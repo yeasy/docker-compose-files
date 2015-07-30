@@ -1,0 +1,28 @@
+# This compose file will start 2 containers: mongo and mongo-express. Run: sudo docker-compose up
+# mongo: a nosql db, store data in local /opt/data/mongo_home/
+# mongo-express: web UI for mongo listening on 8081. See https://github.com/yeasy/mongo-express
+
+
+mongo:
+    image: mongo:3.0
+    hostname: mongo
+    expose:
+        - "27017"
+    volumes:
+        - /opt/data/mongo_home:/data/db
+    restart: always
+    mem_limit: 1024m
+
+mongoexpress:
+    image: yeasy/mongo-express
+    hostname: mongo-express
+    links:
+        - mongo:mongo
+    ports:
+        - "8081:8081"
+    restart: always
+    mem_limit: 128m
+    environment:
+        - WEB_USER='user'
+        - WEB_PASS='pass'
+    command: sh -c 'sleep 10 && tini -- node app'

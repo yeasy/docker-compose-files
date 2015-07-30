@@ -1,0 +1,43 @@
+# This will boot 4 containers: 3 mongo as a cluster, and 1 to issue mongo commands to others
+#
+
+mongo3:
+  image: mongo:3.0
+  hostname: mongo3
+  expose:
+    - "27017"
+    - "28017"
+  restart: always
+  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--rest", "--httpinterface" ]
+
+mongo2:
+  image: mongo:3.0
+  hostname: mongo2
+  expose:
+    - "27017"
+    - "28017"
+  restart: always
+  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--rest", "--httpinterface" ]
+
+mongo1:
+  image: mongo:3.0
+  hostname: mongo1
+  expose:
+    - "27017"
+    - "28017"
+  links:
+    - mongo2:mongo2
+    - mongo3:mongo3
+  restart: always
+  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--rest", "--httpinterface" ]
+
+mongosetup:
+  image: mongo:3.0
+  links:
+    - mongo1:mongo1
+    - mongo2:mongo2
+    - mongo3:mongo3
+  volumes:
+    - ./scripts:/scripts
+  restart: always
+  entrypoint: [ "bash", "/scripts/mongosetup.sh" ]
