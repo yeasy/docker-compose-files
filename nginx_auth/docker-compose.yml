@@ -1,0 +1,30 @@
+# This compose file will boot a typical nginx-web toplogy
+#  nginx: can set user/password to access, and forward request to web.
+#  web: listen on private network
+# https://github.com/yeasy/docker-compose-files
+
+#backend web application
+web:
+  image: yeasy/simple-web:latest
+  hostname: web
+  expose:
+  - "80"
+
+#nginx to forward request 
+nginx:
+  image: yeasy/nginx:test
+  hostname: nginx
+  links:
+    - web:web
+  volumes:
+    - ./docker-entrypoint.sh:/tmp/docker-entrypoint.sh
+    - ./nginx.default.conf:/etc/nginx/nginx.default.conf
+  ports:
+    - "80:80"
+  environment:
+    - BACKEND=web
+    - PORT=80
+    - USERNAME=user
+    - PASSWORD=pass
+  command: bash /tmp/docker-entrypoint.sh
+
