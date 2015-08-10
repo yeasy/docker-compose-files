@@ -1,5 +1,6 @@
 # This compose file will boot a elk cluster.
-#   es will listen on local 9200, and can be scale out.
+#   elasticsearch will listen on local 9200, and  use /opt/data/elasticsearch for storage.
+#   es node can scale out.
 #   logstash will liten on local udp 2055.
 #   kibana will liten on local 5601.
 # https://github.com/yeasy/docker-compose-files
