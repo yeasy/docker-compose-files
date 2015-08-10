@@ -22,3 +22,15 @@ Start 1 mongo instance and a mongo-express web tool to watch it.
 The mongo instance will store data into local /opt/data/mongo_home.
 
 The web UI will listen on local 8081 port.
+
+## nginx_auth
+Use nginx as a proxy with authentication for backend application.
+
+## registry_mirror
+docker registry mirror, with redis as the backend cache.
+
+## elk
+Elk cluster, with netflow support
+```sh
+docker-compose scale es=3
+```
