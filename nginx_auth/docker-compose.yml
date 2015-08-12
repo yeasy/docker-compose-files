@@ -12,13 +12,10 @@ web:
 
 #nginx to forward request 
 nginx:
-  image: yeasy/nginx:test
+  image: yeasy/nginx
   hostname: nginx
   links:
     - web:web
-  volumes:
-    - ./docker-entrypoint.sh:/tmp/docker-entrypoint.sh
-    - ./nginx.default.conf:/etc/nginx/nginx.default.conf
   ports:
     - "80:80"
   environment:
@@ -26,5 +23,3 @@ nginx:
     - PORT=80
     - USERNAME=user
     - PASSWORD=pass
-  command: bash /tmp/docker-entrypoint.sh
-
