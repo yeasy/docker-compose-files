@@ -42,6 +42,4 @@ logstash:
     - "2055/udp:2055/udp"
   links:
     - elasticsearch:elasticsearch
-  volumes:
-    - $PWD:/config-dir
-  command: logstash agent -f /config-dir/logstash_netflow.conf
+  command: logstash agent -f /etc/logstash/conf.d/
