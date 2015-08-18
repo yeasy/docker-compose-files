@@ -13,6 +13,9 @@ See [https://docs.docker.com/compose/](https://docs.docker.com/compose/).
 
 # templates
 
+## consul-discovery
+Using consul to make a service-discoverable architecture.
+
 ## mongo_cluster
 Start 3 mongo instance to make a replica set.
 
