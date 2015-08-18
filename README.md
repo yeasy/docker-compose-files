@@ -2,8 +2,11 @@ Docker Compose Files
 ===
 Some typical docker compose templates.
 
-# Install Docker Compose
+# Install Docker and Docker Compose
+Take ubuntu for example
+
 ```sh
+$ curl -sSL https://get.docker.com/ | sh
 $ sudo pip install docker-compose
 ```
 
