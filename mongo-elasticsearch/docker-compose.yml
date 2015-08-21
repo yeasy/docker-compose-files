@@ -15,18 +15,13 @@ mongo:
     - "27017"
     - "28017"
   restart: always
-  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--smallfiles" ]
+  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--smallfiles", "--httpinterface", "--rest" ]
 
 mongosetup:
-  image: mongo:3.0
+  image: yeasy/mongosetup
   mem_limit: 1024m
-  environment:
-    - TZ=Asia/Shanghai
   links:
     - mongo:mongo
-  volumes:
-    - ./scripts:/scripts
-  entrypoint: [ "bash", "/scripts/mongosetup.sh" ]
 
 elasticsearch:
   image: elasticsearch:1.7
