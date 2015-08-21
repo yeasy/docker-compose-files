@@ -1,0 +1,53 @@
+# This will start 5 nodes:
+# mongo will server as the only member of the cluster
+# mongosetup will init mongo as the master node
+# elasticsearch will server as the index search db
+# kibana will server as the web ui of elasticsearch
+# mongo-connector will pipeline mongodb content to the elasticsearch
+
+mongo:
+  image: mongo:3.0
+  hostname: mongo
+  mem_limit: 1024m
+  environment:
+    - TZ=Asia/Shanghai
+  expose:
+    - "27017"
+    - "28017"
+  restart: always
+  entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--smallfiles" ]
+
+mongosetup:
+  image: mongo:3.0
+  mem_limit: 1024m
+  environment:
+    - TZ=Asia/Shanghai
+  links:
+    - mongo:mongo
+  volumes:
+    - ./scripts:/scripts
+  entrypoint: [ "bash", "/scripts/mongosetup.sh" ]
+
+elasticsearch:
+  image: elasticsearch:1.7
+  mem_limit: 1024m
+  environment:
+    - TZ=Asia/Shanghai
+  #volumes:
+    #- /opt/data/elasticsearch:/usr/share/elasticsearch/data
+  expose:
+    - "9200"
+    - "9300"
+
+kibana:
+  image: kibana:4.1
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch:elasticsearch
+
+mongoconnector:
+  image: yeasy/mongo-connector
+  links:
+    - elasticsearch:elasticsearch
+    - mongo:mongo

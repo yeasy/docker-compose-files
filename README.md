@@ -22,6 +22,9 @@ Using consul to make a service-discoverable architecture.
 ## mongo_cluster
 Start 3 mongo instance to make a replica set.
 
+## mongo-elasticsearch
+Start mongo (as cluster) and elasticsearch, use a mongo-connector to sync the data from mongo to elasticsearch.
+
 ## mongo_webui
 Start 1 mongo instance and a mongo-express web tool to watch it.
 
