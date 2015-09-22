@@ -1,6 +1,6 @@
 Docker Compose Files
 ===
-Some typical docker compose templates.
+Some typical docker compose examples.
 
 # Install Docker and Docker Compose
 Take ubuntu for example
@@ -14,10 +14,16 @@ $ sudo pip install docker-compose
 See [https://docs.docker.com/compose/](https://docs.docker.com/compose/).
 
 
-# templates
+# Examples
 
 ## consul-discovery
 Using consul to make a service-discoverable architecture.
+
+## elk_netflow
+Elk cluster, with netflow support.
+```sh
+docker-compose scale es=3
+```
 
 ## mongo_cluster
 Start 3 mongo instance to make a replica set.
@@ -38,8 +44,8 @@ Use nginx as a proxy with authentication for backend application.
 ## registry_mirror
 docker registry mirror, with redis as the backend cache.
 
-## elk
-Elk cluster, with netflow support
+## spark_cluster
+Spark cluster with master and worker nodes
 ```sh
-docker-compose scale es=3
+docker-compose scale worker=2
 ```

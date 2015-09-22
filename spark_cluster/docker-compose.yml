@@ -1,0 +1,26 @@
+# http://github.com/yeasy/docker-compose-files
+# This compose file will start spark master node and the worker node.
+# All nodes will become a cluster automatically.
+# You can run: docker-compose scale worker=2
+
+master:
+  image: sequenceiq/spark:1.4.0
+  hostname: master
+  ports:
+  - "4040:4040"
+  - "8042:8042"
+  - "7077:7077"
+  - "8088:8088"
+  - "8080:8080"
+  restart: always
+  #mem_limit: 1024m
+  command: bash /usr/local/spark/sbin/start-master.sh && ping localhost > /dev/null
+
+worker:
+  image: sequenceiq/spark:1.4.0
+  links:
+  - master:master
+  expose:
+  - "8081"
+  restart: always
+  command: bash /usr/local/spark/sbin/start-slave.sh spark://master:7077 && ping localhost >/dev/null
