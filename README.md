@@ -45,7 +45,11 @@ Use nginx as a proxy with authentication for backend application.
 docker registry mirror, with redis as the backend cache.
 
 ## spark_cluster
-Spark cluster with master and worker nodes
+Spark cluster with master and worker nodes.
 ```sh
 docker-compose scale worker=2
+```
+Try submitting a test pi application using the spark-submit command.
+```sh
+/urs/local/spark/bin/spark-submit --master spark://master:7077 --class org.apache.spark.examples.SparkPi /usr/local/spark/lib/spark-examples-1.4.0-hadoop2.6.0.jar 1000
 ```
