@@ -18,7 +18,7 @@ es:
 #config is under /usr/share/elasticsearch/config
 #data is under /usr/share/elasticsearch/data
 elasticsearch:
-  image: yeasy/elasticsearch:latest
+  image: yeasy/elasticsearch:1.7
   hostname: elasticsearch
   links:
     - es:es
@@ -38,7 +38,7 @@ kibana:
     - elasticsearch:elasticsearch
 
 logstash:
-  image: yeasy/logstash
+  image: yeasy/logstash:1.5
   ports:
     - "2055/udp:2055/udp"
   links:
