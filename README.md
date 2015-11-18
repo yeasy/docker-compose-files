@@ -25,6 +25,9 @@ Elk cluster, with netflow support.
 docker-compose scale es=3
 ```
 
+## haproxy_web
+A simple haproxy and web applications cluster.
+
 ## mongo_cluster
 Start 3 mongo instance to make a replica set.
 
