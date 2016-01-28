@@ -1,0 +1,48 @@
+# This compose file will use packetbeat with elasticsearch and kibana
+#   elasticsearch will listen on local 9200, and  use /opt/data/elasticsearch for storage.
+#   es node can scale out.
+#   kibana will liten on local 5601, will load dashboard following https://www.elastic.co/guide/en/beats/libbeat/1.0.1/getting-started.html#load-kibana-dashboards.
+# https://github.com/yeasy/docker-compose-files
+
+
+# scale this with docker-compose scale es=3
+es:
+  image: elasticsearch:2.1
+  user: elasticsearch
+  expose:
+    - "9200"
+    - "9300"
+
+#elasticsearch configuration node, should not be scaled
+#config is under /usr/share/elasticsearch/config
+#data is under /usr/share/elasticsearch/data
+elasticsearch:
+  image: elasticsearch:2.1
+  hostname: elasticsearch
+  user: elasticsearch
+  links:
+    - es:es
+  ports:
+    - "9200:9200"
+  expose:
+    - "9300"
+  volumes:
+   #- /opt/data/elasticsearch:/usr/share/elasticsearch/data
+    - packetbeat.template.json:/tmp/packetbeat.template.json
+  command: sh -c "sleep 10; curl -XPUT es:9200/_template/packetbeat -d@'/tmp/packetbeat.template.json';elasticsearch"
+
+kibana:
+  image: kibana:4.3
+  ports:
+    - "5601:5601"
+  volumes:
+    - ./kibana/:/kibana/
+  links:
+    - elasticsearch:elasticsearch
+
+packetbeat:
+  image: yeasy/packetbeat:1.0.1
+  net: host
+  privileged: true
+  volumes:
+    - packetbeat.yml:/etc/packetbeat/packetbeat.yml

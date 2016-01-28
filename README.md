@@ -44,6 +44,16 @@ The web UI will listen on local 8081 port.
 ## nginx_auth
 Use nginx as a proxy with authentication for backend application.
 
+## packetbeat_ek
+Demo the packetbeat, elasticsearch and kibana.
+
+Some kibana dashboard config files are included.
+
+To import them, after all containers startup, go inside the kibana container, and run
+```sh
+$ /kibana/beats-dashboards-1.0.1/load.sh http://elasticsearch:9200
+```
+
 ## registry_mirror
 docker registry mirror, with redis as the backend cache.
 
