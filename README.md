@@ -47,7 +47,7 @@ Use nginx as a proxy with authentication for backend application.
 ## packetbeat_ek
 Demo the packetbeat, elasticsearch and kibana.
 
-Some kibana dashboard config files are included.
+Some kibana [dashboard config](https://github.com/elastic/beats-dashboards) files are included.
 
 To import them, after all containers startup, go inside the kibana container, and run
 ```sh

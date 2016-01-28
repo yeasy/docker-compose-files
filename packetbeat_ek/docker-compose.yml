@@ -1,7 +1,7 @@
 # This compose file will use packetbeat with elasticsearch and kibana
 #   elasticsearch will listen on local 9200, and  use /opt/data/elasticsearch for storage.
 #   es node can scale out.
-#   kibana will liten on local 5601, will load dashboard following https://www.elastic.co/guide/en/beats/libbeat/1.0.1/getting-started.html#load-kibana-dashboards.
+#   kibana will liten on local 5601, will load dashboard following steps on https://www.elastic.co/guide/en/beats/libbeat/1.0.1/getting-started.html#load-kibana-dashboards.
 # https://github.com/yeasy/docker-compose-files
 
 
