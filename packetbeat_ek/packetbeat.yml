@@ -331,9 +331,9 @@ shipper:
 
   # Configure local GeoIP database support.
   # If no paths are not configured geoip is disabled.
-  #geoip:
-    #paths:
-    #  - "/usr/share/GeoIP/GeoLiteCity.dat"
+  geoip:
+    paths:
+      - "/usr/share/GeoIP/GeoLiteCity.dat"
     #  - "/usr/local/var/GeoIP/GeoLiteCity.dat"
 
 
