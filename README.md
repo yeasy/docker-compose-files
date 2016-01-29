@@ -51,7 +51,7 @@ Some kibana [dashboard config](https://github.com/elastic/beats-dashboards) file
 
 To import them, after all containers startup, go inside the kibana container, and run
 ```sh
-$ /kibana/beats-dashboards-1.0.1/load.sh http://elasticsearch:9200
+$ cd /kibana/beats-dashboards-1.0.1 && ./load.sh http://elasticsearch:9200
 ```
 
 ## [registry_mirror](registry_mirror)
