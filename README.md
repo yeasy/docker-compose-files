@@ -40,6 +40,11 @@ $ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
 $ docker pull yeasy/hyperledger-peer:latest
 ```
 
+Then you can start a 4 nodes hyperledger cluster with
+```sh
+$ docker-compose up
+```
+
 After the cluster is synced, you can validate from the container or from the
 host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer).
 
