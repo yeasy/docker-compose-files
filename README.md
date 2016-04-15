@@ -28,6 +28,21 @@ docker-compose scale es=3
 ## [haproxy_web](haproxy_web)
 A simple haproxy and web applications cluster.
 
+## [hyperledger](hyperledger)
+Demo the hyperledger cluster with 4 validator nodes. This refers the example
+ from the [hyperledger](https://github.com/hyperledger/fabric) project.
+
+Note, currently you should manually create an `openblockchain/baseimage:latest` first. The
+easiest way to do so is:
+```sh
+$ docker pull yeasy/hyperledger:latest
+$ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
+$ docker pull yeasy/hyperledger-peer:latest
+```
+
+After the cluster is synced, you can validate from the container or from the
+host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer).
+
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.
 
