@@ -13,7 +13,6 @@ vp0:
   hostname: vp0
   environment:
     - CORE_PEER_ID=vp0
-    #- CORE_VM_ENDPOINT=tcp://172.17.42.1:2375
 
 vp1:
   extends:

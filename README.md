@@ -29,8 +29,7 @@ docker-compose scale es=3
 A simple haproxy and web applications cluster.
 
 ## [hyperledger](hyperledger)
-Demo the hyperledger cluster with 4 validator nodes. This refers the example
- from the [hyperledger](https://github.com/hyperledger/fabric) project.
+Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any local configuration.
 
 Note, currently you should manually create an `openblockchain/baseimage:latest` first. The
 easiest way to do so is:
@@ -45,8 +44,10 @@ Then you can start a 4 nodes hyperledger cluster with
 $ docker-compose up
 ```
 
-After the cluster is synced, you can validate from the container or from the
-host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer).
+After the cluster is synced, you can validate by deploying, invoking or querying chaincode from the container or from the
+host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer) if you've not familiar on that.
+
+This refers the example from the [hyperledger](https://github.com/hyperledger/fabric) project.
 
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.

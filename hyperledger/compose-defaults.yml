@@ -8,6 +8,8 @@ vp:
   restart: unless-stopped
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
+    - CORE_PEER_NETWORKID=dev
+    - CORE_LOGGING_LEVEL=warning
     #- CORE_PEER_VALIDATOR_CONSENSUS=obcpbft
   expose:
   - "30303"
