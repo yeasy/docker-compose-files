@@ -5,18 +5,28 @@
 # If you want enable consensus, just uncomment the
 # CORE_PEER_VALIDATOR_CONSENSUE=obcpbft line
 # See https://github.com/hyperledger/fabric/blob/master/docs/dev-setup/devnet-setup.md#using-consensus-plugin for more details.
+
 vp:
   image: yeasy/hyperledger-peer:latest
   restart: unless-stopped
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
     - CORE_PEER_NETWORKID=dev
-    - CORE_LOGGING_LEVEL=warning
-    - CORE_PEER_VALIDATOR_CONSENSUS=obcpbft
+    - CORE_LOGGING_LEVEL=debug  #critical, error, warning, notice, info, debug
+    # The following section enables bpft consensus
+    - CORE_PEER_VALIDATOR_CONSENSUS=obcpbft  # noops, obcpbft, pbft
+    - CORE_PBFT_GENERAL_MODE=classic  # batch, classic, sieve
+    - CORE_PBFT_GENERAL_N=4
+    - CORE_PBFT_GENERAL_TIMEOUT_REQUEST=10s
+    # The following section enable member authentication, set follow to True
+    - CORE_SECURITY_ENABLED=false
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
   expose:
-  - "30303"
-  - "30304"
-  - "31315"
+    - "30303"
+    - "30304"
+    - "31315"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
   command: fabric peer

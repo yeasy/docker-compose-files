@@ -37,6 +37,7 @@ easiest way to do so is:
 $ docker pull yeasy/hyperledger:latest
 $ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
 $ docker pull yeasy/hyperledger-peer:latest
+$ docker pull yeasy/hyperledger-membersrvc:latest
 ```
 
 Then you can start a 4 nodes hyperledger cluster with

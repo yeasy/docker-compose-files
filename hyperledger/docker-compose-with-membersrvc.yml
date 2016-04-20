@@ -13,6 +13,10 @@ vp0:
   hostname: vp0
   environment:
     - CORE_PEER_ID=vp0
+    - CORE_SECURITY_ENROLLID=test_vp0
+    - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
+  links:
+    - membersrvc
 
 vp1:
   extends:
@@ -22,7 +26,10 @@ vp1:
   environment:
     - CORE_PEER_ID=vp1
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp1
+    - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
   links:
+    - membersrvc
     - vp0
 
 vp2:
@@ -33,7 +40,10 @@ vp2:
   environment:
     - CORE_PEER_ID=vp2
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp2
+    - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
   links:
+    - membersrvc
     - vp0
 
 
@@ -48,8 +58,21 @@ vp3:
   environment:
     - CORE_PEER_ID=vp3
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp3
+    - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
   links:
+    - membersrvc
     - vp0
   ports:
     - "5000:5000"
     #- "30303:30303"
+
+membersrvc:
+  image: yeasy/hyperledger-membersrvc:latest
+  restart: unless-stopped
+  expose:
+    - "50051"
+  volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: membersrvc
+
