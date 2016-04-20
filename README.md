@@ -47,7 +47,7 @@ $ docker-compose up
 After the cluster is synced, you can validate by deploying, invoking or querying chaincode from the container or from the
 host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer) if you've not familiar on that.
 
-This refers the example from the [hyperledger](https://github.com/hyperledger/fabric) project.
+This refers the example from the [hyperledger](https://github.com/hyperledger/fabric/tree/master/consensus/docker-compose-files) project.
 
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.
