@@ -1,4 +1,4 @@
-# This compose file will 4 hyperledger peer nodes for testing
+# This compose file will start 4 hyperledger peer nodes for testing
 #  vp0: validating node as root
 #  vp1: validating node as peer
 #  vp2: validating node as peer
