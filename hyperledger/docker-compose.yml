@@ -1,4 +1,4 @@
-# This compose file will start 4 hyperledger peer nodes for testing
+# This compose file will start a cluster with 4 hyperledger peer nodes
 #  vp0: validating node as root
 #  vp1: validating node as peer
 #  vp2: validating node as peer
@@ -14,6 +14,7 @@ vp0:
   environment:
     - CORE_PEER_ID=vp0
 
+# validating node
 vp1:
   extends:
     file: compose-defaults.yml
@@ -25,6 +26,7 @@ vp1:
   links:
     - vp0
 
+# validating node
 vp2:
   extends:
     file: compose-defaults.yml
@@ -37,7 +39,8 @@ vp2:
     - vp0
 
 
-# vp3 will be used for client interactive operations
+# validating node
+# vp3 will also be used for client interactive operations
 # If you want to run fabric command on the host, then map 30303:30303 to host
 # port, or use like `CORE_PEER_ADDRESS=172.17.0.2:30303` to specify peer addr.
 vp3:
