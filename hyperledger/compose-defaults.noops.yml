@@ -2,9 +2,9 @@
 # Notice that chaincode is executed inside docker in default net mode
 # https://github.com/yeasy/docker-compose-files
 
-# Depends on the yeasy/hyperledger-peer:pbft image
+# Depends on the yeasy/hyperledger-peer:noops image
 
-# This utilized the pbft as consensus
+# This utilizes the noops as consensus
 # See https://github.com/hyperledger/fabric/blob/master/docs/dev-setup/devnet-setup.md#using-consensus-plugin for more details.
 
 vp:
@@ -15,10 +15,8 @@ vp:
     - CORE_PEER_NETWORKID=dev
     - CORE_LOGGING_LEVEL=debug  #critical, error, warning, notice, info, debug
     # The following section enables pbft consensus
-    - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=pbft  # noops, obcpbft, pbft
-    - CORE_PBFT_GENERAL_MODE=classic  # batch, classic, sieve
-    - CORE_PBFT_GENERAL_N=4
-    - CORE_PBFT_GENERAL_TIMEOUT_REQUEST=10s
+    - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=noops  # noops, obcpbft, pbft
+    - CORE_NOOPS_BLOCK_TIMEOUT=10s
   expose:
     - "30303"
     - "30304"

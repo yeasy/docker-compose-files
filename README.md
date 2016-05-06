@@ -29,14 +29,14 @@ docker-compose scale es=3
 A simple haproxy and web applications cluster.
 
 ## [hyperledger](hyperledger)
-Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any local configuration.
+Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any manual configuration. By default, the cluster enables PBFT as the consensus.
 
 Note, currently you should manually create an `openblockchain/baseimage:latest` first. The
 easiest way to do so is:
 ```sh
 $ docker pull yeasy/hyperledger:latest
 $ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
-$ docker pull yeasy/hyperledger-peer:latest
+$ docker pull yeasy/hyperledger-peer:pbft
 $ docker pull yeasy/hyperledger-membersrvc:latest
 ```
 
