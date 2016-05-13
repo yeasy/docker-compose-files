@@ -35,7 +35,7 @@ Note, currently you should manually create an `openblockchain/baseimage:latest` 
 easiest way to do so is:
 ```sh
 $ docker pull yeasy/hyperledger:latest
-$ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
+$ docker tag yeasy/hyperledger:latest hyperledger/fabric-baseimage:latest
 $ docker pull yeasy/hyperledger-peer:noops
 $ docker pull yeasy/hyperledger-peer:pbft
 $ docker pull yeasy/hyperledger-membersrvc:latest
