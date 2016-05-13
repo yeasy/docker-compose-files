@@ -8,7 +8,7 @@
 # See https://github.com/hyperledger/fabric/blob/master/docs/dev-setup/devnet-setup.md#using-consensus-plugin for more details.
 
 vp:
-  image: yeasy/hyperledger-peer:pbft
+  image: yeasy/hyperledger-peer:noops
   restart: unless-stopped
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
@@ -23,5 +23,4 @@ vp:
     - "31315"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
-  command: peer peer
-
+  command: peer node start  # this repeats the default cmd to make sure

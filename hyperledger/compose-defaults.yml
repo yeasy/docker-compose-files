@@ -25,5 +25,5 @@ vp:
     - "31315"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
-  command: peer peer
+  command: peer node start  # this repeats the default cmd to make sure
 
