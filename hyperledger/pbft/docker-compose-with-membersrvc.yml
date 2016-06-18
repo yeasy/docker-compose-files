@@ -1,0 +1,94 @@
+# This compose file will 4 hyperledger peer nodes for testing
+#  vp0: validating node as root
+#  vp1: validating node as peer
+#  vp2: validating node as peer
+#  vp3: validating node as peer
+# https://github.com/yeasy/docker-compose-files
+
+# validating node as the root
+vp0:
+  extends:
+    file: peer-pbft.yml
+    service: vp
+  hostname: vp0
+  environment:
+    - CORE_PEER_ID=vp0
+    - CORE_SECURITY_ENABLED=true
+    - CORE_SECURITY_ENROLLID=test_vp0
+    - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+  ports:
+    - "5000:5000"
+    #- "30303:30303"
+  links:
+    - membersrvc
+
+vp1:
+  extends:
+    file: peer-pbft.yml
+    service: vp
+  hostname: vp1
+  environment:
+    - CORE_PEER_ID=vp1
+    - CORE_SECURITY_ENABLED=true
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp1
+    - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+  links:
+    - membersrvc
+    - vp0
+
+vp2:
+  extends:
+    file: peer-pbft.yml
+    service: vp
+  hostname: vp2
+  environment:
+    - CORE_PEER_ID=vp2
+    - CORE_SECURITY_ENABLED=true
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp2
+    - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+  links:
+    - membersrvc
+    - vp0
+
+
+# vp3 will be used for client interactive operations
+# If you want to run fabric command on the host, then map 30303:30303 to host
+# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:30303` to specify peer addr.
+vp3:
+  extends:
+    file: peer-pbft.yml
+    service: vp
+  hostname: vp3
+  environment:
+    - CORE_PEER_ID=vp3
+    - CORE_SECURITY_ENABLED=true
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_SECURITY_ENROLLID=test_vp3
+    - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+  links:
+    - membersrvc
+    - vp0
+
+membersrvc:
+  image: yeasy/hyperledger-membersrvc:latest
+  restart: unless-stopped
+  expose:
+    - "50051"
+  volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: membersrvc  # this repeats the default cmd to make sure
+
