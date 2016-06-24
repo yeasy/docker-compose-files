@@ -16,7 +16,8 @@ vp:
     - CORE_LOGGING_LEVEL=info  #critical, error, warning, notice, info, debug
     # The following section enables pbft consensus
     - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=noops  # noops, pbft
-    - CORE_NOOPS_BLOCK_TIMEOUT=5s
+    - CORE_NOOPS_BLOCK_TIMEOUT=2s
+    - CORE_NOOPS_BLOCK_WAIT=2s
   expose:
     - "30303"
     - "30304"
