@@ -16,7 +16,7 @@ vp:
     - CORE_LOGGING_LEVEL=info  #critical, error, warning, notice, info, debug
     # The following section enables pbft consensus
     - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=pbft  # noops, pbft
-    - CORE_PBFT_GENERAL_MODE=sieve  # batch, classic, sieve
+    - CORE_PBFT_GENERAL_MODE=batch  # batch. classic and sieve will be not supported again.
     - CORE_PBFT_GENERAL_N=4
     - CORE_PBFT_GENERAL_BATCHSIZE=2  # only useful when in batch mode
     - CORE_PBFT_GENERAL_TIMEOUT_REQUEST=2s
