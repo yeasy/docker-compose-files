@@ -24,3 +24,5 @@ docker pull yeasy/hyperledger-membersrvc:latest
 
 cd pbft
 docker-compose up
+
+#test: curl HOST:5000/network/peers
