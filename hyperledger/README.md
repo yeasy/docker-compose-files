@@ -1,6 +1,15 @@
 # Hyperledger fabric
-Note, currently you should manually create an `openblockchain/baseimage:latest` first. The
-easiest way to do so is:
+
+You can use the following script to install docker and start PBFT cluster in one instruction.
+
+```sh
+$ bash setupPbft.sh
+```
+
+If you want to start it manually, follow the steps:
+
+First,  pull an `openblockchain/baseimage:latest` first. 
+
 ```sh
 $ docker pull yeasy/hyperledger:latest && docker tag yeasy/hyperledger:latest hyperledger/fabric-baseimage:latest
 $ docker pull yeasy/hyperledger-peer:latest
