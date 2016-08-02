@@ -9,15 +9,15 @@ membersrvc:
   image: yeasy/hyperledger-membersrvc:latest
   restart: unless-stopped
   expose:
-    - "50051"
+    - "7054"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
   command: membersrvc  # this repeats the default cmd to make sure
 
 # validating node as the root
 # vp0 will also be used for client interactive operations
-# If you want to run fabric command on the host, then map 30303:30303 to host
-# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:30303` to specify peer addr.
+# If you want to run fabric command on the host, then map 7051:7051 to host
+# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
 vp0:
   extends:
     file: peer-noops.yml
@@ -28,12 +28,12 @@ vp0:
     - CORE_SECURITY_ENABLED=true
     - CORE_SECURITY_ENROLLID=test_vp0
     - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   ports:
-    - "5000:5000"
-    #- "30303:30303"
+    - "7050:7050"
+    #- "7051:7051"
   links:
     - membersrvc
 
@@ -45,12 +45,12 @@ vp1:
   environment:
     - CORE_PEER_ID=vp1
     - CORE_SECURITY_ENABLED=true
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp1
     - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
@@ -63,12 +63,12 @@ vp2:
   environment:
     - CORE_PEER_ID=vp2
     - CORE_SECURITY_ENABLED=true
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp2
     - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
@@ -81,14 +81,12 @@ vp3:
   environment:
     - CORE_PEER_ID=vp3
     - CORE_SECURITY_ENABLED=true
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:30303
+    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp3
     - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:50051
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:50051
+    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
+    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
-
-

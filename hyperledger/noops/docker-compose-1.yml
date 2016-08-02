@@ -7,8 +7,8 @@
 
 # validating node as the root
 # vp0 will also be used for client interactive operations
-# If you want to run fabric command on the host, then map 30303:30303 to host
-# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:30303` to specify peer addr.
+# If you want to run fabric command on the host, then map 7051:7051 to host
+# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
 vp0:
   extends:
     file: peer-noops.yml
@@ -17,6 +17,6 @@ vp0:
   environment:
     - CORE_PEER_ID=vp0
   ports:
-    - "5000:5000"
-    #- "30303:30303"
+    - "7050:7050"
+    #- "7051:7051"
 
