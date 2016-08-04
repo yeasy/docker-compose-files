@@ -1,4 +1,7 @@
-# This compose file will 4 hyperledger peer nodes for testing
+# This compose file will start 4 hyperledger peer nodes + 1 CA node.
+# We add a delay to start the VP nodes after CA node:
+# command: sh -c "sleep 5; peer node start"
+#
 #  vp0: validating node as root
 #  vp1: validating node as peer
 #  vp2: validating node as peer
@@ -36,6 +39,7 @@ vp0:
     #- "7051:7051"
   links:
     - membersrvc
+  command: sh -c "sleep 5; peer node start"
 
 vp1:
   extends:
@@ -54,6 +58,7 @@ vp1:
   links:
     - membersrvc
     - vp0
+  command: sh -c "sleep 5; peer node start"
 
 vp2:
   extends:
@@ -72,6 +77,7 @@ vp2:
   links:
     - membersrvc
     - vp0
+  command: sh -c "sleep 5; peer node start"
 
 vp3:
   extends:
@@ -90,3 +96,4 @@ vp3:
   links:
     - membersrvc
     - vp0
+  command: sh -c "sleep 5; peer node start"

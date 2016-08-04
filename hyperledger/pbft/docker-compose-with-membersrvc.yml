@@ -1,5 +1,5 @@
-# This compose file will 4 hyperledger peer nodes + 1 CA node for testing
-# Suggest add a delay to start VP nodes before CA:
+# This compose file will start 4 hyperledger peer nodes + 1 CA node.
+# We add a delay to start the VP nodes after CA node:
 # command: sh -c "sleep 5; peer node start"
 #
 #  vp0: validating node as root
@@ -7,6 +7,15 @@
 #  vp2: validating node as peer
 #  vp3: validating node as peer
 # https://github.com/yeasy/docker-compose-files
+
+membersrvc:
+  image: yeasy/hyperledger-membersrvc:latest
+  restart: unless-stopped
+  expose:
+    - "7054"
+  volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: membersrvc  # this repeats the default cmd to make sure
 
 # validating node as the root
 vp0:
@@ -27,6 +36,7 @@ vp0:
     #- "7051:7051"
   links:
     - membersrvc
+  command: sh -c "sleep 5; peer node start"
 
 vp1:
   extends:
@@ -45,6 +55,7 @@ vp1:
   links:
     - membersrvc
     - vp0
+  command: sh -c "sleep 5; peer node start"
 
 vp2:
   extends:
@@ -63,7 +74,7 @@ vp2:
   links:
     - membersrvc
     - vp0
-
+  command: sh -c "sleep 5; peer node start"
 
 # vp3 will be used for client interactive operations
 # If you want to run fabric command on the host, then map 7051:7051 to host
@@ -85,12 +96,4 @@ vp3:
   links:
     - membersrvc
     - vp0
-
-membersrvc:
-  image: yeasy/hyperledger-membersrvc:latest
-  restart: unless-stopped
-  expose:
-    - "7054"
-  volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
-    - /var/run/docker.sock:/var/run/docker.sock
-  command: membersrvc  # this repeats the default cmd to make sure
+  command: sh -c "sleep 5; peer node start"

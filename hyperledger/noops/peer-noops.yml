@@ -19,9 +19,10 @@ vp:
     - CORE_NOOPS_BLOCK_TIMEOUT=2s
     - CORE_NOOPS_BLOCK_WAIT=2s
   expose:
-    - "30303"
-    - "30304"
-    - "31315"
+    - "7051"
+    - "7052"
+    - "7053"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
   command: peer node start  # this repeats the default cmd to make sure
+# command: sh -c "sleep 5; peer node start"  # peer node should have booting delay with CA
