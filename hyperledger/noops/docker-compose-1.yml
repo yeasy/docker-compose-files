@@ -1,0 +1,22 @@
+# This compose file will start a cluster with 4 hyperledger peer nodes
+#  vp0: validating node as root
+#  vp1: validating node as peer
+#  vp2: validating node as peer
+#  vp3: validating node as peer
+# https://github.com/yeasy/docker-compose-files
+
+# validating node as the root
+# vp0 will also be used for client interactive operations
+# If you want to run fabric command on the host, then map 7051:7051 to host
+# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
+vp0:
+  extends:
+    file: peer-noops.yml
+    service: vp
+  hostname: vp0
+  environment:
+    - CORE_PEER_ID=vp0
+  ports:
+    - "7050:7050"
+    #- "7051:7051"
+

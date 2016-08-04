@@ -29,26 +29,9 @@ docker-compose scale es=3
 A simple haproxy and web applications cluster.
 
 ## [hyperledger](hyperledger)
-Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any local configuration.
+Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any manual configuration. By default, the cluster enables PBFT as the consensus.
 
-Note, currently you should manually create an `openblockchain/baseimage:latest` first. The
-easiest way to do so is:
-```sh
-$ docker pull yeasy/hyperledger:latest
-$ docker tag yeasy/hyperledger:latest openblockchain/baseimage:latest
-$ docker pull yeasy/hyperledger-peer:latest
-$ docker pull yeasy/hyperledger-membersrvc:latest
-```
-
-Then you can start a 4 nodes hyperledger cluster with
-```sh
-$ docker-compose up
-```
-
-After the cluster is synced, you can validate by deploying, invoking or querying chaincode from the container or from the
-host. See [hyperledger-peer](https://github .com/yeasy/docker-hyperledger-peer) if you've not familiar on that.
-
-This refers the example from the [hyperledger](https://github.com/hyperledger/fabric/tree/master/consensus/docker-compose-files) project.
+See [hyperledger](hyperledger) for more details.
 
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.

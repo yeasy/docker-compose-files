@@ -4,27 +4,27 @@
 
 # Depends on the yeasy/hyperledger-peer:pbft image
 
-# If you want enable consensus, just uncomment the
-# CORE_PEER_VALIDATOR_CONSENSUE=obcpbft line
+# This utilized the pbft as consensus
 # See https://github.com/hyperledger/fabric/blob/master/docs/dev-setup/devnet-setup.md#using-consensus-plugin for more details.
 
 vp:
-  image: yeasy/hyperledger-peer:pbft
+  image: yeasy/hyperledger-peer:latest
   restart: unless-stopped
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
     - CORE_PEER_NETWORKID=dev
-    - CORE_LOGGING_LEVEL=debug  #critical, error, warning, notice, info, debug
+    - CORE_LOGGING_LEVEL=info  #critical, error, warning, notice, info, debug
     # The following section enables pbft consensus
-    - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=pbft  # noops, obcpbft, pbft
-    - CORE_PBFT_GENERAL_MODE=classic  # batch, classic, sieve
+    - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=pbft  # noops, pbft
+    - CORE_PBFT_GENERAL_MODE=batch  # batch. classic and sieve will be not supported again.
     - CORE_PBFT_GENERAL_N=4
-    - CORE_PBFT_GENERAL_TIMEOUT_REQUEST=10s
+    - CORE_PBFT_GENERAL_BATCHSIZE=2  # only useful when in batch mode
+    - CORE_PBFT_GENERAL_TIMEOUT_REQUEST=2s
   expose:
-    - "30303"
-    - "30304"
-    - "31315"
+    - "7051"
+    - "7052"
+    - "7053"
   volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
     - /var/run/docker.sock:/var/run/docker.sock
-  command: peer peer
-
+  command: peer node start  # this repeats the default cmd to make sure
+# command: sh -c "sleep 5; peer node start"  # user this with CA
