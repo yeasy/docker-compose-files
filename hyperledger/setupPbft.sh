@@ -7,6 +7,7 @@ then
    exit
 fi
 
+apt-get update
 
 apt-get install curl -y
 
@@ -14,7 +15,7 @@ wget -qO- https://get.docker.com/ | sh
 sudo service docker stop
 nohup sudo docker daemon --api-cors-header="*" -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock&
 
-curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 
