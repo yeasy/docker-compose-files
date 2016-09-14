@@ -21,16 +21,12 @@ membersrvc:
 vp0:
   extends:
     file: peer-pbft.yml
-    service: vp
+    service: vp_sec
   hostname: vp0
   environment:
     - CORE_PEER_ID=vp0
-    - CORE_SECURITY_ENABLED=true
     - CORE_SECURITY_ENROLLID=test_vp0
     - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   ports:
     - "7050:7050"
     #- "7051:7051"
@@ -41,17 +37,13 @@ vp0:
 vp1:
   extends:
     file: peer-pbft.yml
-    service: vp
+    service: vp_sec
   hostname: vp1
   environment:
     - CORE_PEER_ID=vp1
-    - CORE_SECURITY_ENABLED=true
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp1
     - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
@@ -60,17 +52,13 @@ vp1:
 vp2:
   extends:
     file: peer-pbft.yml
-    service: vp
+    service: vp_sec
   hostname: vp2
   environment:
     - CORE_PEER_ID=vp2
-    - CORE_SECURITY_ENABLED=true
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp2
     - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
@@ -82,17 +70,13 @@ vp2:
 vp3:
   extends:
     file: peer-pbft.yml
-    service: vp
+    service: vp_sec
   hostname: vp3
   environment:
     - CORE_PEER_ID=vp3
-    - CORE_SECURITY_ENABLED=true
     - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
     - CORE_SECURITY_ENROLLID=test_vp3
     - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   links:
     - membersrvc
     - vp0
