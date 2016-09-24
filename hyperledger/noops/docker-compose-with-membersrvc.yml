@@ -9,7 +9,7 @@
 # https://github.com/yeasy/docker-compose-files
 
 membersrvc:
-  image: yeasy/hyperledger-membersrvc:latest
+  image: hyperledger/fabric-membersrvc:latest
   restart: unless-stopped
   expose:
     - "7054"
@@ -36,7 +36,7 @@ vp0:
     - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
   ports:
     - "7050:7050"
-    #- "7051:7051"
+    - "7051:7051"
   links:
     - membersrvc
   command: sh -c "sleep 5; peer node start"

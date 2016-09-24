@@ -2,13 +2,13 @@
 # Notice that chaincode is executed inside docker in default net mode
 # https://github.com/yeasy/docker-compose-files
 
-# Depends on the yeasy/hyperledger-peer:noops image
+# Depends on the hyperledger/fabric-peer image
 
 # This utilizes the noops as consensus
 # See https://github.com/hyperledger/fabric/blob/master/docs/dev-setup/devnet-setup.md#using-consensus-plugin for more details.
 
 vp:
-  image: yeasy/hyperledger-peer:latest
+  image: hyperledger/fabric-peer:latest
   restart: unless-stopped
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true

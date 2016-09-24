@@ -19,9 +19,10 @@ curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 
-docker pull yeasy/hyperledger:latest && docker tag yeasy/hyperledger:latest hyperledger/fabric-baseimage:latest
-docker pull yeasy/hyperledger-peer:latest
-docker pull yeasy/hyperledger-membersrvc:latest
+docker pull yeasy/hyperledger-fabric:latest \
+    && docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-peer:latest \
+    && docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-baseimage:latest \
+    && docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-membersrvc:latest
 
 cd pbft
 docker-compose up
