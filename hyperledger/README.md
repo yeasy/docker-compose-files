@@ -9,13 +9,15 @@ $ bash setupPbft.sh
 ## Download Images
 If you want to start it manually, follow the steps:
 
-First,  pull necessary images first. You can ignore this step if pulling official image already.
+First, pull necessary images first. You can ignore this step if pulling official image already.
+
+*The latest code is evolving quickly, we use the 0.6 branch code.*
 
 ```sh
-$ docker pull yeasy/hyperledger-fabric:latest
-$ docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-peer:latest
-$ docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-baseimage:latest
-$ docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-membersrvc:latest
+$ docker pull yeasy/hyperledger-fabric:0.6-dp
+$ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-peer:latest
+$ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-baseimage:latest
+$ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-membersrvc:latest
 ```
 
 ### Start 4 Noops node cluster
@@ -32,7 +34,7 @@ $ cd pbft; docker-compose up
 
 After the cluster is synced, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
-See [hyperledger-peer](https://github.com/yeasy/docker-hyperledger-peer) if you've not familiar on those operations.
+See [hyperledger-fabric](https://github.com/yeasy/docker-hyperledger-fabric) if you've not familiar on those operations.
 
 
 ### Start 4 PBFT node cluster with member service
