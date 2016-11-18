@@ -8,76 +8,84 @@
 #  vp3: validating node as peer
 # https://github.com/yeasy/docker-compose-files
 
-membersrvc:
-  image: hyperledger/fabric-membersrvc:latest
-  restart: unless-stopped
-  expose:
-    - "7054"
-  volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
-    - /var/run/docker.sock:/var/run/docker.sock
-  command: membersrvc  # this repeats the default cmd to make sure
+version: '2'
 
-# validating node as the root
-vp0:
-  extends:
-    file: peer-pbft.yml
-    service: vp_sec
-  hostname: vp0
-  environment:
-    - CORE_PEER_ID=vp0
-    - CORE_SECURITY_ENROLLID=test_vp0
-    - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
-  ports:
-    - "7050:7050"
-    - "7051:7051"
-  links:
-    - membersrvc
-  command: sh -c "sleep 5; peer node start"
+services:
+  membersrvc:
+    image: hyperledger/fabric-membersrvc:latest
+    restart: unless-stopped
+    expose:
+      - "7054"
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: membersrvc  # this repeats the default cmd to make sure
 
-vp1:
-  extends:
-    file: peer-pbft.yml
-    service: vp_sec
-  hostname: vp1
-  environment:
-    - CORE_PEER_ID=vp1
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
-    - CORE_SECURITY_ENROLLID=test_vp1
-    - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
-  links:
-    - membersrvc
-    - vp0
-  command: sh -c "sleep 5; peer node start"
+  # validating node as the root
+  vp0:
+    extends:
+      file: peer-pbft.yml
+      service: vp_sec
+    hostname: vp0
+    environment:
+      - CORE_PEER_ID=vp0
+      - CORE_SECURITY_ENROLLID=test_vp0
+      - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
+    ports:
+      - "7050:7050"
+      - "7051:7051"
+    links:
+      - membersrvc
+    command: sh -c "sleep 5; peer node start"
 
-vp2:
-  extends:
-    file: peer-pbft.yml
-    service: vp_sec
-  hostname: vp2
-  environment:
-    - CORE_PEER_ID=vp2
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
-    - CORE_SECURITY_ENROLLID=test_vp2
-    - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
-  links:
-    - membersrvc
-    - vp0
-  command: sh -c "sleep 5; peer node start"
+  vp1:
+    extends:
+      file: peer-pbft.yml
+      service: vp_sec
+    hostname: vp1
+    environment:
+      - CORE_PEER_ID=vp1
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp1
+      - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
+    links:
+      - membersrvc
+      - vp0
+    command: sh -c "sleep 5; peer node start"
 
-# vp3 will be used for client interactive operations
-# If you want to run fabric command on the host, then map 7051:7051 to host
-# port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
-vp3:
-  extends:
-    file: peer-pbft.yml
-    service: vp_sec
-  hostname: vp3
-  environment:
-    - CORE_PEER_ID=vp3
-    - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
-    - CORE_SECURITY_ENROLLID=test_vp3
-    - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
-  links:
-    - membersrvc
-    - vp0
-  command: sh -c "sleep 5; peer node start"
+  vp2:
+    extends:
+      file: peer-pbft.yml
+      service: vp_sec
+    hostname: vp2
+    environment:
+      - CORE_PEER_ID=vp2
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp2
+      - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
+    links:
+      - membersrvc
+      - vp0
+    command: sh -c "sleep 5; peer node start"
+
+  # vp3 will be used for client interactive operations
+  # If you want to run fabric command on the host, then map 7051:7051 to host
+  # port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
+  vp3:
+    extends:
+      file: peer-pbft.yml
+      service: vp_sec
+    hostname: vp3
+    environment:
+      - CORE_PEER_ID=vp3
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp3
+      - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
+    links:
+      - membersrvc
+      - vp0
+    command: sh -c "sleep 5; peer node start"
+
+#networks:
+#  default:
+#    external:
+#      name: fabric_pbft

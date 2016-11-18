@@ -6,6 +6,8 @@ You can use the following script to install docker and start a 4-node PBFT clust
 $ bash setupPbft.sh
 ```
 
+## Preparation
+
 ## Download Images
 If you want to start it manually, follow the steps:
 
@@ -19,6 +21,15 @@ $ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-peer:latest
 $ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-baseimage:latest
 $ docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-membersrvc:latest
 ```
+
+### Setup network
+If you want to enable the external network options in the compose files, please create two Docker networks for usage. Otherwise, just ignore.
+```sh
+$ docker network create fabric_noops
+$ docker network create fabric_pbft
+```
+
+## Usage
 
 ### Start 4 Noops node cluster
 
@@ -34,8 +45,21 @@ $ cd pbft; docker-compose up
 
 After the cluster is synced, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
+```sh
+$ docker exec -it pbft_vp0_1 bash
+# peer chaincode deploy -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Function":"init", "Args": ["a","100", "b", "200"]}'
+```
+
 See [hyperledger-fabric](https://github.com/yeasy/docker-hyperledger-fabric) if you've not familiar on those operations.
 
+
+### Start 4 PBFT node cluster with blockchain explorer
+
+```sh
+$ cd pbft; docker-compose -f docker-compose-with-explorer.yml up
+```
+
+Then visit the 9090 port on the host using Web.
 
 ### Start 4 PBFT node cluster with member service
 

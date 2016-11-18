@@ -8,6 +8,16 @@
 version: '2'
 
 services:
+  # blockchain-explorer
+  explorer:
+    image: yeasy/blockchain-explorer:latest
+    restart: unless-stopped
+    hostname: explorer
+    environment:
+      - HYP_REST_ENDPOINT=http://vp0:7050
+    ports:
+      - "9090:9090"
+
   # validating node as the root
   vp0:
     extends:
