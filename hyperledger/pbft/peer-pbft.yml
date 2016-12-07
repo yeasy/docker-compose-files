@@ -17,7 +17,7 @@ services:
       - CORE_PEER_ADDRESSAUTODETECT=true
       - CORE_PEER_NETWORKID=dev
       - CORE_LOGGING_LEVEL=info  #critical, error, warning, notice, info, debug
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_
+     #- CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_pbft  # uncomment this to use specific network
       # The following section enables pbft consensus
       - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=pbft  # noops, pbft
       - CORE_PBFT_GENERAL_MODE=batch  # batch. classic and sieve will be not supported again.

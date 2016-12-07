@@ -31,7 +31,9 @@ The template can support using separate network for the chain.
 
 By default, the feature is disabled to use the shared Docker network.
 
-If you want to enable the feature, just uncommend the networks section at the bottom, and create the following two Docker networks.
+If you want to enable the feature, just uncommend the bottom networks section in the compose file and the `CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE` line in the `peer-[noops,pbft].yml` file.
+
+Then, create the following two Docker networks.
 
 ```sh
 $ docker network create fabric_noops
