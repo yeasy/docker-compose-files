@@ -10,6 +10,11 @@ tldr :)
 
 If you want to explore more, then can follow these steps.
 
+If you're not familiar with Docker and Blockchain, can have a look at 2 books (in CN):
+
+* [Docker Practice](https://github.com/yeasy/docker_practice)
+* [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
+
 ## Preparation
 
 ### Download Images
