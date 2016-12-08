@@ -1,0 +1,92 @@
+# This compose file will start 4 hyperledger peer nodes + 1 CA node.
+# We add a delay to start the VP nodes after CA node:
+# command: sh -c "sleep 5; peer node start"
+#
+#  vp0: validating node as root
+#  vp1: validating node as peer
+#  vp2: validating node as peer
+#  vp3: validating node as peer
+# https://github.com/yeasy/docker-compose-files
+
+version: '2'
+
+services:
+  membersrvc0:
+    extends:
+      file: membersrvc.yml
+      service: membersrvc
+    hostname: membersrvc
+    environment:
+      - CORE_LOGGING_SERVER=debug
+    ports:
+      - "7054:7054"
+    command: membersrvc  # this repeats the default cmd to make sure
+
+  # vp0 will be used for client interactive operations
+  # If you want to run fabric command on the host, then map 7051:7051 to host
+  # port, or use like `CORE_PEER_ADDRESS=172.17.0.2:7051` to specify peer addr.
+  vp0: # validating node as the root
+    extends:
+      file: peer.yml
+      service: vp_sec
+    hostname: vp0
+    environment:
+      - CORE_PEER_ID=vp0
+      - CORE_SECURITY_ENROLLID=test_vp0
+      - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
+    ports:
+      - "7050:7050"
+      - "7051:7051"
+    links:
+      - membersrvc0
+    command: sh -c "sleep 10; peer node start"
+
+  vp1:
+    extends:
+      file: peer.yml
+      service: vp_sec
+    hostname: vp1
+    environment:
+      - CORE_PEER_ID=vp1
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp1
+      - CORE_SECURITY_ENROLLSECRET=5wgHK9qqYaPy
+    links:
+      - vp0
+      - membersrvc0
+    command: sh -c "sleep 10; peer node start"
+
+  vp2:
+    extends:
+      file: peer.yml
+      service: vp_sec
+    hostname: vp2
+    environment:
+      - CORE_PEER_ID=vp2
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp2
+      - CORE_SECURITY_ENROLLSECRET=vQelbRvja7cJ
+    links:
+      - vp0
+      - membersrvc0
+    command: sh -c "sleep 10; peer node start"
+
+  vp3:
+    extends:
+      file: peer.yml
+      service: vp_sec
+    hostname: vp3
+    environment:
+      - CORE_PEER_ID=vp3
+      - CORE_PEER_DISCOVERY_ROOTNODE=vp0:7051
+      - CORE_SECURITY_ENROLLID=test_vp3
+      - CORE_SECURITY_ENROLLSECRET=9LKqKH5peurL
+    links:
+      - vp0
+      - membersrvc0
+    command: sh -c "sleep 10; peer node start"
+
+#networks:
+#  default:
+#    external:
+#      name: fabric_pbft

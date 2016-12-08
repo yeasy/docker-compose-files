@@ -1,0 +1,13 @@
+# This is the default base file for blockchain-explorer
+# https://github.com/yeasy/docker-compose-files
+
+# Depends on the yeasy/blockchain-explorer image.
+
+version: '2'
+
+services:
+  explorer:
+    image: yeasy/blockchain-explorer:latest
+    restart: unless-stopped
+    expose:
+      - "9090"

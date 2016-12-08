@@ -10,8 +10,11 @@
 version: '2'
 
 services:
-  vp:
+  vp:  # vp node no needing membersrvc
     image: hyperledger/fabric-peer:latest
+   #image: yeasy/hyperledger-fabric-peer:0.6-dp
+   #image: hyperledger/fabric-peer:x86_64-0.6.1-preview
+   #image: ibmblockchain/fabric-peer:x86_64-0.6.1-preview
     restart: unless-stopped
     environment:
       - CORE_PEER_ADDRESSAUTODETECT=true
@@ -40,11 +43,11 @@ services:
     command: peer node start  # this repeats the default cmd to make sure
   # command: sh -c "sleep 5; peer node start"  # peer node should have booting delay with CA
 
-  vp_sec:
+  vp_sec: # vp node needing membersrvc suppot
     extends:
       service: vp
     environment:
       - CORE_SECURITY_ENABLED=true
-      - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-      - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-      - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
+      - CORE_PEER_PKI_ECA_PADDR=membersrvc0:7054
+      - CORE_PEER_PKI_TCA_PADDR=membersrvc0:7054
+      - CORE_PEER_PKI_TLSCA_PADDR=membersrvc0:7054

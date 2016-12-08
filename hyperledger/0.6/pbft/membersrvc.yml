@@ -1,0 +1,19 @@
+# This is the default base file to for fabric membersrvc
+# https://github.com/yeasy/docker-compose-files/
+
+# Depends on the hyperledger/fabric-membersrvc image.
+
+version: '2'
+
+services:
+  membersrvc:
+      image: hyperledger/fabric-membersrvc:latest
+     #image: yeasy/hyperledger-fabric-membersrvc:0.6-dp
+     #image: hyperledger/fabric-membersrvc:x86_64-0.6.1-preview
+     #image: ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview
+      restart: unless-stopped
+      expose:
+        - "7054"
+      volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+        - /var/run/docker.sock:/var/run/docker.sock
+      command: membersrvc  # this repeats the default cmd to make sure

@@ -19,12 +19,10 @@ curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 
-docker pull yeasy/hyperledger-fabric:0.6-dp \
-    && docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-peer:latest \
-    && docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-baseimage:latest \
-    && docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-membersrvc:latest
+docker pull hyperledger/fabric-peer:x86_64-0.6.1-preview \
+  && docker pull hyperledger/fabric-membersrvc:x86_64-0.6.1-preview \
+  && docker tag hyperledger/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage:latest \
 
-cd pbft
-docker-compose up
+cd 0.6/pbft && docker-compose -f 4-peers.yml up
 
 #test: curl HOST:5000/network/peers
