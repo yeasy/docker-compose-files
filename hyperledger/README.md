@@ -1,6 +1,5 @@
 # Hyperledger fabric
 
-
 You can use the following script to install Docker and start a 4-node PBFT cluster in one instruction.
 
 ```sh
