@@ -28,13 +28,13 @@ Pull necessary images of peer, base image and the membersrvc. You can use any on
 We maintained a tested dockerhub image with latest changes.
 
 ```sh
-$ docker pull yeasy/hyperledger-fabric:0.6-dp \
+$ docker pull yeasy/hyperledger-fabric-base:0.6-dp \
   && docker pull yeasy/hyperledger-fabric-peer:0.6-dp \
-  && docker pull yeasy/hyperledger-fabric-base:0.6-dp \
+  && docker pull yeasy/hyperledger-fabric-membersrvc:0.6-dp \
   && docker pull yeasy/blockchain-explorer:latest \
   && docker tag yeasy/hyperledger-fabric-peer:0.6-dp hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-base:0.6-dp hyperledger/fabric-baseimage \
-  && docker tag yeasy/hyperledger-fabric:0.6-dp hyperledger/fabric-membersrvc
+  && docker tag yeasy/hyperledger-fabric-membersrvc:0.6-dp hyperledger/fabric-membersrvc
 ```
 
 #### Option 2: Use community images
@@ -58,7 +58,7 @@ $ docker pull ibmblockchain/fabric-peer:x86_64-0.6.1-preview \
   && docker pull yeasy/blockchain-explorer:latest \
   && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-peer \
   && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage \
-  && docker tag ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/membersrvc
+  && docker tag ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/fabric-membersrvc
 ```
 
 ### Setup network
