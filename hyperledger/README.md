@@ -23,9 +23,32 @@ If you're not familiar with Docker and Blockchain, can have a look at 2 books (i
 
 Pull necessary images of peer, base image and the membersrvc. You can use any one from below options
 
-#### Option 1: Use our images
+#### Option 1: Use community images
+The community [images](https://hub.docker.com/r/hyperledger/) are available at dockerhub, use at your own choice.
 
-We maintained a tested dockerhub image with latest changes.
+```bash
+$ docker pull hyperledger/fabric-peer:x86_64-0.6.1-preview \
+  && docker pull hyperledger/fabric-membersrvc:x86_64-0.6.1-preview \
+  && docker pull yeasy/blockchain-explorer:latest \
+  && docker tag hyperledger/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-peer \
+  && docker tag hyperledger/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage \
+  && docker tag hyperledger/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/fabric-membersrvc
+```
+
+#### Option 2: Use IBM certificated images
+IBM also provides some tested [images](http://www-31.ibm.com/ibm/cn/blockchain/index.html), available at [dockerhub](http://www-31.ibm.com/ibm/cn/blockchain/index.html), use at your own choice.
+
+```bash
+$ docker pull ibmblockchain/fabric-peer:x86_64-0.6.1-preview \
+  && docker pull ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview \
+  && docker pull yeasy/blockchain-explorer:latest \
+  && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-peer \
+  && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage \
+  && docker tag ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/fabric-membersrvc
+```
+#### Option 3: Use my images
+
+Some tested dockerhub image with latest changes, Dockerfile provided.
 
 ```sh
 $ docker pull yeasy/hyperledger-fabric-base:0.6-dp \
@@ -37,29 +60,6 @@ $ docker pull yeasy/hyperledger-fabric-base:0.6-dp \
   && docker tag yeasy/hyperledger-fabric-membersrvc:0.6-dp hyperledger/fabric-membersrvc
 ```
 
-#### Option 2: Use community images
-The community [images](https://hub.docker.com/r/hyperledger/) are also available at dockerhub, use at your own choice.
-
-```bash
-$ docker pull hyperledger/fabric-peer:x86_64-0.6.1-preview \
-  && docker pull hyperledger/fabric-membersrvc:x86_64-0.6.1-preview \
-  && docker pull yeasy/blockchain-explorer:latest \
-  && docker tag hyperledger/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-peer \
-  && docker tag hyperledger/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage \
-  && docker tag hyperledger/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/fabric-membersrvc
-```
-
-#### Option 3: Use IBM certificated images
-IBM also provides some tested [images](http://www-31.ibm.com/ibm/cn/blockchain/index.html), available at [dockerhub](http://www-31.ibm.com/ibm/cn/blockchain/index.html), use at your own choice.
-
-```bash
-$ docker pull ibmblockchain/fabric-peer:x86_64-0.6.1-preview \
-  && docker pull ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview \
-  && docker pull yeasy/blockchain-explorer:latest \
-  && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-peer \
-  && docker tag ibmblockchain/fabric-peer:x86_64-0.6.1-preview hyperledger/fabric-baseimage \
-  && docker tag ibmblockchain/fabric-membersrvc:x86_64-0.6.1-preview hyperledger/fabric-membersrvc
-```
 
 ### Setup network
 
