@@ -1,0 +1,57 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * cop
+# * orderer
+# * peer
+# * sdk for testing
+
+version: '2.0'
+
+services:
+  cop:
+    image: hyperledger/fabric-cop
+    container_name: fabric-cop
+    hostname: cop
+  #  command: /go/src/github.com/hyperledger/fabric-cop/bin/cop server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
+    ports:
+      - "8888:8888"
+    command: cop server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/cop.json -address="0.0.0.0"
+
+  orderer:
+    image: hyperledger/fabric-orderer
+    container_name: fabric-orderer
+    hostname: orderer
+    environment:
+        - ORDERER_GENERAL_LEDGERTYPE=ram
+        - ORDERER_GENERAL_BATCHTIMEOUT=10s
+        - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+        - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+        - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+        - ORDERER_RAMLEDGER_HISTORY_SIZE=100
+        - ORDERER_GENERAL_ORDERERTYPE=solo
+    ports:
+      - "7050:7050"
+    command: orderer
+
+  vp0:
+    extends:
+      file: peer.yml
+      service: peer
+    container_name: fabric-vp0
+    hostname: vp0
+    environment:
+      - CORE_PEER_ID=vp0
+      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
+    links:
+      - cop
+      - orderer
+    ports:
+      - 7051:7051
+    depends_on:
+      - cop
+      - orderer
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric
