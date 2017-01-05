@@ -81,11 +81,9 @@ ca046fc3c0e7        hyperledger/fabric-cop       "cop server start -ca"   5 minu
 After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
 #### Deploy
-Use `docker exec` to open a bash inside container `fabric-vp0`, which will accept our chaincode testing commands of `deploy`, `invoke` and `query`.
+Use `docker exec -it fabric-vp0 bash` to open a bash inside container `fabric-vp0`, which will accept our chaincode testing commands of `deploy`, `invoke` and `query`.
 
-Run `peer chaincode deploy -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'` to deploy a new chaincode of the example02.
-
-This will initialize two accounts: `a` and `b`, with value of `100` and `200`.
+Inside the container, run the following command to deploy a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
 $ docker exec -it fabric-vp0 bash
