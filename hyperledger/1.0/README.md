@@ -19,17 +19,17 @@ If you're not familiar with Docker and Blockchain, can have a look at 2 books (i
 
 ### Download Images
 
-Pull necessary images of peer, orderer, cop, and base image.
+Pull necessary images of peer, orderer, ca, and base image.
 
 ```sh
 $ docker pull yeasy/hyperledger-fabric-base:latest \
   && docker pull yeasy/hyperledger-fabric-peer:latest \
   && docker pull yeasy/hyperledger-fabric-orderer:latest \
-  && docker pull yeasy/hyperledger-fabric-cop:latest \
+  && docker pull yeasy/hyperledger-fabric-ca:latest \
   && docker pull yeasy/blockchain-explorer:latest \
   && docker tag yeasy/hyperledger-fabric-peer hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-orderer hyperledger/fabric-orderer \
-  && docker tag yeasy/hyperledger-fabric-cop hyperledger/fabric-cop \
+  && docker tag yeasy/hyperledger-fabric-ca hyperledger/fabric-ca \
   && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-baseimage \
   && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-ccenv:x86_64-1.0.0-preview
 ```
@@ -64,7 +64,7 @@ Start a MVE fabric cluster.
 $ docker-compose up
 ```
 
-Check the output log that the peer is connected to the cop and orderer successfully.
+Check the output log that the peer is connected to the ca and orderer successfully.
 
 There will be 3 running containers.
 
@@ -73,7 +73,7 @@ $ docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
 069427b04bfa        hyperledger/fabric-peer      "peer node start"        5 minutes ago       Up 5 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-vp0
 d22c541c68f5        hyperledger/fabric-orderer   "orderer"                5 minutes ago       Up 5 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
-ca046fc3c0e7        hyperledger/fabric-cop       "cop server start -ca"   5 minutes ago       Up 5 minutes        0.0.0.0:8888->8888/tcp                            fabric-cop
+ca046fc3c0e7        hyperledger/fabric-ca       "ca server start -ca"   5 minutes ago       Up 5 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
 ```
 
 ### Test chaincode
@@ -125,7 +125,7 @@ CONTAINER ID        IMAGE                                                       
 f03e586db8c5        dev-vp0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7   "/opt/gopath/bin/test"   About a minute ago   Up About a minute                                                     dev-vp0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7
 069427b04bfa        hyperledger/fabric-peer                                                                                                                              "peer node start"        9 minutes ago        Up 9 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-vp0
 d22c541c68f5        hyperledger/fabric-orderer                                                                                                                           "orderer"                9 minutes ago        Up 9 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
-ca046fc3c0e7        hyperledger/fabric-cop                                                                                                                               "cop server start -ca"   9 minutes ago        Up 9 minutes        0.0.0.0:8888->8888/tcp                            fabric-cop
+ca046fc3c0e7        hyperledger/fabric-ca                                                                                                                               "ca server start -ca"   9 minutes ago        Up 9 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
 ```
 
 #### Invoke
