@@ -27,20 +27,21 @@ services:
         - ORDERER_GENERAL_MAXMESSAGECOUNT=10
         - ORDERER_GENERAL_MAXWINDOWSIZE=1000
         - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+        - ORDERER_GENERAL_LISTENPORT=7050
         - ORDERER_RAMLEDGER_HISTORY_SIZE=100
         - ORDERER_GENERAL_ORDERERTYPE=solo
     ports:
       - "7050:7050"
     command: orderer
 
-  vp0:
+  peer0:
     extends:
       file: peer.yml
       service: peer
-    container_name: fabric-vp0
-    hostname: vp0
+    container_name: fabric-peer0
+    hostname: peer0
     environment:
-      - CORE_PEER_ID=vp0
+      - CORE_PEER_ID=peer0
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
     links:
       - ca

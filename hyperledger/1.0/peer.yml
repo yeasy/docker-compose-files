@@ -10,15 +10,17 @@ services:
   peer:
     image: hyperledger/fabric-peer
     environment:
-      #- CORE_PEER_ID=vp0
+      #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=true
-      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_LEVEL=INFO
      #- CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hyperledger_fabric  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_NEXT=true
       - CORE_PEER_ENDORSER_ENABLED=true
       - CORE_PEER_COMMITTER_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true
+      - CORE_PEER_GOSSIP_IGNORESECURITY=true
       #- CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
     expose:
       - "7050"  # Rest

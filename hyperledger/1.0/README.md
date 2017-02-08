@@ -31,7 +31,7 @@ $ docker pull yeasy/hyperledger-fabric-base:latest \
   && docker tag yeasy/hyperledger-fabric-orderer hyperledger/fabric-orderer \
   && docker tag yeasy/hyperledger-fabric-ca hyperledger/fabric-ca \
   && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-baseimage \
-  && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-ccenv:x86_64-1.0.0-preview
+  && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-preview
 ```
 
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.
@@ -71,7 +71,7 @@ There will be 3 running containers.
 ```bash
 $ docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-069427b04bfa        hyperledger/fabric-peer      "peer node start"        5 minutes ago       Up 5 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-vp0
+069427b04bfa        hyperledger/fabric-peer      "peer node start"        5 minutes ago       Up 5 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
 d22c541c68f5        hyperledger/fabric-orderer   "orderer"                5 minutes ago       Up 5 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
 ca046fc3c0e7        hyperledger/fabric-ca       "ca server start -ca"   5 minutes ago       Up 5 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
 ```
@@ -81,16 +81,18 @@ ca046fc3c0e7        hyperledger/fabric-ca       "ca server start -ca"   5 minute
 After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
 #### Deploy
-Use `docker exec -it fabric-vp0 bash` to open a bash inside container `fabric-vp0`, which will accept our chaincode testing commands of `deploy`, `invoke` and `query`.
+Use `docker exec -it fabric-peer0 bash` to open a bash inside container `fabric-peer0`, which will accept our chaincode testing commands of `deploy`, `invoke` and `query`.
 
 Inside the container, run the following command to deploy a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-$ docker exec -it fabric-vp0 bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode deploy -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
+$ docker exec -it fabric-peer0 bash
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode deploy -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
 ```
 
 There should be no error in the return log, and in the peer nodes's output.
+
+Wait several seconds till the deploy is finished.
 
 #### Query
 Inside the container, query the existing value of `a` and `b`.
@@ -98,7 +100,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method is called by invoke a transaction.*
 
 ```bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -108,7 +110,7 @@ The final output may look like the following, with a payload value of `100`.
 ```
 
 ```bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}'
 ```
 
 The final output may look like the following, with a payload value of `200`.
@@ -122,8 +124,8 @@ After query, there will generate a new chaincode container, besides the 3 existi
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE                                                                                                                                                COMMAND                  CREATED              STATUS              PORTS                                             NAMES
-f03e586db8c5        dev-vp0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7   "/opt/gopath/bin/test"   About a minute ago   Up About a minute                                                     dev-vp0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7
-069427b04bfa        hyperledger/fabric-peer                                                                                                                              "peer node start"        9 minutes ago        Up 9 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-vp0
+f03e586db8c5        dev-peer0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7   "/opt/gopath/bin/test"   About a minute ago   Up About a minute                                                     dev-peer0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7
+069427b04bfa        hyperledger/fabric-peer                                                                                                                              "peer node start"        9 minutes ago        Up 9 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
 d22c541c68f5        hyperledger/fabric-orderer                                                                                                                           "orderer"                9 minutes ago        Up 9 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
 ca046fc3c0e7        hyperledger/fabric-ca                                                                                                                               "ca server start -ca"   9 minutes ago        Up 9 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
 ```
@@ -132,7 +134,7 @@ ca046fc3c0e7        hyperledger/fabric-ca                                       
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The final result may look like the following, the response should be `OK`.
@@ -145,12 +147,12 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@vp0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
 ```
 The new value of `b` should be 210.
 
