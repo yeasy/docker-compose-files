@@ -71,9 +71,9 @@ There will be 3 running containers.
 ```bash
 $ docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-069427b04bfa        hyperledger/fabric-peer      "peer node start"        5 minutes ago       Up 5 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-d22c541c68f5        hyperledger/fabric-orderer   "orderer"                5 minutes ago       Up 5 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
-ca046fc3c0e7        hyperledger/fabric-ca       "ca server start -ca"   5 minutes ago       Up 5 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
+2367ccb6463d        hyperledger/fabric-peer      "peer node start"        6 minutes ago      Up 6 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
+02eaf86496ca        hyperledger/fabric-orderer   "orderer"                6 minutes ago      Up 6 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer
+71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   6 minutes ago      Up 6 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
 ```
 
 ### Test chaincode
@@ -88,12 +88,13 @@ Inside the container, run the following command to deploy a new chaincode of the
 ```bash
 $ docker exec -it fabric-peer0 bash
 root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
-
 root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
 ```
 
-There should be no error in the return log, and in the peer nodes's output.
-If the install and instantiate commands ate executed successfully,there will generate a new image and container.
+There should be no error in the return log, and in the peer nodes's output. 
+Wait several seconds till the deploy is finished.
+
+If the `peer chaincode install` and `peer chaincode instantiate` commands are executed successfully, there will generate a new chaincode container, besides the 3 existing one, name like `dev-peer0-test_cc-1.0`.
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
@@ -103,23 +104,13 @@ edc9740c265c        dev-peer0-test_cc-1.0        "/opt/gopath/bin/t..."   34 min
 71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   36 minutes ago      Up 36 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
 ```
 
+And will also generate a new chaincode image, name like `dev-peer0-test_cc-1.0`.
 ```bash
 $ docker images
 REPOSITORY                         TAG                             IMAGE ID            CREATED             SIZE
 dev-peer0-test_cc-1.0              latest                          dd5ea867023e        36 minutes ago      874 MB
-hyperledger/fabric-orderer         latest                          865de867d008        5 hours ago         865 MB
-yeasy/hyperledger-fabric-orderer   latest                          865de867d008        5 hours ago         865 MB
-hyperledger/fabric-ca              latest                          6e19bbd79da9        7 hours ago         810 MB
-yeasy/hyperledger-fabric-ca        latest                          6e19bbd79da9        7 hours ago         810 MB
-hyperledger/fabric-peer            latest                          768a4ad0eac7        7 hours ago         876 MB
-yeasy/hyperledger-fabric-peer      latest                          768a4ad0eac7        7 hours ago         876 MB
-hyperledger/fabric-baseimage       latest                          fd2d21f8bc3c        9 hours ago         834 MB
-hyperledger/fabric-ccenv           x86_64-1.0.0-snapshot-preview   fd2d21f8bc3c        9 hours ago         834 MB
-yeasy/hyperledger-fabric-base      latest                          fd2d21f8bc3c        9 hours ago         834 MB
-yeasy/blockchain-explorer          latest                          a029d2e8f9b4        5 days ago          593 MB
+...
 ```
-
-Wait several seconds till the deploy is finished.
 
 #### Query
 Inside the container, query the existing value of `a` and `b`.
@@ -146,16 +137,6 @@ The final output may look like the following, with a payload value of `200`.
 [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 025 Invoke result: version:1 response:<status:200 message:"OK" payload:"200" > payload:"\n \237K\000W\360\374\207\210\201PF\220\222 8-\220\223\257\373\\\272\231c\3622\306\332\356\246\346\300\022(\n&\002\007test_cc\001\001b\004\001\001\001\001\000\004lccc\001\007test_cc\004\001\001\001\001\000" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\372\223\021\305\032\351L\362`?\\\274\233\334\332\374\250,H\"vq~\226^\2707W\300\207D8\002 \034\031/$&\360<iI\372\323\017\352QTwH\263\217\003E\312\306\020\036\225\026\0103^a\307" >
 ```
 
-After query, there will generate a new chaincode container, besides the 3 existing one.
-
-```bash
-$ docker ps
-CONTAINER ID        IMAGE                                                                                                                                                COMMAND                  CREATED              STATUS              PORTS                                             NAMES
-f03e586db8c5        dev-peer0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7   "/opt/gopath/bin/test"   About a minute ago   Up About a minute                                                     dev-peer0-test_cc-0-48baa00e355e6db1648cff44e28f1dbf322523a99ffe283fd99a00348466eb78075559488e372409bb691aab29cfa894645c9c2737781367012e0c816eb227b7
-069427b04bfa        hyperledger/fabric-peer                                                                                                                              "peer node start"        9 minutes ago        Up 9 minutes        7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-d22c541c68f5        hyperledger/fabric-orderer                                                                                                                           "orderer"                9 minutes ago        Up 9 minutes        0.0.0.0:7050->7050/tcp                            fabric-orderer
-ca046fc3c0e7        hyperledger/fabric-ca                                                                                                                               "ca server start -ca"   9 minutes ago        Up 9 minutes        0.0.0.0:8888->8888/tcp                            fabric-ca
-```
 
 #### Invoke
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
