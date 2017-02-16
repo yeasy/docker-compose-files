@@ -22,16 +22,16 @@ If you're not familiar with Docker and Blockchain, can have a look at 2 books (i
 Pull necessary images of peer, orderer, ca, and base image.
 
 ```sh
-$ docker pull yeasy/hyperledger-fabric-base:latest \
-  && docker pull yeasy/hyperledger-fabric-peer:latest \
-  && docker pull yeasy/hyperledger-fabric-orderer:latest \
-  && docker pull yeasy/hyperledger-fabric-ca:latest \
+$ docker pull yeasy/hyperledger-fabric-base:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-peer:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-orderer:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-ca:0.8.1 \
   && docker pull yeasy/blockchain-explorer:latest \
-  && docker tag yeasy/hyperledger-fabric-peer hyperledger/fabric-peer \
-  && docker tag yeasy/hyperledger-fabric-orderer hyperledger/fabric-orderer \
-  && docker tag yeasy/hyperledger-fabric-ca hyperledger/fabric-ca \
-  && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-baseimage \
-  && docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-preview
+  && docker tag yeasy/hyperledger-fabric-peer:0.8.1 hyperledger/fabric-peer \
+  && docker tag yeasy/hyperledger-fabric-orderer:0.8.1 hyperledger/fabric-orderer \
+  && docker tag yeasy/hyperledger-fabric-ca:0.8.1 hyperledger/fabric-ca \
+  && docker tag yeasy/hyperledger-fabric-base:0.8.1 hyperledger/fabric-baseimage \
+  && docker tag yeasy/hyperledger-fabric-base:0.8.1 hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-preview
 ```
 
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.
@@ -81,16 +81,43 @@ ca046fc3c0e7        hyperledger/fabric-ca       "ca server start -ca"   5 minute
 After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
 #### Deploy
-Use `docker exec -it fabric-peer0 bash` to open a bash inside container `fabric-peer0`, which will accept our chaincode testing commands of `deploy`, `invoke` and `query`.
+Use `docker exec -it fabric-peer0 bash` to open a bash inside container `fabric-peer0`, which will accept our chaincode testing commands of `install/instantiate`, `invoke` and `query`.
 
 Inside the container, run the following command to deploy a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
 $ docker exec -it fabric-peer0 bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode deploy -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
+
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
 ```
 
 There should be no error in the return log, and in the peer nodes's output.
+If the install and instantiate commands ate executed successfully,there will generate a new image and container.
+```bash
+$ docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
+edc9740c265c        dev-peer0-test_cc-1.0        "/opt/gopath/bin/t..."   34 minutes ago      Up 34 minutes                                                         dev-peer0-test_cc-1.0
+2367ccb6463d        hyperledger/fabric-peer      "peer node start"        36 minutes ago      Up 36 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
+02eaf86496ca        hyperledger/fabric-orderer   "orderer"                36 minutes ago      Up 36 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer
+71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   36 minutes ago      Up 36 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
+```
+
+```bash
+$ docker images
+REPOSITORY                         TAG                             IMAGE ID            CREATED             SIZE
+dev-peer0-test_cc-1.0              latest                          dd5ea867023e        36 minutes ago      874 MB
+hyperledger/fabric-orderer         latest                          865de867d008        5 hours ago         865 MB
+yeasy/hyperledger-fabric-orderer   latest                          865de867d008        5 hours ago         865 MB
+hyperledger/fabric-ca              latest                          6e19bbd79da9        7 hours ago         810 MB
+yeasy/hyperledger-fabric-ca        latest                          6e19bbd79da9        7 hours ago         810 MB
+hyperledger/fabric-peer            latest                          768a4ad0eac7        7 hours ago         876 MB
+yeasy/hyperledger-fabric-peer      latest                          768a4ad0eac7        7 hours ago         876 MB
+hyperledger/fabric-baseimage       latest                          fd2d21f8bc3c        9 hours ago         834 MB
+hyperledger/fabric-ccenv           x86_64-1.0.0-snapshot-preview   fd2d21f8bc3c        9 hours ago         834 MB
+yeasy/hyperledger-fabric-base      latest                          fd2d21f8bc3c        9 hours ago         834 MB
+yeasy/blockchain-explorer          latest                          a029d2e8f9b4        5 days ago          593 MB
+```
 
 Wait several seconds till the deploy is finished.
 
