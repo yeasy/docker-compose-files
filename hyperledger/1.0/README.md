@@ -62,7 +62,7 @@ $ docker network create fabric_pbft
 
 ### Fabric Bootup
 
-Start a MVE fabric cluster.
+Start a MVE fabric cluster, with the peer joined the default channel `testchainid`.
 
 ```sh
 $ docker-compose up
