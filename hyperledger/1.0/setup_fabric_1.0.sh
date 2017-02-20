@@ -19,6 +19,7 @@ curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 
+<<<<<<< HEAD
 ARCH=x86_64
 BASE_VERSION=1.0.0-preview
 PROJECT_VERSION=1.0.0-preview
@@ -33,5 +34,17 @@ docker pull yeasy/hyperledger-fabric-base:0.8.2 \
   && docker tag yeasy/hyperledger-fabric-base:0.8.2 hyperledger/fabric-baseimage \
   && docker tag yeasy/hyperledger-fabric-base:0.8.2 hyperledger/fabric-ccenv:$ARCH-$BASE_VERSION \
   && docker tag yeasy/hyperledger-fabric-base:0.8.2 hyperledger/fabric-bareos:$ARCH-$BASE_VERSION
+=======
+docker pull yeasy/hyperledger-fabric-base:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-peer:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-orderer:0.8.1 \
+  && docker pull yeasy/hyperledger-fabric-ca:0.8.1 \
+  && docker pull yeasy/blockchain-explorer:latest \
+  && docker tag yeasy/hyperledger-fabric-peer:0.8.1 hyperledger/fabric-peer \
+  && docker tag yeasy/hyperledger-fabric-orderer:0.8.1 hyperledger/fabric-orderer \
+  && docker tag yeasy/hyperledger-fabric-ca:0.8.1 hyperledger/fabric-ca \
+  && docker tag yeasy/hyperledger-fabric-base:0.8.1 hyperledger/fabric-baseimage \
+  && docker tag yeasy/hyperledger-fabric-base:0.8.1 hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-preview
+>>>>>>> 33251da6fcd6a1c7eafcde5a154d00e24c24d515
 
 docker-compose up
