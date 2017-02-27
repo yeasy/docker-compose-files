@@ -29,7 +29,7 @@ services:
         - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
         - ORDERER_GENERAL_LISTENPORT=7050
         - ORDERER_RAMLEDGER_HISTORY_SIZE=100
-        - ORDERER_GENERAL_ORDERERTYPE=solo
+        - CONFIGTX_ORDERER_ORDERERTYPE=solo
     ports:
       - "7050:7050"
     command: orderer
