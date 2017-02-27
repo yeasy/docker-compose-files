@@ -25,7 +25,7 @@ Pull necessary images of peer, orderer, ca, and base image.
 $ ARCH=x86_64
 $ BASE_VERSION=1.0.0-preview
 $ PROJECT_VERSION=1.0.0-preview
-$ IMG_VERSION=0.8.3
+$ IMG_VERSION=0.8.4
 $ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
