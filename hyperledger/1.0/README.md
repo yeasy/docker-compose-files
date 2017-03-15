@@ -25,7 +25,7 @@ Pull necessary images of peer, orderer, ca, and base image.
 $ ARCH=x86_64
 $ BASE_VERSION=1.0.0-preview
 $ PROJECT_VERSION=1.0.0-preview
-$ IMG_VERSION=0.8.5
+$ IMG_VERSION=0.8.6
 $ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
@@ -63,7 +63,7 @@ $ docker network create fabric_pbft
 
 ### Fabric Bootup
 
-Start a MVE fabric cluster, with the peer joined the default channel `testchainid`.
+Start a MVE fabric cluster. with the peer joined the default channel `testchainid`.
 
 ```sh
 $ docker-compose up
@@ -81,7 +81,7 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   6 minutes ago      Up 6 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
 ```
 
-### Test chaincode
+### Test chaincode with default channel
 
 After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
@@ -92,8 +92,8 @@ Inside the container, run the following command to deploy a new chaincode of the
 
 ```bash
 $ docker exec -it fabric-peer0 bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
 ```
 
 There should be no error in the return log, and in the peer nodes's output. 
@@ -120,26 +120,30 @@ dev-peer0-test_cc-1.0              latest                          dd5ea867023e 
 #### Query
 Inside the container, query the existing value of `a` and `b`.
 
-*Notice that the query method is called by invoke a transaction.*
+*Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer:7050
 ```
 
 The final output may look like the following, with a payload value of `100`.
 
 ```bash
-[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 025 Invoke result: version:1 response:<status:200 message:"OK" payload:"100" > payload:"\n M\357\236W\346\363W\320\\#[6H\246s\273\2270<3\253\340i\311i\371i\341\0143\301?\022(\n&\002\004lccc\001\007test_cc\004\001\001\001\001\000\007test_cc\001\001a\004\001\001\001\001\000" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002 +\223\213\026\025\006|H\300\205\362\345\251\373a\241\241\373\360H\032'&\223#\035W\354\032\0321\214\002!\000\351y\027\220\351\317\342\235\255\266zqfO\305\207\346\314\256\005L\025\244A\361-\241>~h\307\"" >
+Query Result: 100
+[main] main -> INFO 001 Exiting.....
 ```
 
+Query the value of `b`
+
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
 
 ```bash
-[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 025 Invoke result: version:1 response:<status:200 message:"OK" payload:"200" > payload:"\n \237K\000W\360\374\207\210\201PF\220\222 8-\220\223\257\373\\\272\231c\3622\306\332\356\246\346\300\022(\n&\002\007test_cc\001\001b\004\001\001\001\001\000\004lccc\001\007test_cc\004\001\001\001\001\000" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\372\223\021\305\032\351L\362`?\\\274\233\334\332\374\250,H\"vq~\226^\2707W\300\207D8\002 \034\031/$&\360<iI\372\323\017\352QTwH\263\217\003E\312\306\020\036\225\026\0103^a\307" >
+Query Result: 200
+[main] main -> INFO 001 Exiting.....
 ```
 
 
@@ -147,27 +151,150 @@ The final output may look like the following, with a payload value of `200`.
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer:7050
 ```
 
 The final result may look like the following, the response should be `OK`.
 
 ```bash
-[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 025 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n I\225\305\002\232&\241N\031wQ\002\304Q\332H\247\330f\271\216Pp\311\254\314\226\255\277\031\325H\022<\n:\002\004lccc\001\007test_cc\004\001\001\001\001\000\007test_cc\002\001a\004\001\001\001\001\001b\004\001\001\001\001\002\001b\000\003210\001a\000\00290" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002 h\260\3062\022\315\016\345\032C\002W\361\366\313\366\225\002\300\250\017\0047\314\361P\270\261\330\226\371\006\002!\000\376\331\222JI\026\026\347\010Y73\334}\321\311\236\265\325'\"\317\311:l\\\025\240\334\2073\202" >
+[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n \215\263\337\322u\323?\242t$s\035l\270Ta\270\270+l6\322X\346\365k\020\215Phy\260\022C\n<\002\004lccc\001\007test_cc\004\001\001\001\001\000\000\007test_cc\002\001a\004\001\001\001\001\001b\004\001\001\001\001\002\001a\000\00290\001b\000\003210\000\032\003\010\310\001" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\271\232\230\261\336\352ow\021V3\224\252\217\362vzM'\213\376@2\306/\201=\213\023\244\310%\002 \014\277\362|\223\342\277Pk5(\004\331\014\021\307\273\351/]:\020\232\013d\261\035+\266\265\305<" > 
+[main] main -> INFO 002 Exiting.....
 ```
 
 #### Query
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer:7050
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","a"]}'
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer:7050
 ```
 The new value of `b` should be 210.
+
+### Test chaincode with new channel (Optional)
+
+#### Create new channel
+
+Peers join channel `testchainid` by default. But if you want to use new channel, run the following command.
+Create new channel named testchannel.
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# peer channel create -c testchannel -o orderer:7050
+```
+This will return a genesis block - testchannel.block.
+
+#### Join the channel
+
+Join peer0 to testchannel.
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer channel join -b testchannel.block -o orderer:7050
+```
+
+The final result may look like following.
+
+```bash
+Join Result: 
+[main] main -> INFO 001 Exiting.....
+```
+
+#### Deploy
+
+First install a chaincode named test_cc to peer0 on channel testchannel:
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode install -C testchannel -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0 -o orderer:7050
+```
+
+The result may look like following.
+
+```bash
+[golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
+[container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
+[main] main -> INFO 003 Exiting.....
+```
+
+Second instantiate chaincode test_cc:
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode instantiate -C testchannel -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
+```
+
+The result may look like following:
+
+```bash
+[chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+[chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+[main] main -> INFO 003 Exiting.....
+```
+
+#### Query
+
+Query the existing value of `a` and `b`.
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","a"]}' -o orderer:7050
+```
+
+The result may look like following, with a payload value of `100`.
+```bash
+Query Result: 100
+[main] main -> INFO 001 Exiting.....
+```
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","b"]}' -o orderer:7050
+```
+The result may look like following, with a payload value of `200`.
+```bash
+Query Result: 200
+[main] main -> INFO 001 Exiting.....
+```
+
+
+#### Invoke
+
+Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode invoke -C testchannel -n test_cc -v 1.0 -c '{"Args":["invoke","a","b","10"]}' -o orderer:7050
+```
+
+The result may look like following:
+
+```bash
+[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n L1sx\330\026\226\273\246\014\300\315\303\25501ED!\177\005!\003\312!\033\312\334\240\203y\024\022C\n<\002\004lccc\001\007test_cc\004\001\001\001\001\000\000\007test_cc\002\001a\004\001\001\001\001\001b\004\001\001\001\001\002\001a\000\00290\001b\000\003210\000\032\003\010\310\001" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\306/\2643h\203\326\020x*g\246:E\270F\240<OCA\260\371\346\021\233\204\321Wv\tL\002 cu\241\034\341\316\374O`\332\224^j\354\233y\215\262|\306\303\353,'\332\230\214]R\327\343\024" > 
+[main] main -> INFO 002 Exiting.....
+```
+
+#### Query
+
+And then query the value of `a` and `b`.
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","a"]}' -o orderer:7050
+```
+
+```bash
+Query Result: 90
+[main] main -> INFO 001 Exiting.....
+```
+The value of `a` should be `90`.
+
+```bash
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","b"]}' -o orderer:7050
+```
+
+The value of `b` should be `210`
+
+```bash
+Query Result: 210
+[main] main -> INFO 001 Exiting.....
+```
+
+About this part of detailed context, [referenve linking](http://hyperledger-fabric.readthedocs.io/en/latest/asset_setup.html#asset-transfer-with-cli)
 
 ## Acknowledgement
 * [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
