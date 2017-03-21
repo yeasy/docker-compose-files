@@ -15,7 +15,7 @@ services:
   #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
     ports:
       - "8888:8888"
-    command: fabric-ca-server start --ca.certfile testdata/ec.pem --ca.keyfile testdata/ec-key.pem -c testdata/testconfig.json
+    command: fabric-ca-server start  -c testdata/testconfig.json
 
   orderer:
     image: hyperledger/fabric-orderer
