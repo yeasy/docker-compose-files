@@ -1,0 +1,106 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * ca
+# * orderer
+# * peer
+# * sdk for testing
+
+version: '2.0'
+
+services:
+  ca:
+    image: hyperledger/fabric-ca
+    container_name: fabric-ca
+    hostname: ca
+  #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
+    ports:
+      - "8888:8888"
+    command: fabric-ca-server start  -c testdata/testconfig.json
+
+  orderer0:  # There  can be multiple orderers
+    image: hyperledger/fabric-orderer
+    container_name: fabric-orderer0
+    hostname: orderer0
+    environment:
+        - ORDERER_GENERAL_LEDGERTYPE=ram
+        - ORDERER_GENERAL_BATCHTIMEOUT=10s
+        - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+        - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+        - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+        - ORDERER_GENERAL_LISTENPORT=7050
+        - ORDERER_RAMLEDGER_HISTORY_SIZE=100
+        - ORDERER_GENERAL_GENESISMETHOD=file
+        - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.block
+        - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+        - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/localMspConfig
+        - ORDERER_GENERAL_TLS_ENABLED=false # to enable TLS, make this true
+        - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/localMspConfig/keystore/ordererSigner.pem
+        - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/localMspConfig/signcerts/orderer0Signer.pem
+        - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/localMspConfig/cacerts/ordererOrg0.pem]
+    ports:
+      - "7050:7050"
+    volumes:
+    - ./e2e_cli/crypto/orderer:/var/hyperledger/orderer
+    command: orderer
+
+  peer0:
+    extends:
+      file: peer.yml
+      service: peer
+    container_name: fabric-peer0
+    hostname: peer0
+    environment:
+      - CORE_PEER_ID=peer0
+      - CORE_PEER_ADDRESS=peer0:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0:7051
+      - CORE_PEER_GOSSIP_ORGLEADER=true
+      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer0:7050
+      - CORE_PEER_LOCALMSPID=Org0MSP
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/signcerts/peer0Signer.pem
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/msp/sampleconfig/keystore/peer0Signer.pem
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/cacerts/peerOrg0.pem
+    links:
+      - orderer0
+    ports:
+      - 7051:7051
+      - 7053:7053
+    volumes:
+        - ./e2e_cli/crypto/peer/peer0/localMspConfig:/etc/hyperledger/fabric/msp/sampleconfig
+    depends_on:
+      - orderer0
+    command: peer node start --peer-defaultchain=false
+
+  cli:
+    extends:
+      file: peer.yml
+      service: peer
+    container_name: fabric-cli
+    hostname: cli
+    environment:
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0:7051
+      - CORE_PEER_LOCALMSPID=Org0MSP
+      #- CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
+      - CORE_PEER_TLS_ENABLED=false  # to enable TLS, change to true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig/signcerts/peer0Signer.pem
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig/keystore/peer0Signer.pem
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig/cacerts/peerOrg0.pem
+      # - CORE_PEER_TLS_SERVERHOSTOVERRIDE=peer0
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig
+    links:
+      - peer0
+      - orderer0
+    volumes:
+        #- ./e2e_cli/examples/:/opt/gopath/src/github.com/hyperledger/fabric/examples/
+        #- ../chaincode/go/:/opt/gopath/src/github.com/hyperledger/fabric/examples/chaincode/go
+        - ./e2e_cli/crypto:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        #- ./e2e_cli/scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+    depends_on:
+      - peer0
+      - orderer0
+    command: bash -c 'while true; do sleep 2017; done'
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric

@@ -5,6 +5,8 @@
 # * peer
 # * sdk for testing
 
+# all peers will join the default testchainid channel after bootup
+
 version: '2.0'
 
 services:
@@ -17,10 +19,10 @@ services:
       - "8888:8888"
     command: fabric-ca-server start  -c testdata/testconfig.json
 
-  orderer:
+  orderer0:  # There  can be multiple orderers
     image: hyperledger/fabric-orderer
-    container_name: fabric-orderer
-    hostname: orderer
+    container_name: fabric-orderer0
+    hostname: orderer0
     environment:
         - ORDERER_GENERAL_LEDGERTYPE=ram
         - ORDERER_GENERAL_BATCHTIMEOUT=10s
@@ -42,15 +44,32 @@ services:
     hostname: peer0
     environment:
       - CORE_PEER_ID=peer0
+      - CORE_PEER_GOSSIP_ORGLEADER=true
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
     links:
-      - ca
-      - orderer
+      - orderer0
     ports:
       - 7051:7051
     depends_on:
-      - ca
-      - orderer
+      - orderer0
+
+  cli:
+    extends:
+      file: peer.yml
+      service: peer
+    container_name: fabric-cli
+    hostname: cli
+    environment:
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0:7051
+      #- CORE_PEER_LOCALMSPID=Org0MSP
+      #- CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
+    links:
+      - peer0
+      - orderer0
+    depends_on:
+      - peer0
+      - orderer0
 
 #networks:
 #  default:

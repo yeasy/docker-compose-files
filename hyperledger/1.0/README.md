@@ -1,21 +1,25 @@
 # Hyperledger fabric 1.0
 
-If you're using Ubuntu, you can use the following script to install Docker and start a fabric 1.0 Minimum Viable Environment (MVE) in one instruction.
-
-```sh
-$ bash setup_fabric_1.0.sh
-```
-
-tldr :)
-
-If you want to explore more, then can follow these steps.
+Here we give steps on how to setup a fabric 1.0 cluster, and then use it to run chaincode tests.
 
 If you're not familiar with Docker and Blockchain, can have a look at 2 books (in CN):
 
 * [Docker Practice](https://github.com/yeasy/docker_practice)
 * [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
 
-## Preparation
+## Manual Setup
+
+tldr :)
+
+With Ubuntu/Debian, you can simple use the following script to setup the environment in one instruction.
+
+```sh
+$ bash setup_fabric_1.0.sh
+```
+
+
+If you want to setup the environment manually, then can follow the below steps in this section.
+
 
 ### Download Images
 
@@ -42,28 +46,9 @@ $ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.
 
 
-### Setup network
+### Bootup Fabric 1.0
 
-*Just ignore if you are not familiar with Docker networking configurations.*
-
-The template can support using separate network for the chain.
-
-By default, the feature is disabled to use the shared Docker network.
-
-If you want to enable the feature, just un-comment the bottom networks section in the compose file and the `CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE` line in the `peer-[noops,pbft].yml` file.
-
-Then, create the following two Docker networks.
-
-```sh
-$ docker network create fabric_noops
-$ docker network create fabric_pbft
-```
-
-## Usage
-
-### Fabric Bootup
-
-Start a MVE fabric cluster. with the peer joined the default channel `testchainid`.
+Start a MVE fabric cluster. All the peers joined the default channel `testchainid`.
 
 ```sh
 $ docker-compose up
@@ -81,7 +66,11 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   6 minutes ago      Up 6 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
 ```
 
+## Usage
+
 ### Test chaincode with default channel
+
+By default, all the peer will join the system chain of `testchainid`.
 
 After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
 
@@ -92,8 +81,8 @@ Inside the container, run the following command to deploy a new chaincode of the
 
 ```bash
 $ docker exec -it fabric-peer0 bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
 ```
 
 There should be no error in the return log, and in the peer nodes's output. 
@@ -123,7 +112,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -136,7 +125,7 @@ Query Result: 100
 Query the value of `b`
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
@@ -151,7 +140,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
 ```
 
 The final result may look like the following, the response should be `OK`.
@@ -165,69 +154,165 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer:7050
+root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 The new value of `b` should be 210.
 
-### Test chaincode with new channel (Optional)
+### Test chaincode with new created channel (Optional)
+
+Start the Docker Compose project with `docker-compose-new-channel.yml`.
+
+```bash
+$ docker-compose -f docker-compose-new-channel.yml up
+```
+
+#### Create genesis block and configuration transaction
+
+**Skip this step**, as we already put the `orderer.block` and `channel.tx` under `e2e_cli/crypto/orderer/`.
+
+This explains the creation of `orderer.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
+
+##### Create the genesis block
+Enter the `fabric-cli` container, and run the following cmd to use the e2e test's configtx.yaml.
+
+```bash
+$ docker exec -it fabric-cli bash
+root@cli:/go/src/github.com/hyperledger/fabric# cp examples/e2e_cli/configtx.yaml /etc/hyperledger/fabric
+```
+
+Generate the genesis block.
+
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# configtxgen -profile TwoOrgs -outputBlock orderer.block
+Loading configuration
+Looking for configtx.yaml in: /etc/hyperledger/fabric
+Found configtx.yaml there
+Checking for MSPDir at: .
+Checking for MSPDir at: .
+Checking for MSPDir at: .
+Generating genesis block
+Writing genesis block
+root@cli:/go/src/github.com/hyperledger/fabric# ls orderer.block
+orderer.block
+```
+
+##### Create the configuration tx
+Create channel configuration transaction for the to-be-created `newchannel`.
+
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="newchannel"
+root@cli:/go/src/github.com/hyperledger/fabric# configtxgen -profile TwoOrgs -outputCreateChannelTx channel.tx -channelID ${CHANNEL_NAME}
+Loading configuration
+Looking for configtx.yaml in: /etc/hyperledger/fabric
+Found configtx.yaml there
+Checking for MSPDir at: .
+Checking for MSPDir at: .
+Checking for MSPDir at: .
+Generating new channel configtx
+Creating no-op MSP instance
+Obtaining default signing identity
+Creating no-op signing identity instance
+Serialinzing identity
+signing message
+signing message
+Writing new channel tx
+root@cli:/go/src/github.com/hyperledger/fabric# ls channel.tx
+channel.tx
+```
 
 #### Create new channel
 
-Peers join channel `testchainid` by default. But if you want to use new channel, run the following command.
-Create new channel named testchannel.
+Create a new channel named `newchannel` with the existing `channel.tx` file.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer channel create -c testchannel -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="newchannel"
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig
+root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_LOCALMSPID="OrdererMSP"
+root@peer0:/go/src/github.com/hyperledger/fabric# peer channel create -c ${CHANNEL_NAME} -o orderer0:7050 -f peer/crypto/orderer/channel.tx
 ```
-This will return a genesis block - testchannel.block.
+The cmd will return lots of info, which is the content of the configuration block.
+
+And a block with the same name of the channel will be created locally.
+
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# ls newchannel.block
+newchannel.block
+```
+
+Check the log output of `fabric-orderer0`, should find something like
+
+```bash
+fabric-orderer0 | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
+```
 
 #### Join the channel
 
-Join peer0 to testchannel.
-```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer channel join -b testchannel.block -o orderer:7050
-```
+Use the following command to join `peer0` the channel
 
-The final result may look like following.
+Notice we will use `peer0`'s configuration here.
 
 ```bash
-Join Result: 
-[main] main -> INFO 001 Exiting.....
-```
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer channel join -b ${CHANNEL_NAME}.block -o orderer0:7050
 
-#### Deploy
+Peer joined the channel!
+``` 
 
-First install a chaincode named test_cc to peer0 on channel testchannel:
+Will receive the `Peer joined the channel!` response if succeed.
+
+#### Install&Instantiate
+
+First install a chaincode named `test_cc` to `peer0`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode install -C testchannel -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0 -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode install -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0 -o orderer0:7050
 ```
 
 The result may look like following.
 
 ```bash
-[golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
-[container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
-[main] main -> INFO 003 Exiting.....
+UTC [golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
+UTC [container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
+UTC [main] main -> INFO 003 Exiting.....
 ```
 
-Second instantiate chaincode test_cc:
+Then instantiate the chaincode test_cc on channel `newchannel`:
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode instantiate -C testchannel -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode instantiate -C ${CHANNEL_NAME} -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
 ```
 
 The result may look like following:
 
 ```bash
-[chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-[chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-[main] main -> INFO 003 Exiting.....
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+UTC [main] main -> INFO 003 Exiting.....
+```
+
+Now in the system, there will be a new `dev-peer0-test_cc-1.0` container.
+
+```bash
+$ docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                               NAMES
+c0abb4b9206b        dev-peer0-test_cc-1.0        "chaincode -peer.a..."   25 seconds ago      Up 25 seconds                                                                                           dev-peer0-test_cc-1.0
+c1cf099e1f76        hyperledger/fabric-peer      "bash -c 'while tr..."   40 minutes ago      Up 40 minutes       7050-7059/tcp                                                                       fabric-cli
+0b67c42fd5cc        hyperledger/fabric-peer      "peer node start -..."   40 minutes ago      Up 40 minutes       7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   fabric-peer0
+80b5fb85636e        hyperledger/fabric-orderer   "orderer"                40 minutes ago      Up 40 minutes       0.0.0.0:7050->7050/tcp                                                              fabric-orderer0
+f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 minutes ago      Up 40 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
 #### Query
@@ -235,7 +320,10 @@ The result may look like following:
 Query the existing value of `a` and `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","a"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `100`.
@@ -245,9 +333,14 @@ Query Result: 100
 ```
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","b"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","b"]}'
 ```
+
 The result may look like following, with a payload value of `200`.
+
 ```bash
 Query Result: 200
 [main] main -> INFO 001 Exiting.....
@@ -259,22 +352,29 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode invoke -C testchannel -n test_cc -v 1.0 -c '{"Args":["invoke","a","b","10"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode invoke -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The result may look like following:
 
 ```bash
-[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n L1sx\330\026\226\273\246\014\300\315\303\25501ED!\177\005!\003\312!\033\312\334\240\203y\024\022C\n<\002\004lccc\001\007test_cc\004\001\001\001\001\000\000\007test_cc\002\001a\004\001\001\001\001\001b\004\001\001\001\001\002\001a\000\00290\001b\000\003210\000\032\003\010\310\001" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\306/\2643h\203\326\020x*g\246:E\270F\240<OCA\260\371\346\021\233\204\321Wv\tL\002 cu\241\034\341\316\374O`\332\224^j\354\233y\215\262|\306\303\353,'\332\230\214]R\327\343\024" > 
-[main] main -> INFO 002 Exiting.....
+UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n qm\251\207\312\277\256\261b\317:\300\000\014\203`\005\304\254\304,$a\360\327\010\342\342/y]\323\022X\nQ\022\031\n\004lccc\022\021\n\017\n\007test_cc\022\004\010\001\020\001\0224\n\007test_cc\022)\n\t\n\001a\022\004\010\001\020\001\n\t\n\001b\022\004\010\001\020\001\032\007\n\001a\032\00290\032\010\n\001b\032\003210\032\003\010\310\001" endorsement:<endorser:"\n\007Org0MSP\022\210\004-----BEGIN -----\nMIIBYzCCAQmgAwIBAwICA+gwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwIcGVlck9y\nZzAwHhcNMTcwMjIwMTkwNjExWhcNMTgwMjIwMTkwNjExWjAQMQ4wDAYDVQQDDAVw\nZWVyMDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEF6dfqjqfbIgZuOR+dgoJMl\n/FaUlGI70A/ixmVUY83Yp4YtV3FDBSOPiO5O+s8pHnpbwB1LqhrxAx1Plr0M/UWj\nUDBOMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFBY2bc84vLEwkX1fSAER2p48jJXw\nMB8GA1UdIwQYMBaAFFQzuQR1RZP/Qn/BNDtGSa8n4eN/MAoGCCqGSM49BAMCA0gA\nMEUCIQDeDZ71L+OTYcbbqiDNRf0L8OExO59mH1O3xpdwMAM0MgIgXySG4sv9yV31\nWcWRFfRFyu7o3T72kqiLZ1nkDuJ8jWI=\n-----END -----\n" signature:"0E\002!\000\220M'\245\230do\310>\277\251j\021$\250\237H\353\377\331:\230\362n\216\224~\033\240\006\367%\002 \014\240|h\346\250\356\372\353\301;#\372\027\276!\252F\334/\221\210\254\215\363\235\341v\217\236\274<" >
+2017-04-06 09:47:15.993 UTC [main] main -> INFO 002 Exiting.....
 ```
 
 #### Query
 
 And then query the value of `a` and `b`.
 
+
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","a"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 ```bash
@@ -283,8 +383,12 @@ Query Result: 90
 ```
 The value of `a` should be `90`.
 
+
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_ADDRESS=peer0:7051 peer chaincode query -C testchannel -n test_cc -v 1.0 -c '{"Args":["query","b"]}' -o orderer:7050
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
+CORE_PEER_LOCALMSPID="Org0MSP" \
+CORE_PEER_ADDRESS=peer0:7051 \
+peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","b"]}'
 ```
 
 The value of `b` should be `210`
@@ -294,7 +398,7 @@ Query Result: 210
 [main] main -> INFO 001 Exiting.....
 ```
 
-About this part of detailed context, [referenve linking](http://hyperledger-fabric.readthedocs.io/en/latest/asset_setup.html#asset-transfer-with-cli)
 
 ## Acknowledgement
 * [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
+* [Hyperledger Fabric Getting Started](http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html).
