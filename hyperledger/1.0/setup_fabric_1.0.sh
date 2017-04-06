@@ -22,7 +22,7 @@ docker-compose --version
 ARCH=x86_64
 BASE_VERSION=1.0.0-preview
 PROJECT_VERSION=1.0.0-preview
-IMG_VERSION=0.8.7
+IMG_VERSION=0.8.8
 docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
