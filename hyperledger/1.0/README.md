@@ -171,6 +171,17 @@ Start the Docker Compose project with `docker-compose-new-channel.yml`.
 $ docker-compose -f docker-compose-new-channel.yml up
 ```
 
+There will be several containers running successfully.
+
+```bash
+$ docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                               NAMES
+c1cf099e1f76        hyperledger/fabric-peer      "bash -c 'while tr..."   40 minutes ago      Up 40 minutes       7050-7059/tcp                                                                       fabric-cli
+0b67c42fd5cc        hyperledger/fabric-peer      "peer node start -..."   40 minutes ago      Up 40 minutes       7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   fabric-peer0
+80b5fb85636e        hyperledger/fabric-orderer   "orderer"                40 minutes ago      Up 40 minutes       0.0.0.0:7050->7050/tcp                                                              fabric-orderer0
+f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 minutes ago      Up 40 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
+```
+
 #### Create genesis block and configuration transaction
 
 **Skip this step**, as we already put the `orderer.block` and `channel.tx` under `e2e_cli/crypto/orderer/`.
