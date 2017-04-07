@@ -12,7 +12,7 @@ services:
     environment:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=true
-      - CORE_LOGGING_LEVEL=INFO
+      - CORE_LOGGING_LEVEL=DEBUG
      #- CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hyperledger_fabric  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_NEXT=true

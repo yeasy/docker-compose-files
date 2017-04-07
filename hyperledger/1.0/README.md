@@ -38,7 +38,6 @@ $ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-orderer:$IMG_VERSION hyperledger/fabric-orderer \
   && docker tag yeasy/hyperledger-fabric-ca:$IMG_VERSION hyperledger/fabric-ca \
-  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseimage \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$BASE_VERSION \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseos:$ARCH-$BASE_VERSION
 ```
@@ -186,7 +185,7 @@ f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 min
 
 **Skip this step**, as we already put the `orderer.block` and `channel.tx` under `e2e_cli/crypto/orderer/`.
 
-This explains the creation of `orderer.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
+This step explains the creation of `orderer.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
 
 ##### Create the genesis block
 Enter the `fabric-cli` container, and run the following cmd to use the e2e test's configtx.yaml.
@@ -241,10 +240,11 @@ channel.tx
 Create a new channel named `newchannel` with the existing `channel.tx` file.
 
 ```bash
+$ docker exec -it fabric-cli bash
 root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="newchannel"
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig
-root@peer0:/go/src/github.com/hyperledger/fabric# CORE_PEER_LOCALMSPID="OrdererMSP"
-root@peer0:/go/src/github.com/hyperledger/fabric# peer channel create -c ${CHANNEL_NAME} -o orderer0:7050 -f peer/crypto/orderer/channel.tx
+root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig \
+CORE_PEER_LOCALMSPID="OrdererMSP" \
+peer channel create -c ${CHANNEL_NAME} -o orderer0:7050 -f peer/crypto/orderer/channel.tx
 ```
 The cmd will return lots of info, which is the content of the configuration block.
 
@@ -255,7 +255,7 @@ root@cli:/go/src/github.com/hyperledger/fabric# ls newchannel.block
 newchannel.block
 ```
 
-Check the log output of `fabric-orderer0`, should find something like
+Check the log output of `fabric-orderer0`, should find some message like
 
 ```bash
 fabric-orderer0 | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
@@ -289,7 +289,7 @@ CORE_PEER_ADDRESS=peer0:7051 \
 peer chaincode install -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0 -o orderer0:7050
 ```
 
-The result may look like following.
+This will take a while, and the result may look like following.
 
 ```bash
 UTC [golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
@@ -297,16 +297,16 @@ UTC [container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
 UTC [main] main -> INFO 003 Exiting.....
 ```
 
-Then instantiate the chaincode test_cc on channel `newchannel`:
+Then instantiate the chaincode test_cc on channel `newchannel`, with initial args and the endorsement policy.
 
 ```bash
 root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
 CORE_PEER_LOCALMSPID="Org0MSP" \
 CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode instantiate -C ${CHANNEL_NAME} -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+peer chaincode instantiate -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org0MSP.member','Org1MSP.member')"
 ```
 
-The result may look like following:
+This will take a while, and the result may look like following:
 
 ```bash
 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
@@ -314,7 +314,7 @@ UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
 UTC [main] main -> INFO 003 Exiting.....
 ```
 
-Now in the system, there will be a new `dev-peer0-test_cc-1.0` container.
+Now in the system, there will be a new `dev-peer0-test_cc-1.0` image and a `dev-peer0-test_cc-1.0` chaincode container.
 
 ```bash
 $ docker ps
