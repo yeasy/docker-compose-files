@@ -1,5 +1,5 @@
 ## Environment
-Any environment information, e.g., os, tool versions, weather.
+Any environment information, e.g., os, tool versions, image version.
 
 ## How to repeat the problem?
 Detailed steps to repeat the problem. 
