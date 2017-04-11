@@ -45,13 +45,14 @@ services:
     environment:
       - CORE_PEER_ID=peer0
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
+      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer0:7050
     links:
       - orderer0
     ports:
       - 7051:7051
     depends_on:
       - orderer0
+    command: peer node start -o orderer0:7050
 
   cli:
     extends:
@@ -70,6 +71,7 @@ services:
     depends_on:
       - peer0
       - orderer0
+    command: bash -c 'while true; do sleep 2017; done' 
 
 #networks:
 #  default:
