@@ -55,14 +55,15 @@ $ docker-compose up
 
 Check the output log that the peer is connected to the ca and orderer successfully.
 
-There will be 3 running containers.
+There will be 4 running containers.
 
 ```bash
 $ docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-2367ccb6463d        hyperledger/fabric-peer      "peer node start"        6 minutes ago      Up 6 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-02eaf86496ca        hyperledger/fabric-orderer   "orderer"                6 minutes ago      Up 6 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer
-71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   6 minutes ago      Up 6 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
+44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   33 seconds ago      Up 32 seconds       7050-7059/tcp                                     fabric-cli
+ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   33 seconds ago      Up 32 seconds       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
+af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                34 seconds ago      Up 33 seconds       0.0.0.0:7050->7050/tcp                            fabric-orderer0
+bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   34 seconds ago      Up 33 seconds       7054/tcp, 0.0.0.0:8888->8888/tcp
 ```
 
 ## Usage
@@ -71,37 +72,65 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 
 By default, all the peer will join the system chain of `testchainid`.
 
-After the cluster is synced successfully, you can validate by deploying, invoking or querying chaincode from the container or from the host.
+```bash
+$ docker exec -it fabric-cli bash
+root@cli:/go/src/github.com/hyperledger/fabric# peer channel list  
+Channels peers has joined to:
+	 testchainid
+UTC [main] main -> INFO 001 Exiting.....
+```
 
-#### Deploy
-Use `docker exec -it fabric-peer0 bash` to open a bash inside container `fabric-peer0`, which will accept our chaincode testing commands of `install/instantiate`, `invoke` and `query`.
+After the cluster is synced successfully, you can validate by install/instantiate, invoking or querying chaincode from the container or from the host.
 
-Inside the container, run the following command to deploy a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
+#### install&instantiate
+Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cli`, which will accept our chaincode testing commands of `install/instantiate`, `invoke` and `query`.
+
+Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-$ docker exec -it fabric-peer0 bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+```
+This will take a while, and the result may look like following.
+
+```bash
+[golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
+container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
+[main] main -> INFO 003 Exiting.....
+```
+
+Then instantiate the chaincode test_cc on defaule channel testchainid.
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+```
+
+This will take a while, and the result may look like following:
+
+```bash
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+UTC [main] main -> INFO 003 Exiting.....
 ```
 
 There should be no error in the return log, and in the peer nodes's output. 
 Wait several seconds till the deploy is finished.
 
-If the `peer chaincode install` and `peer chaincode instantiate` commands are executed successfully, there will generate a new chaincode container, besides the 3 existing one, name like `dev-peer0-test_cc-1.0`.
+If the `peer chaincode install` and `peer chaincode instantiate` commands are executed successfully, there will generate a new chaincode container, besides the 4 existing one, name like `dev-peer0-test_cc-1.0`.
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-edc9740c265c        dev-peer0-test_cc-1.0        "/opt/gopath/bin/t..."   34 minutes ago      Up 34 minutes                                                         dev-peer0-test_cc-1.0
-2367ccb6463d        hyperledger/fabric-peer      "peer node start"        36 minutes ago      Up 36 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-02eaf86496ca        hyperledger/fabric-orderer   "orderer"                36 minutes ago      Up 36 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer
-71c2246e1165        hyperledger/fabric-ca        "fabric-ca server ..."   36 minutes ago      Up 36 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp 
+cf7bf529f214        dev-peer0-test_cc-1.0        "chaincode -peer.a..."   58 seconds ago      Up 58 seconds                                                         dev-peer0-test_cc-1.0
+44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   14 minutes ago      Up 14 minutes       7050-7059/tcp                                     fabric-cli
+ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   14 minutes ago      Up 14 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
+af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                14 minutes ago      Up 14 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer0
+bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   14 minutes ago      Up 14 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                  fabric-ca
+
 ```
 
 And will also generate a new chaincode image, name like `dev-peer0-test_cc-1.0`.
 ```bash
 $ docker images
-REPOSITORY                         TAG                             IMAGE ID            CREATED             SIZE
-dev-peer0-test_cc-1.0              latest                          dd5ea867023e        36 minutes ago      874 MB
+REPOSITORY                         TAG                    IMAGE ID            CREATED              SIZE
+dev-peer0-test_cc-1.0              latest                 84e5422eead5        About a minute ago   176 MB
 ...
 ```
 
@@ -111,7 +140,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -124,7 +153,7 @@ Query Result: 100
 Query the value of `b`
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
@@ -139,7 +168,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
 ```
 
 The final result may look like the following, the response should be `OK`.
@@ -153,12 +182,12 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@peer0:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 The new value of `b` should be 210.
 
@@ -277,6 +306,15 @@ Peer joined the channel!
 ``` 
 
 Will receive the `Peer joined the channel!` response if succeed.
+
+Then use the following command, we will find the channels that peers joined.
+
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# peer channel list
+Channels peers has joined to:
+	 newchannel
+2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
+```
 
 #### Install&Instantiate
 
@@ -407,6 +445,24 @@ The value of `b` should be `210`
 ```bash
 Query Result: 210
 [main] main -> INFO 001 Exiting.....
+```
+
+Finally, the output of the chaincode containers may look like following.
+
+```bash
+root@Self-Dev:~$ docker logs dev-peer0-test_cc-1.0
+ex02 Init
+Aval = 100, Bval = 200
+ex02 Invoke
+Query Response:{"Name":"a","Amount":"100"}
+ex02 Invoke
+Query Response:{"Name":"b","Amount":"200"}
+ex02 Invoke
+Aval = 90, Bval = 210
+ex02 Invoke
+Query Response:{"Name":"a","Amount":"90"}
+ex02 Invoke
+Query Response:{"Name":"b","Amount":"210"}
 ```
 
 
