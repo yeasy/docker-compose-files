@@ -94,7 +94,7 @@ services:
         #- ./e2e_cli/examples/:/opt/gopath/src/github.com/hyperledger/fabric/examples/
         #- ../chaincode/go/:/opt/gopath/src/github.com/hyperledger/fabric/examples/chaincode/go
         - ./e2e_cli/crypto:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        #- ./e2e_cli/scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
     depends_on:
       - peer0
       - orderer0

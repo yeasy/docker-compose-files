@@ -465,6 +465,13 @@ ex02 Invoke
 Query Response:{"Name":"b","Amount":"210"}
 ```
 
+### Run the auto-test with shell 
+
+As the shell shown, it will auto execute test steps. 
+
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# ./peer/scripts/new-channel-auto-test.sh
+```
 
 ## Acknowledgement
 * [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
