@@ -98,7 +98,7 @@ services:
     depends_on:
       - peer0
       - orderer0
-    command: bash -c 'while true; do sleep 2017; done'
+    command: bash -c 'while true; do sleep 20170504; done'
 
 #networks:
 #  default:

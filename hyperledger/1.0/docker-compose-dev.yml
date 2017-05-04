@@ -38,7 +38,7 @@ services:
 
   peer0:
     extends:
-      file: peer.yml
+      file: peer-dev.yml
       service: peer
     container_name: fabric-peer0
     hostname: peer0
@@ -56,7 +56,7 @@ services:
 
   cli:
     extends:
-      file: peer.yml
+      file: peer-dev.yml
       service: peer
     container_name: fabric-cli
     hostname: cli
@@ -68,6 +68,8 @@ services:
     links:
       - peer0
       - orderer0
+    volumes:
+        - $GOPATH/src/github.com/hyperledger/:/go/src/github.com/hyperledger/
     depends_on:
       - peer0
       - orderer0

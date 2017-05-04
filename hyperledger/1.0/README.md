@@ -88,7 +88,7 @@ Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cl
 Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode  install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
 ```
 This will take a while, and the result may look like following.
 
@@ -324,7 +324,7 @@ First install a chaincode named `test_cc` to `peer0`.
 root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
 CORE_PEER_LOCALMSPID="Org0MSP" \
 CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode install -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0 -o orderer0:7050
+peer chaincode install -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0
 ```
 
 This will take a while, and the result may look like following.
