@@ -88,7 +88,7 @@ Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cl
 Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 This will take a while, and the result may look like following.
 
@@ -100,7 +100,7 @@ container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
 
 Then instantiate the chaincode test_cc on defaule channel testchainid.
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode  instantiate -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
 ```
 
 This will take a while, and the result may look like following:
@@ -341,7 +341,7 @@ Then instantiate the chaincode test_cc on channel `newchannel`, with initial arg
 root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
 CORE_PEER_LOCALMSPID="Org0MSP" \
 CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode instantiate -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org0MSP.member','Org1MSP.member')"
+peer chaincode instantiate -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org0MSP.member','Org1MSP.member')"
 ```
 
 This will take a while, and the result may look like following:
