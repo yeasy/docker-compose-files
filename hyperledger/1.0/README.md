@@ -140,7 +140,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -182,12 +182,12 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
 ```
 The new value of `b` should be 210.
 
