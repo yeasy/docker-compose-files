@@ -29,7 +29,7 @@ Pull necessary images of peer, orderer, ca, and base image.
 $ ARCH=x86_64
 $ BASE_VERSION=1.0.0-preview
 $ PROJECT_VERSION=1.0.0-preview
-$ IMG_VERSION=0.8.9
+$ IMG_VERSION=latest
 $ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
@@ -203,25 +203,25 @@ There will be several containers running successfully.
 
 ```bash
 $ docker ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                               NAMES
-c1cf099e1f76        hyperledger/fabric-peer      "bash -c 'while tr..."   40 minutes ago      Up 40 minutes       7050-7059/tcp                                                                       fabric-cli
-0b67c42fd5cc        hyperledger/fabric-peer      "peer node start -..."   40 minutes ago      Up 40 minutes       7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   fabric-peer0
-80b5fb85636e        hyperledger/fabric-orderer   "orderer"                40 minutes ago      Up 40 minutes       0.0.0.0:7050->7050/tcp                                                              fabric-orderer0
-f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 minutes ago      Up 40 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
+CONTAINER ID        IMAGE                        COMMAND                  CREATED              STATUS              PORTS                                                                               NAMES
+6688f290a9b9        hyperledger/fabric-peer      "bash -c 'while tr..."   About a minute ago   Up About a minute   7050-7059/tcp                                                                       fabric-cli
+6ddbbd972ac3        hyperledger/fabric-peer      "peer node start -..."   About a minute ago   Up About a minute   7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
+4afc759e0dc9        hyperledger/fabric-orderer   "orderer"                About a minute ago   Up About a minute   0.0.0.0:7050->7050/tcp                                                              orderer.example.com
+bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
-#### Create genesis block and configuration transaction
+#### [WIP]Create genesis block and configuration transaction
 
-**Skip this step**, as we already put the `orderer.block` and `channel.tx` under `e2e_cli/crypto/orderer/`.
+**Skip this step**, as we already put the `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-This step explains the creation of `orderer.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
+This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
 
 ##### Create the genesis block
 Enter the `fabric-cli` container, and run the following cmd to use the e2e test's configtx.yaml.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# cp examples/e2e_cli/configtx.yaml /etc/hyperledger/fabric
+root@cli:/go/src/github.com/hyperledger/fabric# cp ./peer/configtx.yaml /etc/hyperledger/fabric
 ```
 
 Generate the genesis block.
@@ -266,41 +266,34 @@ channel.tx
 
 #### Create new channel
 
-Create a new channel named `newchannel` with the existing `channel.tx` file.
+Create a new channel named `mychannel` with the existing `channel.tx` file.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="newchannel"
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig \
-CORE_PEER_LOCALMSPID="OrdererMSP" \
-peer channel create -c ${CHANNEL_NAME} -o orderer0:7050 -f peer/crypto/orderer/channel.tx
+root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="mychannel"
+peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx
 ```
 The cmd will return lots of info, which is the content of the configuration block.
 
 And a block with the same name of the channel will be created locally.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# ls newchannel.block
-newchannel.block
+root@cli:/go/src/github.com/hyperledger/fabric# ls mychannel.block
+mychannel.block
 ```
 
-Check the log output of `fabric-orderer0`, should find some message like
+Check the log output of `orderer.example.com`, should find some message like
 
 ```bash
-fabric-orderer0 | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
+orderer.example.com | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
 ```
 
 #### Join the channel
 
-Use the following command to join `peer0` the channel
-
-Notice we will use `peer0`'s configuration here.
+Use the following command to join `peer0.org1.example.com` the channel
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer channel join -b ${CHANNEL_NAME}.block -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer channel join -b ${CHANNEL_NAME}.block -o orderer.example.com:7050
 
 Peer joined the channel!
 ``` 
@@ -312,56 +305,60 @@ Then use the following command, we will find the channels that peers joined.
 ```bash
 root@cli:/go/src/github.com/hyperledger/fabric# peer channel list
 Channels peers has joined to:
-	 newchannel
+	 mychannel
 2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
 ```
 
+#### Update anchor peers 
+
+The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network 
+components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1,
+org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
+```bash
+root@cli:/go/src/github.com/hyperledger/fabric# peer channel create -o orderer.example.com:7050 -c mychannel -f ./peer/channel-artifacts/Org1MSPanchors.tx
+```
+
+
 #### Install&Instantiate
 
-First install a chaincode named `test_cc` to `peer0`.
+First `install` a chaincode named `test_cc` to `peer0`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode install -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02  -v 1.0
+root@cli:/go/src/github.com/hyperledger/fabric#  peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 This will take a while, and the result may look like following.
 
 ```bash
-UTC [golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
-UTC [container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
-UTC [main] main -> INFO 003 Exiting.....
+UTC [golang-platform] writeGopathSrc -> INFO 004 rootDirectory = /go/src
+UTC [container] WriteFolderToTarPackage -> INFO 005 rootDirectory = /go/src
+UTC [main] main -> INFO 006 Exiting.....
 ```
 
-Then instantiate the chaincode test_cc on channel `newchannel`, with initial args and the endorsement policy.
+Then `instantiate` the chaincode mycc on channel `mychannel`, with initial args and the endorsement policy.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode instantiate -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org0MSP.member','Org1MSP.member')"
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
 ```
 
 This will take a while, and the result may look like following:
 
 ```bash
-UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-UTC [main] main -> INFO 003 Exiting.....
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 004 Using default escc
+UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 005 Using default vscc
+UTC [main] main -> INFO 006 Exiting.....
 ```
 
-Now in the system, there will be a new `dev-peer0-test_cc-1.0` image and a `dev-peer0-test_cc-1.0` chaincode container.
+Now in the system, there will be a new `dev-peer0.org1.example.com-mycc-1.0` image and a `dev-peer0.org1.example.com-mycc-1.0` chaincode container.
 
 ```bash
-$ docker ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                               NAMES
-c0abb4b9206b        dev-peer0-test_cc-1.0        "chaincode -peer.a..."   25 seconds ago      Up 25 seconds                                                                                           dev-peer0-test_cc-1.0
-c1cf099e1f76        hyperledger/fabric-peer      "bash -c 'while tr..."   40 minutes ago      Up 40 minutes       7050-7059/tcp                                                                       fabric-cli
-0b67c42fd5cc        hyperledger/fabric-peer      "peer node start -..."   40 minutes ago      Up 40 minutes       7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   fabric-peer0
-80b5fb85636e        hyperledger/fabric-orderer   "orderer"                40 minutes ago      Up 40 minutes       0.0.0.0:7050->7050/tcp                                                              fabric-orderer0
-f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 minutes ago      Up 40 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
+crluser@baas-test2:~$ docker ps
+CONTAINER ID        IMAGE                                 COMMAND                  CREATED              STATUS              PORTS                                                                               NAMES
+7aa088c76597        dev-peer0.org1.example.com-mycc-1.0   "chaincode -peer.a..."   10 seconds ago       Up 9 seconds                                                                                            dev-peer0.org1.example.com-mycc-1.0
+eb1d9c73b26b        hyperledger/fabric-peer               "bash -c 'while tr..."   About a minute ago   Up About a minute   7050-7059/tcp                                                                       fabric-cli
+2d6fd4f61e2b        hyperledger/fabric-peer               "peer node start -..."   About a minute ago   Up About a minute   7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
+832dcc64cc1b        hyperledger/fabric-orderer            "orderer"                About a minute ago   Up About a minute   0.0.0.0:7050->7050/tcp                                                              orderer.example.com
+c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
 #### Query
@@ -369,10 +366,7 @@ f3680e5889b0        hyperledger/fabric-ca        "fabric-ca-server ..."   40 min
 Query the existing value of `a` and `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","a"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `100`.
@@ -382,10 +376,7 @@ Query Result: 100
 ```
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","b"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `200`.
@@ -401,10 +392,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode invoke -o orderer0:7050 -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["invoke","a","b","10"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The result may look like following:
@@ -420,10 +408,7 @@ And then query the value of `a` and `b`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","a"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
 ```
 
 ```bash
@@ -434,10 +419,7 @@ The value of `a` should be `90`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CORE_PEER_MSPCONFIGPATH=$GOPATH/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig \
-CORE_PEER_LOCALMSPID="Org0MSP" \
-CORE_PEER_ADDRESS=peer0:7051 \
-peer chaincode query -C ${CHANNEL_NAME} -n test_cc -c '{"Args":["query","b"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","b"]}'
 ```
 
 The value of `b` should be `210`
@@ -450,22 +432,21 @@ Query Result: 210
 Finally, the output of the chaincode containers may look like following.
 
 ```bash
-root@Self-Dev:~$ docker logs dev-peer0-test_cc-1.0
+$ docker logs -f dev-peer0.org1.example.com-mycc-1.0
 ex02 Init
 Aval = 100, Bval = 200
 ex02 Invoke
 Query Response:{"Name":"a","Amount":"100"}
 ex02 Invoke
-Query Response:{"Name":"b","Amount":"200"}
-ex02 Invoke
 Aval = 90, Bval = 210
 ex02 Invoke
-Query Response:{"Name":"a","Amount":"90"}
-ex02 Invoke
 Query Response:{"Name":"b","Amount":"210"}
+ex02 Invoke
+Query Response:{"Name":"a","Amount":"90"}
+
 ```
 
-### Run the auto-test with shell 
+### [WIP]Run the auto-test with shell 
 
 As the shell shown, it will auto execute test steps. 
 
