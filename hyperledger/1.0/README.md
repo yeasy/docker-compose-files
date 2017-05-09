@@ -153,7 +153,7 @@ Query Result: 100
 Query the value of `b`
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
