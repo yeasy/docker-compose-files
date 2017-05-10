@@ -4,7 +4,7 @@ This project provides several useful Docker-Compose script to help quickly bootu
 
 Currently we support Hyperledger Fabric v0.6 and v1.0.
 
-If you're not familiar with Docker and Blockchain, can have a look at 2 books (in CN):
+If you're not familiar with Docker and Blockchain, can have a look at these books (in CN):
 
 * [Docker Practice](https://github.com/yeasy/docker_practice)
 * [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
