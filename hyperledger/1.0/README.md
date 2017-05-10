@@ -210,59 +210,25 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
-#### [WIP]Create genesis block and configuration transaction
+#### Auto chaincode operation
+
+Run this script will check whether the MVE bootstrap success.
+
+```bash
+$ docker exec -it fabric-cli bash
+root@cli:/go/src/github.com/hyperledger/fabric# ./peer/scripts/new-channel-auto-test.sh
+```
+
+#### Manually create artifacts
+
+This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup), `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
+
+Detailed steps refer to [GenerateArtifacts](./GenerateArtifacts.md)
 
 **Skip this step**, as we already put the `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
 This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
 
-##### Create the genesis block
-Enter the `fabric-cli` container, and run the following cmd to use the e2e test's configtx.yaml.
-
-```bash
-$ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# cp ./peer/configtx.yaml /etc/hyperledger/fabric
-```
-
-Generate the genesis block.
-
-```bash
-root@cli:/go/src/github.com/hyperledger/fabric# configtxgen -profile TwoOrgs -outputBlock orderer.block
-Loading configuration
-Looking for configtx.yaml in: /etc/hyperledger/fabric
-Found configtx.yaml there
-Checking for MSPDir at: .
-Checking for MSPDir at: .
-Checking for MSPDir at: .
-Generating genesis block
-Writing genesis block
-root@cli:/go/src/github.com/hyperledger/fabric# ls orderer.block
-orderer.block
-```
-
-##### Create the configuration tx
-Create channel configuration transaction for the to-be-created `newchannel`.
-
-```bash
-root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="newchannel"
-root@cli:/go/src/github.com/hyperledger/fabric# configtxgen -profile TwoOrgs -outputCreateChannelTx channel.tx -channelID ${CHANNEL_NAME}
-Loading configuration
-Looking for configtx.yaml in: /etc/hyperledger/fabric
-Found configtx.yaml there
-Checking for MSPDir at: .
-Checking for MSPDir at: .
-Checking for MSPDir at: .
-Generating new channel configtx
-Creating no-op MSP instance
-Obtaining default signing identity
-Creating no-op signing identity instance
-Serialinzing identity
-signing message
-signing message
-Writing new channel tx
-root@cli:/go/src/github.com/hyperledger/fabric# ls channel.tx
-channel.tx
-```
 
 #### Create new channel
 
@@ -315,16 +281,16 @@ The `configtx.yaml` file contains the definitions for our sample network and pre
 components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1,
 org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer channel create -o orderer.example.com:7050 -c mychannel -f ./peer/channel-artifacts/Org1MSPanchors.tx
+root@cli:/go/src/github.com/hyperledger/fabric# peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
 ```
 
 
 #### Install&Instantiate
 
-First `install` a chaincode named `test_cc` to `peer0`.
+First `install` a chaincode named `mycc` to `peer0`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric#  peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 This will take a while, and the result may look like following.
@@ -338,7 +304,7 @@ UTC [main] main -> INFO 006 Exiting.....
 Then `instantiate` the chaincode mycc on channel `mychannel`, with initial args and the endorsement policy.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
 ```
 
 This will take a while, and the result may look like following:
@@ -366,7 +332,7 @@ c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."
 Query the existing value of `a` and `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `100`.
@@ -376,7 +342,7 @@ Query Result: 100
 ```
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `200`.
@@ -392,7 +358,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The result may look like following:
@@ -408,7 +374,7 @@ And then query the value of `a` and `b`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 ```bash
@@ -419,7 +385,7 @@ The value of `a` should be `90`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","b"]}'
+root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
 ```
 
 The value of `b` should be `210`
@@ -446,13 +412,6 @@ Query Response:{"Name":"a","Amount":"90"}
 
 ```
 
-### [WIP]Run the auto-test with shell 
-
-As the shell shown, it will auto execute test steps. 
-
-```bash
-root@cli:/go/src/github.com/hyperledger/fabric# ./peer/scripts/new-channel-auto-test.sh
-```
 
 ## Acknowledgement
 * [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
