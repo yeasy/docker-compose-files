@@ -26,20 +26,7 @@ If you want to setup the environment manually, then can follow the below steps i
 Pull necessary images of peer, orderer, ca, and base image.
 
 ```sh
-$ ARCH=x86_64
-$ BASE_VERSION=1.0.0-preview
-$ PROJECT_VERSION=1.0.0-preview
-$ IMG_VERSION=latest
-$ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
-  && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
-  && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
-  && docker pull yeasy/hyperledger-fabric-ca:$IMG_VERSION \
-  && docker pull yeasy/blockchain-explorer:latest \
-  && docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-peer \
-  && docker tag yeasy/hyperledger-fabric-orderer:$IMG_VERSION hyperledger/fabric-orderer \
-  && docker tag yeasy/hyperledger-fabric-ca:$IMG_VERSION hyperledger/fabric-ca \
-  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$BASE_VERSION \
-  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseos:$ARCH-$BASE_VERSION
+$ bash scripts/start_fabric.sh
 ```
 
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.
@@ -74,7 +61,7 @@ By default, all the peer will join the system chain of `testchainid`.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer channel list  
+root@cli: # peer channel list  
 Channels peers has joined to:
 	 testchainid
 UTC [main] main -> INFO 001 Exiting.....
@@ -83,12 +70,12 @@ UTC [main] main -> INFO 001 Exiting.....
 After the cluster is synced successfully, you can validate by install/instantiate, invoking or querying chaincode from the container or from the host.
 
 #### install&instantiate
-Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cli`, which will accept our chaincode testing commands of `install/instantiate`, `invoke` and `query`.
+Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cli`, which will accept our chaincode testing commands of `install&instantiate`, `invoke` and `query`.
 
 Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+root@cli: # peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 This will take a while, and the result may look like following.
 
@@ -100,7 +87,7 @@ container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
 
 Then instantiate the chaincode test_cc on defaule channel testchainid.
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+root@cli: # peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
 ```
 
 This will take a while, and the result may look like following:
@@ -140,7 +127,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
+root@cli: # peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -153,7 +140,7 @@ Query Result: 100
 Query the value of `b`
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+root@cli: # peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
@@ -168,7 +155,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
+root@cli: # peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
 ```
 
 The final result may look like the following, the response should be `OK`.
@@ -182,12 +169,12 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
+root@cli: # peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
+root@cli: # peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
 ```
 The new value of `b` should be 210.
 
@@ -216,7 +203,7 @@ Run this script will check whether the MVE bootstrap success.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# ./peer/scripts/new-channel-auto-test.sh
+root@cli: # ./peer/scripts/new-channel-auto-test.sh
 ```
 
 #### Manually create artifacts
@@ -236,7 +223,7 @@ Create a new channel named `mychannel` with the existing `channel.tx` file.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli:/go/src/github.com/hyperledger/fabric# CHANNEL_NAME="mychannel"
+root@cli: # CHANNEL_NAME="mychannel"
 peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx
 ```
 The cmd will return lots of info, which is the content of the configuration block.
@@ -244,7 +231,7 @@ The cmd will return lots of info, which is the content of the configuration bloc
 And a block with the same name of the channel will be created locally.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# ls mychannel.block
+root@cli: # ls mychannel.block
 mychannel.block
 ```
 
@@ -259,7 +246,7 @@ orderer.example.com | UTC [orderer/multichain] newChain -> INFO 004 Created and 
 Use the following command to join `peer0.org1.example.com` the channel
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer channel join -b ${CHANNEL_NAME}.block -o orderer.example.com:7050
+root@cli: # peer channel join -b ${CHANNEL_NAME}.block -o orderer.example.com:7050
 
 Peer joined the channel!
 ``` 
@@ -269,7 +256,7 @@ Will receive the `Peer joined the channel!` response if succeed.
 Then use the following command, we will find the channels that peers joined.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer channel list
+root@cli: # peer channel list
 Channels peers has joined to:
 	 mychannel
 2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
@@ -281,7 +268,7 @@ The `configtx.yaml` file contains the definitions for our sample network and pre
 components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1,
 org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
+root@cli: # peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
 ```
 
 
@@ -290,7 +277,7 @@ root@cli:/go/src/github.com/hyperledger/fabric# peer channel create -o orderer.e
 First `install` a chaincode named `mycc` to `peer0`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+root@cli: # peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 This will take a while, and the result may look like following.
@@ -304,7 +291,7 @@ UTC [main] main -> INFO 006 Exiting.....
 Then `instantiate` the chaincode mycc on channel `mychannel`, with initial args and the endorsement policy.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
+root@cli: # peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
 ```
 
 This will take a while, and the result may look like following:
@@ -332,7 +319,7 @@ c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."
 Query the existing value of `a` and `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+root@cli: # peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `100`.
@@ -342,7 +329,7 @@ Query Result: 100
 ```
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+root@cli: # peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `200`.
@@ -358,7 +345,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -c '{"Args":["invoke","a","b","10"]}'
+root@cli: # peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The result may look like following:
@@ -374,7 +361,7 @@ And then query the value of `a` and `b`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+root@cli: # peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 ```bash
@@ -385,7 +372,7 @@ The value of `a` should be `90`.
 
 
 ```bash
-root@cli:/go/src/github.com/hyperledger/fabric# peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
+root@cli: # peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
 ```
 
 The value of `b` should be `210`
