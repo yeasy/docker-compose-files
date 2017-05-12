@@ -202,16 +202,11 @@ $ docker exec -it fabric-cli bash
 root@cli: ./peer/scripts/new-channel-auto-test.sh
 ```
 
-### Manually create artifacts
+### Manually create artifacts (optional)
 
-This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup), `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
+**Skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-Detailed steps refer to [GenerateArtifacts](./GenerateArtifacts.md)
-
-**Skip this step**, as we already put the `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
-
-This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
-
+Detailed steps in [GenerateArtifacts](./GenerateArtifacts.md) explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
 ### Create new channel
 
@@ -260,13 +255,11 @@ Channels peers has joined to:
 
 ### Update anchor peers 
 
-The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network 
-components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1,
-org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
+The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1, org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
+
 ```bash
 root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
 ```
-
 
 ### Install&Instantiate
 
