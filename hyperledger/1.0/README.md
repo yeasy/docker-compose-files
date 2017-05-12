@@ -7,7 +7,7 @@ If you're not familiar with Docker and Blockchain, can have a look at 2 books (i
 * [Docker Practice](https://github.com/yeasy/docker_practice)
 * [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
 
-## Manual Setup
+## Environment Setup
 
 tldr :)
 
@@ -17,9 +17,7 @@ With Ubuntu/Debian, you can simple use the following script to setup the environ
 $ bash setup_fabric_1.0.sh
 ```
 
-
 If you want to setup the environment manually, then can follow the below steps in this section.
-
 
 ### Download Images
 
@@ -53,11 +51,9 @@ af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                34 sec
 bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   34 seconds ago      Up 33 seconds       7054/tcp, 0.0.0.0:8888->8888/tcp
 ```
 
-## Usage
+## Use default channel
 
-### Test chaincode with default channel
-
-By default, all the peer will join the system chain of `testchainid`.
+By default, all the peer will join the default chain of `testchainid`.
 
 ```bash
 $ docker exec -it fabric-cli bash
@@ -69,7 +65,7 @@ UTC [main] main -> INFO 001 Exiting.....
 
 After the cluster is synced successfully, you can validate by install/instantiate, invoking or querying chaincode from the container or from the host.
 
-#### install&instantiate
+### install&instantiate
 Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cli`, which will accept our chaincode testing commands of `install&instantiate`, `invoke` and `query`.
 
 Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
@@ -121,7 +117,7 @@ dev-peer0-test_cc-1.0              latest                 84e5422eead5        Ab
 ...
 ```
 
-#### Query
+### Query
 Inside the container, query the existing value of `a` and `b`.
 
 *Notice that the query method can be called by invoke a transaction.*
@@ -151,7 +147,7 @@ Query Result: 200
 ```
 
 
-#### Invoke
+### Invoke
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
@@ -165,7 +161,7 @@ The final result may look like the following, the response should be `OK`.
 [main] main -> INFO 002 Exiting.....
 ```
 
-#### Query
+### Query
 Query again the existing value of `a` and `b`.
 
 ```bash
@@ -178,7 +174,7 @@ root@cli: peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
 ```
 The new value of `b` should be 210.
 
-### Test chaincode with new created channel (Optional)
+## Use new created channel (Optional)
 
 Start the Docker Compose project with `docker-compose-new-channel.yml`.
 
@@ -197,7 +193,7 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
-#### Auto chaincode operation
+### Auto testing operation (optional)
 
 Run this script will check whether the MVE bootstrap success.
 
@@ -206,7 +202,7 @@ $ docker exec -it fabric-cli bash
 root@cli: ./peer/scripts/new-channel-auto-test.sh
 ```
 
-#### Manually create artifacts
+### Manually create artifacts
 
 This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup), `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
@@ -217,7 +213,7 @@ Detailed steps refer to [GenerateArtifacts](./GenerateArtifacts.md)
 This step explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel).
 
 
-#### Create new channel
+### Create new channel
 
 Create a new channel named `mychannel` with the existing `channel.tx` file.
 
@@ -241,7 +237,7 @@ Check the log output of `orderer.example.com`, should find some message like
 orderer.example.com | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
 ```
 
-#### Join the channel
+### Join the channel
 
 Use the following command to join `peer0.org1.example.com` the channel
 
@@ -262,7 +258,7 @@ Channels peers has joined to:
 2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
 ```
 
-#### Update anchor peers 
+### Update anchor peers 
 
 The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network 
 components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1,
@@ -272,7 +268,7 @@ root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f 
 ```
 
 
-#### Install&Instantiate
+### Install&Instantiate
 
 First `install` a chaincode named `mycc` to `peer0`.
 
@@ -314,7 +310,7 @@ eb1d9c73b26b        hyperledger/fabric-peer               "bash -c 'while tr..."
 c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
 ```
 
-#### Query
+### Query
 
 Query the existing value of `a` and `b`.
 
@@ -340,7 +336,7 @@ Query Result: 200
 ```
 
 
-#### Invoke
+### Invoke
 
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
@@ -355,7 +351,7 @@ UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 r
 2017-04-06 09:47:15.993 UTC [main] main -> INFO 002 Exiting.....
 ```
 
-#### Query
+### Query
 
 And then query the value of `a` and `b`.
 
