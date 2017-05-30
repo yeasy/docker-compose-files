@@ -45,7 +45,7 @@ services:
     environment:
       - CORE_PEER_ID=peer0
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer0:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer0:7050
     links:
       - orderer0
     ports:

@@ -42,7 +42,7 @@ services:
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
@@ -68,7 +68,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
@@ -93,7 +93,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
@@ -118,7 +118,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.example.com:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
@@ -143,7 +143,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:7051
       - CORE_PEER_LOCALMSPID=Org3MSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
+     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
