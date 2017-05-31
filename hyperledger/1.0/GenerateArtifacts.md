@@ -11,9 +11,9 @@ and put cryptographic materials to `e2e_cli/crypto_config`. So this doc will exp
 
 > * `Org1MSPanchors.tx`, `Org2MSPanchors.tx`: Anchor peers, as the name described, use for specify each Org's anchor peer on this channel.
 
-> Cerfiricates:
+> Certificates:
 
-> * All files in crypto-config.
+> * All files under crypto-config.
 
 ### cryptogen
 

@@ -42,7 +42,6 @@ services:
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_ORGLEADER=true
-     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key

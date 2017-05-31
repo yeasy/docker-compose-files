@@ -48,7 +48,7 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   33 seconds ago      Up 32 seconds       7050-7059/tcp                                     fabric-cli
 ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   33 seconds ago      Up 32 seconds       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
 af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                34 seconds ago      Up 33 seconds       0.0.0.0:7050->7050/tcp                            fabric-orderer0
-bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   34 seconds ago      Up 33 seconds       7054/tcp, 0.0.0.0:8888->8888/tcp
+bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   34 seconds ago      Up 33 seconds       7054/tcp, 0.0.0.0:7054->7054/tcp
 ```
 
 ## Use default channel
@@ -57,7 +57,7 @@ By default, all the peer will join the default chain of `testchainid`.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli: peer channel list  
+$ peer channel list  
 Channels peers has joined to:
 	 testchainid
 UTC [main] main -> INFO 001 Exiting.....
@@ -71,7 +71,7 @@ Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cl
 Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
 
 ```bash
-root@cli: peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+$ peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 This will take a while, and the result may look like following.
 
@@ -83,7 +83,7 @@ container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
 
 Then instantiate the chaincode test_cc on defaule channel testchainid.
 ```bash
-root@cli: peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
+$ peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
 ```
 
 This will take a while, and the result may look like following:
@@ -105,7 +105,7 @@ cf7bf529f214        dev-peer0-test_cc-1.0        "chaincode -peer.a..."   58 sec
 44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   14 minutes ago      Up 14 minutes       7050-7059/tcp                                     fabric-cli
 ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   14 minutes ago      Up 14 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
 af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                14 minutes ago      Up 14 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer0
-bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   14 minutes ago      Up 14 minutes       7054/tcp, 0.0.0.0:8888->8888/tcp                  fabric-ca
+bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   14 minutes ago      Up 14 minutes       7054/tcp, 0.0.0.0:7054->7054/tcp                  fabric-ca
 
 ```
 
@@ -123,7 +123,7 @@ Inside the container, query the existing value of `a` and `b`.
 *Notice that the query method can be called by invoke a transaction.*
 
 ```bash
-root@cli: peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
+$ peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 
 The final output may look like the following, with a payload value of `100`.
@@ -136,7 +136,7 @@ Query Result: 100
 Query the value of `b`
 
 ```bash
-root@cli: peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
+$ peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
 ```
 
 The final output may look like the following, with a payload value of `200`.
@@ -151,7 +151,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli: peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
+$ peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
 ```
 
 The final result may look like the following, the response should be `OK`.
@@ -165,12 +165,12 @@ The final result may look like the following, the response should be `OK`.
 Query again the existing value of `a` and `b`.
 
 ```bash
-root@cli: peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
+$ peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
 ```
 The new value of `a` should be 90.
 
 ```bash
-root@cli: peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
+$ peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
 ```
 The new value of `b` should be 210.
 
@@ -190,7 +190,7 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 6688f290a9b9        hyperledger/fabric-peer      "bash -c 'while tr..."   About a minute ago   Up About a minute   7050-7059/tcp                                                                       fabric-cli
 6ddbbd972ac3        hyperledger/fabric-peer      "peer node start -..."   About a minute ago   Up About a minute   7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
 4afc759e0dc9        hyperledger/fabric-orderer   "orderer"                About a minute ago   Up About a minute   0.0.0.0:7050->7050/tcp                                                              orderer.example.com
-bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
+bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:7054->7054/tcp                                                    fabric-ca
 ```
 
 ### Auto testing operation (optional)
@@ -199,7 +199,7 @@ Run this script will check whether the MVE bootstrap success.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli: ./peer/scripts/new-channel-auto-test.sh
+$ ./peer/scripts/new-channel-auto-test.sh
 ```
 
 ### Manually create artifacts (optional)
@@ -214,7 +214,7 @@ Create a new channel named `mychannel` with the existing `channel.tx` file.
 
 ```bash
 $ docker exec -it fabric-cli bash
-root@cli: CHANNEL_NAME="mychannel"
+$ CHANNEL_NAME="mychannel"
 peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx
 ```
 The cmd will return lots of info, which is the content of the configuration block.
@@ -222,7 +222,7 @@ The cmd will return lots of info, which is the content of the configuration bloc
 And a block with the same name of the channel will be created locally.
 
 ```bash
-root@cli: ls mychannel.block
+$ ls mychannel.block
 mychannel.block
 ```
 
@@ -237,7 +237,7 @@ orderer.example.com | UTC [orderer/multichain] newChain -> INFO 004 Created and 
 Use the following command to join `peer0.org1.example.com` the channel
 
 ```bash
-root@cli: peer channel join -b ${CHANNEL_NAME}.block -o orderer.example.com:7050
+$ peer channel join -b ${CHANNEL_NAME}.block
 
 Peer joined the channel!
 ``` 
@@ -247,7 +247,7 @@ Will receive the `Peer joined the channel!` response if succeed.
 Then use the following command, we will find the channels that peers joined.
 
 ```bash
-root@cli: peer channel list
+$ peer channel list
 Channels peers has joined to:
 	 mychannel
 2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
@@ -258,7 +258,7 @@ Channels peers has joined to:
 The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1, org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
 
 ```bash
-root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
+$ peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
 ```
 
 ### Install&Instantiate
@@ -266,7 +266,7 @@ root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f 
 First `install` a chaincode named `mycc` to `peer0`.
 
 ```bash
-root@cli: peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+$ peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 This will take a while, and the result may look like following.
@@ -280,7 +280,7 @@ UTC [main] main -> INFO 006 Exiting.....
 Then `instantiate` the chaincode mycc on channel `mychannel`, with initial args and the endorsement policy.
 
 ```bash
-root@cli: peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
+$ peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
 ```
 
 This will take a while, and the result may look like following:
@@ -300,7 +300,7 @@ CONTAINER ID        IMAGE                                 COMMAND               
 eb1d9c73b26b        hyperledger/fabric-peer               "bash -c 'while tr..."   About a minute ago   Up About a minute   7050-7059/tcp                                                                       fabric-cli
 2d6fd4f61e2b        hyperledger/fabric-peer               "peer node start -..."   About a minute ago   Up About a minute   7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
 832dcc64cc1b        hyperledger/fabric-orderer            "orderer"                About a minute ago   Up About a minute   0.0.0.0:7050->7050/tcp                                                              orderer.example.com
-c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:8888->8888/tcp                                                    fabric-ca
+c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:7054->7054/tcp                                                    fabric-ca
 ```
 
 ### Query
@@ -308,7 +308,7 @@ c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."
 Query the existing value of `a` and `b`.
 
 ```bash
-root@cli: peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `100`.
@@ -318,7 +318,7 @@ Query Result: 100
 ```
 
 ```bash
-root@cli: peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 The result may look like following, with a payload value of `200`.
@@ -334,7 +334,7 @@ Query Result: 200
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
 ```bash
-root@cli: peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -c '{"Args":["invoke","a","b","10"]}'
+$ peer chaincode invoke -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 The result may look like following:
@@ -350,7 +350,7 @@ And then query the value of `a` and `b`.
 
 
 ```bash
-root@cli: peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
 ```bash
@@ -361,7 +361,7 @@ The value of `a` should be `90`.
 
 
 ```bash
-root@cli: peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
+$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
 ```
 
 The value of `b` should be `210`
