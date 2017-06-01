@@ -11,10 +11,12 @@ If you're not familiar with Docker and Blockchain, can have a look at 2 books (i
 
 tldr :)
 
-With Ubuntu/Debian, you can simple use the following script to setup the environment in one instruction.
+With Ubuntu/Debian, you can simple use the following scripts to setup the environment and start the fabric network.
 
 ```sh
-$ bash setup_fabric_1.0.sh
+$ bash scripts/setup_Docker.sh  # Install Docker, Docker-Compose 
+  bash scripts/download_images.sh  # Pull required Docker images
+  bash scripts/start_fabric.sh
 ```
 
 If you want to setup the environment manually, then can follow the below steps in this section.
@@ -24,7 +26,7 @@ If you want to setup the environment manually, then can follow the below steps i
 Pull necessary images of peer, orderer, ca, and base image.
 
 ```sh
-$ bash scripts/start_fabric.sh
+$ bash scripts/download_images.sh
 ```
 
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.

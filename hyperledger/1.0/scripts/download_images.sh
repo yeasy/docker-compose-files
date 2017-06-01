@@ -5,7 +5,7 @@ source ./header.sh
 ARCH=x86_64
 BASE_VERSION=1.0.0-preview
 PROJECT_VERSION=1.0.0-preview
-IMG_VERSION=0.9.3
+IMG_VERSION=0.9.4
 
 echo_b "Downloading images from DockerHub..."
 
