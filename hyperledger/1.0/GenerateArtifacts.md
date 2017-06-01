@@ -1,18 +1,14 @@
-## Usage of `cryptogen` and `configtxgen` 
+## Usage of cryptogen and configtxgen
 
-As we already put the `orderer.genesis.block`, `channel.tx`, `Org1MSPanchors.tx`, `Org2MSPanchors.tx` under `e2e_cli/channel-artifacts/`.
-and put cryptographic materials to `e2e_cli/crypto_config`. So this doc will explain how we use `cryptogen` and `configtxgen` those two foundamental tools to manually create artifacts and certificates.
+As we already put the orderer.genesis.block, channel.tx, Org1MSPanchors.tx, Org2MSPanchors.tx under e2e_cli/channel-artifacts/.
+and put cryptographic materials to e2e_cli/crypto_config. So this doc will explain how we use cryptogen and configtxgen those two foundamental tools to manually create artifacts and certificates.
 
 > Artifacts:
-
 > * `orderer.genesis.block`: Genesis block for the ordering service
-
 > * `channel.tx`: Channel transaction file for peers broadcast to the orderer at channel creation time.
-
 > * `Org1MSPanchors.tx`, `Org2MSPanchors.tx`: Anchor peers, as the name described, use for specify each Org's anchor peer on this channel.
 
 > Certificates:
-
 > * All files under crypto-config.
 
 ### cryptogen
@@ -30,16 +26,16 @@ and execute `cryptogen generate` command
 ```bash
 $ cryptogen generate --config=./peer/crypto-config.yaml --output ./peer/crypto
 ```
-cryptogen will read configuration from `crypto-config.yaml`, so if we want to add(change) Orgs or perrs topology, wo should change this file first and then execute this command.
+cryptogen will read configuration from `crypto-config.yaml`, so if we want to add(change) Orgs or perrs topology, we should change this file first.
 
-> The results will save at directory crypto, and this directory was mounted from host which describe detailed at `docker-compose-2orgs.yaml`.
->
-> Refer to Example2
+> The results will save under directory crypto, and this directory has mounted from host, defined in the `docker-compose-2orgs.yaml`.
+> for more information refer to Example2
 
 
 ### [configtxgen](http://hyperledger-fabric.readthedocs.io/en/latest/configtxgen.html?highlight=crypto#)
 
-This tool will generate genesis block, channel configuration transaction and anchor peer update transactions.
+This tool will generate genesis block, channel configuration transaction and update anchor peer.
+the following is a general steps after changing the configtx.yaml.
 
 #### Replace default configtx.yaml
 
@@ -52,13 +48,13 @@ it will read configuration from `/etc/hyperledger/fabric/configtx.yaml`,
 So if we want to regenerate `orderer.genesis.block` and `channel.tx`, we should
 replace `configtx.yaml` using our own configtx.yaml first.
 
-#### Create the genesis block
+#### Create orderer genesis block
 
 ```bash
 root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer.genesis.block
 ```
 
-#### Create the configuration tx
+#### Create channel transaction artifact
 
 ```bash
 root@cli: CHANNEL_NAME=mychannel
@@ -66,15 +62,12 @@ root@cli: configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./peer/chan
 ```
 `channel.tx` is used for generating new channel `mychannel`
 
-> Note: the channelID can be whatever you want. and refer to Example1
+#### Update anchor peer for Organizations on the channel
 
-#### Define the anchor peer for Org1 on the channel
-
+Chose peer peer0.org1.example.com as org1's anchor peer, and peer0.org2.example.com as org2's anchor peer.
 ```bash
 root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
 ```
-
-#### Define the anchor peer for Org2 on the channel
 
 ```bash
 root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
@@ -82,64 +75,61 @@ root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/ch
 
 > more details refer to Example2
 
-### Example1: how to add or change channel
+### Examples
 
-This example will explain how to add a new channel without change basic topology which desigend in configtx.yaml and crypto-config.yaml.
+#### Example1: how to add and re-join a new channel
 
-Create channel configuration transaction for the to-be-created `testchain`.
+This example will explain how to add a new channel without change basic topology that desigend in configtx.yaml and crypto-config.yaml.
 
-* 1 Regenerate `channel.tx`
+* 1 Regenerate `channel.tx` using with new channel name
 
-    Fist boot MVE using `docker-compose-new-channel.yml`
+Create channel configuration for the to-be-created `testchannel`.
 
 ```bash
-$ root@cli:pwd
-  /go/src/github.com/hyperledger/fabric
 $ root@cli: CHANNEL_NAME=testchannel
 $ root@cli: cp ./peer/configtx.yaml /etc/hyperledger/fabric
 $ root@cli: configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./peer/channel-artifacts/channel.tx -channelID ${CHANNEL_NAME}
 ```
 
-* 2 Update anchor peer config for Org1MSP
+* 2 regenerate anchor peer configuratoin for Organizations
 
 ```bash
 $ root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
-```
 
-* 3 Update anchor peer config for Org2msp
-
-```bash
 $ root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
 ```
 
-* 4 (optional)execute auto-test script
+*  (optional)execute auto-test script
 
-    You can skip this step and manually verify.
+    You can skip this step, this will quickly check whether the network works, and also you can verify manually.
 ```bash
-$ root@cli: ./peer/scripts/new-channel-auto-test.sh testchannel
+$ root@cli: bash ./peer/scripts/new-channel-auto-test.sh testchannel
 ```
 
-* 5 Create new channel
+* 3 Create new channel
 
 ```bash
 $ root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx
 ```
 
-    check whether genrate new block `testchannel.block`
+check whether genrated new block `testchannel.block`
 
 ```bash
 root@cli: ls testchannel.block
 testchannel.block
 ```
 
-* 6 Join peer0,org1.example.com in new channel
+* 4 Join new channel
+
+    Join peer0.org1.example.com to the new channel
 
 ```bash
 $ root@cli: peer channel join -b ${CHANNEL_NAME}.block -o orderer.example.com:7050
 
 Peer joined the channel!
 ```
-    check whether success
+
+check whether success
 
 ```bash
 $ root@cli: peer channel list
@@ -148,51 +138,48 @@ Channels peers has joined to:
 	 testchannel
 ```
 
-* 7 Update anchor peer
+* 5 Update anchor peer
 
 ```bash
 $ root@cli: peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
 ```
 
-* 8 Install 
+* 6 Install 
 
 ```bash
 peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
-* 9 Instantiate
+* 7 Instantiate
 
 ```bash
 root@cli: peer chaincode instantiate -o orderer.example.com:7050 -C ${CHANNEL_NAME} -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR ('Org1MSP.member')"
 ```
 
-* 10 Query
+* 8 Query
 
 ```bash
 root@cli: peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
 ```
 
-    The output should be:
+The output should be:
 
 ```bash
 Query Result: 100
 UTC [main] main -> INFO 008 Exiting.....
 ```
 
-### Example2: how to Add an organization or peer
 
-#### all-in-one
+
+#### Example2: how to add an organization or peer
+
+This example will explain how to add a new org or peer with changed the basic topology that desigend in configtx.yaml and crypto-config.yaml.
+
+##### all-in-one
 
 We privide some [instance](./example2), in this case we add a new organization `Org3` and new peer `peer0.org3.example.com`.
 
-* 1 Replace docker-compose files
-
-```bash
-$ git clone https://github.com/yeasy/docker-compose-files.git
-$ cd docker-compose-files/hyperledger/1.0
-$ cp ./example2/docker-compose-2orgs.yml ./example2/peer-base.yml .
-```
-* 2 Generate necessary config and certs
+* 1 Generate necessary config and certs
 
 ```bash
 $ sudo docker-compose -f docker-compose-2orgs.yml up
@@ -200,7 +187,7 @@ $ docker exec -it fabric-cli bash
 $ root@cli: ./peer/example2/add-org.sh
 ```
 
-* 3 Restart network
+* 2 Re-setup network
 
 ```bash
 echo "clean containers...."
@@ -214,10 +201,11 @@ docker rmi -f `docker images|grep mycc-1.0|awk '{print $3}'`
 $ sudo docker-compose -f docker-compose-2orgs.yml up
 ```
 
-* 4 execute auto-test
+* 3 execute auto-test
 
+    Throuth this script to test whether the network works.
 ```bash
-$ root@cli: ./peer/scripts/new-channel-auto-test-5-peers.sh newchannel
+$ root@cli: bash ./peer/scripts/new-channel-auto-test-5-peers.sh newchannel
 ```
 
 The final output may look like following
@@ -230,7 +218,7 @@ The final output may look like following
 ```
 
 
-#### manually
+##### manually
 
 * 1 Modify config
 
@@ -242,9 +230,8 @@ The final output may look like following
 $  docker-compose -f docker-compose-2orgs.yml up
 ```
 
-    You may encounter some errors at startup and some peers can't start up, It's innocuous, ignore it,
-
-    Because we will restart later, and now we just use tools in cli container.
+> notes:You may encounter some errors at startup and some peers can't start up, It's innocuous, ignore it,
+because we will restart later, and now we just use tools in cli container.
 
 * 3 Replace default configtx.yaml
 
@@ -270,30 +257,22 @@ root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel
 root@cli: CHANNEL_NAME=newchannel
 root@cli: configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./peer/channel-artifacts/channel.tx -channelID ${CHANNEL_NAME}
 ```
-`channel.tx` is used for generating new channel `mychannel`
+`channel.tx` is used for generating new channel `newchannel`
 
-* 7 Define the anchor peer for Org1 on the channel
+* 7 Define the anchor peer for Orgs on the channel
 
 ```bash
 root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
-```
 
-* 8 Define the anchor peer for Org2 on the channel
-
-```bash
 root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
-```
 
-* 9 Define the anchor peer for Org3 on the channel
-
-```bash
 root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org3MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org3MSP
 ```
 
-* 10 Restart network
+* 8 Restart network
 
-    As we have changed the configtx.yaml and regenerate `orderer.genesis.block`,
-    we'd better restart orderering service or all the service.
+    As we have regenerate `orderer.genesis.block` and add a new container,
+    we'd better re-execute docker-compose-2orgs.yaml,
     now we clean all the old service and boot a new network.
 
 ```bash
@@ -308,13 +287,15 @@ docker rmi -f `docker images|grep mycc-1.0|awk '{print $3}'`
 $ sudo docker-compose -f docker-compose-2orgs.yml up
 ```
 
-* 11 Execute auto-test script
+* 9 Execute auto-test script
+
+    Until this step, we complete the network re-setup, and then we will test whether it works.
 
 ```bash
-$ root@cli: ./peer/scripts/new-channel-auto-test-5-peers.sh
+$ root@cli: bash ./peer/scripts/new-channel-auto-test-5-peers.sh
 ```
 
-The output may looklike:
+If the network works well. the output may looklike:
 
 ```bash
 
