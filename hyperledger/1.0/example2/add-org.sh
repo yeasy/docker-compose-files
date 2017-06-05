@@ -15,7 +15,7 @@ echo "Generate new certificates"
 cryptogen generate --config=./peer/crypto-config.yaml --output ./peer/crypto
 
 echo "Generate new certificates"
-configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer.genesis.block
+configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer_genesis.block
 
 echo "Create the configuration tx"
 CHANNEL_NAME=newchannel

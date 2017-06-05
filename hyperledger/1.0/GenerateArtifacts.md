@@ -1,11 +1,11 @@
 ## Usage of `cryptogen` and `configtxgen` 
 
-As we already put the `orderer.genesis.block`, `channel.tx`, `Org1MSPanchors.tx`, `Org2MSPanchors.tx` under `e2e_cli/channel-artifacts/`.
+As we already put the `orderer_genesis.block`, `channel.tx`, `Org1MSPanchors.tx`, `Org2MSPanchors.tx` under `e2e_cli/channel-artifacts/`.
 and put cryptographic materials to `e2e_cli/crypto_config`. So this doc will explain how we use `cryptogen` and `configtxgen` those two foundamental tools to manually create artifacts and certificates.
 
 > Artifacts:
 
-> * `orderer.genesis.block`: Genesis block for the ordering service
+> * `orderer_genesis.block`: Genesis block for the ordering service
 
 > * `channel.tx`: Channel transaction file for peers broadcast to the orderer at channel creation time.
 
@@ -49,13 +49,13 @@ root@cli: cp ./peer/configtx.yaml /etc/hyperledger/fabric
 
 The `configtxgen` tool is in `/go/bin/`, and when it's executed,
 it will read configuration from `/etc/hyperledger/fabric/configtx.yaml`,
-So if we want to regenerate `orderer.genesis.block` and `channel.tx`, we should
+So if we want to regenerate `orderer_genesis.block` and `channel.tx`, we should
 replace `configtx.yaml` using our own configtx.yaml first.
 
 #### Create the genesis block
 
 ```bash
-root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer.genesis.block
+root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer_genesis.block
 ```
 
 #### Create the configuration tx
@@ -261,7 +261,7 @@ $ cryptogen generate --config=./peer/crypto-config.yaml --output ./peer/crypto
 * 5 Create the genesis block
 
 ```bash
-root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer.genesis.block
+root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer_genesis.block
 ```
 
 * 6 Create the configuration tx
@@ -292,7 +292,7 @@ root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/ch
 
 * 10 Restart network
 
-    As we have changed the configtx.yaml and regenerate `orderer.genesis.block`,
+    As we have changed the configtx.yaml and regenerate `orderer_genesis.block`,
     we'd better restart orderering service or all the service.
     now we clean all the old service and boot a new network.
 
