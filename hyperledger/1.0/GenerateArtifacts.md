@@ -271,14 +271,8 @@ root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/ch
 
 * 8 Restart network
 
-<<<<<<< HEAD
     As we have changed the configtx.yaml and regenerate `orderer_genesis.block`,
     we'd better restart orderering service or all the service.
-=======
-    As we have regenerate `orderer.genesis.block` and add a new container,
-    we'd better re-execute docker-compose-2orgs.yaml,
->>>>>>> 2569f8bf1990a63850aee108528059a562d68b46
-    now we clean all the old service and boot a new network.
 
 ```bash
 echo "clean containers...."
