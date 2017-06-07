@@ -10,7 +10,7 @@ services:
         - ORDERER_GENERAL_LOGLEVEL=INFO
         - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
         - ORDERER_GENERAL_GENESISMETHOD=file
-        - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer_genesis.block #Need to be confirm orderer.block
+        - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block #Need to be confirm orderer.block
         - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
         - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
         - ORDERER_GENERAL_LEDGERTYPE=ram
@@ -26,7 +26,7 @@ services:
     ports:
       - "7050:7050"
     volumes:
-    - ./e2e_cli/channel-artifacts/orderer_genesis.block:/var/hyperledger/orderer/orderer_genesis.block
+    - ./e2e_cli/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     command: orderer

@@ -24,7 +24,7 @@ services:
     container_name: fabric-orderer0
     hostname: orderer0
     environment:
-        - ORDERER_GENERAL_LEDGERTYPE=ram
+        - ORDERER_GENERAL_LEDGERTYPE=file
         - ORDERER_GENERAL_BATCHTIMEOUT=10s
         - ORDERER_GENERAL_MAXMESSAGECOUNT=10
         - ORDERER_GENERAL_MAXWINDOWSIZE=1000
@@ -45,7 +45,6 @@ services:
     environment:
       - CORE_PEER_ID=peer0
       - CORE_PEER_GOSSIP_ORGLEADER=true
-     # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer0:7050
     links:
       - orderer0
     ports:
@@ -64,7 +63,6 @@ services:
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0:7051
       #- CORE_PEER_LOCALMSPID=Org0MSP
-      #- CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
     links:
       - peer0
       - orderer0

@@ -206,9 +206,9 @@ $ ./peer/scripts/new-channel-auto-test.sh
 
 ### Manually create artifacts (optional)
 
-**Skip this step**, as we already put the needed artifacts `orderer_genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
+**Skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-Detailed steps in [GenerateArtifacts](./GenerateArtifacts.md) explains the creation of `orderer_genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
+Detailed steps in [GenerateArtifacts](artifacts_generation.md) explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
 ### Create new channel
 

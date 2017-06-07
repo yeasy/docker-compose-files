@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-source ./header.sh
+source scripts/header.sh
 
 ARCH=x86_64
-BASE_VERSION=1.0.0-preview
+BASE_VERSION=0.3.1
 PROJECT_VERSION=1.0.0-preview
 IMG_VERSION=0.9.4
 
-echo_b "Downloading images from DockerHub..."
+# For testing latest images
+IMG_VERSION=latest
+
+echo_b "Downloading images from DockerHub... need a while"
 
 docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
@@ -19,7 +22,10 @@ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
 
 echo_b "Rename images with official tags..."
 docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-peer \
+  && docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-tools \
   && docker tag yeasy/hyperledger-fabric-orderer:$IMG_VERSION hyperledger/fabric-orderer \
   && docker tag yeasy/hyperledger-fabric-ca:$IMG_VERSION hyperledger/fabric-ca \
-  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$BASE_VERSION \
+  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseos:$ARCH-$BASE_VERSION
+
+echo_g "Done, now can startup the network using docker-compose..."
