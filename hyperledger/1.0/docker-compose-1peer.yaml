@@ -99,7 +99,7 @@ services:
         - ./e2e_cli/crypto-config:/etc/hyperledger/fabric/crypto-config
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-        - ./e2e_cli/configtx.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/configtx.yaml
+        - ./e2e_cli/configtx.yaml:/opt/gopath/src/github.com/hyperledger/fabric/configtx.yaml
         - ./e2e_cli/crypto-config.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto-config.yaml
     depends_on:
       - peer0.org1.example.com

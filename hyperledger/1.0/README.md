@@ -34,157 +34,74 @@ There are also some community [images](https://hub.docker.com/r/hyperledger/) at
 
 ### Bootup Fabric 1.0
 
-Start a MVE fabric cluster. All the peers joined the default channel `testchainid`.
+Start a  fabric cluster.
+
+```bash
+$ bash scripts/start_fabric.sh
+```
+
+or
 
 ```sh
-$ docker-compose up
+$ docker-compose -f docker-compose-2orgs-4peers.yaml up
 ```
 
 Check the output log that the peer is connected to the ca and orderer successfully.
 
-There will be 4 running containers.
+There will be 7 running containers, include 4 peers, 1 cli, 1 ca and 1 orderer.
 
 ```bash
 $ docker ps -a
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   33 seconds ago      Up 32 seconds       7050-7059/tcp                                     fabric-cli
-ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   33 seconds ago      Up 32 seconds       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                34 seconds ago      Up 33 seconds       0.0.0.0:7050->7050/tcp                            fabric-orderer0
-bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   34 seconds ago      Up 33 seconds       7054/tcp, 0.0.0.0:7054->7054/tcp
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                                 NAMES
+8683435422ca        hyperledger/fabric-peer      "bash -c 'while true;"   19 seconds ago      Up 18 seconds       7050-7059/tcp                                                                         fabric-cli
+f284c4dd26a0        hyperledger/fabric-peer      "peer node start --pe"   22 seconds ago      Up 19 seconds       7050/tcp, 0.0.0.0:7051->7051/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+95fa3614f82c        hyperledger/fabric-ca        "fabric-ca-server sta"   22 seconds ago      Up 19 seconds       0.0.0.0:7054->7054/tcp                                                                fabric-ca
+833ca0d8cf41        hyperledger/fabric-orderer   "orderer"                22 seconds ago      Up 19 seconds       0.0.0.0:7050->7050/tcp                                                                orderer.example.com
+cd21cfff8298        hyperledger/fabric-peer      "peer node start --pe"   22 seconds ago      Up 20 seconds       7050/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+372b583b3059        hyperledger/fabric-peer      "peer node start --pe"   22 seconds ago      Up 20 seconds       7050/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+47ce30077276        hyperledger/fabric-peer      "peer node start --pe"   22 seconds ago      Up 20 seconds       7050/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
 ```
 
-## Use default channel
+#### Test fabric network
 
-By default, all the peer will join the default chain of `testchainid`.
+Into the container fabric-cli and run the test script.
 
 ```bash
 $ docker exec -it fabric-cli bash
-$ peer channel list  
-Channels peers has joined to:
-	 testchainid
-UTC [main] main -> INFO 001 Exiting.....
+$ bash ./scripts/test_4peers.sh
 ```
 
-After the cluster is synced successfully, you can validate by install/instantiate, invoking or querying chaincode from the container or from the host.
-
-### install&instantiate
-Use `docker exec -it fabric-cli bash` to open a bash inside container `fabric-cli`, which will accept our chaincode testing commands of `install&instantiate`, `invoke` and `query`.
-
-Inside the container, run the following command to install a new chaincode of the example02. The chaincode will initialize two accounts: `a` and `b`, with value of `100` and `200`.
+You should see the following output:
 
 ```bash
-$ peer chaincode install -v 1.0 -n test_cc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+UTC [msp] GetLocalMSP -> DEBU 004 Returning existing local MSP
+UTC [msp] GetDefaultSigningIdentity -> DEBU 005 Obtaining default signing identity
+UTC [msp/identity] Sign -> DEBU 006 Sign: plaintext: 0AB1070A6708031A0C08F6DCDDC90510...6D7963631A0A0A0571756572790A0161 
+UTC [msp/identity] Sign -> DEBU 007 Sign: digest: 4095B73E1AA14FE681BCF891A6E08E55D7B01FA0C2D01E69E91DD1019E9E48CB 
+Query Result: 90
+UTC [main] main -> INFO 008 Exiting.....
+===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
+
+===================== All GOOD, End-2-End execution completed ===================== 
+
+
+ _____   _   _   ____            _____   ____    _____ 
+| ____| | \ | | |  _ \          | ____| |___ \  | ____|
+|  _|   |  \| | | | | |  _____  |  _|     __) | |  _|  
+| |___  | |\  | | |_| | |_____| | |___   / __/  | |___ 
+|_____| |_| \_| |____/          |_____| |_____| |_____|
 ```
-This will take a while, and the result may look like following.
+
+## Explain the steps
+
+This section will show you how to operate the chaincode in detail.
+first start fabric network with `docker-compose-1peer.yaml`, and we will obtain the basic environmet that can be operated.
 
 ```bash
-[golang-platform] writeGopathSrc -> INFO 001 rootDirectory = /go/src
-container] WriteFolderToTarPackage -> INFO 002 rootDirectory = /go/src
-[main] main -> INFO 003 Exiting.....
+$ docker-compose -f docker-compose-1peer.yaml up
 ```
 
-Then instantiate the chaincode test_cc on defaule channel testchainid.
-```bash
-$ peer chaincode instantiate -v 1.0 -n test_cc -c '{"Args":["init","a","100","b","200"]}' -o orderer0:7050
-```
-
-This will take a while, and the result may look like following:
-
-```bash
-UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-UTC [main] main -> INFO 003 Exiting.....
-```
-
-There should be no error in the return log, and in the peer nodes's output. 
-Wait several seconds till the deploy is finished.
-
-If the `peer chaincode install` and `peer chaincode instantiate` commands are executed successfully, there will generate a new chaincode container, besides the 4 existing one, name like `dev-peer0-test_cc-1.0`.
-```bash
-$ docker ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                             NAMES
-cf7bf529f214        dev-peer0-test_cc-1.0        "chaincode -peer.a..."   58 seconds ago      Up 58 seconds                                                         dev-peer0-test_cc-1.0
-44b6870b0802        hyperledger/fabric-peer      "bash -c 'while tr..."   14 minutes ago      Up 14 minutes       7050-7059/tcp                                     fabric-cli
-ed2c4927c0ed        hyperledger/fabric-peer      "peer node start -..."   14 minutes ago      Up 14 minutes       7050/tcp, 7052-7059/tcp, 0.0.0.0:7051->7051/tcp   fabric-peer0
-af5ba8f213bb        hyperledger/fabric-orderer   "orderer"                14 minutes ago      Up 14 minutes       0.0.0.0:7050->7050/tcp                            fabric-orderer0
-bbe31b98445f        hyperledger/fabric-ca        "fabric-ca-server ..."   14 minutes ago      Up 14 minutes       7054/tcp, 0.0.0.0:7054->7054/tcp                  fabric-ca
-
-```
-
-And will also generate a new chaincode image, name like `dev-peer0-test_cc-1.0`.
-```bash
-$ docker images
-REPOSITORY                         TAG                    IMAGE ID            CREATED              SIZE
-dev-peer0-test_cc-1.0              latest                 84e5422eead5        About a minute ago   176 MB
-...
-```
-
-### Query
-Inside the container, query the existing value of `a` and `b`.
-
-*Notice that the query method can be called by invoke a transaction.*
-
-```bash
-$ peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
-```
-
-The final output may look like the following, with a payload value of `100`.
-
-```bash
-Query Result: 100
-[main] main -> INFO 001 Exiting.....
-```
-
-Query the value of `b`
-
-```bash
-$ peer chaincode query -n test_cc -c '{"Args":["query","b"]}' -o orderer0:7050
-```
-
-The final output may look like the following, with a payload value of `200`.
-
-```bash
-Query Result: 200
-[main] main -> INFO 001 Exiting.....
-```
-
-
-### Invoke
-Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
-
-```bash
-$ peer chaincode invoke -n test_cc -c '{"Args":["invoke","a","b","10"]}' -o orderer0:7050
-```
-
-The final result may look like the following, the response should be `OK`.
-
-```bash
-[chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 response:<status:200 message:"OK" > payload:"\n \215\263\337\322u\323?\242t$s\035l\270Ta\270\270+l6\322X\346\365k\020\215Phy\260\022C\n<\002\004lccc\001\007test_cc\004\001\001\001\001\000\000\007test_cc\002\001a\004\001\001\001\001\001b\004\001\001\001\001\002\001a\000\00290\001b\000\003210\000\032\003\010\310\001" endorsement:<endorser:"\n\007DEFAULT\022\232\007-----BEGIN -----\nMIICjDCCAjKgAwIBAgIUBEVwsSx0TmqdbzNwleNBBzoIT0wwCgYIKoZIzj0EAwIw\nfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xHzAdBgNVBAoTFkludGVybmV0IFdpZGdldHMsIEluYy4xDDAK\nBgNVBAsTA1dXVzEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMTYxMTExMTcwNzAw\nWhcNMTcxMTExMTcwNzAwWjBjMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGgg\nQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxGzAZBgNVBAoTEkh5cGVybGVkZ2Vy\nIEZhYnJpYzEMMAoGA1UECxMDQ09QMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nHBuKsAO43hs4JGpFfiGMkB/xsILTsOvmN2WmwpsPHZNL6w8HWe3xCPQtdG/XJJvZ\n+C756KEsUBM3yw5PTfku8qOBpzCBpDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw\nFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFOFC\ndcUZ4es3ltiCgAVDoyLfVpPIMB8GA1UdIwQYMBaAFBdnQj2qnoI/xMUdn1vDmdG1\nnEgQMCUGA1UdEQQeMByCCm15aG9zdC5jb22CDnd3dy5teWhvc3QuY29tMAoGCCqG\nSM49BAMCA0gAMEUCIDf9Hbl4xn3z4EwNKmilM9lX2Fq4jWpAaRVB97OmVEeyAiEA\n25aDPQHGGq2AvhKT0wvt08cX1GTGCIbfmuLpMwKQj38=\n-----END -----\n" signature:"0E\002!\000\271\232\230\261\336\352ow\021V3\224\252\217\362vzM'\213\376@2\306/\201=\213\023\244\310%\002 \014\277\362|\223\342\277Pk5(\004\331\014\021\307\273\351/]:\020\232\013d\261\035+\266\265\305<" > 
-[main] main -> INFO 002 Exiting.....
-```
-
-### Query
-Query again the existing value of `a` and `b`.
-
-```bash
-$ peer chaincode query -n test_cc -c '{"Args":["query","a"]}'
-```
-The new value of `a` should be 90.
-
-```bash
-$ peer chaincode query -n test_cc -c '{"Args":["query","b"]}'
-```
-The new value of `b` should be 210.
-
-## Use new created channel (Optional)
-
-Start the Docker Compose project with `docker-compose-new-channel.yml`.
-
-```bash
-$ docker-compose -f docker-compose-new-channel.yml up
-```
-
-There will be several containers running successfully.
+There will be 4 containers running successfully.
 
 ```bash
 $ docker ps
@@ -195,29 +112,26 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:7054->7054/tcp                                                    fabric-ca
 ```
 
-### Auto testing operation (optional)
+### Manually testing
 
-Run this script will check whether the MVE bootstrap success.
+#### Create artifacts
 
-```bash
-$ docker exec -it fabric-cli bash
-$ ./peer/scripts/new-channel-auto-test.sh
-```
+**You can skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-### Manually create artifacts (optional)
+Detailed steps in [GenerateArtifacts](./artifacts_generation/GenerateArtifacts.md) explains the creation of `orderer.genesis.block` (needed by orderering service) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
-**Skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
-
-Detailed steps in [GenerateArtifacts](artifacts_generation.md) explains the creation of `orderer.genesis.block` (needed by orderer to bootup) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
-
-### Create new channel
+#### Create new channel
 
 Create a new channel named `mychannel` with the existing `channel.tx` file.
 
 ```bash
 $ docker exec -it fabric-cli bash
+```
+Into the container and execute following commands:
+
+```bash
 $ CHANNEL_NAME="mychannel"
-peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx
+$ peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/channel.tx
 ```
 The cmd will return lots of info, which is the content of the configuration block.
 
@@ -234,7 +148,7 @@ Check the log output of `orderer.example.com`, should find some message like
 orderer.example.com | UTC [orderer/multichain] newChain -> INFO 004 Created and starting new chain newchannel
 ```
 
-### Join the channel
+#### Join the channel
 
 Use the following command to join `peer0.org1.example.com` the channel
 
@@ -255,15 +169,15 @@ Channels peers has joined to:
 2017-04-11 03:44:40.313 UTC [main] main -> INFO 001 Exiting.....
 ```
 
-### Update anchor peers 
+#### Update anchor peers 
 
 The `configtx.yaml` file contains the definitions for our sample network and presents the topology of the network components - three members (OrdererOrg, Org1 & Org2), But in this MVE, we just use OrdererOrg and Org1, org1 has only peer(pee0.org1), and chose it as anchor peers for Org1. 
 
 ```bash
-$ peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx
+$ peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/Org1MSPanchors.tx
 ```
 
-### Install&Instantiate
+#### Install&Instantiate
 
 First `install` a chaincode named `mycc` to `peer0`.
 
@@ -305,7 +219,7 @@ eb1d9c73b26b        hyperledger/fabric-peer               "bash -c 'while tr..."
 c87095528f76        hyperledger/fabric-ca                 "fabric-ca-server ..."   About a minute ago   Up About a minute   7054/tcp, 0.0.0.0:7054->7054/tcp                                                    fabric-ca
 ```
 
-### Query
+#### Query
 
 Query the existing value of `a` and `b`.
 
@@ -331,7 +245,7 @@ Query Result: 200
 ```
 
 
-### Invoke
+#### Invoke
 
 Inside the container, invoke a transaction to transfer `10` from `a` to `b`.
 
@@ -346,7 +260,7 @@ UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001 Invoke result: version:1 r
 2017-04-06 09:47:15.993 UTC [main] main -> INFO 002 Exiting.....
 ```
 
-### Query
+#### Query
 
 And then query the value of `a` and `b`.
 
@@ -390,6 +304,14 @@ Query Response:{"Name":"a","Amount":"90"}
 
 ```
 
+### (optional) All-in-one testing operation
+
+Run this script will check whether the MVE bootstrap success.
+
+```bash
+$ docker exec -it fabric-cli bash
+$ bash ./peer/scripts/new-channel-auto-test.sh
+```
 
 ## Acknowledgement
 * [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
