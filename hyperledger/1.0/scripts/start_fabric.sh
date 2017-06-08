@@ -2,7 +2,7 @@
 
 source scripts/header.sh
 
-COMPOSE_FILE=${1:-"docker-compose-2orgs-4peers.yml"}
+COMPOSE_FILE=${1:-"docker-compose-2orgs-4peers.yaml"}
 
 echo_b "Start up with ${COMPOSE_FILE}"
 

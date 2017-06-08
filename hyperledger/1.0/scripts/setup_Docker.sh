@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./header.sh
+source scripts/header.sh
 
 if [ xroot != x$(whoami) ]
 then

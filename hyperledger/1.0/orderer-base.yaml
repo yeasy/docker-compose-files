@@ -23,7 +23,7 @@ services:
       - ORDERER_GENERAL_LISTENPORT=7050
      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
       # enabled TLS
-      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_ENABLED=false
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
