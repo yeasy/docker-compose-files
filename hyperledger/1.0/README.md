@@ -32,7 +32,7 @@ $ bash scripts/download_images.sh
 There are also some community [images](https://hub.docker.com/r/hyperledger/) at Dockerhub, use at your own choice.
 
 
-### Bootup Fabric 1.0
+### Bootup and test Fabric 1.0
 
 Start a  fabric cluster.
 
@@ -62,13 +62,41 @@ cd21cfff8298        hyperledger/fabric-peer      "peer node start --pe"   22 sec
 47ce30077276        hyperledger/fabric-peer      "peer node start --pe"   22 seconds ago      Up 20 seconds       7050/tcp, 7052/tcp, 7054-7059/tcp, 0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
 ```
 
-#### Test fabric network
+#### Initialize fabric network
 
-Into the container fabric-cli and run the test script.
+Into the container fabric-cli and run the initialize.sh script, this will prepare the basic environment required for chaincode operations,
+inclode `create channel`, `join channel`, `install` and `instantiate`. this script only needs to be executed once.
+
 
 ```bash
 $ docker exec -it fabric-cli bash
-$ bash ./scripts/test_4peers.sh
+$ bash ./scripts/initialize.sh
+```
+
+You should see the following output:
+
+```bash
+2017-06-09 10:13:01.015 UTC [main] main -> INFO 00c Exiting.....
+===================== Chaincode Instantiation on PEER2 on channel 'businesschannel' is successful ===================== 
+
+
+===================== All GOOD, initialization completed ===================== 
+
+
+ _____   _   _   ____  
+| ____| | \ | | |  _ \ 
+|  _|   |  \| | | | | |
+| |___  | |\  | | |_| |
+|_____| |_| \_| |____/ 
+```
+
+#### Chaincode operation
+
+After initialize network, you can execute some chaincode operations, such as `query` or `invoke`,
+and you can modify the parameters and execute this script repeatedly.
+
+```bash
+$ bash ./scripts/test_4peers.sh  #execute in container fabric-cli
 ```
 
 You should see the following output:
@@ -76,20 +104,34 @@ You should see the following output:
 ```bash
 UTC [msp] GetLocalMSP -> DEBU 004 Returning existing local MSP
 UTC [msp] GetDefaultSigningIdentity -> DEBU 005 Obtaining default signing identity
-UTC [msp/identity] Sign -> DEBU 006 Sign: plaintext: 0AB1070A6708031A0C08F6DCDDC90510...6D7963631A0A0A0571756572790A0161 
-UTC [msp/identity] Sign -> DEBU 007 Sign: digest: 4095B73E1AA14FE681BCF891A6E08E55D7B01FA0C2D01E69E91DD1019E9E48CB 
-Query Result: 90
+UTC [msp/identity] Sign -> DEBU 006 Sign: plaintext: 0AB7070A6D08031A0C08C3EAE9C90510...6D7963631A0A0A0571756572790A0161 
+UTC [msp/identity] Sign -> DEBU 007 Sign: digest: FA308EF50C4812BADB60D58CE15C1CF41089EFB93B27D46885D92C92F55E98A0 
+Query Result: 80
 UTC [main] main -> INFO 008 Exiting.....
-===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
+===================== Query on PEER3 on channel 'businesschannel' is successful ===================== 
 
 ===================== All GOOD, End-2-End execution completed ===================== 
 
 
- _____   _   _   ____            _____   ____    _____ 
-| ____| | \ | | |  _ \          | ____| |___ \  | ____|
-|  _|   |  \| | | | | |  _____  |  _|     __) | |  _|  
-| |___  | |\  | | |_| | |_____| | |___   / __/  | |___ 
-|_____| |_| \_| |____/          |_____| |_____| |_____|
+ _____   _   _   ____  
+| ____| | \ | | |  _ \ 
+|  _|   |  \| | | | | |
+| |___  | |\  | | |_| |
+|_____| |_| \_| |____/ 
+```
+
+At last, you can fetch blocks using following command:
+
+```bash
+$ NUM= the block's num you want to fetch
+$ peer channel fetch $NUM  -o orderer.example.com:7050 -c businesschannel
+```
+In this example, we `install` 4 times, and `invoke` 2 times, so we have 6 blocks in total, and we put it into `/e2e_cli/channel-artifacts`.
+you can also use following command to fetch blocks:
+
+```bash
+$ peer channel fetch oldest  -o orderer.example.com:7050 -c businesschannel 
+$ peer channel fetch newest  -o orderer.example.com:7050 -c businesschannel
 ```
 
 ## Explain the steps
@@ -118,7 +160,7 @@ bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About 
 
 **You can skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-Detailed steps in [GenerateArtifacts](./artifacts_generation/GenerateArtifacts.md) explains the creation of `orderer.genesis.block` (needed by orderering service) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
+Detailed steps in [GenerateArtifacts](./artifacts_generation/artifacts_generation.md) explains the creation of `orderer.genesis.block` (needed by orderering service) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
 #### Create new channel
 

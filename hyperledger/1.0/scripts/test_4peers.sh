@@ -1,15 +1,16 @@
 #!/bin/bash
 
 echo
-echo " ____    _____      _      ____    _____           _____   ____    _____ "
-echo "/ ___|  |_   _|    / \    |  _ \  |_   _|         | ____| |___ \  | ____|"
-echo "\___ \    | |     / _ \   | |_) |   | |    _____  |  _|     __) | |  _|  "
-echo " ___) |   | |    / ___ \  |  _ <    | |   |_____| | |___   / __/  | |___ "
-echo "|____/    |_|   /_/   \_\ |_| \_\   |_|           |_____| |_____| |_____|"
+echo "  ______    __     __      _       _____    ____     _    ______      ______      ______      _____ "
+echo " / _____|  |  |   |  |    / \     |_   _|  | |\ \   | |   / _____|   / ______ \   |  ___\ \   | ____|"
+echo "/ /        |  |---|  |   / _ \      | |    | | \ \  | |  / /        / /      \ \  | |    \ \  |  _|  "
+echo "\ \_____   |  |---|  |  / ___ \    _| |_   | |  \ \ | |  \ \_____   \ \______/ /  | |____/ /  | |___ "
+echo " \______|  |__|   |__| /_/   \_\  |_____|  |_|   \_\|_|   \______|   \ ______ /   |_______/   |_____|"
 echo
 
+
 CHANNEL_NAME="$1"
-: ${CHANNEL_NAME:="mychannel"}
+: ${CHANNEL_NAME:="businesschannel"}
 : ${TIMEOUT:="60"}
 COUNTER=1
 MAX_RETRY=5
@@ -50,91 +51,6 @@ setGlobals () {
 	fi
 
 	env |grep CORE
-}
-
-createChannel() {
-	setGlobals 0
-
-        if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
-	else
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
-	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "Channel creation failed"
-	echo "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
-	echo
-}
-
-updateAnchorPeers() {
-        PEER=$1
-        setGlobals $PEER
-
-        if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
-	else
-		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
-	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "Anchor peer update failed"
-	echo "===================== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully ===================== "
-	echo
-}
-
-## Sometimes Join takes time hence RETRY atleast for 5 times
-joinWithRetry () {
-	peer channel join -b $CHANNEL_NAME.block  >&log.txt
-	res=$?
-	cat log.txt
-	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
-		COUNTER=` expr $COUNTER + 1`
-		echo "PEER$1 failed to join the channel, Retry after 2 seconds"
-		sleep 2
-		joinWithRetry $1
-	else
-		COUNTER=1
-	fi
-        verifyResult $res "After $MAX_RETRY attempts, PEER$ch has failed to Join the Channel"
-}
-
-joinChannel () {
-	for ch in 0 1 2 3; do
-		setGlobals $ch
-		joinWithRetry $ch
-		echo "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
-		sleep 2
-		echo
-	done
-}
-
-installChaincode () {
-	PEER=$1
-	setGlobals $PEER
-	peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 >&log.txt
-	res=$?
-	cat log.txt
-        verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
-	echo "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
-	echo
-}
-
-instantiateChaincode () {
-	PEER=$1
-	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
-	# lets supply it directly as we know it using the "-o" option
-	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
-	else
-		peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
-	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "Chaincode instantiation on PEER$PEER on channel '$CHANNEL_NAME' failed"
-	echo "===================== Chaincode Instantiation on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
-	echo
 }
 
 chaincodeQuery () {
@@ -183,56 +99,33 @@ chaincodeInvoke () {
 	echo
 }
 
-## Create channel
-echo "Creating channel..."
-createChannel
-
-## Join all the peers to the channel
-echo "Having all peers join the channel..."
-joinChannel
-
-## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for org1..."
-updateAnchorPeers 0
-echo "Updating anchor peers for org2..."
-updateAnchorPeers 2
-
-## Install chaincode on Peer0/Org1 and Peer2/Org2
-echo "Installing chaincode on org1/peer0..."
-installChaincode 0
-echo "Install chaincode on org2/peer2..."
-installChaincode 2
-
-#Instantiate chaincode on Peer0/Org2
-echo "Instantiating chaincode on peer0/org2..."
-instantiateChaincode 2
 
 #Query on chaincode on Peer0/Org1
 echo "Querying chaincode on org1/peer0..."
-chaincodeQuery 0 100
+chaincodeQuery 2 100
 
 #Invoke on chaincode on Peer0/Org1
 echo "Sending invoke transaction on org1/peer0..."
-chaincodeInvoke 0
-
-## Install chaincode on Peer1/Org2
-echo "Installing chaincode on peer1/org2..."
-installChaincode 3
+chaincodeInvoke 1
 
 #Query on chaincode on Peer1/Org2, check if the result is 90
 echo "Querying chaincode on org2/peer1..."
 chaincodeQuery 3 90
+
+chaincodeInvoke 3
+
+chaincodeQuery 3 80
 
 echo
 echo "===================== All GOOD, End-2-End execution completed ===================== "
 echo
 
 echo
-echo " _____   _   _   ____            _____   ____    _____ "
-echo "| ____| | \ | | |  _ \          | ____| |___ \  | ____|"
-echo "|  _|   |  \| | | | | |  _____  |  _|     __) | |  _|  "
-echo "| |___  | |\  | | |_| | |_____| | |___   / __/  | |___ "
-echo "|_____| |_| \_| |____/          |_____| |_____| |_____|"
+echo " _____   _   _   ____  "
+echo "| ____| | \ | | |  _ \ "
+echo "|  _|   |  \| | | | | |"
+echo "| |___  | |\  | | |_| |"
+echo "|_____| |_| \_| |____/ "
 echo
 
 exit 0
