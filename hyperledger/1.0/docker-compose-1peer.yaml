@@ -48,15 +48,15 @@ services:
 
   peer0.org1.example.com:
     extends:
-      file: peer.yml
-      service: peer
+      file: peer-base.yaml
+      service: peer-base
     container_name: peer0.org1.example.com
     hostname: peer0.org1.example.com
     environment:
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_ADDRESS=peer0.org1:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
-      - CORE_PEER_GOSSIP_ORGLEADER=true
+     # - CORE_PEER_GOSSIP_ORGLEADER=true
      # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -76,8 +76,8 @@ services:
 
   cli:
     extends:
-      file: peer.yml
-      service: peer
+      file: peer-base.yaml
+      service: peer-base
     container_name: fabric-cli
     hostname: cli
     environment:
@@ -104,6 +104,7 @@ services:
     depends_on:
       - peer0.org1.example.com
       - orderer.example.com
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'while true; do sleep 20170504; done'
 
 #networks:
