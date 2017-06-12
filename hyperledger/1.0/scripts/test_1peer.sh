@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CHANNEL_NAME="$1"
-: ${CHANNEL_NAME:="mychannel"}
+: ${CHANNEL_NAME:="businesschannel"}
 : ${TIMEOUT:="60"}
 COUNTER=0
 MAX_RETRY=5
@@ -19,7 +19,7 @@ verifyResult () {
 }
 
 createChannel() {
-	peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/channel.tx >&log.txt
+	peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/channel.tx >&log.txt
 	res=$?
 	cat log.txt
 
@@ -53,7 +53,7 @@ joinChannel () {
 }
 
 updateAnchorPeers() {
-    peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./peer/channel-artifacts/Org1MSPanchors.tx >&log.txt
+    peer channel create -o orderer.example.com:7050 -c ${CHANNEL_NAME} -f ./channel-artifacts/Org1MSPanchors.tx >&log.txt
     res=$?
     cat log.txt
     verifyResult $res "Anchor peer update failed"
