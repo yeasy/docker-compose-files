@@ -62,4 +62,4 @@ services:
 #networks:
 #  default:
 #    external:
-#      name: fabric_pbft
+#      name: fabric_noops
