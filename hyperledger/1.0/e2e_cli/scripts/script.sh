@@ -9,7 +9,7 @@ echo "|____/    |_|   /_/   \_\ |_| \_\   |_|           |_____| |_____| |_____|"
 echo
 
 CHANNEL_NAME="$1"
-: ${CHANNEL_NAME:="mychannel"}
+: ${CHANNEL_NAME:="businesschannel"}
 : ${TIMEOUT:="60"}
 COUNTER=1
 MAX_RETRY=5
