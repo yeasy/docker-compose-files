@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source scripts/header.sh
+
 echo
 echo "  ______    __     __      _       _____    ____     _    ______      ______      ______      _____ "
 echo " / _____|  |  |   |  |    / \     |_   _|  | |\ \   | |   / _____|   / ______ \   |  ___\ \   | ____|"
@@ -16,12 +18,12 @@ COUNTER=1
 MAX_RETRY=5
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/cacerts/ca.example.com-cert.pem
 
-echo "Channel name : "$CHANNEL_NAME
+echo_b "Channel name : "$CHANNEL_NAME
 
 verifyResult () {
 	if [ $1 -ne 0 ] ; then
-		echo "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
-                echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
+		echo_b "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
+                echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
 		echo
    		exit 1
 	fi
@@ -55,7 +57,7 @@ setGlobals () {
 
 chaincodeQuery () {
   PEER=$1
-  echo "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+  echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
   setGlobals $PEER
   local rc=1
   local starttime=$(date +%s)
@@ -65,7 +67,7 @@ chaincodeQuery () {
   while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
   do
      sleep 3
-     echo "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
      peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}' >&log.txt
      test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
      test "$VALUE" = "$2" && let rc=0
@@ -73,10 +75,10 @@ chaincodeQuery () {
   echo
   cat log.txt
   if test $rc -eq 0 ; then
-	echo "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
   else
-	echo "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
-        echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
+	echo_r "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
+        echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
 	echo
 	exit 1
   fi
@@ -95,29 +97,33 @@ chaincodeInvoke () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Invoke execution on PEER$PEER failed "
-	echo "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
 }
 
 
 #Query on chaincode on Peer0/Org1
-echo "Querying chaincode on org1/peer0..."
+echo_b "Querying chaincode on org1/peer0..."
 chaincodeQuery 2 100
 
 #Invoke on chaincode on Peer0/Org1
-echo "Sending invoke transaction on org1/peer0..."
+echo_b "Sending invoke transaction on org1/peer0..."
 chaincodeInvoke 1
 
 #Query on chaincode on Peer1/Org2, check if the result is 90
-echo "Querying chaincode on org2/peer1..."
+echo_b "Querying chaincode on org2/peer1..."
 chaincodeQuery 3 90
 
+#Invoke on chaincode on Peer1/Org2
+echo_b "Sending invoke transaction on org2/peer1..."
 chaincodeInvoke 3
 
+#Query on chaincode on Peer1/Org2, check if the result is 80
+echo_b "Querying chaincode on org2/peer1..."
 chaincodeQuery 3 80
 
 echo
-echo "===================== All GOOD, End-2-End execution completed ===================== "
+echo_g "===================== All GOOD, End-2-End execution completed ===================== "
 echo
 
 echo

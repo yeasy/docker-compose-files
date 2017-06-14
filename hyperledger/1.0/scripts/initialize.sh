@@ -6,6 +6,8 @@ echo " ==========initialize businesschannel========== "
 echo " ============================================== "
 echo
 
+source scripts/header.sh
+
 CHANNEL_NAME="$1"
 : ${CHANNEL_NAME:="businesschannel"}
 : ${TIMEOUT:="60"}
@@ -13,12 +15,12 @@ COUNTER=1
 MAX_RETRY=5
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/cacerts/ca.example.com-cert.pem
 
-echo "Channel name : "$CHANNEL_NAME
+echo_b "Channel name : "$CHANNEL_NAME
 
 verifyResult () {
 	if [ $1 -ne 0 ] ; then
-		echo "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
-                echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
+		echo_b "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
+                echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
 		echo
    		exit 1
 	fi
@@ -61,7 +63,7 @@ createChannel() {
 	res=$?
 	cat log.txt
 	verifyResult $res "Channel creation failed"
-	echo "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
+	echo_g "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
 	echo
 }
 
@@ -77,7 +79,7 @@ updateAnchorPeers() {
 	res=$?
 	cat log.txt
 	verifyResult $res "Anchor peer update failed"
-	echo "===================== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully ===================== "
+	echo_g "===================== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully ===================== "
 	echo
 }
 
@@ -88,7 +90,7 @@ joinWithRetry () {
 	cat log.txt
 	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
 		COUNTER=` expr $COUNTER + 1`
-		echo "PEER$1 failed to join the channel, Retry after 2 seconds"
+		echo_b "PEER$1 failed to join the channel, Retry after 2 seconds"
 		sleep 2
 		joinWithRetry $1
 	else
@@ -101,7 +103,7 @@ joinChannel () {
 	for ch in 0 1 2 3; do
 		setGlobals $ch
 		joinWithRetry $ch
-		echo "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
+		echo_g "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
 		sleep 2
 		echo
 	done
@@ -114,7 +116,7 @@ installChaincode () {
 	res=$?
 	cat log.txt
         verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
-	echo "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
+	echo_g "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
 	echo
 }
 
@@ -131,46 +133,46 @@ instantiateChaincode () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Chaincode instantiation on PEER$PEER on channel '$CHANNEL_NAME' failed"
-	echo "===================== Chaincode Instantiation on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "===================== Chaincode Instantiation on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
 }
 
 
 ## Create channel
-echo "Creating channel..."
+echo_b "Creating channel..."
 createChannel
 
 ## Join all the peers to the channel
-echo "Having all peers join the channel..."
+echo_b "Having all peers join the channel..."
 joinChannel
 
 ## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for org1..."
+echo_b "Updating anchor peers for org1..."
 updateAnchorPeers 0
-echo "Updating anchor peers for org2..."
+echo_b "Updating anchor peers for org2..."
 updateAnchorPeers 2
 
 ## Install chaincode on Peer0/Org1 and Peer2/Org2
-echo "Installing chaincode on org1/peer0..."
+echo_b "Installing chaincode on org1/peer0..."
 installChaincode 0
 
-echo "Install chaincode on org1/peer1..."
+echo_b "Install chaincode on org1/peer1..."
 installChaincode 1
 
-echo "Install chaincode on org2/peer0..."
+echo_b "Install chaincode on org2/peer0..."
 installChaincode 2
 
-echo "Install chaincode on org2/peer1..."
+echo_b "Install chaincode on org2/peer1..."
 installChaincode 3
 
 # Instantiate chaincode on Peer0/Org2
 # Instantiate can only be executed once on any node
-echo "Instantiating chaincode on peer0/org2..."
+echo_b "Instantiating chaincode on peer0/org2..."
 instantiateChaincode 2
 
 
 echo
-echo "===================== All GOOD, initialization completed ===================== "
+echo_g "===================== All GOOD, initialization completed ===================== "
 echo
 
 echo
