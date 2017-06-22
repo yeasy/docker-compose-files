@@ -147,7 +147,9 @@ Will explain the usage of `cryptogen` and `configtxgen`
 ### [WIP] [Some verification tests](./docs/Verification-test.md)
 
 
-### [WIP] [Use couchDB](./docs/couchdb-usage.md)
+### [Use database couchDB](./docs/couchdb-usage.md)
+
+### [WIP] [kafka usage](./docs/kafka-usage.md)
 
 
 ## Acknowledgement
