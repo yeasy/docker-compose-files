@@ -17,7 +17,8 @@ echo_b "Downloading images from DockerHub... need a while"
 docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
-  && docker pull yeasy/hyperledger-fabric-ca:$IMG_VERSION
+  && docker pull yeasy/hyperledger-fabric-ca:$IMG_VERSION \
+  && docker pull hyperledger/fabric-couchdb:$ARCH-1.0.0-beta
 
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
