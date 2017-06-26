@@ -9,7 +9,7 @@ PROJECT_VERSION=1.0.0-preview
 
 IMG_VERSION=0.9.4
 # For testing latest images
-IMG_VERSION=latest
+IMG_VERSION=v1.0.0-rc1
 
 echo_b "Downloading images from DockerHub... need a while"
 
