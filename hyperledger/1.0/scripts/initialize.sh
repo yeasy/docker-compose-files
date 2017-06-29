@@ -165,10 +165,10 @@ installChaincode 2
 echo_b "Install chaincode on org2/peer1..."
 installChaincode 3
 
-# Instantiate chaincode on Peer0/Org2
+# Instantiate chaincode on Peer0/Org1
 # Instantiate can only be executed once on any node
-echo_b "Instantiating chaincode on peer0/org2..."
-instantiateChaincode 2
+echo_b "Instantiating chaincode on peer0/org1..."
+instantiateChaincode 0
 
 
 echo
