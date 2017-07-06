@@ -1,0 +1,209 @@
+
+version: '2'
+
+services:
+
+  zookeeper0:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: zookeeper
+    container_name: zookeeper0
+    hostname: zookeeper0
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+  zookeeper1:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: zookeeper
+    container_name: zookeeper1
+    hostname: zookeeper1
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+  zookeeper2:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: zookeeper
+    container_name: zookeeper2
+    hostname: zookeeper2
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+  kafka0:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: kafka
+    container_name: kafka0
+    hostname: kafka0
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    links:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka1:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: kafka
+    container_name: kafka1
+    hostname: kafka1
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    links:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka2:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: kafka
+    container_name: kafka2
+    hostname: kafka2
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    links:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka3:
+    extends:
+      file: orderer-kafka-base.yaml
+      service: kafka
+    container_name: kafka3
+    hostname: kafka3
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    links:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  orderer.example.com:  # There  can be multiple orderers
+    extends:
+      file: orderer-base.yaml
+      service: orderer-base
+    ports:
+      - "7050:7050"
+    container_name: orderer.example.com
+    hostname: orderer.example.com
+    environment:
+      - CONFIGTX_ORDERER_ORDERERTYPE=kafka
+      - CONFIGTX_ORDERER_KAFKA_BROKERS=[kafka0:9092,kafka1:9092,kafka2:9092,kafka3:9092]
+      # Above two env also need to modify in configtx.yaml
+      - ORDERER_GENERAL_GENESISPROFILE=SampleInsecureKafka
+      - ORDERER_KAFKA_VERBOSE=true
+    volumes:
+      - ./channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+    links:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+    command: orderer start
+
+  peer0.org1.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer0.org1.example.com
+    depends_on:
+      - orderer.example.com
+
+  peer1.org1.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer1.org1.example.com
+    depends_on:
+      - orderer.example.com
+
+  peer0.org2.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer0.org2.example.com
+    depends_on:
+      - orderer.example.com
+
+  peer1.org2.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer1.org2.example.com
+    depends_on:
+      - orderer.example.com
+
+  cli:
+    container_name: fabric-cli
+    hostname: fabric-cli
+    image: hyperledger/fabric-tools
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-cli
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    volumes:
+        #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        - ./configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+    depends_on:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    links:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'while true; do sleep 20170504; done'
