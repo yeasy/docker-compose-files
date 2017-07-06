@@ -36,7 +36,6 @@ setGlobals () {
 			CORE_PEER_ADDRESS=peer0.org1.example.com:7051
 		else
 			CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 		fi
 	else
 		CORE_PEER_LOCALMSPID="Org2MSP"
@@ -55,7 +54,7 @@ setGlobals () {
 createChannel() {
 	setGlobals 0
 
-        if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
 	else
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
