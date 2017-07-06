@@ -17,7 +17,9 @@ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-ca:$IMG_VERSION \
-  && docker pull hyperledger/fabric-couchdb:$ARCH-1.0.0-beta
+  && docker pull hyperledger/fabric-couchdb:$ARCH-1.0.0-beta \
+  && docker pull hyperledger/fabric-kafka:$ARCH-$PROJECT_VERSION \
+  && docker pull hyperledger/fabric-zookeeper:$ARCH-$PROJECT_VERSION
 
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
@@ -29,6 +31,8 @@ docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-ca:$IMG_VERSION hyperledger/fabric-ca \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseos:$ARCH-$BASEIMAGE_RELEASE \
-  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseimage:$ARCH-$BASEIMAGE_RELEASE
+  && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseimage:$ARCH-$BASEIMAGE_RELEASE \
+  && docker tag hyperledger/fabric-zookeeper:$ARCH-$PROJECT_VERSION hyperledger/fabric-zookeeper \
+  && docker tag hyperledger/fabric-kafka:$ARCH-$PROJECT_VERSION hyperledger/fabric-kafka
 
 echo_g "Done, now can startup the network using docker-compose..."
