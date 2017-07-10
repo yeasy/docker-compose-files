@@ -26,6 +26,7 @@ If you want to setup the environment manually, then can follow the below steps i
 Pull necessary images of peer, orderer, ca, and base image.
 
 ```sh
+$ bash scripts/cleanup_env.sh
 $ bash scripts/download_images.sh
 ```
 
@@ -34,7 +35,7 @@ There are also some community [images](https://hub.docker.com/r/hyperledger/) at
 
 ### Bootup and test Fabric 1.0
 
-Start a  fabric cluster.
+Start a fabric cluster.
 
 ```bash
 $ bash scripts/start_fabric.sh
@@ -90,7 +91,7 @@ You should see the following output:
 |_____| |_| \_| |____/ 
 ```
 
-#### Chaincode operation
+#### Chaincode Operations
 
 After initialize network, you can execute some chaincode operations, such as `query` or `invoke`,
 and you can modify the parameters and execute this script repeatedly.
@@ -122,7 +123,7 @@ UTC [main] main -> INFO 008 Exiting.....
 
 So far, we have quickly started a fabric network successfully.
 
-## Expand
+## More to explore
 
 ### [Explain the steps](./docs/docker-compose-1peer-usage.md)
 
@@ -148,6 +149,7 @@ Will explain the usage of `cryptogen` and `configtxgen`
 
 
 ### [Use database couchDB](./docs/couchdb-usage.md)
+
 
 ### [WIP] [kafka usage](./docs/kafka-usage.md)
 

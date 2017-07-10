@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# This script will remove all containers and hyperledger related images
+
 # Detecting whether can import the header file to render colorful cli output
 if [ -f ./header.sh ]; then
  source ./header.sh
@@ -11,8 +13,10 @@ else
  alias echo_b="echo"
 fi
 
-COMPOSE_FILE=${1:-"docker-compose-2orgs-4peers.yaml"}
+echo_b "Clean up all containers..."
+docker rm -f `docker ps -qa`
 
-echo_b "Start up with ${COMPOSE_FILE}"
+echo_b "Clean up all hyperledger related images..."
+docker rmi $(docker images |grep 'hyperledger')
 
-docker-compose -f ${COMPOSE_FILE} up -d
+echo_g "Env cleanup done!"

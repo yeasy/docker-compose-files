@@ -1,12 +1,21 @@
 #!/bin/bash
 
+# Detecting whether can import the header file to render colorful cli output
+if [ -f ./header.sh ]; then
+ source ./header.sh
+elif [ -f worker_node_setup/header.sh ]; then
+ source scripts/header.sh
+else
+ alias echo_r="echo"
+ alias echo_g="echo"
+ alias echo_b="echo"
+fi
+
 echo
 echo " ============================================== "
 echo " ==========initialize businesschannel========== "
 echo " ============================================== "
 echo
-
-source scripts/header.sh
 
 CHANNEL_NAME="$1"
 : ${CHANNEL_NAME:="businesschannel"}
