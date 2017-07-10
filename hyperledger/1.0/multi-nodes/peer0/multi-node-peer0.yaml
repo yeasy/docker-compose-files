@@ -1,0 +1,46 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+
+version: '2.0'
+
+services:
+
+  peer0.org1.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer0.org1.example.com
+
+  cli:
+    container_name: fabric-cli
+    hostname: fabric-cli
+    image: hyperledger/fabric-tools
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-cli
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    volumes:
+        #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - /etc/hosts:/etc/hosts
+        - ./channel-block:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-block
+    depends_on:
+      - peer0.org1.example.com
+    links:
+      - peer0.org1.example.com
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'while true; do sleep 20170504; done'
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric

@@ -1,0 +1,10 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+
+version: '2.0'
+
+services:
+
+  orderer.example.com:  # There  can be multiple orderers
+    extends:
+      file: docker-compose-base.yaml
+      service: orderer.example.com

@@ -1,0 +1,32 @@
+# This is the default base file to config env and command
+# Notice that chaincode is executed inside docker in default net mode
+# https://github.com/yeasy/docker-compose-files
+
+# Depends on the hyperledger/fabric-orderer image.
+
+version: '2'
+
+services:
+  orderer-base:
+    image: hyperledger/fabric-orderer
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      - ORDERER_GENERAL_BATCHTIMEOUT=2s
+      - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+      - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+      - ORDERER_GENERAL_LISTENPORT=7050
+     #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    expose:
+      - "7050"  #
+    command: orderer start

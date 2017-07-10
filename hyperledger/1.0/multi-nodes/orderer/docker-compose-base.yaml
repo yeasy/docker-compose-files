@@ -1,0 +1,26 @@
+# Base compose files for:
+
+# orderer.example.com
+# peer0.org1.example.com
+# peer1.org1.example.com
+# peer0.org2.example.com
+# peer1.org2.example.com
+
+
+version: '2'  # v3 does not support 'extends' yet
+
+services:
+
+  orderer.example.com:  # There  can be multiple orderers
+    extends:
+      file: orderer-base.yaml
+      service: orderer-base
+    container_name: orderer.example.com
+    hostname: orderer.example.com
+    ports:
+      - "7050:7050"
+    volumes:
+    - ./e2e_cli/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+    - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    command: orderer start
