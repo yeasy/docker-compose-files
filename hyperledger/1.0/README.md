@@ -143,13 +143,11 @@ Get events with block-listener
 
 Will explain the usage of `cryptogen` and `configtxgen`
 
-
-### [WIP] [Some verification tests](./docs/Verification-test.md)
-
-
 ### [Use database couchDB](./docs/couchdb-usage.md)
 
-### [WIP] [kafka usage](./docs/kafka-usage.md)
+### [kafka usage](./kafka/README.md)
+
+### [WIP] [Some verification tests](./docs/Verification-test.md)
 
 
 ## Acknowledgement
