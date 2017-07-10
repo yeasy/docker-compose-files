@@ -1,0 +1,29 @@
+
+version: '2'  # v3 does not support 'extends' yet
+
+services:
+
+  peer1.org1.example.com:
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    container_name: peer1.org1.example.com
+    hostname: peer1.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org1.example.com
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org1.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - /etc/hosts:/etc/hosts
+    ports:
+      - 8051:7051
+      - 8052:7052
+      - 8053:7053
+    command: peer node start
+
+

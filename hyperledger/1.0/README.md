@@ -149,7 +149,9 @@ Will explain the usage of `cryptogen` and `configtxgen`
 
 ### [Use database couchDB](./docs/couchdb-usage.md)
 
-### [WIP] [kafka usage](./docs/kafka-usage.md)
+### [kafka usage](./kafka/README.md)
+
+### [Multi-nodes deployment](./multi-nodes/README.md)
 
 
 ## Acknowledgement

@@ -1,0 +1,94 @@
+{
+	"payload": {
+		"data": {
+			"config_update": {
+				"channel_id": "businesschannel",
+				"read_set": {
+					"groups": {
+						"Application": {
+							"groups": {
+								"Org1MSP": {},
+								"Org2MSP": {}
+							}
+						}
+					},
+					"values": {
+						"Consortium": {
+							"value": {
+								"name": "SampleConsortium"
+							}
+						}
+					}
+				},
+				"write_set": {
+					"groups": {
+						"Application": {
+							"groups": {
+								"Org1MSP": {},
+								"Org2MSP": {}
+							},
+							"mod_policy": "Admins",
+							"policies": {
+								"Admins": {
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "MAJORITY",
+											"sub_policy": "Admins"
+										}
+									}
+								},
+								"Readers": {
+									"policy": {
+										"type": 3,
+										"value": {
+											"sub_policy": "Readers"
+										}
+									}
+								},
+								"Writers": {
+									"policy": {
+										"type": 3,
+										"value": {
+											"sub_policy": "Writers"
+										}
+									}
+								}
+							},
+							"version": "1"
+						}
+					},
+					"values": {
+						"Consortium": {
+							"value": {
+								"name": "SampleConsortium"
+							}
+						}
+					}
+				}
+			},
+			"signatures": [
+				{
+					"signature": "c2lnbmF0dXJl",
+					"signature_header": {
+						"creator": "Y2VydA==",
+						"nonce": "1oc+L6xljIBetYydlntxaHVhqhILYoYS"
+					}
+				}
+			]
+		},
+		"header": {
+			"channel_header": {
+				"channel_id": "businesschannel",
+				"timestamp": "2017-06-09T10:10:51.000Z",
+				"tx_id": "ca224b5c3fbe508e68b2e046e66640576af9dc5d50b1e025e3c16277a59fe927",
+				"type": 2
+			},
+			"signature_header": {
+				"creator": "Y2VydA==",
+				"nonce": "X993licxmnWT0zHGr4YZ6JYmnuokR7DA"
+			}
+		}
+	},
+	"signature": "c2lnbmF0dXJl"
+}
