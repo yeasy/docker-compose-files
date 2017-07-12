@@ -3,7 +3,7 @@
 # Detecting whether can import the header file to render colorful cli output
 if [ -f ./header.sh ]; then
  source ./header.sh
-elif [ -f worker_node_setup/header.sh ]; then
+elif [ -f scripts/header.sh ]; then
  source scripts/header.sh
 else
  alias echo_r="echo"
