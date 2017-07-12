@@ -3,7 +3,7 @@
 # Detecting whether can import the header file to render colorful cli output
 if [ -f ./header.sh ]; then
  source ./header.sh
-elif [ -f worker_node_setup/header.sh ]; then
+elif [ -f scripts/header.sh ]; then
  source scripts/header.sh
 else
  alias echo_r="echo"
@@ -14,10 +14,10 @@ fi
 ARCH=x86_64
 BASEIMAGE_RELEASE=0.3.1
 BASE_VERSION=1.0.0
-PROJECT_VERSION=1.0.0-rc1
+PROJECT_VERSION=1.0.0
 
-# For testing v1.0.0-rc1 images
-IMG_VERSION=v1.0.0-rc1
+# For testing 1.0.0 images
+IMG_VERSION=1.0.0
 
 echo_b "Downloading images from DockerHub... need a while"
 
@@ -26,9 +26,9 @@ docker pull yeasy/hyperledger-fabric-base:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-peer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-orderer:$IMG_VERSION \
   && docker pull yeasy/hyperledger-fabric-ca:$IMG_VERSION \
-  && docker pull hyperledger/fabric-couchdb:$ARCH-1.0.0-beta \
-  && docker pull hyperledger/fabric-kafka:$ARCH-$PROJECT_VERSION \
-  && docker pull hyperledger/fabric-zookeeper:$ARCH-$PROJECT_VERSION
+  && docker pull hyperledger/fabric-couchdb:$ARCH-$IMG_VERSION \
+  && docker pull hyperledger/fabric-kafka:$ARCH-$IMG_VERSION \
+  && docker pull hyperledger/fabric-zookeeper:$ARCH-$IMG_VERSION
 
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
@@ -41,7 +41,7 @@ docker tag yeasy/hyperledger-fabric-peer:$IMG_VERSION hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseos:$ARCH-$BASEIMAGE_RELEASE \
   && docker tag yeasy/hyperledger-fabric-base:$IMG_VERSION hyperledger/fabric-baseimage:$ARCH-$BASEIMAGE_RELEASE \
-  && docker tag hyperledger/fabric-zookeeper:$ARCH-$PROJECT_VERSION hyperledger/fabric-zookeeper \
-  && docker tag hyperledger/fabric-kafka:$ARCH-$PROJECT_VERSION hyperledger/fabric-kafka
+  && docker tag hyperledger/fabric-zookeeper:$ARCH-$IMG_VERSION hyperledger/fabric-zookeeper \
+  && docker tag hyperledger/fabric-kafka:$ARCH-$IMG_VERSION hyperledger/fabric-kafka
 
 echo_g "Done, now can startup the network using docker-compose..."
