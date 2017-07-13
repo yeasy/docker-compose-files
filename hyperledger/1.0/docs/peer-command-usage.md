@@ -27,7 +27,7 @@ $ peer channel fetch newest  -o orderer.example.com:7050 -c businesschannel
 When you set *TLS_ENABLED=true, then you can fetch blocks using following command:
 
 ```bash
-$ ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/cacerts/ca.example.com-cert.pem
+$ ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 $ NUM= the block's num you want to fetch
 $ peer channel fetch $NUM  -o orderer.example.com:7050 -c businesschannel --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA  |xargs mv true businesschannel_$NUM.block
 $ peer channel fetch oldest  -o orderer.example.com:7050 -c businesschannel  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA  |xargs mv true businesschannel_oldest.block
