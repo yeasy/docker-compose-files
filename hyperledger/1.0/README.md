@@ -146,11 +146,12 @@ Will explain the usage of `cryptogen` and `configtxgen`
 
 ### [Use database couchDB](./docs/couchdb-usage.md)
 
+### [kafka](./kafka/README.md)
+
+### [configtxlator](./docs/configtxlator-usage.md)
 
 ### [WIP] [Some verification tests](./docs/Verification-test.md)
 =======
-
-
 
 
 ## Acknowledgement
