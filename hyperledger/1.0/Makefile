@@ -17,10 +17,10 @@ start: # bootup the fabric network
 	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 init: # initialize the fabric network
-	docker exec -it fabric-cli bash ./scripts/test_4peers.sh
+	docker exec -it fabric-cli bash ./scripts/initialize.sh
 
 test: # test chaincode
-	docker exec -it fabric-cli bash ./scripts/initialize.sh
+	docker exec -it fabric-cli bash ./scripts/test_4peers.sh
 
 stop: # stop the fabric network
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
