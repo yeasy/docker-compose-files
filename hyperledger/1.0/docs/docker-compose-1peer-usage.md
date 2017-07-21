@@ -23,7 +23,7 @@ bea1154c7162        hyperledger/fabric-ca        "fabric-ca-server ..."   About 
 
 **You can skip this step**, as we already put the needed artifacts `orderer.genesis.block` and `channel.tx` under `e2e_cli/channel-artifacts/`.
 
-Detailed steps in [GenerateArtifacts](../artifacts_generation/artifacts_generation.md) explains the creation of `orderer.genesis.block` (needed by orderering service) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
+Detailed steps in [GenerateArtifacts](artifacts_generation.md) explains the creation of `orderer.genesis.block` (needed by orderering service) and `channel.tx` (needed by cli to create new channel) and crypto related configuration files.
 
 #### Create new channel
 

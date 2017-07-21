@@ -48,6 +48,7 @@ services:
     image: hyperledger/fabric-tools
     tty: true
     environment:
+      - GOPATH=/opt/gopath
       - CORE_PEER_ID=fabric-cli
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1

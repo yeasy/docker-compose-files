@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Install docker on Ubuntu/Debian system
+
 # Detecting whether can import the header file to render colorful cli output
 if [ -f ./header.sh ]; then
  source ./header.sh
