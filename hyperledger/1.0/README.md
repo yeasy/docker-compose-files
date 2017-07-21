@@ -7,23 +7,116 @@ If you're not familiar with Docker and Blockchain technology yet, feel free to h
 * [Docker Practice](https://github.com/yeasy/docker_practice)
 * [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
 
-## Setup
+
+## Pass-through
+
+The following command will run the entire process pass-through.
+
+```sh
+$ make 
+```
 
 tldr :)
 
-The following scripts will setup the environment and start a 4 peer (belonging to 2 organizations) fabric network.
+Otherwise, if u wanna know more or run the command manually, then go on reading the following part.
+
+## Environment Setup
+
+The following scripts will setup the environment by installing Docker, Docker-Compose and download required docker images. 
 
 ```sh
-$ bash scripts/setup_Docker.sh  # Install Docker, Docker-Compose 
-  bash scripts/download_images.sh  # Pull required Docker images
-  bash scripts/start_fabric.sh
+$ make setup # setup environment
 ```
 
 If you want to setup the environment manually, then have a look at [manually setup](docs/setup.md).
 
+## Bootup Fabric Network
+
+Start a 4 peer (belonging to 2 organizations) fabric network.
+
+```sh
+$ make start  # Start a fabric network
+```
+The script actually uses docker-compose to boot up the fabric network with several containers.
+
+There will be 7 running containers, include 4 peers, 1 cli, 1 ca and 1 orderer.
+
+```bash
+$ make show
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                                 NAMES
+1dc3f2557bdc        hyperledger/fabric-tools              "bash -c 'while tr..."   25 minutes ago       Up 25 minutes                                                                                                            fabric-cli
+5e5f37a0ed3c        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.org1.example.com
+6cce94da6392        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.org2.example.com
+e36c5e8d56c5        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.org1.example.com
+1fdd3d2b6527        hyperledger/fabric-orderer            "orderer start"          25 minutes ago       Up 25 minutes       0.0.0.0:7050->7050/tcp                                                                               orderer.example.com
+8af323340651        hyperledger/fabric-ca                 "fabric-ca-server ..."   25 minutes ago       Up 25 minutes       0.0.0.0:7054->7054/tcp                                                                               fabric-ca
+e41d8bca7fe5        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+```
+
+### Initialize Fabric network
+
+```bash
+$ make init  # Start a fabric network
+```
+
+The command actually calls the `./scripts/initialize.sh` script in the `fabric-cli` container to:
+
+* create a new application channel
+* join all peers into the channel
+* install and instantiate chaincodes for testing
+
+This script only needs to be executed once.
+
+You should see result like the following if the initialization is successful.
+
+```bash
+==============================================
+==========initialize businesschannel==========
+==============================================
+
+Channel name : businesschannel
+Creating channel...
+
+...
+
+===================== All GOOD, initialization completed ===================== 
+```
+
+And there will be new chaincode container generated in the system, looks like
+
+```bash
+$ make show
+CONTAINER ID        IMAGE                                 COMMAND                  CREATED              STATUS              PORTS                                                                                                NAMES
+9971c9fd1971        dev-peer1.org2.example.com-mycc-1.0   "chaincode -peer.a..."   54 seconds ago       Up 53 seconds                                                                                                            dev-peer1.org2.example.com-mycc-1.0
+e3092961b81b        dev-peer1.org1.example.com-mycc-1.0   "chaincode -peer.a..."   About a minute ago   Up About a minute                                                                                                        dev-peer1.org1.example.com-mycc-1.0
+57d3555f56e5        dev-peer0.org2.example.com-mycc-1.0   "chaincode -peer.a..."   About a minute ago   Up About a minute                                                                                                        dev-peer0.org2.example.com-mycc-1.0
+c9974dbc21d9        dev-peer0.org1.example.com-mycc-1.0   "chaincode -peer.a..."   23 minutes ago       Up 23 minutes                                                                                                            dev-peer0.org1.example.com-mycc-1.0
+```
+
+
 ## Test Chaincode
 
-See [chaincode test](docs/chaincode_test.md).
+```bash
+$ make test # test with chaincode
+```
+
+More details, see [chaincode test](docs/chaincode_test.md).
+
+
+## Stop the network
+
+```bash
+$ make stop # stop the fabric network
+```
+
+## Clean environment
+
+Clean all related containers and images.
+
+```bash
+$ make clean # clean the environment
+```
+
 
 ## More to learn
 

@@ -8,52 +8,12 @@ Use the following command to login into the container fabric-cli
 $ docker exec -it fabric-cli bash
 ```
 
-After executing the cmd, you can logout by `exit`.
+After finish the chaincode tests, you can log-out by `exit`.
 
-### Initialize fabric network
-
-Execute the `initialize.sh` script to 
-
-* create a new application channel
-* join all peers into the channel
-* install and instantiate chaincodes for testing
-
-This script only needs to be executed once.
-
-```bash
-$ bash ./scripts/initialize.sh
-```
-
-You should see result like the following if the initialization is successful.
-
-```bash
-==============================================
-==========initialize businesschannel==========
-==============================================
-
-Channel name : businesschannel
-Creating channel...
-
-...
-UTC [main] main -> INFO 00c Exiting.....
-===================== Chaincode Instantiation on PEER2 on channel 'businesschannel' is successful ===================== 
-
-
-===================== All GOOD, initialization completed ===================== 
-
-
- _____   _   _   ____  
-| ____| | \ | | |  _ \ 
-|  _|   |  \| | | | | |
-| |___  | |\  | | |_| |
-|_____| |_| \_| |____/ 
-```
-
-And there will be new chaincode container generated in the system
 
 ### Chaincode Operations
 
-After initialize network, you can execute some chaincode operations, such as `query` or `invoke`,
+You can execute some chaincode operations, such as `query` or `invoke`,
 and you can modify the parameters and execute this script repeatedly.
 
 ```bash
@@ -72,13 +32,4 @@ UTC [main] main -> INFO 008 Exiting.....
 ===================== Query on PEER3 on channel 'businesschannel' is successful ===================== 
 
 ===================== All GOOD, End-2-End execution completed ===================== 
-
-
- _____   _   _   ____  
-| ____| | \ | | |  _ \ 
-|  _|   |  \| | | | | |
-| |___  | |\  | | |_| |
-|_____| |_| \_| |____/ 
 ```
-
-So far, we have quickly started a fabric network successfully.
