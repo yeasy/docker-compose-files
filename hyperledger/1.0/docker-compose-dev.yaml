@@ -63,6 +63,7 @@ services:
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0:7051
       #- CORE_PEER_LOCALMSPID=Org0MSP
+      - CHANNEL_NAME=businesschannel
     links:
       - peer0
       - orderer0
