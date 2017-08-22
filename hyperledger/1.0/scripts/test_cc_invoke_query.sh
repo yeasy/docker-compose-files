@@ -48,7 +48,6 @@ setGlobals () {
 			CORE_PEER_ADDRESS=peer0.org1.example.com:7051
 		else
 			CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 		fi
 	else
 		CORE_PEER_LOCALMSPID="Org2MSP"
@@ -112,23 +111,32 @@ chaincodeInvoke () {
 
 
 #Query on chaincode on Peer0/Org1
-echo_b "Querying chaincode on org1/peer0..."
+echo_b "Querying chaincode on all 4 peers..."
+chaincodeQuery 0 100
+chaincodeQuery 1 100
 chaincodeQuery 2 100
+chaincodeQuery 3 100
 
 #Invoke on chaincode on Peer0/Org1
-echo_b "Sending invoke transaction on org1/peer0..."
-chaincodeInvoke 1
+echo_b "Sending invoke transaction (transfer 10) on org1/peer0..."
+chaincodeInvoke 0
 
 #Query on chaincode on Peer1/Org2, check if the result is 90
-echo_b "Querying chaincode on org2/peer1..."
+echo_b "Querying chaincode on all 4 peers..."
+chaincodeQuery 0 90
+chaincodeQuery 1 90
+chaincodeQuery 2 90
 chaincodeQuery 3 90
 
 #Invoke on chaincode on Peer1/Org2
-echo_b "Sending invoke transaction on org2/peer1..."
+echo_b "Sending invoke transaction on org2/peer3..."
 chaincodeInvoke 3
 
 #Query on chaincode on Peer1/Org2, check if the result is 80
-echo_b "Querying chaincode on org2/peer1..."
+echo_b "Querying chaincode on all 4peers..."
+chaincodeQuery 0 80
+chaincodeQuery 1 80
+chaincodeQuery 2 80
 chaincodeQuery 3 80
 
 echo

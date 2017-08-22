@@ -4,6 +4,9 @@ all:
 	echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 2
 
+	echo "Stop potential running network first"
+	make stop
+
 	make start
 	sleep 3
 
@@ -16,6 +19,7 @@ all:
 	make stop
 
 ready:
+	make stop
 	make start
 	sleep 3
 
@@ -41,7 +45,7 @@ init: # initialize the fabric network
 
 test: # test chaincode
 	echo "Invoke and query cc example02"
-	docker exec -it fabric-cli bash ./scripts/test_4peers.sh
+	docker exec -it fabric-cli bash ./scripts/test_cc_invoke_query.sh
 
 qscc: # test qscc quries
 	docker exec -it fabric-cli bash ./scripts/test_qscc.sh
