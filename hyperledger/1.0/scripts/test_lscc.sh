@@ -14,14 +14,46 @@ else
  alias echo_b="echo"
 fi
 
+ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
-#CHANNEL_NAME="$1"
-#: ${CHANNEL_NAME:="businesschannel"}
+CHANNEL_NAME="$1"
+: ${CHANNEL_NAME:="businesschannel"}
 
-echo_b "Lscc"
+echo_b "LSCC testing"
 
-peer chaincode query -C "" -n qscc -c '{"Args":["GetChainInfo","businesschannel"]}'
+# invoke required following params
+	#-o orderer.example.com:7050 \
+	#--tls "true" \
+	#--cafile ${ORDERER_CA} \
 
-peer chaincode query -C "" -n qscc -c '{"Args":["GetBlockByNumber","businesschannel","5"]}'
+echo_b "Get cc name"
+peer chaincode query \
+	-C "${CHANNEL_NAME}" \
+	-n lscc \
+	-c '{"Args":["getid","businesschannel", "mycc"]}'
 
-echo_g "Lscc testing done!"
+echo_b "Get cc ChaincodeDeploymentSpec"
+peer chaincode query \
+	-C "${CHANNEL_NAME}" \
+	-n lscc \
+	-c '{"Args":["getdepspec","businesschannel", "mycc"]}'
+
+echo_b "Get cc bytes"
+peer chaincode query \
+	-C "${CHANNEL_NAME}" \
+	-n lscc \
+  -c '{"Args":["getccdata","businesschannel", "mycc"]}'
+
+echo_b "Get all chaincodes installed on the channel"
+peer chaincode query \
+	-C "${CHANNEL_NAME}" \
+	-n lscc \
+	-c '{"Args":["getinstalledchaincodes"]}'
+
+echo_b "Get all chaincodes instantiated on the channel"
+peer chaincode query \
+	-C "${CHANNEL_NAME}" \
+	-n lscc \
+	-c '{"Args":["getchaincodes"]}'
+
+echo_g "LSCC testing done!"
