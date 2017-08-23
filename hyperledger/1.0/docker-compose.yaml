@@ -38,7 +38,7 @@ services:
 
   peer0:
     extends:
-      file: peer.yml
+      file: peer-base.yaml
       service: peer
     container_name: fabric-peer0
     hostname: peer0
@@ -55,7 +55,7 @@ services:
 
   cli:
     extends:
-      file: peer.yml
+      file: peer-base.yaml
       service: peer
     container_name: fabric-cli
     hostname: cli
