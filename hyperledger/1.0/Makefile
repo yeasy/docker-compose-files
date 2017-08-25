@@ -13,7 +13,7 @@ all:
 	make init
 	sleep 3
 
-	make test
+	make test_cc
 	sleep 3
 
 	make stop
@@ -26,7 +26,7 @@ ready:
 	make init
 	sleep 3
 
-	make test
+	make test_cc
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -43,9 +43,13 @@ init: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric network"
 	docker exec -it fabric-cli bash ./scripts/initialize.sh
 
-test: # test chaincode
-	@echo "Invoke and query cc example02"
-	docker exec -it fabric-cli bash ./scripts/test_cc_invoke_query.sh
+test_cc: # test chaincode
+	@echo "Invoke and query cc example02 on all peers"
+	docker exec -it fabric-cli bash ./scripts/test_cc_all.sh
+
+test_peer0: # test single peer
+	@echo "Invoke and query cc example02 on single peer0"
+	docker exec -it fabric-cli bash ./scripts/test_cc_peer0.sh
 
 qscc: # test qscc quries
 	docker exec -it fabric-cli bash ./scripts/test_qscc.sh

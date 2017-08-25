@@ -23,7 +23,7 @@ tldr :)
 
 * `make start`
 * `make init`
-* `make test`
+* `make test_cc`
 * `make stop`
 
 Otherwise, if u wanna know more or run the command manually, then go on reading the following part.
@@ -105,7 +105,7 @@ c9974dbc21d9        dev-peer0.org1.example.com-mycc-1.0   "chaincode -peer.a..."
 ## Test Chaincode
 
 ```bash
-$ make test # test invoke and query with chaincode
+$ make test_cc # test invoke and query with chaincode
 ```
 
 More details, see [chaincode test](docs/chaincode_test.md).
