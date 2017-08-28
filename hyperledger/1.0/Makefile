@@ -1,4 +1,5 @@
 COMPOSE_FILE="docker-compose-2orgs-4peers.yaml"
+COMPOSE_DEV_FILE="docker-compose-dev.yaml"
 
 all:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
@@ -8,15 +9,35 @@ all:
 	make stop
 
 	make start
-	sleep 3
+	sleep 1
 
 	make init
 	sleep 3
 
 	make test_cc
-	sleep 3
+	sleep 1
+
+	make lscc
+	sleep 1
+
+	make qscc
+	sleep 1
 
 	make stop
+
+dev:
+	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
+	sleep 2
+
+	@echo "Stop potential running dev network first"
+	make dev_stop
+
+	make dev_start
+	sleep 5
+
+	make test_peer0
+
+	make dev_stop
 
 ready:
 	make stop
@@ -41,7 +62,7 @@ start: # bootup the fabric network
 
 init: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric network"
-	docker exec -it fabric-cli bash ./scripts/initialize.sh
+	docker exec -it fabric-cli bash ./scripts/initialize_all.sh
 
 test_cc: # test chaincode
 	@echo "Invoke and query cc example02 on all peers"
@@ -73,3 +94,12 @@ ps: # show existing docker images
 
 logs: # show logs
 	docker-compose -f ${COMPOSE_FILE} logs -f --tail 200
+
+dev_start: # start fabric network for dev
+	@echo "Start a fabric network with 1 peer for dev"
+	docker-compose -f ${COMPOSE_DEV_FILE} up -d
+
+dev_stop: # stop the fabric network for dev
+	@echo "Stop the fabric network with 1 peer for dev"
+	docker-compose -f ${COMPOSE_DEV_FILE} down
+
