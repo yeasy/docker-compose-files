@@ -62,21 +62,21 @@ start: # bootup the fabric network
 
 init: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric network"
-	docker exec -it fabric-cli bash ./scripts/initialize_all.sh
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_all.sh"
 
 test_cc: # test chaincode
 	@echo "Invoke and query cc example02 on all peers"
-	docker exec -it fabric-cli bash ./scripts/test_cc_all.sh
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_all.sh"
 
 test_peer0: # test single peer
 	@echo "Invoke and query cc example02 on single peer0"
-	docker exec -it fabric-cli bash ./scripts/test_cc_peer0.sh
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
 qscc: # test qscc quries
-	docker exec -it fabric-cli bash ./scripts/test_qscc.sh
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
 
 lscc: # test lscc quries
-	docker exec -it fabric-cli bash ./scripts/test_lscc.sh
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
 
 stop: # stop the fabric network
 	@echo "Stop the fabric network"

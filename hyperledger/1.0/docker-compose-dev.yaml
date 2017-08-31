@@ -35,7 +35,7 @@ services:
     #extends:
     #  file: peer-base-dev.yaml
     #  service: peer-base
-    image: hyperledger/fabric-tools
+    image: yeasy/hyperledger-fabric:1.0.0
     container_name: fabric-cli
     hostname: fabric-cli
     tty: true
@@ -52,13 +52,15 @@ services:
       - CHANNEL_NAME:="businesschannel"
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
     volumes:
-        - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
-        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        #- $GOPATH/src/github.com/hyperledger/:/go/src/github.com/hyperledger/
+        - ./scripts:/tmp/scripts
+        - ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
         - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-        #- $GOPATH/src/github.com/hyperledger/:/go/src/github.com/hyperledger/
+        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - $GOPATH/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+        - /tmp/:/tmp/
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'while true; do sleep 20170504; done'
 
@@ -82,8 +84,8 @@ services:
       - 7051:7051
       - 7052:7052
       - 7053:7053
-    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
-    command: peer node start
+    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    #command: peer node start
 
 #networks:
 #  default:

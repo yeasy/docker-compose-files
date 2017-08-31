@@ -26,7 +26,7 @@ echo_b "LSCC testing"
 	#--tls "true" \
 	#--cafile ${ORDERER_CA} \
 
-echo_b "Get cc name"
+echo_b "Get id"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \

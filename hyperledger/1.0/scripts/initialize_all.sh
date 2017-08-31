@@ -23,6 +23,7 @@ createChannel
 echo_b "Having all peers join the channel..."
 joinChannel
 
+
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for org1..."
 updateAnchorPeers 0
