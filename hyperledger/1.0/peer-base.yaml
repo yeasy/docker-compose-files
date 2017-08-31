@@ -8,7 +8,7 @@ version: '2'
 
 services:
   peer-base:
-    image: hyperledger/fabric-peer
+    image: yeasy/hyperledger-fabric-peer:1.0.0
     environment:
      #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false

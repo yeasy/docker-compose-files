@@ -13,7 +13,7 @@ version: '2'  # v3 does not support 'extends' yet
 
 services:
   ca:
-    image: hyperledger/fabric-ca
+    image: yeasy/hyperledger-fabric-ca:1.0.0
     container_name: fabric-ca
     hostname: fabric-ca
   #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
@@ -36,7 +36,7 @@ services:
     command: orderer start
 
   cli:
-    image: hyperledger/fabric-tools
+    image: yeasy/hyperledger-fabric:1.0.0
     container_name: fabric-cli
     hostname: fabric-cli
     tty: true
