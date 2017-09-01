@@ -15,3 +15,6 @@ See [Fabric v0.6](0.6/).
 
 ## Hyperledger Fabric v1.0
 See [Fabric v1.0](1.0/).
+
+## Hyperledger Fabric v1.0.1
+See [Fabric v1.0.1](1.0.1/).
