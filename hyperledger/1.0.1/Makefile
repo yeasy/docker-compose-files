@@ -18,7 +18,6 @@ all:
 	sleep 1
 
 	make qscc
-	sleep 1
 
 	make stop
 
@@ -39,17 +38,16 @@ dev:
 	sleep 1
 
 	make qscc
-	sleep 1
 
 	make dev_stop
 
 ready:
 	make stop
 	make start
-	sleep 3
+	sleep 2
 
 	make init
-	sleep 3
+	sleep 2
 
 	make test_cc
 	@echo "Now the fabric network is ready to play"

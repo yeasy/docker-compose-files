@@ -9,7 +9,7 @@ version: '2.0'
 
 services:
   ca:
-    image: hyperledger/fabric-ca
+    image: yeasy/hyperledger-fabric-ca:1.0.1
     container_name: fabric-ca
     hostname: ca
   #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
@@ -45,7 +45,7 @@ services:
   cli:
     container_name: fabric-cli
     hostname: fabric-cli
-    image: hyperledger/fabric-tools
+    image: yeasy/hyperledger-fabric:1.0.1
     tty: true
     environment:
       - CORE_PEER_ID=fabric-cli
@@ -83,7 +83,7 @@ services:
   event-listener:
     container_name: fabric-event-listener
     hostname: fabric-event-listener
-    image: hyperledger/fabric-tools
+    image: yeasy/hyperledger-fabric:1.0.1
     tty: true
     environment:
       - CORE_PEER_ID=fabric-event-listener

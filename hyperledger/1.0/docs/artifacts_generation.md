@@ -1,70 +1,51 @@
 ## Usage of cryptogen and configtxgen
 
-As we already put the orderer_genesis.block, channel.tx, Org1MSPanchors.tx, Org2MSPanchors.tx under e2e_cli/channel-artifacts/.
-and put cryptographic materials to e2e_cli/crypto_config. So this doc will explain how we use cryptogen and configtxgen those two foundamental tools to manually create artifacts and certificates.
+To bootup a fabric network, we need:
 
-> Artifacts:
-> * `orderer_genesis.block`: Genesis block for the ordering service
-> * `channel.tx`: Channel transaction file for peers broadcast to the orderer at channel creation time.
-> * `Org1MSPanchors.tx`, `Org2MSPanchors.tx`: Anchor peers, as the name described, use for specify each Org's anchor peer on this channel.
+* crypto_config: crypto keys/certs for all organizations, see `e2e_cli/crypto-config`
+* orderer_genesis.block: genesis block to bootup orderer, see `e2e_cli/channel-artifacts`
+* channel.tx: transaction to create an application channel, see `e2e_cli/channel-artifacts`
+* Org1MSPanchors.tx, Org2MSPanchors.tx: Transaction to update anchor config in Org1 and Org2, see `e2e_cli/channel-artifacts`
 
-> Certificates:
-> * All files under crypto-config.
-
-### cryptogen
-
-This tool will generate the x509 certificates used to identify and authenticate the various components in the network.
-
-First boot network through `docker-compose-2orgs-4peers.yaml`
+### Generate crypto-config using cryptogen
 
 ```bash
-$ (sudo) docker-compose -f docker-compose-2orgs-4peers.yaml up
+$ cryptogen generate --config=/etc/hyperledger/fabric/crypto-config.yaml --output ./crypto-config
 ```
+cryptogen will read configuration from `crypto-config.yaml`, by default it was put under `/etc/hyperledger/fabric/`.
 
-and execute `cryptogen generate` command
-
-```bash
-$ cryptogen generate --config=/etc/hyperledger/fabric/crypto-config.yaml --output ./crypto
-```
-cryptogen will read configuration from `crypto-config.yaml`, so if we want to add(change) Orgs or perrs topology, we should change this file first.
-
-> The results will save under directory crypto, and this directory has mounted from host, defined in the `docker-compose-2orgs-4peers.yaml.yaml`.
-> for more information refer to Example2
+Then put the generated `crypto-config` under `/etc/hyperledger/fabric/`.
 
 
-### [configtxgen](http://hyperledger-fabric.readthedocs.io/en/latest/configtxgen.html?highlight=crypto#)
+### Generate blocks/txs using [configtxgen](http://hyperledger-fabric.readthedocs.io/en/latest/configtxgen.html?highlight=crypto#)
 
-This tool will generate genesis block, channel configuration transaction and update anchor peer.
-the following is a general steps after changing the configtx.yaml.
-
-The `configtxgen` tool is in `/go/bin/`, and when it's executed,
-it will read configuration from `/etc/hyperledger/fabric/configtx.yaml`,
-So if we want to regenerate `orderer.genesis.block` and `channel.tx`, we should
-replace `configtx.yaml` using our own configtx.yaml first.
+By default, configtxgen will read configuration from `/etc/hyperledger/fabric/configtx.yaml`, Please customize the configtx.yaml file before running.
 
 #### Create orderer genesis block
 
 ```bash
-root@cli: configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/orderer.genesis.block
+$ configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/orderer.genesis.block
 ```
 
 #### Create channel transaction artifact
 
 ```bash
-root@cli: CHANNEL_NAME=businesschannel
-root@cli: configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ${CHANNEL_NAME}
+$ CHANNEL_NAME=businesschannel
+$ configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ${CHANNEL_NAME}
 ```
-`channel.tx` is used for generating new channel `businesschannel`
+
+`channel.tx` is used for creating a new application channel `businesschannel`
 
 #### Update anchor peer for Organizations on the channel
 
-Chose peer peer0.org1.example.com as org1's anchor peer, and peer0.org2.example.com as org2's anchor peer.
+Choose peer peer0.org1.example.com as org1's anchor peer, and peer0.org2.example.com as org2's anchor peer.
+
 ```bash
-root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
+$ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
 ```
 
 ```bash
-root@cli: configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
+$ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
 ```
 
 > more details refer to Example2

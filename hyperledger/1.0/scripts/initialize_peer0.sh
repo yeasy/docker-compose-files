@@ -21,27 +21,21 @@ createChannel
 
 ## Join all the peers to the channel
 echo_b "Having all peers join the channel..."
-joinChannel
+joinChannel 0
 
 
 ## Set the anchor peers for each org in the channel
-echo_b "Updating anchor peers for org1..."
+echo_b "Updating anchor peers for peer0/org1..."
 updateAnchorPeers 0
-echo_b "Updating anchor peers for org2..."
-updateAnchorPeers 2
 
 ## Install chaincode on all peers
-echo_b "Installing chaincode on all 4 peers..."
+echo_b "Installing chaincode on peer0..."
 installChaincode 0
-installChaincode 1
-installChaincode 2
-installChaincode 3
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
-echo_b "Instantiating chaincode on all 2 channels (once for each channel)..."
+echo_b "Instantiating chaincode on the channel..."
 instantiateChaincode 0
-instantiateChaincode 2
 
 
 echo

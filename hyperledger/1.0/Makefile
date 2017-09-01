@@ -5,14 +5,11 @@ all:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 2
 
-	@echo "Stop potential running network first"
-	make stop
-
-	make start
-	sleep 1
+	@echo "Restarting network..."
+	make restart
 
 	make init
-	sleep 3
+	sleep 2
 
 	make test_cc
 	sleep 1
@@ -21,7 +18,6 @@ all:
 	sleep 1
 
 	make qscc
-	sleep 1
 
 	make stop
 
@@ -29,23 +25,29 @@ dev:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 2
 
-	@echo "Stop potential running dev network first"
-	make dev_stop
+	@echo "Restarting dev network..."
+	make dev_restart
 
-	make dev_start
-	sleep 5
+	make dev_init
+	sleep 2
 
 	make test_peer0
+	sleep 1
+
+	make lscc
+	sleep 1
+
+	make qscc
 
 	make dev_stop
 
 ready:
 	make stop
 	make start
-	sleep 3
+	sleep 2
 
 	make init
-	sleep 3
+	sleep 2
 
 	make test_cc
 	@echo "Now the fabric network is ready to play"
@@ -82,6 +84,8 @@ stop: # stop the fabric network
 	@echo "Stop the fabric network"
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
 
+restart: stop start
+
 clean: # clean up environment
 	@echo "Clean all images and containers"
 	bash scripts/clean_env.sh
@@ -99,7 +103,13 @@ dev_start: # start fabric network for dev
 	@echo "Start a fabric network with 1 peer for dev"
 	docker-compose -f ${COMPOSE_DEV_FILE} up -d
 
+dev_init: # initialize the fabric network
+	@echo "Install and instantiate cc example02 on the fabric dev network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
+
 dev_stop: # stop the fabric network for dev
 	@echo "Stop the fabric network with 1 peer for dev"
 	docker-compose -f ${COMPOSE_DEV_FILE} down
+
+dev_restart: dev_stop dev_start
 

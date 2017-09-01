@@ -19,9 +19,9 @@ fi
 #: ${CHANNEL_NAME:="businesschannel"}
 
 echo_b "Qscc GetChainInfo"
-
 peer chaincode query -C "" -n qscc -c '{"Args":["GetChainInfo","businesschannel"]}'
 
-peer chaincode query -C "" -n qscc -c '{"Args":["GetBlockByNumber","businesschannel","5"]}'
+echo_b "Qscc GetBlockByNumber 2"
+peer chaincode query -C "" -n qscc -c '{"Args":["GetBlockByNumber","businesschannel","2"]}'
 
 echo_g "Qscc testing done!"
