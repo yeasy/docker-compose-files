@@ -9,7 +9,6 @@ fi
 
 echo_b "Channel name : "$CHANNEL_NAME
 
-
 echo_b "====================Query the existing value of a===================================="
 chaincodeQuery 0 100
 

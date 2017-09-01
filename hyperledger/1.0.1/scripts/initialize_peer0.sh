@@ -23,7 +23,6 @@ createChannel
 echo_b "Having all peers join the channel..."
 joinChannel 0
 
-
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for peer0/org1..."
 updateAnchorPeers 0
@@ -36,7 +35,6 @@ installChaincode 0
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on the channel..."
 instantiateChaincode 0
-
 
 echo
 echo_g "===================== All GOOD, initialization completed ===================== "
