@@ -1,0 +1,41 @@
+# This is the default base file to config env and command
+# Notice that chaincode is executed inside docker in default net mode
+# https://github.com/yeasy/docker-compose-files
+
+# Depends on the hyperledger/fabric-peer image.
+
+version: '2'
+
+services:
+  peer-base:
+    image: hyperledger/fabric-peer
+    environment:
+     #- CORE_PEER_ID=peer0
+      - CORE_PEER_ADDRESSAUTODETECT=true
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=kafka_default  # uncomment this to use specific network
+     #- CORE_PEER_NETWORKID=dev
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    expose:
+      - "7050"  # Rest
+      - "7051"  # Grpc
+      - "7052"  # Peer CLI
+      - "7053"  # Peer Event
+      - "7054"  # eCAP
+      - "7055"  # eCAA
+      - "7056"  # tCAP
+      - "7057"  # eCAA
+      - "7058"  # tlsCAP
+      - "7059"  # tlsCAA
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    #volumes:
+    #    - /var/run/:/host/var/run/
+    command: peer node start

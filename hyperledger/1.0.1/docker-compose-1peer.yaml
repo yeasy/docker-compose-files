@@ -1,0 +1,34 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * 1 ca
+# * 1 orderer
+# * 1 peers in 1 orgs
+# * cli for testing
+
+version: '2.0'
+
+services:
+  ca:
+    extends:
+      file: docker-compose-base.yaml
+      service: ca
+
+  cli:
+    extends:
+      file: docker-compose-base.yaml
+      service: cli
+
+  orderer.example.com:  # There  can be multiple orderers
+    extends:
+      file: docker-compose-base.yaml
+      service: orderer.example.com
+
+  peer0.org1.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer0.org1.example.com
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric

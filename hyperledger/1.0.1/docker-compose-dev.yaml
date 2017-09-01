@@ -1,0 +1,84 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * 1 ca
+# * 1 orderer
+# * 1 peer
+# * cli for testing
+
+version: '2.0'
+
+services:
+  ca.example.com: # not used currently
+    extends:
+      file: base.yaml
+      service: ca-base
+    container_name: ca.example.com
+    hostname: ca.example.com
+  #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
+    ports:
+      - "7054:7054"
+    command: fabric-ca-server start -b admin:adminpw
+
+  orderer.example.com:  # There  can be multiple orderers
+    extends:
+      file: base.yaml
+      service: orderer-base
+    container_name: orderer.example.com
+    hostname: orderer.example.com
+    ports:
+      - "7050:7050"
+    volumes:
+    - ./e2e_cli/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+    - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    command: orderer start
+
+  cli:
+    #extends:
+    #  file: peer-base-dev.yaml
+    #  service: peer-base
+    #image: yeasy/hyperledger-fabric:1.0.1
+    extends:
+      file: base.yaml
+      service: cli-base
+    container_name: fabric-cli
+    hostname: fabric-cli
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    volumes:
+        - $GOPATH/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+        - /tmp/:/tmp/
+
+  peer0.org1.example.com:
+    extends:
+      file: base.yaml
+      service: peer-base-dev
+    container_name: peer0.org1.example.com
+    hostname: peer0.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 7051:7051
+      - 7052:7052
+      - 7053:7053
+    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    #command: peer node start
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric
