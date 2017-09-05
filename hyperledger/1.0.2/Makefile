@@ -12,7 +12,7 @@ all:
 	make stop
 
 ready:
-	@echo "Restart and init network..."
+	@echo "Restart, init network and then do cc testing..."
 	make restart init
 	sleep 2
 
@@ -28,7 +28,6 @@ start: # bootup the fabric network
 init: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_all.sh"
-
 
 stop: # stop the fabric network
 	@echo "Stop the fabric network"

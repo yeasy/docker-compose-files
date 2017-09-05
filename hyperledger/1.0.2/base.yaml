@@ -9,15 +9,15 @@ version: '2'
 services:
   ca-base:
     #image: hyperledger/fabric-ca
-    image: yeasy/hyperledger-fabric-ca:1.0.1
-    #image: hyperledger/fabric-ca:x86_64-1.0.1
+    image: yeasy/hyperledger-fabric-ca:1.0.2
+    #image: hyperledger/fabric-ca:x86_64-1.0.2
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_TLS_ENABLED=true
 
   orderer-base:
-    image: yeasy/hyperledger-fabric-orderer:1.0.1
-    #image: hyperledger/fabric-orderer:x86_64-1.0.1
+    image: yeasy/hyperledger-fabric-orderer:1.0.2
+    #image: hyperledger/fabric-orderer:x86_64-1.0.2
     environment:
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
@@ -41,13 +41,13 @@ services:
     command: orderer start
 
   peer-base:
-    image: yeasy/hyperledger-fabric-peer:1.0.1
-    #image: hyperledger/fabric-peer:x86_64-1.0.1
+    image: yeasy/hyperledger-fabric-peer:1.0.2
+    #image: hyperledger/fabric-peer:x86_64-1.0.2
     environment:
      #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=101_default  # uncomment this to use specific network
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=102_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
@@ -74,12 +74,12 @@ services:
     command: peer node start
 
   peer-base-dev:
-    image: yeasy/hyperledger-fabric:1.0.1
+    image: yeasy/hyperledger-fabric:1.0.2
     environment:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=101_default  # uncomment this to use specific network
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=102_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
@@ -106,8 +106,8 @@ services:
     command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
   cli-base:
-    image: yeasy/hyperledger-fabric:1.0.1
-    #image: hyperledger/fabric-tools:x86_64-1.0.1
+    image: yeasy/hyperledger-fabric:1.0.2
+    #image: hyperledger/fabric-tools:x86_64-1.0.2
     tty: true
     environment:
       #- GOPATH=/opt/gopath
@@ -128,6 +128,6 @@ services:
 
   couchdb-base:
     #container_name: couchdb0
-    image: hyperledger/fabric-couchdb:x86_64-1.0.1
+    image: hyperledger/fabric-couchdb:x86_64-1.0.2
     # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
     # for example map it to utilize Fauxton User Interface in dev environments.

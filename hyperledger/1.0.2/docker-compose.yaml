@@ -11,7 +11,7 @@ version: '2.0'
 
 services:
   ca:
-    image: yeasy/hyperledger-fabric-ca:1.0.1
+    image: yeasy/hyperledger-fabric-ca:1.0.2
     container_name: fabric-ca
     hostname: ca
   #  command: /go/src/github.com/hyperledger/fabric-ca/bin/ca server start -ca testdata/ec.pem -ca-key testdata/ec-key.pem -config testdata/testconfig.json
@@ -20,7 +20,7 @@ services:
     command: fabric-ca-server start -b admin:adminpw
 
   orderer0:  # There  can be multiple orderers
-    image: yeasy/hyperledger-fabric-orderer:1.0.1
+    image: yeasy/hyperledger-fabric-orderer:1.0.2
     container_name: fabric-orderer0
     hostname: orderer0
     environment:

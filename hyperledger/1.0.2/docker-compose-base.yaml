@@ -13,8 +13,8 @@ version: '2'  # v3 does not support 'extends' yet
 
 services:
   ca.org1.example.com:
-    #image: yeasy/hyperledger-fabric-ca:1.0.1
-    #image: hyperledger/fabric-ca:x86_64-1.0.1
+    #image: yeasy/hyperledger-fabric-ca:1.0.2
+    #image: hyperledger/fabric-ca:x86_64-1.0.2
     extends:
       file: base.yaml
       service: ca-base
@@ -31,8 +31,8 @@ services:
     command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/c843d3f021118963ce5d340e95286e8869bb7bd051454cd4166aa2887a2ad451_sk -b admin:adminpw -d'
 
   ca.org2.example.com:
-    #image: yeasy/hyperledger-fabric-ca:1.0.1
-    #image: hyperledger/fabric-ca:x86_64-1.0.1
+    #image: yeasy/hyperledger-fabric-ca:1.0.2
+    #image: hyperledger/fabric-ca:x86_64-1.0.2
     extends:
       file: base.yaml
       service: ca-base
@@ -64,8 +64,8 @@ services:
     command: orderer start
 
   cli:
-    #image: yeasy/hyperledger-fabric:1.0.1
-    #image: hyperledger/fabric-tools:x86_64-1.0.1
+    #image: yeasy/hyperledger-fabric:1.0.2
+    #image: hyperledger/fabric-tools:x86_64-1.0.2
     extends:
       file: base.yaml
       service: cli-base
