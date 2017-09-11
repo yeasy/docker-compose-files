@@ -137,6 +137,12 @@ clean: # clean up environment
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
 
+peer: # enter the peer container
+	docker exec -it peer0.org1.example.com bash
+
+dev_compile: # rebuild the peer
+	docker exec -it peer0.org1.example.com bash /tmp/peer_build.sh
+
 ps: # show existing docker images
 	docker ps -a
 
@@ -148,4 +154,4 @@ dev_logs: # show dev logs
 
 logs_check: # show logs
 	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
-	vim /tmp/dev_peer.log
+	less /tmp/dev_peer.log
