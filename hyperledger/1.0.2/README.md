@@ -1,6 +1,6 @@
-# Hyperledger fabric 1.0
+# Hyperledger fabric 1.0.2
 
-Here we show steps on how to setup a fabric 1.0 network on Linux (e.g., Ubuntu/Debian), and then use it to run chaincode tests.
+Here we show steps on how to setup a fabric 1.0.2 network on Linux (e.g., Ubuntu/Debian), and then use it to run chaincode tests.
 
 If you're not familiar with Docker and Blockchain technology yet, feel free to have a look at 2 books (in CN):
 
