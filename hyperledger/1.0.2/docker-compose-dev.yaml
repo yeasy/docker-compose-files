@@ -75,6 +75,7 @@ services:
       - 7051:7051
       - 7052:7052
       - 7053:7053
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     #command: peer node start
 

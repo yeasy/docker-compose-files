@@ -101,9 +101,9 @@ services:
       - "7059"  # tlsCAA
     volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
       - /var/run/docker.sock:/var/run/docker.sock
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     #volumes:
     #    - /var/run/:/host/var/run/
-    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
   cli-base:
     image: yeasy/hyperledger-fabric:1.0.2

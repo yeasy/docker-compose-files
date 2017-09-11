@@ -20,5 +20,5 @@ $ bash ./scripts/test_4peers.sh
 >
 > ```bash
 > $ cd ~/docker-compose-files/tree/master/hyperledger/1.0
-> $ bash ./scripts/download_official_images.sh
+> $ bash ./scripts/download_images.sh
 > ```

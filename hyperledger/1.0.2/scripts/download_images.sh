@@ -12,12 +12,12 @@ else
 fi
 
 ARCH=x86_64
-BASEIMAGE_RELEASE=0.3.1
-BASE_VERSION=1.0.0
-PROJECT_VERSION=1.0.0
+BASEIMAGE_RELEASE=0.3.2
+BASE_VERSION=1.1.0
+PROJECT_VERSION=1.0.2
 
 # For testing 1.0.0 images
-IMG_TAG=1.0.0
+IMG_TAG=1.0.2
 
 echo_b "Downloading images from DockerHub... need a while"
 
@@ -33,6 +33,33 @@ docker pull yeasy/hyperledger-fabric-base:$IMG_TAG \
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
 
+echo_b "===Pulling fabric images from official repo... with tag = ${IMG_TAG}"
+docker pull hyperledger/fabric-peer:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-tools:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-orderer:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-ca:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-ccenv:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-baseimage:$ARCH-$BASEIMAGE_RELEASE
+docker pull hyperledger/fabric-baseos:$ARCH-$BASEIMAGE_RELEASE
+docker pull hyperledger/fabric-couchdb:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-kafka:$ARCH-$IMG_TAG
+docker pull hyperledger/fabric-zookeeper:$ARCH-$IMG_TAG
+
+echo_g "Done, now can startup the network using docker-compose..."
+
+exit 0
+
+
+# following part is not necessary now.
+echo_b "===Re-tagging images to *latest* tag"
+docker tag hyperledger/fabric-peer:$ARCH-$IMG_TAG hyperledger/fabric-peer
+docker tag hyperledger/fabric-tools:$ARCH-$IMG_TAG hyperledger/fabric-tools
+docker tag hyperledger/fabric-orderer:$ARCH-$IMG_TAG hyperledger/fabric-orderer
+docker tag hyperledger/fabric-ca:$ARCH-$IMG_TAG hyperledger/fabric-ca
+docker tag hyperledger/fabric-zookeeper:$ARCH-$IMG_TAG hyperledger/fabric-zookeeper
+docker tag hyperledger/fabric-kafka:$ARCH-$IMG_TAG hyperledger/fabric-kafka
+docker tag hyperledger/fabric-couchdb:$ARCH-$IMG_TAG hyperledger/fabric-couchdb
+
 echo_b "Rename images with official tags..."
 docker tag yeasy/hyperledger-fabric-peer:$IMG_TAG hyperledger/fabric-peer \
   && docker tag yeasy/hyperledger-fabric-peer:$IMG_TAG hyperledger/fabric-tools \
@@ -44,4 +71,3 @@ docker tag yeasy/hyperledger-fabric-peer:$IMG_TAG hyperledger/fabric-peer \
   && docker tag hyperledger/fabric-zookeeper:$ARCH-$IMG_TAG hyperledger/fabric-zookeeper \
   && docker tag hyperledger/fabric-kafka:$ARCH-$IMG_TAG hyperledger/fabric-kafka
 
-echo_g "Done, now can startup the network using docker-compose..."

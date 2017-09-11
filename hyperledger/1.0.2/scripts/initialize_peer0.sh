@@ -20,7 +20,7 @@ echo_b "Creating channel..."
 createChannel
 
 ## Join all the peers to the channel
-echo_b "Having all peers join the channel..."
+echo_b "Having peer0 join the channel..."
 joinChannel 0
 
 ## Set the anchor peers for each org in the channel

@@ -41,13 +41,24 @@ dev:
 	sleep 2
 
 	@echo "Restart and init dev network..."
-	make dev_restart dev_init
-	sleep 2
+	make dev_ready
 
-	make test_peer0
 	make lscc qscc
 
 	make dev_stop
+
+dev_ready:
+	@echo "Restart and init network for dev mode..."
+	make dev_restart
+	sleep 30
+
+	make dev_init
+	sleep 2
+
+	make test_peer0
+	@echo "Now the fabric network is ready to play"
+	@echo "run 'make cli' to enter into the fabric-cli container."
+	@echo "run 'make dev_stop' when done."
 
 dev_start: # start fabric network for dev
 	@echo "Start a fabric network with 1 peer for dev"
@@ -107,7 +118,7 @@ test_peer0: # test single peer
 	@echo "Invoke and query cc example02 on single peer0"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
-qscc: # test qscc quries
+qscc: # test qscc queries
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
 
 lscc: # test lscc quries
@@ -132,3 +143,9 @@ ps: # show existing docker images
 logs: # show logs
 	docker-compose -f ${COMPOSE_FILE} logs -f --tail 200
 
+dev_logs: # show dev logs
+	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
+
+logs_check: # show logs
+	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
+	vim /tmp/dev_peer.log
