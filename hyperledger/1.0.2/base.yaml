@@ -73,8 +73,34 @@ services:
     #    - /var/run/:/host/var/run/
     command: peer node start
 
-  peer-base-dev:
+  cli-base:
     image: yeasy/hyperledger-fabric:1.0.2
+    #image: hyperledger/fabric-tools:x86_64-1.0.2
+    tty: true
+    environment:
+      #- GOPATH=/opt/gopath
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+      - CHANNEL_NAME:="businesschannel"
+    volumes:
+        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./scripts:/tmp/scripts
+        - ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
+        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'while true; do sleep 20170504; done'
+
+  couchdb-base:
+    #container_name: couchdb0
+    image: hyperledger/fabric-couchdb:x86_64-1.0.2
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+  peer-base-dev:
+    image: yeasy/hyperledger-fabric:latest
     environment:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
@@ -102,11 +128,36 @@ services:
     volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
       - /var/run/docker.sock:/var/run/docker.sock
       - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
-    #volumes:
-    #    - /var/run/:/host/var/run/
+    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
-  cli-base:
-    image: yeasy/hyperledger-fabric:1.0.2
+  orderer-base-dev:
+    image: yeasy/hyperledger-fabric:latest
+    #image: hyperledger/fabric-orderer:x86_64-1.0.2
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      - ORDERER_GENERAL_BATCHTIMEOUT=2s
+      - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+      - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+      - ORDERER_GENERAL_LISTENPORT=7050
+     #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    expose:
+      - "7050"  #
+    #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
+    command: bash -c 'orderer start'
+
+  cli-base-dev:
+    image: yeasy/hyperledger-fabric:latest
     #image: hyperledger/fabric-tools:x86_64-1.0.2
     tty: true
     environment:
@@ -124,10 +175,4 @@ services:
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
         - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'while true; do sleep 20170504; done'
-
-  couchdb-base:
-    #container_name: couchdb0
-    image: hyperledger/fabric-couchdb:x86_64-1.0.2
-    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
-    # for example map it to utilize Fauxton User Interface in dev environments.
+    command: bash -c 'while true; do sleep 20170910; done'

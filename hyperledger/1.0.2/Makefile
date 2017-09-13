@@ -69,10 +69,16 @@ dev_init: # initialize the fabric network
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
 
 dev_stop: # stop the fabric network for dev
-	@echo "Stop the fabric network with 1 peer for dev"
+	@echo "Stop and clean the fabric dev network"
 	docker-compose -f ${COMPOSE_DEV_FILE} down
 
 dev_restart: dev_stop dev_start
+
+dev_download: # download required images
+	@echo "Download Docker images for dev"
+	docker pull yeasy/hyperledger-fabric:latest
+	docker pull hyperledger/fabric-baseos:x86_64-0.4.1
+	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
 
 ################## Couchdb testing ################
 couch:
