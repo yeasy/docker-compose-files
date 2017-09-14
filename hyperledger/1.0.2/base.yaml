@@ -105,6 +105,7 @@ services:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s} %{message}%{color:reset}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=102_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true

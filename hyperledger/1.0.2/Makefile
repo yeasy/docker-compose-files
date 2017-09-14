@@ -158,6 +158,10 @@ logs: # show logs
 dev_logs: # show dev logs
 	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
 
-logs_check: # show logs
+logs_check: logs_save logs_view
+
+logs_save: # save logs
 	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
+
+logs_view: # view logs
 	less /tmp/dev_peer.log

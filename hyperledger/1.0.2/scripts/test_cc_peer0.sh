@@ -12,10 +12,12 @@ echo_b "Channel name : "$CHANNEL_NAME
 echo_b "====================Query the existing value of a===================================="
 chaincodeQuery 0 100
 
+sleep 1
+
 echo_b "=====================Invoke a transaction to transfer 10 from a to b=================="
 chaincodeInvoke 0
 
-sleep 2
+sleep 1
 
 echo_b "=====================Check if the result of a is 90==================================="
 chaincodeQuery 0 90
