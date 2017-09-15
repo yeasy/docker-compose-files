@@ -4,10 +4,6 @@ This project provides several useful Docker-Compose script to help quickly bootu
 
 Currently we support Kakfa 0.11.*.
 
-If you're not familiar with Docker, can have a look at these books (in CN):
-
-* [Docker Practice](https://github.com/yeasy/docker_practice)
-
 ## Start
 
 ```bash

@@ -2,10 +2,13 @@ Docker Compose Files
 ===
 Some typical docker compose examples.
 
-# Install Docker and Docker Compose
-Take ubuntu for example
+If you're not familiar with Docker, can have a look at these books (in CN):
 
-```sh
+* [Docker Practice](https://github.com/yeasy/docker_practice)
+
+# Install Docker&Docker Compose
+
+```bash
 $ curl -sSL https://get.docker.com/ | sh
 $ sudo pip install docker-compose
 ```
@@ -32,6 +35,9 @@ A simple haproxy and web applications cluster.
 Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any manual configuration. By default, the cluster enables PBFT as the consensus.
 
 See [hyperledger](hyperledger) for more details.
+
+## [kafka](kafka)
+Start a simple kafka service for testing.
 
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.
