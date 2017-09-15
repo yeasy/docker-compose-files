@@ -9,7 +9,7 @@ version: '2'
 
 services:
   zookeeper:
-    image: yeasy/kafka:latest
+    image: yeasy/kafka:0.11.0.1
     container_name: zookeeper
     hostname: zookeeper
     ports:
@@ -17,7 +17,7 @@ services:
     command: bash -c 'bash /tmp/start_zk.sh'
 
   kafka: # kafka service
-    image: yeasy/kafka:latest
+    image: yeasy/kafka:0.11.0.1
     container_name: kafka
     hostname: kafka
     ports:
@@ -27,7 +27,7 @@ services:
     command: bash -c 'bash /tmp/start_kafka.sh'
 
   cli:  # used for testing kafka cmds, see /tmp/*.sh
-    image: yeasy/kafka:latest
+    image: yeasy/kafka:0.11.0.1
     container_name: cli
     hostname: cli
     environment:
