@@ -50,7 +50,7 @@ dev:
 dev_ready:
 	@echo "Restart and init network for dev mode..."
 	make dev_restart
-	sleep 30
+	sleep 35
 
 	make dev_init
 	sleep 2
@@ -79,6 +79,9 @@ dev_download: # download required images
 	docker pull yeasy/hyperledger-fabric:latest
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.1
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+
+dev_logs: # show dev logs
+	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
 
 ################## Couchdb testing ################
 couch:
@@ -154,9 +157,6 @@ ps: # show existing docker images
 
 logs: # show logs
 	docker-compose -f ${COMPOSE_FILE} logs -f --tail 200
-
-dev_logs: # show dev logs
-	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
 
 logs_check: logs_save logs_view
 

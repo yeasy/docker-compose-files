@@ -105,7 +105,7 @@ services:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s} %{message}%{color:reset}
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=102_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
@@ -136,6 +136,7 @@ services:
     #image: hyperledger/fabric-orderer:x86_64-1.0.2
     environment:
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
@@ -154,8 +155,10 @@ services:
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     expose:
       - "7050"  #
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
-    command: bash -c 'orderer start'
+    command: bash -c 'bash /tmp/orderer_build.sh; orderer start'
 
   cli-base-dev:
     image: yeasy/hyperledger-fabric:latest
@@ -176,4 +179,4 @@ services:
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
         - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'while true; do sleep 20170910; done'
+    command: bash -c 'cd /tmp; bash scripts/func.sh; while true; do sleep 20170910; done'

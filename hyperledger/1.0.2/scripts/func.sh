@@ -97,6 +97,14 @@ createChannel() {
 	fi
 	res=$?
 	cat log.txt
+	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
+		COUNTER=` expr $COUNTER + 1`
+		echo_b "PEER$1 failed to create the channel, Retry after 2 seconds"
+		sleep 2
+		createChannel
+	else
+		COUNTER=1
+	fi
 	verifyResult $res "Channel creation failed"
 	echo_g "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
 	echo
