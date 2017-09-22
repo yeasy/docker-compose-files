@@ -8,15 +8,15 @@
 version: '2.0'
 
 services:
-  ca.org1.example.com:
-    extends:
-      file: docker-compose-base.yaml
-      service: ca.org1.example.com
+# ca.org1.example.com:
+#   extends:
+#     file: docker-compose-base.yaml
+#     service: ca.org1.example.com
 
-  ca.org2.example.com:
-    extends:
-      file: docker-compose-base.yaml
-      service: ca.org2.example.com
+# ca.org2.example.com:
+#   extends:
+#     file: docker-compose-base.yaml
+#     service: ca.org2.example.com
 
   cli:
     extends:

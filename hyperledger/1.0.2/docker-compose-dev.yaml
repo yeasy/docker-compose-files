@@ -20,6 +20,7 @@ services:
     - ./e2e_cli/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    command: bash -c 'orderer start'
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start'
 
   peer0.org1.example.com:
@@ -41,8 +42,8 @@ services:
       - 7051:7051
       - 7052:7052
       - 7053:7053
-    command: bash -c 'peer node start'
-    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    #command: bash -c 'peer node start'
+    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
   cli:
     #extends:

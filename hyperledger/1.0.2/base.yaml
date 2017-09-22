@@ -8,7 +8,7 @@ version: '2'
 
 services:
   ca-base:
-    #image: hyperledger/fabric-ca
+    #image: hyperledger/fabric-ca:1.0.2
     image: yeasy/hyperledger-fabric-ca:1.0.2
     #image: hyperledger/fabric-ca:x86_64-1.0.2
     environment:
@@ -16,8 +16,8 @@ services:
       - FABRIC_CA_SERVER_TLS_ENABLED=true
 
   orderer-base:
-    image: yeasy/hyperledger-fabric-orderer:1.0.2
-    #image: hyperledger/fabric-orderer:x86_64-1.0.2
+    #image: yeasy/hyperledger-fabric-orderer:1.0.2
+    image: hyperledger/fabric-orderer:x86_64-1.0.2
     environment:
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
@@ -41,8 +41,8 @@ services:
     command: orderer start
 
   peer-base:
-    image: yeasy/hyperledger-fabric-peer:1.0.2
-    #image: hyperledger/fabric-peer:x86_64-1.0.2
+    #image: yeasy/hyperledger-fabric-peer:1.0.2
+    image: hyperledger/fabric-peer:x86_64-1.0.2
     environment:
      #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
@@ -74,8 +74,8 @@ services:
     command: peer node start
 
   cli-base:
-    image: yeasy/hyperledger-fabric:1.0.2
-    #image: hyperledger/fabric-tools:x86_64-1.0.2
+    #image: yeasy/hyperledger-fabric:1.0.2
+    image: hyperledger/fabric-tools:x86_64-1.0.2
     tty: true
     environment:
       #- GOPATH=/opt/gopath
@@ -92,7 +92,7 @@ services:
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
         - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'while true; do sleep 20170504; done'
+    command: bash -c 'cd /tmp; bash scripts/func.sh; while true; do sleep 20170504; done'
 
   couchdb-base:
     #container_name: couchdb0
@@ -115,6 +115,8 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
+      - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     expose:
       - "7050"  # Rest
       - "7051"  # Grpc

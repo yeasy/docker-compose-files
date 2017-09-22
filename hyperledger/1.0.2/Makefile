@@ -139,7 +139,12 @@ setup: # setup the environment
 	bash scripts/setup_Docker.sh  # Install Docker, Docker-Compose
 	bash scripts/download_images.sh  # Pull required Docker images
 
-clean: # clean up environment
+clean: # clean up containers
+	@echo "Clean all containers and cc images"
+	docker rm -f `docker ps -qa`
+	docker rmi dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9
+
+clean_env: # clean up environment
 	@echo "Clean all images and containers"
 	bash scripts/clean_env.sh
 

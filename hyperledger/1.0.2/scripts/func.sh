@@ -88,7 +88,7 @@ checkOSNAvailability() {
 }
 
 # Use peer0/org1 to create a channel
-createChannel() {
+channelCreate() {
 	setGlobals 0
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --timeout $TIMEOUT >&log.txt
@@ -101,7 +101,7 @@ createChannel() {
 		COUNTER=` expr $COUNTER + 1`
 		echo_b "PEER$1 failed to create the channel, Retry after 2 seconds"
 		sleep 2
-		createChannel
+		channelCreate
 	else
 		COUNTER=1
 	fi
@@ -144,7 +144,7 @@ joinWithRetry () {
 }
 
 # Join given (by default all) peers into the channel
-joinChannel () {
+channelJoin () {
 	peer_to_join=$(seq 0 3)
   if [ $# -gt 0 ]; then
     peer_to_join=$@
@@ -158,20 +158,8 @@ joinChannel () {
 	done
 }
 
-# Install chaincode on specifized peer node
-installChaincode () {
-	PEER=$1
-	setGlobals $PEER
-	peer chaincode install -n $CC_NAME -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 >&log.txt
-	res=$?
-	cat log.txt
-        verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
-	echo_g "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
-	echo
-}
-
 # Instantiate chaincode on specifized peer node
-instantiateChaincode () {
+chaincodeInstantiate () {
 	PEER=$1
 	setGlobals $PEER
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),

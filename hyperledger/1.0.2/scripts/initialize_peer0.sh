@@ -17,13 +17,13 @@ echo_b "Channel name : "$CHANNEL_NAME
 
 ## Create channel
 echo_b "Creating channel..."
-createChannel
+channelCreate
 
 sleep 1
 
 ## Join all the peers to the channel
 echo_b "Having peer0 join the channel..."
-joinChannel 0
+channelJoin 0
 
 sleep 1
 
@@ -35,14 +35,14 @@ sleep 1
 
 ## Install chaincode on all peers
 echo_b "Installing chaincode on peer0..."
-installChaincode 0
+chaincodeInstall 0 1.0
 
 sleep 1
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on the channel..."
-instantiateChaincode 0
+chaincodeInstantiate 0
 
 sleep 1
 
