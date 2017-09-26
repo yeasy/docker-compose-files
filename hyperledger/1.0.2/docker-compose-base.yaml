@@ -1,13 +1,13 @@
 # Base compose files for:
 
-# ca
+# ca.org1.example.com
+# ca.org2.example.com
 # orderer.example.com
-# cli
 # peer0.org1.example.com
 # peer1.org1.example.com
 # peer0.org2.example.com
 # peer1.org2.example.com
-
+# cli
 
 version: '2'  # v3 does not support 'extends' yet
 
@@ -47,7 +47,6 @@ services:
     volumes:
       - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/1ee551a8753171c0377366e96a1d7ec01afddb868c9483cc501b6f8ac7ae752f_sk -b admin:adminpw -d'
-
 
   orderer.example.com:  # There can be multiple orderers
     extends:

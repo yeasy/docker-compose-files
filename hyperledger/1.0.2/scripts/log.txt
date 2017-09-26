@@ -1,0 +1,19 @@
+[36m2017-09-15 06:32:05.922 UTC [msp] GetLocalMSP -> DEBU 001[0m Returning existing local MSP
+[36m2017-09-15 06:32:05.922 UTC [msp] GetDefaultSigningIdentity -> DEBU 002[0m Obtaining default signing identity
+2017-09-15 06:32:05.928 UTC [channelCmd] InitCmdFactory -> INFO 003[0m Endorser and orderer connections initialized
+Error: genesis block file not found open businesschannel.block: no such file or directory
+Usage:
+  peer channel join [flags]
+
+Flags:
+  -b, --blockpath string   Path to file containing genesis block
+
+Global Flags:
+      --cafile string                       Path to file containing PEM-encoded trusted certificate(s) for the ordering endpoint
+      --logging-level string                Default logging level and overrides, see core.yaml for full syntax
+  -o, --orderer string                      Ordering service endpoint
+      --ordererTLSHostnameOverride string   The hostname override to use when validating the TLS connection to the orderer.
+      --test.coverprofile string            Done (default "coverage.cov")
+      --tls                                 Use TLS when communicating with the orderer endpoint
+  -v, --version                             Display current version of fabric peer server
+
