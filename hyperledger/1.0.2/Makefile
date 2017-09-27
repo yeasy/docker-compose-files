@@ -1,4 +1,11 @@
-COMPOSE_FILE="docker-compose-2orgs-4peers.yaml"
+KAFKA_ENABLED ?= false
+
+COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
+
+ifeq ($(KAFKA_ENABLED),true)
+COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
+endif
+
 COMPOSE_DEV_FILE="docker-compose-dev.yaml"
 COMPOSE_COUCHDB_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 
@@ -142,7 +149,7 @@ setup: # setup the environment
 clean: # clean up containers
 	@echo "Clean all containers and cc images"
 	docker rm -f `docker ps -qa`
-	docker rmi dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9
+	docker rmi $(docker images | awk '$1 ~ /dev-peer/ { print $3}')
 
 clean_env: # clean up environment
 	@echo "Clean all images and containers"
@@ -170,3 +177,9 @@ logs_save: # save logs
 
 logs_view: # view logs
 	less /tmp/dev_peer.log
+
+gen_e2e: # generate e2e_cli artifacts
+	cd e2e_cli && bash gen_artifacts.sh
+
+gen_kafka: # generate kafka artifacts
+	cd kafka && bash gen_artifacts.sh

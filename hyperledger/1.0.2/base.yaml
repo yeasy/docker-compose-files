@@ -83,14 +83,6 @@ services:
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
       - CHANNEL_NAME:="businesschannel"
-    volumes:
-        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./scripts:/tmp/scripts
-        - ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
-        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
-        - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; bash scripts/func.sh; while true; do sleep 20170504; done'
 
