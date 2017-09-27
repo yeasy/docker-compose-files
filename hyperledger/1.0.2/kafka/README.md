@@ -1,24 +1,13 @@
-[WIP]
-
 ## Start a network base on kafka
 
+### Quick testing with kafka
 ```bash
-$ cd ~/docker-compose-files/tree/master/hyperledger/1.0/kafka
-$ docker-compose -f orderer-kafka.yaml up (-d)
+$ KAFKA_ENABLED=true make
 ```
-When the fabric-network fully started, it takes about 15-20s. 
+When the fabric-network fully started, it takes about 30~60s to finish all the test. 
 
-## Test chaincode
+## Generate crypto-config and channel-artifacts
 
 ```bash
-$ docker exec -it fabric-cli bash
-$ bash ./scripts/initialize.sh # initialize the fabric network
-$ bash ./scripts/test_4peers.sh
+$ make gen_kafka
 ```
-
->(Optional) If you want to use official images, you can run the following command first
->
-> ```bash
-> $ cd ~/docker-compose-files/tree/master/hyperledger/1.0
-> $ bash ./scripts/download_images.sh
-> ```

@@ -99,8 +99,8 @@ channelCreate() {
 	cat log.txt
 	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
 		COUNTER=` expr $COUNTER + 1`
-		echo_b "PEER$1 failed to create the channel, Retry after 2 seconds"
-		sleep 2
+		echo_b "PEER$1 failed to create the channel, Retry after 3 seconds"
+		sleep 3
 		channelCreate
 	else
 		COUNTER=1

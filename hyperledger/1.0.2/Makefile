@@ -1,4 +1,5 @@
 KAFKA_ENABLED ?= false
+COUCHDB_ENABLED ?= false
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
 
@@ -6,22 +7,26 @@ ifeq ($(KAFKA_ENABLED),true)
 COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
 endif
 
+ifeq ($(COUCHDB_ENABLED),true)
+COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
+endif
+
 COMPOSE_DEV_FILE="docker-compose-dev.yaml"
-COMPOSE_COUCHDB_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 
 all:
+	@echo "Run test with ${COMPOSE_FILE}"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 2
 
 	make ready
 	make lscc qscc
 
-	make stop
+	make stop clean
 
-ready:
+ready: restart
 	@echo "Restart, init network and then do cc testing..."
-	make restart init
-	sleep 2
+	make init
+	sleep 3
 
 	make test_cc
 	@echo "Now the fabric network is ready to play"
@@ -40,7 +45,7 @@ stop: # stop the fabric network
 	@echo "Stop the fabric network"
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
 
-restart: stop start
+restart: stop clean start
 
 ################## Dev testing ################
 dev:
@@ -78,6 +83,7 @@ dev_init: # initialize the fabric network
 dev_stop: # stop the fabric network for dev
 	@echo "Stop and clean the fabric dev network"
 	docker-compose -f ${COMPOSE_DEV_FILE} down
+	make clean
 
 dev_restart: dev_stop dev_start
 
@@ -89,41 +95,6 @@ dev_download: # download required images
 
 dev_logs: # show dev logs
 	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
-
-################## Couchdb testing ################
-couch:
-	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
-	sleep 2
-
-	make couch_ready
-
-	make lscc qscc
-
-	make dev_stop
-
-couch_ready:
-	@echo "Restart and init network with couchdb..."
-	make couch_restart couch_init
-	sleep 2
-
-	make test_cc
-	@echo "Now the fabric network is ready to play"
-	@echo "run 'make cli' to enter into the fabric-cli container."
-	@echo "run 'make stop' when done."
-
-couch_start: # start fabric network with couchdb
-	@echo "Start a fabric network with couchdb"
-	docker-compose -f ${COMPOSE_COUCHDB_FILE} up -d
-
-couch_init: # initialize the fabric network
-	@echo "Install and instantiate cc example02 on the fabric dev network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_all.sh"
-
-couch_stop: # stop the fabric network with couchdb
-	@echo "Stop the fabric network with 1 peer with couchdb"
-	docker-compose -f ${COMPOSE_COUCHDB_FILE} down
-
-couch_restart: couch_stop couch_start
 
 ################## Chaincode testing operations ################
 test_cc: # test user chaincode on all peers
@@ -147,9 +118,9 @@ setup: # setup the environment
 	bash scripts/download_images.sh  # Pull required Docker images
 
 clean: # clean up containers
-	@echo "Clean all containers and cc images"
-	docker rm -f `docker ps -qa`
-	docker rmi $(docker images | awk '$1 ~ /dev-peer/ { print $3}')
+	@echo "Clean all containers and fabric cc images"
+	@-docker rm -f `docker ps -qa`
+	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
 
 clean_env: # clean up environment
 	@echo "Clean all images and containers"
