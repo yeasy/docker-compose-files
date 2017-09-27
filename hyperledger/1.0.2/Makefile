@@ -46,6 +46,7 @@ ready: restart
 
 start: # bootup the fabric network
 	@echo "Start a fabric network with 2-org-4-peer"
+	make clean
 	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 init: # initialize the fabric network
@@ -59,7 +60,6 @@ init_peer0: # initialize the fabric network
 stop: # stop the fabric network
 	@echo "Stop the fabric network"
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
-	make clean
 
 restart: stop start
 
