@@ -134,7 +134,7 @@ Topics | Description
 [Use Events](./docs/events.md) | Get events with block-listener
 [Artifacts Generation](docs/artifacts_generation.md) | Will explain the usage of `cryptogen` and `configtxgen` to prepare the artifacts for booting the fabric network.
 [couchDB](docs/couchdb_usage.md) | Use couchDB as the state DB.
-[kafka](./kafka/README.md) | Use kafka as the orderering backend
+[kafka](./kafka/README.md) | Use kafka as the ordering backend
 [configtxlator](docs/configtxlator.md) | Use configtxlator to convert the configurations
 [WIP] [Some verification tests](docs/verification_test.md) | 
 

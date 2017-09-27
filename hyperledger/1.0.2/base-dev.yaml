@@ -7,7 +7,7 @@
 version: '2'
 
 services:
-  peer-base-dev:
+  peer-base:
     image: yeasy/hyperledger-fabric:latest
     restart: always
     environment:
@@ -42,7 +42,7 @@ services:
       - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
-  orderer-base-dev:
+  orderer-base:
     image: yeasy/hyperledger-fabric:latest
     #image: hyperledger/fabric-orderer:x86_64-1.0.2
     restart: always
@@ -72,7 +72,7 @@ services:
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
     command: bash -c 'bash /tmp/orderer_build.sh; orderer start'
 
-  cli-base-dev:
+  cli-base:
     image: yeasy/hyperledger-fabric:latest
     #image: hyperledger/fabric-tools:x86_64-1.0.2
     restart: always

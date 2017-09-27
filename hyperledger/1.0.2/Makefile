@@ -1,5 +1,6 @@
 KAFKA_ENABLED ?= false
 COUCHDB_ENABLED ?= false
+DEV_ENABLED ?= false
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
 
@@ -11,7 +12,9 @@ ifeq ($(COUCHDB_ENABLED),true)
 COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 endif
 
-COMPOSE_DEV_FILE="docker-compose-dev.yaml"
+ifeq ($(DEV_ENABLED),true)
+COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
+endif
 
 all:
 	@echo "Run test with ${COMPOSE_FILE}"
@@ -25,10 +28,18 @@ all:
 
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
-	make init
-	sleep 3
+	if [ "$DEV_ENABLED" = "true" ]; then \
+      sleep 35; \
+			make init_peer0; \
+			sleep 2; \
+			make test_peer0; \
+	else \
+			sleep 3; \
+			make init; \
+			sleep 2; \
+			make test_cc; \
+	fi
 
-	make test_cc
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -41,60 +52,17 @@ init: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_all.sh"
 
-stop: # stop the fabric network
-	@echo "Stop the fabric network"
-	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
-
-restart: stop clean start
-
-################## Dev testing ################
-dev:
-	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
-	sleep 2
-
-	@echo "Restart and init dev network..."
-	make dev_ready
-
-	make lscc qscc
-
-	make dev_stop
-
-dev_ready:
-	@echo "Restart and init network for dev mode..."
-	make dev_restart
-	sleep 35
-
-	make dev_init
-	sleep 2
-
-	make test_peer0
-	@echo "Now the fabric network is ready to play"
-	@echo "run 'make cli' to enter into the fabric-cli container."
-	@echo "run 'make dev_stop' when done."
-
-dev_start: # start fabric network for dev
-	@echo "Start a fabric network with 1 peer for dev"
-	docker-compose -f ${COMPOSE_DEV_FILE} up -d
-
-dev_init: # initialize the fabric network
+init_peer0: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
 
-dev_stop: # stop the fabric network for dev
-	@echo "Stop and clean the fabric dev network"
-	docker-compose -f ${COMPOSE_DEV_FILE} down
+stop: # stop the fabric network
+	@echo "Stop the fabric network"
+	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
 	make clean
 
-dev_restart: dev_stop dev_start
+restart: stop start
 
-dev_download: # download required images
-	@echo "Download Docker images for dev"
-	docker pull yeasy/hyperledger-fabric:latest
-	docker pull hyperledger/fabric-baseos:x86_64-0.4.1
-	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
-
-dev_logs: # show dev logs
-	docker-compose -f ${COMPOSE_DEV_FILE} logs -f --tail 200
 
 ################## Chaincode testing operations ################
 test_cc: # test user chaincode on all peers
@@ -154,3 +122,11 @@ gen_e2e: # generate e2e_cli artifacts
 
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
+
+download: # download required images
+	@echo "Download Docker images"
+	docker pull yeasy/hyperledger-fabric:latest
+	docker pull yeasy/hyperledger-fabric:1.0.2
+	docker pull hyperledger/fabric-baseos:x86_64-0.4.1
+	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+
