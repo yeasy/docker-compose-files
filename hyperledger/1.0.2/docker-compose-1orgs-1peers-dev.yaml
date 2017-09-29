@@ -46,10 +46,6 @@ services:
     command: bash -c 'bash /tmp/peer_build.sh; peer node start'
 
   cli:
-    #extends:
-    #  file: peer-base-dev.yaml
-    #  service: peer-base
-    #image: yeasy/hyperledger-fabric:1.0.2
     extends:
       file: base-dev.yaml
       service: cli-base

@@ -43,42 +43,11 @@ services:
       service: peer1.org2.example.com
 
   cli:
-    container_name: fabric-cli
-    hostname: fabric-cli
-    image: yeasy/hyperledger-fabric:1.0.2
-    tty: true
+    extends:
+      file: docker-compose-base.yaml
+      service: cli
     environment:
-      - CORE_PEER_ID=fabric-cli
-      - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
-      - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_ENABLED=false  # event-listener doesn't support TLS
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-    volumes:
-        #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
-        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-        - ./e2e_cli/crypto-config:/etc/hyperledger/fabric/crypto-config
-        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/peer/crypto-config.yaml
-    depends_on:
-      - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
-    links:
-      - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'while true; do sleep 20170504; done'
 
   event-listener:
     container_name: fabric-event-listener
@@ -98,24 +67,19 @@ services:
     volumes:
         #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
         - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
     depends_on:
       - orderer.example.com
       - peer0.org1.example.com
       - peer1.org1.example.com
       - peer0.org2.example.com
       - peer1.org2.example.com
-    links:
-      - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP'
+    #command: bash -c 'block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP'
+    command: bash -c 'while true; do sleep 20170504; done'
 
 #networks:
 #  default:
