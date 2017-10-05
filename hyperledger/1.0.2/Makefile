@@ -28,13 +28,13 @@ all:
 
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
-	if [ "$DEV_ENABLED" = "true" ]; then \
-      sleep 35; \
+	if [ "$(DEV_ENABLED)" = "true" ]; then \
+			echo "In DEV mode, wait for rebuilding ..." && sleep 35; \
 			make init_peer0; \
-			sleep 2; \
+			sleep 5; \
 			make test_peer0; \
 	else \
-			sleep 3; \
+			echo "In Normal mode ..." && sleep 3; \
 			make init; \
 			sleep 2; \
 			make test_cc; \
@@ -45,7 +45,7 @@ ready: restart
 	@echo "run 'make stop' when done."
 
 start: # bootup the fabric network
-	@echo "Start a fabric network with 2-org-4-peer"
+	@echo "Start a fabric network with ${COMPOSE_FILE}"
 	make clean
 	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
@@ -113,6 +113,7 @@ logs_check: logs_save logs_view
 
 logs_save: # save logs
 	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
+	docker logs orderer.example.com >& /tmp/dev_orderer.log
 
 logs_view: # view logs
 	less /tmp/dev_peer.log

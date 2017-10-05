@@ -21,6 +21,7 @@ services:
     restart: always
     environment:
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
@@ -42,12 +43,13 @@ services:
     command: orderer start
 
   peer-base:
-    image: yeasy/hyperledger-fabric:1.0.2
+    image: yeasy/hyperledger-fabric-peer:1.0.2
     #image: hyperledger/fabric-peer:x86_64-1.0.2
     restart: always
     environment:
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=102_default  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
@@ -56,6 +58,8 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
+      - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     expose:
       - "7050"  # Rest
       - "7051"  # Grpc
@@ -81,6 +85,7 @@ services:
     environment:
       #- GOPATH=/opt/gopath
       - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
       - CHANNEL_NAME:="businesschannel"
@@ -91,5 +96,27 @@ services:
     #container_name: couchdb0
     image: hyperledger/fabric-couchdb:x86_64-1.0.2
     restart: always
+    tty: true
     # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
     # for example map it to utilize Fauxton User Interface in dev environments.
+
+  zookeeper-base:
+    image: hyperledger/fabric-zookeeper:x86_64-1.0.2
+    restart: always
+    tty: true
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+  kafka-base:
+    image: hyperledger/fabric-kafka:x86_64-1.0.2
+    restart: always
+    tty: true
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+    expose:
+      - '9092'

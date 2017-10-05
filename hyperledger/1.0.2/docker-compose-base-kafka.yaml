@@ -1,4 +1,4 @@
-# Base compose files for:
+# Kafka enabled fabric network with:
 
 # ca.org1.example.com
 # ca.org2.example.com
@@ -7,6 +7,8 @@
 # peer1.org1.example.com
 # peer0.org2.example.com
 # peer1.org2.example.com
+# 3 zookeeper nodes
+# 4 kafka nodes
 # cli
 
 version: '2'  # v3 does not support 'extends' yet
@@ -50,12 +52,17 @@ services:
 
   orderer.example.com:  # There can be multiple orderers
     extends:
-      file: base-kafka.yaml
+      file: base.yaml
       service: orderer-base
     container_name: orderer.example.com
     hostname: orderer.example.com
     ports:
       - "7050:7050"
+    environment:
+      # Kafka related configurations
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
+      - ORDERER_KAFKA_VERBOSE=true
     volumes:
     - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
@@ -63,8 +70,6 @@ services:
     command: orderer start
 
   cli:
-    #image: yeasy/hyperledger-fabric:1.0.2
-    #image: hyperledger/fabric-tools:x86_64-1.0.2
     extends:
       file: base.yaml
       service: cli-base
@@ -72,7 +77,6 @@ services:
     hostname: fabric-cli
     tty: true
     environment:
-      #- GOPATH=/opt/gopath
       - CORE_PEER_ID=fabric-cli
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
       - CORE_PEER_LOCALMSPID=Org1MSP
@@ -81,7 +85,6 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     volumes:
-        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./scripts:/tmp/scripts
         - ./kafka/channel-artifacts:/tmp/channel-artifacts
         - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
@@ -173,3 +176,84 @@ services:
       - 10051:7051
       - 10052:7052
       - 10053:7053
+
+
+# ZooKeeper services, at least 3 nodes
+  zookeeper0:
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    container_name: zookeeper0
+    hostname: zookeeper0
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+  zookeeper1:
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    container_name: zookeeper1
+    hostname: zookeeper1
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+  zookeeper2:
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    container_name: zookeeper2
+    hostname: zookeeper2
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+
+# Kafka services, at least 4 node to tolerant work with 1 node failure
+  kafka0:
+    extends:
+      file: base.yaml
+      service: kafka-base
+    container_name: kafka0
+    hostname: kafka0
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+  kafka1:
+    extends:
+      file: base.yaml
+      service: kafka-base
+    container_name: kafka1
+    hostname: kafka1
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+  kafka2:
+    extends:
+      file: base.yaml
+      service: kafka-base
+    container_name: kafka2
+    hostname: kafka2
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+  kafka3:
+    extends:
+      file: base.yaml
+      service: kafka-base
+    container_name: kafka3
+    hostname: kafka3
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181

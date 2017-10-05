@@ -35,7 +35,7 @@ services:
 
   cli:
     #extends:
-    #  file: peer-base-dev.yaml
+    #  file: peer-docker-compose-base-dev.yaml
     #  service: peer-base
     #image: yeasy/hyperledger-fabric:1.0.1
     extends:
