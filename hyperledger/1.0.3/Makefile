@@ -1,6 +1,6 @@
 KAFKA_ENABLED ?= false
 COUCHDB_ENABLED ?= false
-DEV_ENABLED ?= true
+DEV_ENABLED ?= false
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
 
