@@ -12,16 +12,26 @@ services:
     extends:
       file: docker-compose-base-dev.yaml
       service: orderer.example.com
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
 
   peer0.org1.example.com:
     extends:
       file: docker-compose-base-dev.yaml
       service: peer0.org1.example.com
+    depends_on:
+      - orderer.example.com
 
   cli:
     extends:
       file: docker-compose-base-dev.yaml
       service: cli
+    depends_on:
+      - peer0.org1.example.com
+      - orderer.example.com
 
 # ZooKeeper services, at least 3 nodes
   zookeeper0:

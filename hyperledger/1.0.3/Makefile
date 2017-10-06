@@ -45,7 +45,7 @@ ready: restart
 	@echo "run 'make stop' when done."
 
 start: # bootup the fabric network
-	@echo "Start a fabric network with 2-org-4-peer"
+	@echo "Start a fabric network with ${COMPOSE_FILE}"
 	make clean
 	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
@@ -123,6 +123,9 @@ gen_e2e: # generate e2e_cli artifacts
 
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
+
+configtxlator: # run configtxlator
+	cd kafka && bash run_configtxlator.sh
 
 download: # download required images
 	@echo "Download Docker images"

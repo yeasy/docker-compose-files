@@ -17,3 +17,9 @@ See [Fabric v1.0](1.0/).
 
 ## Hyperledger Fabric v1.0.2
 See [Fabric v1.0.2](1.0.2/).
+
+## Hyperledger Fabric v1.0.3
+See [Fabric v1.0.3](1.0.3/).
+
+## Hyperledger Fabric latest
+See [Fabric Latest](latest/).
