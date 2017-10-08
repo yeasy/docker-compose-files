@@ -254,3 +254,26 @@ chaincodeUpgrade () {
 	echo
 }
 
+channelFetch () {
+	PEER=$1
+	BLOCK_NO=$2
+	setGlobals $PEER
+	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# lets supply it directly as we know it using the "-o" option
+	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
+		peer channel fetch $BLOCK_NO \
+			-o orderer.example.com:7050 \
+			-c ${CHANNEL_NAME}  >&log.txt
+	else
+		peer channel fetch $BLOCK_NO block_${BLOCK_NO}.block \
+			-o orderer.example.com:7050 \
+			-c $CHANNEL_NAME \
+			--tls \
+			--cafile $ORDERER_CA  >&log.txt
+	fi
+	res=$?
+	cat log.txt
+	verifyResult $res "Fetch block on PEER$PEER failed "
+	echo_g "===================== Fetch block on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+	echo
+}

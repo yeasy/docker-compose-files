@@ -22,8 +22,7 @@ all:
 	sleep 2
 
 	make ready
-	make lscc qscc
-
+	make lscc qscc fetch_block
 	make stop clean
 
 ready: restart
@@ -63,7 +62,6 @@ stop: # stop the fabric network
 
 restart: stop start
 
-
 ################## Chaincode testing operations ################
 test_cc: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
@@ -78,6 +76,14 @@ qscc: # test qscc queries
 
 lscc: # test lscc quries
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
+
+fetch_block: # test channel fetch
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
+	docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_2.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_3.block kafka/channel-artifacts/
+
 
 ################## Env setup related, no need to see usually ################
 

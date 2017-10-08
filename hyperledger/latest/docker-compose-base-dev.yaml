@@ -11,7 +11,7 @@ services:
     extends:
       file: base.yaml
       service: orderer-base
-    image: yeasy/hyperledger-fabric:latest  # TODO: latest orderer code cannot work
+    image: yeasy/hyperledger-fabric:latest
     container_name: orderer.example.com
     hostname: orderer.example.com
     ports:
@@ -80,7 +80,7 @@ services:
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     volumes:
       - $GOPATH/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
-      - /tmp/:/tmp/
+      #- /tmp/:/tmp/
       - ./scripts:/tmp/scripts
       # e2e mode configuration
       #- ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
