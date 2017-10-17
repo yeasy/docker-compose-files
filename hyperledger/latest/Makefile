@@ -28,7 +28,7 @@ all:
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
 	if [ "$(DEV_ENABLED)" = "true" ]; then \
-			echo "In DEV mode, wait for rebuilding ..." && sleep 35; \
+			echo "In DEV mode, wait for rebuilding ..." && sleep 40; \
 			make init_peer0; \
 			sleep 2; \
 			make test_peer0; \
@@ -120,6 +120,7 @@ logs_check: logs_save logs_view
 logs_save: # save logs
 	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
 	docker logs orderer.example.com >& /tmp/dev_orderer.log
+	docker-compose -f ${COMPOSE_FILE} logs >& /tmp/dev_all.log
 
 logs_view: # view logs
 	less /tmp/dev_peer.log
