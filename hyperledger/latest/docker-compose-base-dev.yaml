@@ -32,7 +32,7 @@ services:
       - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
       - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
-    #command: bash -c 'sleep 3; orderer start' # use this if to debug orderer
+    #command: bash -c 'orderer start' # use this if to debug orderer
 
   peer0.org1.example.com:
     extends:
