@@ -31,10 +31,12 @@ docker-compose scale es=3
 ## [haproxy_web](haproxy_web)
 A simple haproxy and web applications cluster.
 
-## [hyperledger](hyperledger)
-Quickly bootup a hyperledger cluster with several validator nodes, without vagrant or any manual configuration. By default, the cluster enables PBFT as the consensus.
+## [hyperledger_fabric](hyperledger_fabric)
+Quickly bootup a hyperledger fabric cluster with several validator nodes, without vagrant or any manual configuration.
 
-See [hyperledger](hyperledger) for more details.
+Now we support from v0.6 to v1.0.x.
+
+See [hyperledger_fabric](hyperledger_fabric) for more details.
 
 ## [kafka](kafka)
 Start a simple kafka service for testing.
