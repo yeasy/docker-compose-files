@@ -28,7 +28,7 @@ channelJoin 0
 sleep 1
 
 ## Set the anchor peers for each org in the channel
-echo_b "Updating anchor peers for peer0/org1..."
+echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
 updateAnchorPeers 0
 
 sleep 1

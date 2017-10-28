@@ -2,6 +2,9 @@ KAFKA_ENABLED ?= false
 COUCHDB_ENABLED ?= false
 DEV_ENABLED ?= true
 
+CODE_BUILD_WAIT=2
+FABRIC_INIT_WAIT=2
+
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
 
 ifeq ($(KAFKA_ENABLED),true)
@@ -28,14 +31,14 @@ all:
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
 	if [ "$(DEV_ENABLED)" = "true" ]; then \
-			echo "In DEV mode, wait for rebuilding ..." && sleep 40; \
+			echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
-			sleep 2; \
-			make test_peer0; \
+			sleep $(FABRIC_INIT_WAIT); \
+			make test_cc_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 3; \
 			make init; \
-			sleep 2; \
+			sleep $(FABRIC_INIT_WAIT); \
 			make test_cc; \
 	fi
 
@@ -62,12 +65,14 @@ stop: # stop the fabric network
 
 restart: stop start
 
+chaincode_dev: restart chaincode_init test_cc_peer0 stop
+
 ################## Chaincode testing operations ################
-test_cc: # test user chaincode on all peers
+test_cc_all: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_all.sh"
 
-test_peer0: # test single peer
+test_cc_peer0: # test single peer
 	@echo "Invoke and query cc example02 on single peer0"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
@@ -140,4 +145,11 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+
+
+
+################## chaincode dev mode ################
+chaincode_init: # start chaincode in dev mode and do install/instantiate
+	@echo "Install and instantiate cc example02 on the fabric dev network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
 

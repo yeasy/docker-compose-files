@@ -235,6 +235,22 @@ chaincodeInstall () {
 	echo
 }
 
+# Start chaincode with dev mode
+chaincodeStartDev () {
+	PEER=$1
+	VERSION=$2
+	setGlobals $PEER
+	CORE_CHAINCODE_LOGLEVEL=debug \
+	CORE_PEER_ADDRESS=peer${PEER}.org1.example.com:7052 \
+	CORE_CHAINCODE_ID_NAME=mycc:${VERSION} \
+	nohup ./scripts/chaincode_example02 > chaincode_dev.log &
+	res=$?
+	cat log.txt
+	verifyResult $res "Chaincode start in dev mode has Failed"
+	echo_g "===================== Chaincode started in dev mode ===================== "
+	echo
+}
+
 # chaincodeUpgrade 0 1.1
 chaincodeUpgrade () {
 	PEER=$1
