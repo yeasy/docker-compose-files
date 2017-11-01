@@ -2,7 +2,7 @@ KAFKA_ENABLED ?= false
 COUCHDB_ENABLED ?= false
 DEV_ENABLED ?= false
 
-COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
+COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
 ifeq ($(KAFKA_ENABLED),true)
 COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"

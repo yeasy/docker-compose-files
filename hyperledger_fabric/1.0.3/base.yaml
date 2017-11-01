@@ -1,5 +1,5 @@
 # This is the default base file to config env and command
-# Notice that chaincode is executed inside docker in default net mode
+# All element in this file is abstract without knowing the org and consensus type
 # https://github.com/yeasy/docker-compose-files
 
 # Depends on the hyperledger/fabric-peer image.
@@ -14,6 +14,7 @@ services:
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_TLS_ENABLED=true
+      #- FABRIC_CA_SERVER_TLS_ENABLED=false
 
   orderer-base:
     #image: yeasy/hyperledger-fabric-orderer:1.0.3
@@ -28,7 +29,7 @@ services:
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_LEDGERTYPE=file
-      - ORDERER_GENERAL_BATCHTIMEOUT=2s
+      - ORDERER_GENERAL_BATCHTIMEOUT=1s
       - ORDERER_GENERAL_MAXMESSAGECOUNT=10
       - ORDERER_GENERAL_MAXWINDOWSIZE=1000
       - ORDERER_GENERAL_LISTENPORT=7050
@@ -90,7 +91,19 @@ services:
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
       - CHANNEL_NAME:="businesschannel"
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: bash -c 'cd /tmp; bash scripts/func.sh; while true; do sleep 20170504; done'
+    command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
+
+  event-listener-base:
+    image: yeasy/hyperledger-fabric:1.0.3
+    restart: always
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-event-listener
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=false  # event-listener doesn't support TLS
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    #command: bash -c 'block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP'
+    command: bash -c 'while true; do sleep 20170504; done'
 
   couchdb-base:
     #container_name: couchdb0
@@ -110,6 +123,8 @@ services:
       - '3888'
 
   kafka-base:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    image: yeasy/hyperledger-fabric-kafka:0.10.2.0
     image: hyperledger/fabric-kafka:x86_64-1.0.3
     restart: always
     tty: true
