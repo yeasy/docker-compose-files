@@ -92,17 +92,29 @@ channelCreate() {
 	echo_b "===================== Create Channel \"$CHANNEL_NAME\" ===================== "
 	setGlobals 0
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --timeout $TIMEOUT >&log.txt
+		peer channel create \
+			-o orderer.example.com:7050 \
+			-c $CHANNEL_NAME \
+			-f ./channel-artifacts/channel.tx \
+			--timeout $TIMEOUT \
+			>&log.txt
 	else
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --timeout $TIMEOUT >&log.txt
+		peer channel create \
+			-o orderer.example.com:7050 \
+			-c $CHANNEL_NAME \
+			-f ./channel-artifacts/channel.tx \
+			--tls $CORE_PEER_TLS_ENABLED \
+			--cafile $ORDERER_CA \
+			--timeout $TIMEOUT \
+			>&log.txt
 	fi
 	res=$?
 	cat log.txt
 	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
 		COUNTER=` expr $COUNTER + 1`
-		echo_b "PEER$1 failed to create the channel, Retry after 3 seconds"
+		echo_b "Fail to create channel $CHANNEL_NAME, Retry after 3 seconds"
 		sleep 3
-		channelCreate
+		channelCreate $CHANNEL_NAME
 	else
 		COUNTER=1
 	fi
