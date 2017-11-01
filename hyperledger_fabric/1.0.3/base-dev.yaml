@@ -38,7 +38,7 @@ services:
     extends:
       file: base.yaml
       service: peer-base
-    image: yeasy/hyperledger-fabric:latest
+    image: yeasy/hyperledger-fabric:1.0.3
     container_name: peer0.org1.example.com
     hostname: peer0.org1.example.com
     environment:

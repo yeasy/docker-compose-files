@@ -168,7 +168,7 @@ channelJoin () {
 	for i in $peers_to_join; do
 		setGlobals $i
 		joinWithRetry $i
-		echo_g "===================== PEER$i joined on the channel \"$CHANNEL_NAME\" ===================== "
+		echo_g "===================== PEER$i joined into the channel \"$CHANNEL_NAME\" ===================== "
 		sleep 2
 		echo
 	done

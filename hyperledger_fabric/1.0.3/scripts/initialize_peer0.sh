@@ -13,23 +13,21 @@ echo " ==========initialize businesschannel========== "
 echo " ============================================== "
 echo
 
-echo_b "Channel name : "$CHANNEL_NAME
-
 ## Create channel
-echo_b "Creating channel..."
-channelCreate
+echo_b "Creating channel $CHANNEL_NAME..."
+channelCreate $CHANNEL_NAME
 
 sleep 1
 
 ## Join all the peers to the channel
 echo_b "Having peer0 join the channel..."
-channelJoin 0
+channelJoin $CHANNEL_NAME 0
 
 sleep 1
 
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
-updateAnchorPeers 0
+updateAnchorPeers $CHANNEL_NAME 0
 
 sleep 1
 
@@ -42,7 +40,7 @@ sleep 1
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on the channel..."
-chaincodeInstantiate 0
+chaincodeInstantiate $CHANNEL_NAME 0
 
 sleep 1
 

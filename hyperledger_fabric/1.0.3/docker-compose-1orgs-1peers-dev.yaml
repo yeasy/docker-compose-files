@@ -1,4 +1,4 @@
-# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# https://github.com/yeasy/files/tree/master/hyperledger
 # This compose file will start a Hyperledger Fabric 1.0 MVE, including
 # * 1 ca
 # * 1 orderer
@@ -36,23 +36,23 @@ services:
 # ZooKeeper services, at least 3 nodes
   zookeeper0:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper0
 
   zookeeper1:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper1
 
   zookeeper2:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper2
 
 # Kafka services, at least 4 node to tolerant work with 1 node failure
   kafka0:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka0
     depends_on:
       - zookeeper0
@@ -61,7 +61,7 @@ services:
 
   kafka1:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka1
     depends_on:
       - zookeeper0
@@ -70,7 +70,7 @@ services:
 
   kafka2:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka2
     depends_on:
       - zookeeper0
@@ -79,7 +79,7 @@ services:
 
   kafka3:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka3
     depends_on:
       - zookeeper0

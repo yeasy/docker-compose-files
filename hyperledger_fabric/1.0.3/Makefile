@@ -1,43 +1,40 @@
-KAFKA_ENABLED ?= false
-COUCHDB_ENABLED ?= false
-DEV_ENABLED ?= false
+# mode of the network: solo, kafka, couchdb, dev
+HLF_MODE ?= solo
+
+CODE_BUILD_WAIT=2
+NETWORK_INIT_WAIT=2
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
-ifeq ($(KAFKA_ENABLED),true)
-COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
-endif
-
-ifeq ($(COUCHDB_ENABLED),true)
-COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
-endif
-
-ifeq ($(DEV_ENABLED),true)
-COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
+ifeq ($(HLF_MODE),kafka)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
+else ifeq ($(HLF_MODE),couchdb)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
+else ifeq ($(HLF_MODE),dev)
+	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
 
 all:
-	@echo "Run test with ${COMPOSE_FILE}"
+	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
-	sleep 1
+	sleep 2
 
 	make ready
-	make lscc qscc
-
+	make lscc qscc fetch_block
 	make stop clean
 
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
-	if [ "$(DEV_ENABLED)" = "true" ]; then \
-			echo "In DEV mode, wait for rebuilding ..." && sleep 35; \
+	if [ "$(HLF_MODE)" = "dev" ]; then \
+			echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
-			sleep 2; \
-			make test_peer0; \
+			sleep $(NETWORK_INIT_WAIT); \
+			make test_cc_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 3; \
 			make init; \
-			sleep 2; \
-			make test_cc; \
+			sleep $(NETWORK_INIT_WAIT); \
+			make test_cc_all; \
 	fi
 
 	@echo "Now the fabric network is ready to play"
@@ -63,13 +60,14 @@ stop: # stop the fabric network
 
 restart: stop start
 
+chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Chaincode testing operations ################
-test_cc: # test user chaincode on all peers
+test_cc_all: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_all.sh"
 
-test_peer0: # test single peer
+test_cc_peer0: # test single peer
 	@echo "Invoke and query cc example02 on single peer0"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
@@ -78,6 +76,14 @@ qscc: # test qscc queries
 
 lscc: # test lscc quries
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
+
+fetch_block: # test channel fetch
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
+	docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_2.block kafka/channel-artifacts/
+	docker cp fabric-cli:/tmp/block_3.block kafka/channel-artifacts/
+
 
 ################## Env setup related, no need to see usually ################
 
@@ -114,6 +120,7 @@ logs_check: logs_save logs_view
 logs_save: # save logs
 	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
 	docker logs orderer.example.com >& /tmp/dev_orderer.log
+	docker-compose -f ${COMPOSE_FILE} logs >& /tmp/dev_all.log
 
 logs_view: # view logs
 	less /tmp/dev_peer.log
@@ -130,7 +137,14 @@ configtxlator: # run configtxlator
 download: # download required images
 	@echo "Download Docker images"
 	docker pull yeasy/hyperledger-fabric:latest
-	docker pull yeasy/hyperledger-fabric:1.0.3
+	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+
+
+
+################## chaincode dev mode ################
+chaincode_init: # start chaincode in dev mode and do install/instantiate
+	@echo "Install and instantiate cc example02 on the fabric dev network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
 

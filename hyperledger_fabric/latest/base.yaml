@@ -1,5 +1,5 @@
 # This is the default base file to config env and command
-# Notice that chaincode is executed inside docker in default net mode
+# All element in this file is abstract without knowing the org and consensus type
 # https://github.com/yeasy/docker-compose-files
 
 # Depends on the hyperledger/fabric-peer image.
