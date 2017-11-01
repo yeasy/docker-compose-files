@@ -10,66 +10,66 @@ version: '2.0'
 services:
 # ca.org1.example.com:
 #   extends:
-#     file: docker-compose-base-kafka.yaml
+#     file: base-kafka.yaml
 #     service: ca.org1.example.com
 
 # ca.org2.example.com:
 #   extends:
-#     file: docker-compose-base-kafka.yaml
+#     file: base-kafka.yaml
 #     service: ca.org2.example.com
 
   cli:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: cli
 
   orderer.example.com:  # There  can be multiple orderers
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: orderer.example.com
 
   peer0.org1.example.com:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: peer0.org1.example.com
 
   peer1.org1.example.com:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: peer1.org1.example.com
 
   peer0.org2.example.com:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: peer0.org2.example.com
 
   peer1.org2.example.com:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: peer1.org2.example.com
 
 # ZooKeeper services, at least 3 nodes
   zookeeper0:
     extends:
-      file: docker-compose-base-kafka.yaml
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper0
 
   zookeeper1:
     extends:
-      file: docker-compose-base-kafka.yaml
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper1
 
   zookeeper2:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: zookeeper2
 
 # Kafka services, at least 4 node to tolerant work with 1 node failure
   kafka0:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka0
     depends_on:
       - zookeeper0
@@ -78,7 +78,7 @@ services:
 
   kafka1:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka1
     depends_on:
       - zookeeper0
@@ -87,7 +87,7 @@ services:
 
   kafka2:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka2
     depends_on:
       - zookeeper0
@@ -96,7 +96,7 @@ services:
 
   kafka3:
     extends:
-      file: docker-compose-base-kafka.yaml
+      file: base-kafka.yaml
       service: kafka3
     depends_on:
       - zookeeper0

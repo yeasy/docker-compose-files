@@ -38,8 +38,8 @@ chaincodeInstall 3 1.0
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on all 2 orgs (once for each org)..."
-chaincodeInstantiate 0
-chaincodeInstantiate 2
+chaincodeInstantiate $CHANNEL_NAME 0
+chaincodeInstantiate $CHANNEL_NAME 2
 
 echo
 echo_g "===================== All GOOD, initialization completed ===================== "
