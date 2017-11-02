@@ -125,8 +125,8 @@ logs_save: # save logs
 logs_view: # view logs
 	less /tmp/dev_peer.log
 
-gen_e2e: # generate e2e_cli artifacts
-	cd e2e_cli && bash gen_artifacts.sh
+gen_solo: # generate solo artifacts
+	cd solo && bash gen_artifacts.sh
 
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
@@ -140,7 +140,6 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
-
 
 
 ################## chaincode dev mode ################
