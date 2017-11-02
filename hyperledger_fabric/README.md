@@ -9,17 +9,23 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 * [Docker Practice](https://github.com/yeasy/docker_practice)
 * [Blockchain Guide](https://github.com/yeasy/blockchain_guide)
 
-## Hyperledger Fabric v0.6
-See [Fabric v0.6](0.6/).
 
-## Hyperledger Fabric v1.0
-See [Fabric v1.0](1.0/).
+## Getting Started
 
-## Hyperledger Fabric v1.0.2
-See [Fabric v1.0.2](1.0.2/).
+```bash
+$ cd 1.0.4
+$ HLF_MODE=solo make
+$ HLF_MODE=kafka make
+$ HLF_MODE=couchdb make
+$ HLF_MODE=dev make
+```
 
-## Hyperledger Fabric v1.0.3
-See [Fabric v1.0.3](1.0.3/).
+## Supported Releases
 
-## Hyperledger Fabric latest
-See [Fabric Latest](latest/).
+* [Fabric v0.6.0](0.6.0/): stable.
+* [Fabric v1.0.0](1.0.0/): stable.
+* [Fabric v1.0.2](1.0.2/): deprecated.
+* [Fabric v1.0.3](1.0.3/): deprecated.
+* [Fabric v1.0.4](1.0.4/): ongoing.
+* [Fabric Latest](latest/): experimental.
+
