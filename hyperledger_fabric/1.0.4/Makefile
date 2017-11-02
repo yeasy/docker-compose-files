@@ -1,4 +1,4 @@
-# mode of the network: solo, kafka, couchdb, dev
+# mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
 CODE_BUILD_WAIT=2
@@ -10,6 +10,8 @@ ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
+else ifeq ($(HLF_MODE),event)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-event.yaml"
 else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
@@ -20,7 +22,7 @@ all:
 	sleep 2
 
 	make ready
-	make lscc qscc fetch_block
+	make lscc qscc
 	make stop clean
 
 ready: restart

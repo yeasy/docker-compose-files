@@ -124,7 +124,7 @@ services:
 
   kafka-base:
     # official repo doesn't have latest tag, however, kafka changes version recently
-    image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
     image: hyperledger/fabric-kafka:x86_64-1.0.4
     restart: always
     tty: true

@@ -63,31 +63,6 @@ services:
     - ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     command: orderer start
 
-  cli: # client node
-    extends:
-      file: base.yaml
-      service: cli-base
-    container_name: fabric-cli
-    hostname: fabric-cli
-    tty: true
-    environment:
-      #- GOPATH=/opt/gopath
-      - CORE_PEER_ID=fabric-cli
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
-      - CORE_PEER_LOCALMSPID=Org1MSP
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
-    volumes:
-        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./scripts:/tmp/scripts
-        - ./solo/channel-artifacts:/tmp/channel-artifacts
-        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
-        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
 
 ## following are peer nodes ##
 
@@ -178,6 +153,32 @@ services:
       - 10052:7052
       - 10053:7053
 
+  cli: # client node
+    extends:
+      file: base.yaml
+      service: cli-base
+    container_name: fabric-cli
+    hostname: fabric-cli
+    tty: true
+    environment:
+      #- GOPATH=/opt/gopath
+      - CORE_PEER_ID=fabric-cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+    volumes:
+        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./scripts:/tmp/scripts
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+
   event-listener:
     extends:
       file: base.yaml
@@ -192,17 +193,11 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     volumes:
-        #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
-        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./solo/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        - ./scripts:/tmp/scripts
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
         - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-    depends_on:
-      - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
-    #command: bash -c 'block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP'
-    command: bash -c 'while true; do sleep 20170504; done'
+        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+    command: bash -c 'while true; do sleep 1; block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP; done'
+    #command: bash -c 'while true; do sleep 20170504; done'

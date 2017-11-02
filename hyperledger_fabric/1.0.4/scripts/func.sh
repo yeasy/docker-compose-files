@@ -316,15 +316,17 @@ channelFetch () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-		peer channel fetch $BLOCK_NO \
+		peer channel fetch $BLOCK_NO block_${BLOCK_NO}.block \
 			-o orderer.example.com:7050 \
-			-c ${CHANNEL_NAME}  >&log.txt
+			-c ${CHANNEL_NAME}  \
+			>&log.txt
 	else
 		peer channel fetch $BLOCK_NO block_${BLOCK_NO}.block \
 			-o orderer.example.com:7050 \
 			-c $CHANNEL_NAME \
 			--tls \
-			--cafile $ORDERER_CA  >&log.txt
+			--cafile $ORDERER_CA  \
+			>&log.txt
 	fi
 	res=$?
 	cat log.txt
