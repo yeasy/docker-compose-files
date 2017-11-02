@@ -14,10 +14,10 @@ fi
 ARCH=x86_64
 BASEIMAGE_RELEASE=0.3.2
 BASE_VERSION=1.1.0
-PROJECT_VERSION=1.0.3
+PROJECT_VERSION=1.0.4
 
 # For testing 1.0.0 images
-IMG_TAG=1.0.3
+IMG_TAG=1.0.4
 
 echo_b "Downloading images from DockerHub... need a while"
 

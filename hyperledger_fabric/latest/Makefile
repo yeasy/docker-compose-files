@@ -1,26 +1,21 @@
-KAFKA_ENABLED ?= false
-COUCHDB_ENABLED ?= false
-DEV_ENABLED ?= true
+# mode of the network: solo, kafka, couchdb, dev
+HLF_MODE ?= solo
 
 CODE_BUILD_WAIT=2
-FABRIC_INIT_WAIT=2
+NETWORK_INIT_WAIT=2
 
-COMPOSE_FILE ?= "docker-compose-2orgs-4peers.yaml"
+COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
-ifeq ($(KAFKA_ENABLED),true)
-COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
-endif
-
-ifeq ($(COUCHDB_ENABLED),true)
-COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
-endif
-
-ifeq ($(DEV_ENABLED),true)
-COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
+ifeq ($(HLF_MODE),kafka)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
+else ifeq ($(HLF_MODE),couchdb)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
+else ifeq ($(HLF_MODE),dev)
+	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
 
 all:
-	@echo "Run test with ${COMPOSE_FILE}"
+	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 2
 
@@ -30,16 +25,16 @@ all:
 
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
-	if [ "$(DEV_ENABLED)" = "true" ]; then \
+	if [ "$(HLF_MODE)" = "dev" ]; then \
 			echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
-			sleep $(FABRIC_INIT_WAIT); \
+			sleep $(NETWORK_INIT_WAIT); \
 			make test_cc_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 3; \
 			make init; \
-			sleep $(FABRIC_INIT_WAIT); \
-			make test_cc; \
+			sleep $(NETWORK_INIT_WAIT); \
+			make test_cc_all; \
 	fi
 
 	@echo "Now the fabric network is ready to play"
@@ -130,8 +125,8 @@ logs_save: # save logs
 logs_view: # view logs
 	less /tmp/dev_peer.log
 
-gen_e2e: # generate e2e_cli artifacts
-	cd e2e_cli && bash gen_artifacts.sh
+gen_solo: # generate solo artifacts
+	cd solo && bash gen_artifacts.sh
 
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
@@ -145,8 +140,6 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
-
-
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate

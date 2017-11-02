@@ -37,7 +37,7 @@ chaincodeInstall 1 1.1
 chaincodeInstall 2 1.1
 chaincodeInstall 3 1.1
 
-chaincodeUpgrade 0 1.1
+chaincodeUpgrade $CHANNEL_NAME 0 1.1
 
 chaincodeQuery 0 100
 chaincodeQuery 3 100

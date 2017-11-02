@@ -1,16 +1,31 @@
-# https://github.com/yeasy/files/tree/master/hyperledger
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
 # This compose file will start a Hyperledger Fabric 1.0 MVE, including
-# * 1 ca
+# * 2 ca (not in use now)
 # * 1 orderer
-# * 1 peer
+# * 4 peers in 2 orgs
 # * cli for testing
 
 version: '2.0'
 
 services:
+# ca.org1.example.com:
+#   extends:
+#     file: base-kafka.yaml
+#     service: ca.org1.example.com
+
+# ca.org2.example.com:
+#   extends:
+#     file: base-kafka.yaml
+#     service: ca.org2.example.com
+
+  cli:
+    extends:
+      file: base-kafka.yaml
+      service: cli
+
   orderer.example.com:  # There  can be multiple orderers
     extends:
-      file: base-dev.yaml
+      file: base-kafka.yaml
       service: orderer.example.com
     depends_on:
       - kafka0
@@ -20,18 +35,25 @@ services:
 
   peer0.org1.example.com:
     extends:
-      file: base-dev.yaml
+      file: base-kafka.yaml
       service: peer0.org1.example.com
     depends_on:
       - orderer.example.com
 
-  cli:
+  peer1.org1.example.com:
     extends:
-      file: base-dev.yaml
-      service: cli
-    depends_on:
-      - peer0.org1.example.com
-      - orderer.example.com
+      file: base-kafka.yaml
+      service: peer1.org1.example.com
+
+  peer0.org2.example.com:
+    extends:
+      file: base-kafka.yaml
+      service: peer0.org2.example.com
+
+  peer1.org2.example.com:
+    extends:
+      file: base-kafka.yaml
+      service: peer1.org2.example.com
 
 # ZooKeeper services, at least 3 nodes
   zookeeper0:

@@ -11,7 +11,7 @@ services:
     extends:
       file: base.yaml
       service: orderer-base
-    image: yeasy/hyperledger-fabric:1.0.4
+    image: yeasy/hyperledger-fabric:latest
     container_name: orderer.example.com
     hostname: orderer.example.com
     ports:
@@ -38,7 +38,7 @@ services:
     extends:
       file: base.yaml
       service: peer-base
-    image: yeasy/hyperledger-fabric:1.0.4
+    image: yeasy/hyperledger-fabric:latest
     container_name: peer0.org1.example.com
     hostname: peer0.org1.example.com
     environment:
@@ -67,7 +67,7 @@ services:
     extends:
       file: base.yaml
       service: cli-base
-    image: yeasy/hyperledger-fabric:1.0.4
+    image: yeasy/hyperledger-fabric:latest
     container_name: fabric-cli
     hostname: fabric-cli
     tty: true

@@ -6,7 +6,13 @@ $ HLF_MODE=solo make
 ```
 When the fabric-network fully started, it takes about 30~60s to finish all the test. 
 
-## Generate crypto-config and channel-artifacts
+### Quick testing with kafka
+```bash
+$ HLF_MODE=kafka make
+```
+When the fabric-network fully started, it takes about 30~60s to finish all the test. 
+
+### Generate crypto-config and channel-artifacts
 
 ```bash
 $ make gen_solo gen_kafka
