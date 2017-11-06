@@ -1,8 +1,10 @@
+# Makefile to bootup the network, and do operations (channel, chaincode)
+
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
-CODE_BUILD_WAIT=2
-NETWORK_INIT_WAIT=2
+CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
+NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
@@ -48,14 +50,6 @@ start: # bootup the fabric network
 	make clean
 	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
-init: # initialize the fabric network
-	@echo "Install and instantiate cc example02 on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_all.sh"
-
-init_peer0: # initialize the fabric network
-	@echo "Install and instantiate cc example02 on the fabric dev network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
-
 stop: # stop the fabric network
 	@echo "Stop the fabric network"
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
@@ -63,6 +57,29 @@ stop: # stop the fabric network
 restart: stop start
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
+
+################## Initialization operations ################
+init: # initialize the fabric network
+	@echo "Init fabric network"
+	make init_channel
+	make update_anchors
+	make init_chaincode
+
+init_channel: # Init the channel
+	@echo "Init channel on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_channel.sh"
+
+update_anchors: # Update the anchor peer
+	@echo "Update anchors on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/update_anchors.sh"
+
+init_chaincode: # Init the chaincode
+	@echo "Install and instantiate chaincode on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode.sh"
+
+init_peer0: # initialize the fabric network
+	@echo "Install and instantiate cc example02 on the fabric dev network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
 
 ################## Chaincode testing operations ################
 test_cc_all: # test user chaincode on all peers
@@ -142,7 +159,6 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
-
 
 
 ################## chaincode dev mode ################

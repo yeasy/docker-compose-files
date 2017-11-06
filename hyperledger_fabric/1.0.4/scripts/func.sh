@@ -82,14 +82,14 @@ checkOSNAvailability() {
 	done
 	cat log.txt
 	verifyResult $rc "Ordering Service is not available, Please try again ..."
-	echo "===================== Ordering Service is up and running ===================== "
+	echo "=== Ordering Service is up and running === "
 	echo
 }
 
 # Use peer0/org1 to create a channel
 channelCreate() {
 	CHANNEL_NAME=$1
-	echo_b "===================== Create Channel \"$CHANNEL_NAME\" ===================== "
+	echo_b "=== Create Channel \"$CHANNEL_NAME\" === "
 	setGlobals 0
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create \
@@ -119,7 +119,7 @@ channelCreate() {
 		COUNTER=1
 	fi
 	verifyResult $res "Channel creation failed"
-	echo_g "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
+	echo_g "=== Channel \"$CHANNEL_NAME\" is created successfully === "
 	echo
 }
 
@@ -127,7 +127,7 @@ updateAnchorPeers() {
 	CHANNEL_NAME=$1
   PEER=$2
   setGlobals $PEER
-	echo_b "===================== Update Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" ===================== "
+	echo_b "=== Update Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" === "
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
 	else
@@ -136,13 +136,13 @@ updateAnchorPeers() {
 	res=$?
 	cat log.txt
 	verifyResult $res "Anchor peer update failed"
-	echo_g "===================== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully ===================== "
+	echo_g "=== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully === "
 	sleep 5
 	echo
 }
 
 ## Sometimes Join takes time hence RETRY atleast for 5 times
-joinWithRetry () {
+channelJoinWithRetry () {
 	peer channel join -b $CHANNEL_NAME.block  >&log.txt
 	res=$?
 	cat log.txt
@@ -150,25 +150,25 @@ joinWithRetry () {
 		COUNTER=` expr $COUNTER + 1`
 		echo_b "PEER$1 failed to join the channel, Retry after 2 seconds"
 		sleep 2
-		joinWithRetry $1
+		channelJoinWithRetry $1
 	else
 		COUNTER=1
 	fi
-        verifyResult $res "After $MAX_RETRY attempts, PEER$ch has failed to Join the Channel"
+  verifyResult $res "After $MAX_RETRY attempts, PEER$1 has failed to Join the Channel"
 }
 
 # Join given (by default all) peers into the channel
 channelJoin () {
 	CHANNEL_NAME=$1
-	echo_b "===================== Join peers into the channel \"$CHANNEL_NAME\" ===================== "
+	echo_b "=== Join peers into the channel \"$CHANNEL_NAME\" === "
 	peers_to_join=$(seq 0 3)
   if [ $# -gt 1 ]; then
     peers_to_join=${@:2}
   fi
 	for i in $peers_to_join; do
 		setGlobals $i
-		joinWithRetry $i
-		echo_g "===================== PEER$i joined into the channel \"$CHANNEL_NAME\" ===================== "
+		channelJoinWithRetry $i
+		echo_g "=== PEER$i joined into the channel \"$CHANNEL_NAME\" === "
 		sleep 2
 		echo
 	done
@@ -179,7 +179,7 @@ chaincodeInstantiate () {
 	CHANNEL_NAME=$1
 	PEER=$2
 	setGlobals $PEER
-	echo_b "===================== chaincodeInstantiate for channel $CHANNEL_NAME on peer $PEER ============"
+	echo_b "=== chaincodeInstantiate for channel $CHANNEL_NAME on peer $PEER ===="
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -205,14 +205,14 @@ chaincodeInstantiate () {
 	fi
 	res=$?
 	cat log.txt
-	verifyResult $res "Chaincode instantiation on PEER$PEER in channel '$CHANNEL_NAME' failed"
-	echo_g "===================== Chaincode Instantiation on PEER$PEER in channel '$CHANNEL_NAME' is successful ===================== "
+	verifyResult $res "ChaincodeInstantiation on PEER$PEER in channel '$CHANNEL_NAME' failed"
+	echo_g "=== ChaincodeInstantiation on PEER$PEER in channel '$CHANNEL_NAME' is successful ==="
 	echo
 }
 
 chaincodeQuery () {
   PEER=$1
-  echo_b "===================== Querying on PEER$PEER in channel '$CHANNEL_NAME'... ===================== "
+  echo_b "=== Querying on PEER$PEER in channel '$CHANNEL_NAME'... === "
   setGlobals $PEER
   local rc=1
   local starttime=$(date +%s)
@@ -230,7 +230,7 @@ chaincodeQuery () {
   echo
   cat log.txt
   if test $rc -eq 0 ; then
-	echo_g "===================== Query on PEER$PEER in channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "=== Query on PEER$PEER in channel '$CHANNEL_NAME' is successful === "
   else
 	echo_r "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
         echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
@@ -241,7 +241,7 @@ chaincodeQuery () {
 
 chaincodeInvoke () {
 	PEER=$1
-	echo_g "===================== Invoke transaction on PEER$PEER in channel '$CHANNEL_NAME'===================== "
+	echo_g "=== Invoke transaction on PEER$PEER in channel '$CHANNEL_NAME'=== "
 	setGlobals $PEER
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
@@ -253,21 +253,25 @@ chaincodeInvoke () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Invoke execution on PEER$PEER failed "
-	echo_g "===================== Invoke transaction on PEER$PEER in channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "=== Invoke transaction on PEER$PEER in channel '$CHANNEL_NAME' is successful === "
 	echo
 }
 
 # Install chaincode on specifized peer node
 chaincodeInstall () {
 	PEER=$1
-	echo_b "===================== Install Chaincode on remote peer PEER$PEER ===================== "
+	echo_b "=== Install Chaincode on remote peer PEER$PEER === "
 	VERSION=$2
 	setGlobals $PEER
-	peer chaincode install -n $CC_NAME -v $VERSION -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 >&log.txt
+	peer chaincode install \
+		-n $CC_NAME \
+		-v $VERSION \
+		-p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 \
+		>&log.txt
 	res=$?
 	cat log.txt
         verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
-	echo_g "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
+	echo_g "=== Chaincode is installed on remote peer PEER$PEER === "
 	echo
 }
 
@@ -283,7 +287,7 @@ chaincodeStartDev () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Chaincode start in dev mode has Failed"
-	echo_g "===================== Chaincode started in dev mode ===================== "
+	echo_g "=== Chaincode started in dev mode === "
 	echo
 }
 
@@ -292,7 +296,7 @@ chaincodeUpgrade () {
 	CHANNEL_NAME=$1
 	PEER=$2
 	VERSION=$3
-	echo_b "===================== Upgrade chaincode to version $VERSION on PEER$PEER in channel '$CHANNEL_NAME'  ===================== "
+	echo_b "=== Upgrade chaincode to version $VERSION on PEER$PEER in channel '$CHANNEL_NAME'  === "
 	setGlobals $PEER
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
@@ -304,14 +308,14 @@ chaincodeUpgrade () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Upgrade execution on PEER$PEER failed "
-	echo_g "===================== Upgrade transaction on PEER$PEER in channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "=== Upgrade transaction on PEER$PEER in channel '$CHANNEL_NAME' is successful === "
 	echo
 }
 
 channelFetch () {
 	PEER=$1
 	BLOCK_NO=$2
-	echo_b "===================== Fetch block $BLOCK_NO on PEER$PEER in channel '$CHANNEL_NAME' ===================== "
+	echo_b "=== Fetch block $BLOCK_NO on PEER$PEER in channel '$CHANNEL_NAME' === "
 	setGlobals $PEER
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
@@ -331,6 +335,6 @@ channelFetch () {
 	res=$?
 	cat log.txt
 	verifyResult $res "Fetch block on PEER$PEER failed "
-	echo_g "===================== Fetch block on PEER$PEER in channel '$CHANNEL_NAME' is successful ===================== "
+	echo_g "=== Fetch block on PEER$PEER in channel '$CHANNEL_NAME' is successful === "
 	echo
 }
