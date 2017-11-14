@@ -9,16 +9,16 @@ fi
 
 ## Install chaincode on all peers
 echo_b "Installing chaincode on all 4 peers..."
-chaincodeInstall 0 1.0
-chaincodeInstall 1 1.0
-chaincodeInstall 2 1.0
-chaincodeInstall 3 1.0
+chaincodeInstall 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+chaincodeInstall 1 ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+chaincodeInstall 2 ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+chaincodeInstall 3 ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on all 2 orgs (once for each org)..."
-chaincodeInstantiate $CHANNEL_NAME 0
-chaincodeInstantiate $CHANNEL_NAME 2
+chaincodeInstantiate $CHANNEL_NAME 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
+chaincodeInstantiate $CHANNEL_NAME 2 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
 
 echo
 echo_g "===================== Init chaincode done ===================== "

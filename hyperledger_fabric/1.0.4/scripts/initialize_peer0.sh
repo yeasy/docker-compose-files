@@ -25,7 +25,7 @@ updateAnchorPeers $CHANNEL_NAME 0
 
 ## Install chaincode on all peers
 echo_b "Installing chaincode on peer0..."
-chaincodeInstall 0 1.0
+chaincodeInstall 0 ${CC_INIT_ARGS}
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node

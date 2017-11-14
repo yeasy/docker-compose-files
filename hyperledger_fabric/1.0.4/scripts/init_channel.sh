@@ -8,9 +8,9 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Create channel
-echo_b "Creating channel $CHANNEL_NAME..."
-channelCreate $CHANNEL_NAME
+echo_b "Creating channel ${CHANNEL_NAME}..."
+channelCreate ${CHANNEL_NAME}
 
 ## Join all the peers to the channel
-echo_b "Having all peers join the channel $CHANNEL_NAME..."
-channelJoin $CHANNEL_NAME 0 1 2 3
+echo_b "Having all peers join the channel ${CHANNEL_NAME}..."
+channelJoin ${CHANNEL_NAME} 0 1 2 3

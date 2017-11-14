@@ -20,7 +20,7 @@ echo_b "Fetch block 1"
 channelFetch 0 1
 
 echo_b "Fetch block 2"
-channelFetch 0 2
+channelFetch ${CHANNEL_NAME} 0 2
 
 echo_b "Fetch block 3"
 channelFetch 0 3
