@@ -21,13 +21,19 @@ endif
 all:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
-	sleep 2
+	sleep 1
 
 	make ready
 	make lscc qscc
 	make stop clean
 
-ready: restart
+init: # initialize the fabric network
+	@echo "Init fabric network"
+	make init_channel
+	#make update_anchors
+	make init_chaincode
+
+ready:
 	@echo "Restart, init network and then do cc testing..."
 	if [ "$(HLF_MODE)" = "dev" ]; then \
 			echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
@@ -45,6 +51,8 @@ ready: restart
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
 
+restart: stop start
+
 start: # bootup the fabric network
 	@echo "Start a fabric network with ${COMPOSE_FILE}"
 	make clean
@@ -54,16 +62,9 @@ stop: # stop the fabric network
 	@echo "Stop the fabric network"
 	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
 
-restart: stop start
-
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Initialization operations ################
-init: # initialize the fabric network
-	@echo "Init fabric network"
-	make init_channel
-	make update_anchors
-	make init_chaincode
 
 init_channel: # Init the channel
 	@echo "Init channel on the fabric network"
@@ -71,9 +72,9 @@ init_channel: # Init the channel
 
 update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/update_anchors.sh"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
-init_chaincode: # Init the chaincode
+init_chaincode: # Install and instantiate the chaincode
 	@echo "Install and instantiate chaincode on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode.sh"
 
@@ -96,7 +97,7 @@ qscc: # test qscc queries
 lscc: # test lscc quries
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
 
-fetch_block: # test channel fetch
+fetch_blocks: # test channel fetch
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
 	docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts/
 	docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts/

@@ -36,12 +36,12 @@ chaincodeInstall 0 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
 chaincodeInstall 1 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
 chaincodeInstall 2 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
 chaincodeInstall 3 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
-
 chaincodeUpgrade ${CHANNEL_NAME} 0 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_UPGRADE_ARGS}
 
+# Query new value, should refresh through all peers in the channel
 chaincodeQuery ${CHANNEL_NAME} 0 ${CC_NAME} ${CC_QUERY_ARGS} 100
 chaincodeQuery ${CHANNEL_NAME} 3 ${CC_NAME} ${CC_QUERY_ARGS} 100
 
-echo_g "===================== All GOOD, End-2-End execution completed ===================== "
+echo_g "=== All GOOD, End-2-End execution completed ==="
 
 exit 0

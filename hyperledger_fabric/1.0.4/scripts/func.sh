@@ -214,7 +214,6 @@ chaincodeInstall () {
 	cat log.txt
   verifyResult $res "Chaincode installation on remote peer$peer has Failed"
 	echo_g "=== Chaincode is installed on remote peer$peer === "
-	echo
 }
 
 # Instantiate chaincode on specifized peer node
@@ -229,7 +228,6 @@ chaincodeInstantiate () {
 	echo_b "=== chaincodeInstantiate for channel ${channel} on peer $peer ===="
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
-	set -x
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer chaincode instantiate \
 			-o ${ORDERER_URL} \
@@ -255,7 +253,6 @@ chaincodeInstantiate () {
 	cat log.txt
 	verifyResult $res "ChaincodeInstantiation on peer$peer in channel '${channel}' failed"
 	echo_g "=== ChaincodeInstantiation on peer$peer in channel '${channel}' is successful ==="
-	echo
 }
 
 
@@ -290,7 +287,6 @@ chaincodeInvoke () {
 	cat log.txt
 	verifyResult $res "Invoke execution on peer$peer failed "
 	echo_g "=== Invoke transaction on peer$peer in channel '${channel}' is successful === "
-	echo
 }
 
 # query channel peer name args expected_result

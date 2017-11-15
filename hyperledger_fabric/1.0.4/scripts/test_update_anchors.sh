@@ -7,6 +7,8 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
+setGlobals 0
+
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for org1..."
 updateAnchorPeers $CHANNEL_NAME 0
