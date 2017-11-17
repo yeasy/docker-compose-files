@@ -28,25 +28,24 @@ all:
 	make stop clean
 
 init: # initialize the fabric network
-	@echo "Init fabric network"
-	make init_channel
-	#make update_anchors
-	make init_chaincode
-
-ready:
-	@echo "Restart, init network and then do cc testing..."
 	if [ "$(HLF_MODE)" = "dev" ]; then \
-			echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
+			@echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
-			sleep $(NETWORK_INIT_WAIT); \
-			make test_cc_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 3; \
-			make init; \
-			sleep $(NETWORK_INIT_WAIT); \
-			make test_cc_all; \
-	fi
+			make init_all; \
 
+test_cc: # test chaincode
+	if [ "$(HLF_MODE)" = "dev" ]; then \
+			make test_cc_peer0; \
+	else \
+			make test_cc_all; \
+
+ready: restart
+	@echo "Restart, init network and then do cc testing..."
+	make init
+	sleep $(NETWORK_INIT_WAIT); \
+	make test_cc
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -77,6 +76,12 @@ update_anchors: # Update the anchor peer
 init_chaincode: # Install and instantiate the chaincode
 	@echo "Install and instantiate chaincode on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode.sh"
+
+init_all: # initialize the fabric network
+	@echo "Init fabric network"
+	make init_channel
+	#make update_anchors
+	make init_chaincode
 
 init_peer0: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric dev network"

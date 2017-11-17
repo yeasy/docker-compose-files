@@ -48,6 +48,32 @@ services:
       file: base-solo.yaml
       service: peer1.org2.example.com
 
+  explorer:
+    image: yeasy/blockchain-explorer:latest
+    container_name: explorer
+    hostname: explorer
+    depends_on:
+      - mysql
+    volumes:
+      - ./config.json:/blockchain-explorer/config.json
+      - ./solo/crypto-config:/blockchain-explorer/first-network/crypto-config
+    ports:
+      - "8080:8080"  # HTTP port
+    command: bash -c 'node main.js'
+
+  mysql: # mysql service
+    image: mysql:8.0
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=fabricexplorer
+    volumes:
+      - ./fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
+    expose:
+      - "3306"
+    #command: bash -c 'mysqld; sleep 1; mysql -uroot -proot < /tmp/fabricexplorer.sql; while true; do sleep 20171117; done'
 #networks:
 #  default:
 #    external:
