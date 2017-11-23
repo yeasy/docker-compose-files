@@ -32,14 +32,16 @@ init: # initialize the fabric network
 			@echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
 	else \
-			echo "In Normal mode ..." && sleep 3; \
+			echo "In Normal mode ..." && sleep 1; \
 			make init_all; \
+	fi
 
 test_cc: # test chaincode
 	if [ "$(HLF_MODE)" = "dev" ]; then \
 			make test_cc_peer0; \
 	else \
 			make test_cc_all; \
+	fi
 
 ready: restart
 	@echo "Restart, init network and then do cc testing..."

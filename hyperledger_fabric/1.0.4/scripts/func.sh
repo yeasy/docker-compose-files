@@ -20,7 +20,6 @@ elif [ -f scripts/variables.sh ]; then
  source scripts/variables.sh
 fi
 
-
 # Verify $1 is not 0, then output error msg $2
 verifyResult () {
 	if [ $1 -ne 0 ] ; then
