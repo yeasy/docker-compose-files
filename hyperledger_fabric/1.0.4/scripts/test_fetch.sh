@@ -9,7 +9,7 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-setGlobals 0
+setEnvs "Org1MSP" ${ORG1_PEER0_TLS_ROOTCERT} ${ORG1_ADMIN_MSP} ${ORG1_PEER0_URL}
 
 echo_b "=== Fetching blocks ==="
 

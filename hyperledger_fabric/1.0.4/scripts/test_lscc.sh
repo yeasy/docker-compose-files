@@ -16,36 +16,45 @@ echo_b "LSCC testing"
 	#--tls "true" \
 	#--cafile ${ORDERER_TLS_CA} \
 
-setGlobals 0
-
 echo_b "LSCC Get id"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${CHANNEL_NAME}" 0 lscc '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get cc ChaincodeDeploymentSpec"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${CHANNEL_NAME}" 0 lscc '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get cc bytes"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-  -c '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${CHANNEL_NAME}" 0 lscc '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get all chaincodes installed on the channel"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getinstalledchaincodes"]}'
+chaincodeQuery "${CHANNEL_NAME}" 0 lscc '{"Args":["getinstalledchaincodes"]}'
 
 echo_b "LSCC Get all chaincodes instantiated on the channel"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getchaincodes"]}'
+chaincodeQuery "${CHANNEL_NAME}" 0 lscc '{"Args":["getchaincodes"]}'
+
+
+#peer chaincode query \
+#	-C "${CHANNEL_NAME}" \
+#	-n lscc \
+#	-c '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${CHANNEL_NAME}" \
+#	-n lscc \
+#	-c '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${CHANNEL_NAME}" \
+#	-n lscc \
+#  -c '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${CHANNEL_NAME}" \
+#	-n lscc \
+#	-c '{"Args":["getinstalledchaincodes"]}'
+
+#peer chaincode query \
+#	-C "${CHANNEL_NAME}" \
+#	-n lscc \
+#	-c '{"Args":["getchaincodes"]}'
 
 echo_g "LSCC testing done!"

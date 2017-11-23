@@ -7,7 +7,7 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-echo_b "Channel name: "$CHANNEL_NAME
+echo_b "Channel name: "${CHANNEL_NAME}
 
 echo_b "Query the existing value of a"
 chaincodeQuery ${CHANNEL_NAME} 0 ${CC_NAME} ${CC_QUERY_ARGS} 100

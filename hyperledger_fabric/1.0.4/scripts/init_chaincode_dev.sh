@@ -14,7 +14,7 @@ echo " ==========initialize businesschannel========== "
 echo " ============================================== "
 echo
 
-echo_b "Channel name: "$CHANNEL_NAME
+echo_b "Channel name: "${CHANNEL_NAME}
 
 ## Create channel
 echo_b "Creating channel..."
@@ -24,7 +24,7 @@ sleep 1
 
 ## Join all the peers to the channel
 echo_b "Having peer0 join the channel..."
-channelJoin 0
+channelJoin ${CHANNEL_NAME} 0
 
 sleep 1
 

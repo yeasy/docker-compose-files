@@ -11,18 +11,20 @@ fi
 
 echo_b "QSCC testing"
 
-setGlobals 0
-
 echo_b "QSCC GetChainInfo"
-peer chaincode query \
-	-C "" \
-	-n qscc \
-	-c '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
+chaincodeQuery "" 0 qscc '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
 
 echo_b "QSCC GetBlockByNumber 2"
-peer chaincode query \
-	-C "" \
-	-n qscc \
-	-c '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
+chaincodeQuery "" 0 qscc '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
+
+#peer chaincode query \
+#	-C "" \
+#	-n qscc \
+#	-c '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
+
+#peer chaincode query \
+#	-C "" \
+#	-n qscc \
+#	-c '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
 
 echo_g "QSCC testing done!"

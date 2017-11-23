@@ -23,10 +23,15 @@ all:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 1
 
-	make ready
+	#make ready
+	make restart
+	make init
+
+	make test_cc
 	make lscc # test lscc operations
 	make qscc  # test qscc operations
-	make fetch_blocks # fetch block files
+	#make fetch_blocks # fetch block files
+
 	make stop clean
 
 init: # initialize the fabric network
@@ -35,7 +40,9 @@ init: # initialize the fabric network
 			make init_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 1; \
-			make init_all; \
+			make init_channel; \
+			\# make update_anchors; \
+			make init_chaincode; \
 	fi
 
 test_cc: # test chaincode
@@ -48,8 +55,8 @@ test_cc: # test chaincode
 ready: restart
 	@echo "Restart, init network and then do cc testing..."
 	make init
-	sleep $(NETWORK_INIT_WAIT); \
-	make test_cc
+	sleep $(NETWORK_INIT_WAIT)
+	#make test_cc
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -59,11 +66,11 @@ restart: stop start
 start: # bootup the fabric network
 	@echo "Start a fabric network with ${COMPOSE_FILE}"
 	make clean
-	docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
+	@docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 stop: # stop the fabric network
-	@echo "Stop the fabric network"
-	docker-compose -f ${COMPOSE_FILE} down  # Stop a fabric network
+	@echo "Stop the fabric network..."
+	@docker-compose -f ${COMPOSE_FILE} down >/tmp/docker-compose.log&  # Stop a fabric network
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
