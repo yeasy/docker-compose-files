@@ -9,6 +9,8 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
+echo_b "QSCC testing"
+
 setGlobals 0
 
 echo_b "QSCC GetChainInfo"
@@ -23,4 +25,4 @@ peer chaincode query \
 	-n qscc \
 	-c '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
 
-echo_g "Qscc testing done!"
+echo_g "QSCC testing done!"

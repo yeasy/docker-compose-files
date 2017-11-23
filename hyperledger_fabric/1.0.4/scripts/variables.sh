@@ -19,7 +19,6 @@ ORG2_PEER0_TLS_ROOTCERT=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypt
 ORG1_ADMIN_MSP=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 ORG2_ADMIN_MSP=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
 
-
 # Node URLS
 ORDERER_URL="orderer.example.com:7050"
 ORG1_PEER0_URL="peer0.org1.example.com:7051"

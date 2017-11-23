@@ -7,7 +7,7 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-echo_b "Channel name : "$CHANNEL_NAME
+echo_b "Channel name: "$CHANNEL_NAME
 
 #Query on chaincode on Peer0/Org1
 echo_b "Querying chaincode on peer 3..."

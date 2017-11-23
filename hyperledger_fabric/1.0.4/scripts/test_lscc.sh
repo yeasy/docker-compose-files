@@ -18,31 +18,31 @@ echo_b "LSCC testing"
 
 setGlobals 0
 
-echo_b "Get id"
+echo_b "LSCC Get id"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \
-	-c '{"Args":["getid","'${CHANNEL_NAME}'", "mycc"]}'
+	-c '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
-echo_b "Get cc ChaincodeDeploymentSpec"
+echo_b "LSCC Get cc ChaincodeDeploymentSpec"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \
-	-c '{"Args":["getdepspec","'${CHANNEL_NAME}'", "mycc"]}'
+	-c '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
-echo_b "Get cc bytes"
+echo_b "LSCC Get cc bytes"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \
-  -c '{"Args":["getccdata","'${CHANNEL_NAME}'", "mycc"]}'
+  -c '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
 
-echo_b "Get all chaincodes installed on the channel"
+echo_b "LSCC Get all chaincodes installed on the channel"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \
 	-c '{"Args":["getinstalledchaincodes"]}'
 
-echo_b "Get all chaincodes instantiated on the channel"
+echo_b "LSCC Get all chaincodes instantiated on the channel"
 peer chaincode query \
 	-C "${CHANNEL_NAME}" \
 	-n lscc \

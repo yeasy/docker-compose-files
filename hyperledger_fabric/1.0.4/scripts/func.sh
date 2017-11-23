@@ -20,7 +20,7 @@ elif [ -f scripts/variables.sh ]; then
  source scripts/variables.sh
 fi
 
-# Verify $1 is not 0, then output error msg $2
+# Verify $1 is not 0, then output error msg $2 and exit
 verifyResult () {
 	if [ $1 -ne 0 ] ; then
 		echo_b "$2"
@@ -107,23 +107,25 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
+# channelCreate channel_name
 channelCreate() {
 	local channel=$1
+	echo_b "=== Create Channel ${channel} === "
 	local counter=0
-	local res=1
-	echo_b "=== Create Channel ${channel}\" === "
 	setGlobals 0
-	while [ $counter -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
-		 res=$(channelCreateAction ${channel})
+	channelCreateAction ${channel}
+	local res=$?
+	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
+		 echo_b "Failed to create channel $channel, retry after 3s"
+		 sleep 3
+		 channelCreateAction ${channel}
+		 res=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
-		 echo_b "Fail to create channel ${channel}, Retry after 3 seconds"
-		 sleep 3
 	done
 	cat log.txt
-	verifyResult ${res} "Channel creation failed"
-	echo_g "=== Channel ${channel} is created successfully === "
-	echo
+	verifyResult ${res} "Channel ${channel} creation failed"
+	echo_g "=== Channel ${channel} is created. === "
 }
 
 # called by channelJoinWithRetry
@@ -138,22 +140,24 @@ channelJoinWithRetry () {
 	local channel=$1
 	local peer=$2
 	local counter=0
-	local res=1
+	channelJoinAction ${channel}
+	local res=$?
 	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
-		res=$(channelJoinAction ${channel})
-		let counter=$counter+1
-		echo_b "peer${peer} failed to join the channel, Retry after 2 seconds"
+		echo_b "peer${peer} failed to join channel ${channel}, retry after 2s"
 		sleep 2
+		channelJoinAction ${channel}
+		res=$?
+		let counter=${counter}+1
 	done
 	cat log.txt
-  verifyResult $res "After $MAX_RETRY attempts, peer${peer} has failed to Join the Channel"
+  verifyResult ${res} "After $MAX_RETRY attempts, peer${peer} failed to Join the Channel"
 }
 
 # Join given (by default all) peers into the channel
 # channelJoin 0 1 2 3
 channelJoin () {
 	local channel=$1
-	echo_b "=== Join peers into the channel ${channel} === "
+	echo_b "=== Join peers into channel ${channel} === "
 	peers_to_join=$(seq 0 3)
   if [ $# -gt 1 ]; then
     peers_to_join=${@:2}
@@ -161,7 +165,7 @@ channelJoin () {
 	for i in $peers_to_join; do
 		setGlobals $i
 		channelJoinWithRetry ${channel} $i
-		echo_g "=== peer$i joined into the channel \"${channel}\" === "
+		echo_g "=== peer$i joined into channel ${channel} === "
 		sleep 1
 	done
 }
@@ -191,7 +195,7 @@ updateAnchorPeers() {
 	res=$?
 	cat log.txt
 	verifyResult $res "Anchor peer update failed"
-	echo_g "=== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on ${channel} is updated successfully === "
+	echo_g "=== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on ${channel} is updated. === "
 	sleep 2
 }
 
@@ -384,19 +388,19 @@ chaincodeUpgrade () {
 channelFetch () {
 	local channel=$1
 	local peer=$2
-	local blockNum=$3
-	echo_b "=== Fetch block $blockNum on peer$peer in channel '$channel' === "
+	local num=$3
+	echo_b "=== Fetch block $num on peer$peer in channel '$channel' === "
 
 	setGlobals $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-		peer channel fetch $blockNum block_${blockNum}.block \
+		peer channel fetch $num ${channel}_block_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel}  \
 			>&log.txt
 	else
-		peer channel fetch $blockNum block_${blockNum}.block \
+		peer channel fetch $num block_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
 			--tls \

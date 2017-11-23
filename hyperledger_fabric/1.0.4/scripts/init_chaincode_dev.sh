@@ -14,7 +14,7 @@ echo " ==========initialize businesschannel========== "
 echo " ============================================== "
 echo
 
-echo_b "Channel name : "$CHANNEL_NAME
+echo_b "Channel name: "$CHANNEL_NAME
 
 ## Create channel
 echo_b "Creating channel..."

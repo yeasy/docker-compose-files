@@ -24,7 +24,9 @@ all:
 	sleep 1
 
 	make ready
-	make lscc qscc
+	make lscc # test lscc operations
+	make qscc  # test qscc operations
+	make fetch_blocks # fetch block files
 	make stop clean
 
 init: # initialize the fabric network
@@ -99,18 +101,28 @@ test_cc_peer0: # test single peer
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
 qscc: # test qscc queries
+	@echo "Test QSCC query"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
 
 lscc: # test lscc quries
+	@echo "Test LSCC query"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
 
-fetch_blocks: # test channel fetch
+# FIXME: docker doesn't support wildcard in cp right now
+fetch_blocks: # test fetching channel blocks fetch
+	@echo "Test fetching block files"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
-	docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts/
-	docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts/
-	docker cp fabric-cli:/tmp/block_2.block kafka/channel-artifacts/
-	docker cp fabric-cli:/tmp/block_3.block kafka/channel-artifacts/
-
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
+		docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_2.block kafka/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_3.block kafka/channel-artifacts; \
+	else \
+		docker cp fabric-cli:/tmp/block_0.block solo/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_1.block solo/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_2.block solo/channel-artifacts; \
+		docker cp fabric-cli:/tmp/block_3.block solo/channel-artifacts; \
+	fi
 
 ################## Env setup related, no need to see usually ################
 
@@ -158,7 +170,7 @@ gen_solo: # generate solo artifacts
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
 
-configtxlator: # run configtxlator
+test_configtxlator: # Test change config using configtxlator
 	cd kafka && bash run_configtxlator.sh
 
 download: # download required images
@@ -167,7 +179,6 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
-
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate

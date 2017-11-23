@@ -152,7 +152,7 @@ This example will explain how to add a new org or peer with changed the basic to
 
 ##### all-in-one
 
-We privide some instance in current directory, in this case we add a new organization `Org3` and new peer `peer0.org3.example.com`.
+We provide some instance in current directory, in this case we add a new organization `Org3` and new peer `peer0.org3.example.com`.
 
 * 1 Generate necessary config and certs
 
@@ -180,7 +180,8 @@ $ sudo docker-compose -f docker-compose-2orgs-4peers-event.yaml up
 
 * 3 execute auto-test
 
-    Throuth this script to test whether the network works.
+Throuth this script to test whether the network works.
+
 ```bash
 $ root@cli: bash ./scripts/test-5-peers.sh newchannel
 ```
@@ -199,7 +200,7 @@ The final output may look like following
 
 * 1 Modify config
 
-    modify configtx.yaml, crypto-cnfig.yaml and docker-compose files to adapt new change. and replace old file.
+modify configtx.yaml, crypto-cnfig.yaml and docker-compose files to adapt new change. and replace old file.
 
 * 2 Bootstrap network with `docker-compose-2orgs-4peers-event.yaml`
 

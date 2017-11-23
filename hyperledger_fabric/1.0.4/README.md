@@ -82,7 +82,7 @@ You should see result like the following if the initialization is successful.
 ==========initialize businesschannel==========
 ==============================================
 
-Channel name : businesschannel
+Channel name: businesschannel
 Creating channel...
 
 ...
