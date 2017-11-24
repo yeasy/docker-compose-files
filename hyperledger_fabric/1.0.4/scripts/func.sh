@@ -32,7 +32,6 @@ verifyResult () {
 # Set global env variables for fabric usage
 # Usage: setEnvs org peer
 setEnvs () {
-	set -x
 	local org=$1  # 1 or 2
 	local peer=$2  # 0 or 1
 	local t=""
@@ -42,7 +41,7 @@ setEnvs () {
 	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
 	t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
 
-	env |grep CORE
+	# env |grep CORE
 }
 
 checkOSNAvailability() {
@@ -101,9 +100,12 @@ channelCreateAction(){
 # channelCreate channel_name
 channelCreate() {
 	local channel=$1
-	echo_b "=== Create Channel ${channel} === "
+	local org=$2
+	local peer=$3
+
+	echo_b "=== Create Channel ${channel} by org $org peer $peer === "
 	local counter=0
-	#setEnvs 0
+	setEnvs $org $peer
 	channelCreateAction ${channel}
 	local res=$?
 	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
@@ -145,28 +147,38 @@ channelJoinWithRetry () {
 }
 
 # Join given (by default all) peers into the channel
-# channelJoin 0 1 2 3
+# channelJoin channel org peer
 channelJoin () {
 	local channel=$1
-	echo_b "=== Join peers into channel ${channel} === "
-	peers_to_join=$(seq 0 3)
-  if [ $# -gt 1 ]; then
-    peers_to_join=${@:2}
-  fi
-	for i in $peers_to_join; do
-		#setEnvs $i
-		channelJoinWithRetry ${channel} $i
-		echo_g "=== peer$i joined into channel ${channel} === "
-		sleep 1
-	done
+	local org=$2
+	local peer=$3
+	echo_b "=== Join peer $peer into channel ${channel} === "
+	setEnvs $org $peer
+	channelJoinWithRetry ${channel} $peer
+	echo_g "=== peer$peer joined into channel ${channel} === "
+
+	# TODO: Remove this?
+	if [ 1 -eq 0 ]; then
+		peers_to_join=$(seq 0 3)
+		if [ $# -gt 1 ]; then
+			peers_to_join=${@:2}
+		fi
+		for i in $peers_to_join; do
+			#setEnvs $i
+			channelJoinWithRetry ${channel} $i
+			echo_g "=== peer$i joined into channel ${channel} === "
+			sleep 1
+		done
+	fi
 }
 
 # Update the anchor peer at given channel
 # updateAnchorPeers channel peer
 updateAnchorPeers() {
 	local channel=$1
-  local peer=$2
-  #setEnvs $peer
+  local org=$2
+  local peer=$3
+  setEnvs $org $peer
 	echo_b "=== Update Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on ${channel} === "
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update \
@@ -193,12 +205,13 @@ updateAnchorPeers() {
 # Install chaincode on specified peer node
 # chaincodeInstall peer cc_name version path
 chaincodeInstall () {
-	local peer=$1
-	local name=$2
-	local version=$3
-	local path=$4
-	echo_b "=== Install Chaincode $name:$version ($path) on peer$peer === "
-	#setEnvs $peer
+	local org=$1
+	local peer=$2
+	local name=$3
+	local version=$4
+	local path=$5
+	echo_b "=== Install Chaincode $name:$version ($path) on org${org} peer$peer === "
+	setEnvs $org $peer
 	peer chaincode install \
 		-n ${name} \
 		-v $version \
@@ -211,15 +224,16 @@ chaincodeInstall () {
 }
 
 # Instantiate chaincode on specifized peer node
-# chaincodeInstantiate channel peer name version args
+# chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
 	local channel=$1
-	local peer=$2
-	local name=$3
-	local version=$4
-	local args=$5
-	#setEnvs $peer
-	echo_b "=== chaincodeInstantiate for channel ${channel} on peer $peer ===="
+	local org=$2
+	local peer=$3
+	local name=$4
+	local version=$5
+	local args=$6
+	setEnvs $org $peer
+	echo_b "=== chaincodeInstantiate for channel ${channel} on org $org peer $peer ===="
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -250,14 +264,15 @@ chaincodeInstantiate () {
 }
 
 
-# channel peer name args
+# Usage: chaincodeInvoke channel org peer name args
 chaincodeInvoke () {
 	local channel=$1
-	local peer=$2
-	local name=$3
-	local args=$4
+	local org=$2
+	local peer=$3
+	local name=$4
+	local args=$5
 	echo_g "=== Invoke transaction on peer$peer in channel ${channel} === "
-	#setEnvs $peer
+	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -286,15 +301,16 @@ chaincodeInvoke () {
 # query channel peer name args expected_result
 chaincodeQuery () {
   local channel=$1
-  local peer=$2
-  local name=$3
-  local args=$4
-  [ $# -gt 4 ] && local expected_result=$5
+  local org=$2
+  local peer=$3
+  local name=$4
+  local args=$5
+  [ $# -gt 5 ] && local expected_result=$6
   echo_b "=== Querying on peer$peer in channel ${channel}... === "
   local rc=1
   local starttime=$(date +%s)
 
-  #setEnvs $peer
+  setEnvs $org $peer
   # we either get a successful response, or reach TIMEOUT
   while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
   do
@@ -304,7 +320,7 @@ chaincodeQuery () {
 			 -n "${name}" \
 			 -c "${args}" \
 			 >&log.txt
-			if [ $# -gt 4 ]; then
+			if [ $# -gt 5 ]; then # need to check the result
 			 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
 			 test "$VALUE" = "${expected_result}" && let rc=0
 			 sleep 3
@@ -346,13 +362,14 @@ chaincodeStartDev () {
 # chaincodeUpgrade channel peer name version args
 chaincodeUpgrade () {
 	local channel=$1
-	local peer=$2
-	local name=$3
-	local version=$4
-	local args=$5
+	local org=$2
+	local peer=$3
+	local name=$4
+	local version=$5
+	local args=$6
 	echo_b "=== Upgrade chaincode to version $version on peer$peer in channel ${channel}  === "
 
-	#setEnvs $peer
+	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -384,11 +401,12 @@ chaincodeUpgrade () {
 # Fetch some block from a given channel: channel, peer, blockNum
 channelFetch () {
 	local channel=$1
-	local peer=$2
-	local num=$3
+	local org=$2
+	local peer=$3
+	local num=$4
 	echo_b "=== Fetch block $num on peer$peer in channel $channel === "
 
-	#setEnvs $peer
+	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then

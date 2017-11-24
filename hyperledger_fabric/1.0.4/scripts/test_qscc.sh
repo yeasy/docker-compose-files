@@ -11,11 +11,14 @@ fi
 
 echo_b "QSCC testing"
 
+org=1
+peer=0
+
 echo_b "QSCC GetChainInfo"
-chaincodeQuery "" 0 qscc '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
+chaincodeQuery "" $org $peer qscc '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
 
 echo_b "QSCC GetBlockByNumber 2"
-chaincodeQuery "" 0 qscc '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
+chaincodeQuery "" $org $peer qscc '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
 
 #peer chaincode query \
 #	-C "" \

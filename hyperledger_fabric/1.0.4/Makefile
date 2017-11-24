@@ -23,40 +23,45 @@ all:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 	sleep 1
 
-	#make ready
 	make restart
-	make init
 
-	make test_cc
-	make lscc # test lscc operations
-	make qscc  # test qscc operations
-	#make fetch_blocks # fetch block files
+	make test_channel
+	# make update_anchors
+	make test_cc_install
+	make test_cc_instantiate
+
+	make test_cc_invoke_query
+	make test_lscc # test lscc operations
+	make test_qscc # test qscc operations
+	#make test_fetch_blocks # fetch block files
 
 	make stop clean
 
-init: # initialize the fabric network
+init: # initialize the fabric network, deprecated
 	if [ "$(HLF_MODE)" = "dev" ]; then \
 			@echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
 			make init_peer0; \
 	else \
 			echo "In Normal mode ..." && sleep 1; \
-			make init_channel; \
+			make test_channel; \
 			\# make update_anchors; \
-			make init_chaincode; \
+			make test_cc_install; \
+			make test_cc_instantiate; \
 	fi
 
-test_cc: # test chaincode
+test_cc: # test chaincode, deprecated
 	if [ "$(HLF_MODE)" = "dev" ]; then \
 			make test_cc_peer0; \
 	else \
-			make test_cc_all; \
+			make test_cc_invoke_query; \
 	fi
 
-ready: restart
+ready: restart  # create/join channel, install/instantiate cc
 	@echo "Restart, init network and then do cc testing..."
-	make init
-	sleep $(NETWORK_INIT_WAIT)
-	#make test_cc
+	make test_channel
+	# make update_anchors
+	make test_cc_install
+	make test_cc_instantiate
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -70,53 +75,55 @@ start: # bootup the fabric network
 
 stop: # stop the fabric network
 	@echo "Stop the fabric network..."
-	@docker-compose -f ${COMPOSE_FILE} down >/tmp/docker-compose.log&  # Stop a fabric network
+	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log  # Stop a fabric network
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
-################## Initialization operations ################
+################## Channel testing operations ################
 
-init_channel: # Init the channel
+test_channel: # Init the channel
 	@echo "Init channel on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_channel.sh"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel.sh"
 
 update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
-
-init_chaincode: # Install and instantiate the chaincode
-	@echo "Install and instantiate chaincode on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode.sh"
-
-init_all: # initialize the fabric network
-	@echo "Init fabric network"
-	make init_channel
-	#make update_anchors
-	make init_chaincode
 
 init_peer0: # initialize the fabric network
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
 
 ################## Chaincode testing operations ################
-test_cc_all: # test user chaincode on all peers
+test_cc_install: # Install the chaincode
+	@echo "Install chaincode on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
+
+test_cc_instantiate: # Instantiate the chaincode
+	@echo "Instantiate chaincode on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_instantiate.sh"
+
+test_cc_upgrade: # Upgrade the chaincode
+	@echo "Upgrade chaincode on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_upgrade.sh"
+
+test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_all.sh"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
 
 test_cc_peer0: # test single peer
 	@echo "Invoke and query cc example02 on single peer0"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
-qscc: # test qscc queries
+test_qscc: # test qscc queries
 	@echo "Test QSCC query"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
 
-lscc: # test lscc quries
+test_lscc: # test lscc quries
 	@echo "Test LSCC query"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
 
 # FIXME: docker doesn't support wildcard in cp right now
-fetch_blocks: # test fetching channel blocks fetch
+test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
@@ -134,8 +141,8 @@ fetch_blocks: # test fetching channel blocks fetch
 ################## Env setup related, no need to see usually ################
 
 setup: # setup the environment
-	bash scripts/setup_Docker.sh  # Install Docker, Docker-Compose
-	bash scripts/download_images.sh  # Pull required Docker images
+	bash scripts/setup_env.sh # Installing Docker and Docker-Compose
+	bash scripts/download_images.sh # Pull required Docker images
 
 clean: # clean up containers
 	@echo "Clean all containers and fabric cc images"
