@@ -30,40 +30,17 @@ verifyResult () {
 }
 
 # Set global env variables for fabric usage
-# Usage: setEnvs localmsp tls_root_cert msp_cfg core_peer_addr
+# Usage: setEnvs org peer
 setEnvs () {
-	local localMspId=$1
-	local tlsRootCertFile=$2
-	local mspCfgFile=$3
-	local corePeerAddr=$4
-
-	echo_b "Set env for peer..."
-	CORE_PEER_LOCALMSPID="${localMspId}"
-	CORE_PEER_TLS_ROOTCERT_FILE="${tlsRootCertFile}"
-	CORE_PEER_MSPCONFIGPATH="${mspCfgFile}"
-	CORE_PEER_ADDRESS="${corePeerAddr}"
-
-if [ 1 -eq 0 ]; then  # TODO: remove this
-	if [ $1 -eq 0 -o $1 -eq 1 ] ; then
-		CORE_PEER_LOCALMSPID="Org1MSP"
-		CORE_PEER_TLS_ROOTCERT_FILE=${ORG1_PEER0_TLS_ROOTCERT}
-		CORE_PEER_MSPCONFIGPATH=${ORG1_ADMIN_MSP}
-		if [ $1 -eq 0 ]; then
-			CORE_PEER_ADDRESS=${ORG1_PEER0_URL}
-		else
-			CORE_PEER_ADDRESS=${ORG1_PEER1_URL}
-		fi
-	else
-		CORE_PEER_LOCALMSPID="Org2MSP"
-		CORE_PEER_TLS_ROOTCERT_FILE=${ORG2_PEER0_TLS_ROOTCERT}
-		CORE_PEER_MSPCONFIGPATH=${ORG2_ADMIN_MSP}
-		if [ $1 -eq 2 ]; then
-			CORE_PEER_ADDRESS=${ORG2_PEER0_URL}
-		else
-			CORE_PEER_ADDRESS=${ORG2_PEER1_URL}
-		fi
-	fi
-fi
+	set -x
+	local org=$1  # 1 or 2
+	local peer=$2  # 0 or 1
+	local t=""
+	CORE_PEER_LOCALMSPID="Org${org}MSP"
+	#CORE_PEER_MSPCONFIGPATH=\$${ORG${org}_ADMIN_MSP}
+	t="\${ORG${org}_ADMIN_MSP}" && CORE_PEER_MSPCONFIGPATH=`eval echo $t`
+	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
+	t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
 
 	env |grep CORE
 }
@@ -353,7 +330,8 @@ chaincodeStartDev () {
 	local peer=$1
 	local version=$2
 	#setEnvs $peer
-	setEnvs "Org1MSP" ${ORG1_PEER0_TLS_ROOTCERT} ${ORG1_ADMIN_MSP} ${ORG1_PEER0_URL}
+	#setEnvs 1 0
+	setEnvs 1 0
 	CORE_CHAINCODE_LOGLEVEL=debug \
 	CORE_PEER_ADDRESS=peer${peer}.org1.example.com:7052 \
 	CORE_CHAINCODE_ID_NAME=mycc:${version} \
