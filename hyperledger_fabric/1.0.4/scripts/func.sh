@@ -426,5 +426,50 @@ channelFetch () {
 	cat log.txt
 	verifyResult $res "Fetch block on peer$peer failed"
 	echo_g "=== Fetch block on peer$peer in channel $channel is successful === "
-	echo
+}
+
+# configtxlator encode json to pb
+# Usage: configtxlatorEncode msgType input output
+configtxlatorEncode() {
+	echo_b "Encode $input --> $output using type $msgType"
+	local msgType=$1
+	local input=$2
+	local output=$3
+
+	curl -sX POST \
+			--data-binary @${input} \
+			${CTL_ENCODE_URL}/${msgType} \
+			>${output}
+}
+
+# configtxlator decode pb to json
+# Usage: configtxlatorEncode msgType input output
+configtxlatorDecode() {
+	echo_b "Encode $input --> $output using type $msgType"
+	local msgType=$1
+	local input=$2
+	local output=$3
+
+	curl -sX POST \
+		--data-binary @${input} \
+		${CTL_DECODE_URL}/${msgType} \
+		> ${output}
+}
+
+# compute diff between two pb
+# Usage: configtxlatorCompare channel origin updated output
+configtxlatorCompare() {
+	local channel=$1
+	local origin=$2
+	local updated=$3
+	local output=$3
+
+	curl -sX POST \
+		-F channel="${channel}" \
+		-F "original=@${origin}" \
+		-F "updated=@${updated}" \
+		"${CTL_COMPARE_URL}" \
+		> "${output}"
+
+	[ $? -eq 0 ] || echo_r "Failed to compute config update"
 }

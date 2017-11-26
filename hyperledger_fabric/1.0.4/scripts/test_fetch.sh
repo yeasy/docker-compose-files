@@ -14,16 +14,16 @@ peer=0
 
 echo_b "=== Fetching blocks ==="
 
-echo_b "Fetch block 0"
-channelFetch ${CHANNEL_NAME} $org $peer 0
+for i in {0..2}
+do
+	echo_b "Fetch block $i"
+	channelFetch ${SYS_CHANNEL} $org $peer $i
+done
 
-echo_b "Fetch block 1"
-channelFetch ${CHANNEL_NAME} $org $peer 1
-
-echo_b "Fetch block 2"
-channelFetch ${CHANNEL_NAME} $org $peer 2
-
-echo_b "Fetch block 3"
-channelFetch ${CHANNEL_NAME} $org $peer 3
+for i in {0..4}
+do
+	echo_b "Fetch block $i"
+	channelFetch ${CHANNEL_NAME} $org $peer $i
+done
 
 echo_g "Block fetching done!"

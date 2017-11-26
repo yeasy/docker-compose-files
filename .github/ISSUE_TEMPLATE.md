@@ -1,3 +1,5 @@
+## Basic Description
+
 ## Environment
 Any environment information, e.g., os, tool versions, image version.
 
@@ -5,7 +7,7 @@ Any environment information, e.g., os, tool versions, image version.
 Detailed steps to repeat the problem. 
 
 ## What solutions have u tried?
-Potential solutions you have tried, e.g., search Google or restart the computer.
+Potential solutions you have tried, e.g., search Google or restart the server.
 
 ## Other Information
-Other information u think can help to fix the problem.
+Other information, e.g., how u think may help to fix the problem.

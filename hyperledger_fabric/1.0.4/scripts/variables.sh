@@ -3,6 +3,7 @@
 # Define some global variables for usage. Will be included by func.sh.
 
 # Name of app channel, need to align with the gen_artifacts.sh
+SYS_CHANNEL="testchainid"
 CHANNEL_NAME="businesschannel"
 
 # Client cmd execute timeout
@@ -44,3 +45,12 @@ CC_QUERY_ARGS='{"Args":["query","a"]}'
 
 # TLS config
 : ${CORE_PEER_TLS_ENABLED:="false"}
+
+
+# CONFIGTXLATOR
+
+CTL_BASE_URL=http://127.0.0.1:7059
+
+CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode
+CTL_DECODE_URL=${CTL_BASE_URL}/protolator/decode
+CTL_COMPARE_URL=${CTL_BASE_URL}/configtxlator/compute/update-from-configs

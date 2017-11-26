@@ -185,7 +185,8 @@ gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh
 
 test_configtxlator: # Test change config using configtxlator
-	cd kafka && bash run_configtxlator.sh
+	bash scripts/test_configtxlator.sh solo
+	bash scripts/test_configtxlator.sh kafka
 
 download: # download required images
 	@echo "Download Docker images"
