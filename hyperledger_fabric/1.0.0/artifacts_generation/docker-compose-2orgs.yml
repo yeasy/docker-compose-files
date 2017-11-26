@@ -72,14 +72,14 @@ services:
       - peer0.org1.example.com
       - orderer.example.com
     volumes:
-        #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
-        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./e2e_cli/crypto-config:/etc/hyperledger/fabric/crypto-config
+        #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
         - ./example2:/opt/gopath/src/github.com/hyperledger/fabric/peer/example2
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-        - ./e2e_cli/configtx.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/configtx.yaml
-        - ./e2e_cli/crypto-config.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto-config.yaml
+        - ./solo/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+        - ./solo/configtx.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/configtx.yaml
+        - ./solo/crypto-config.yaml:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto-config.yaml
     depends_on:
       - orderer.example.com
       - peer0.org1.example.com

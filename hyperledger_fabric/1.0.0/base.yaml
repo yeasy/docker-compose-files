@@ -118,11 +118,11 @@ services:
     volumes:
         #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./scripts:/tmp/scripts
-        - ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
-        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-        - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
-        - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'while true; do sleep 20170504; done'
 
