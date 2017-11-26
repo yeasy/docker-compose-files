@@ -47,7 +47,7 @@ services:
      #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=10_default  # uncomment this to use specific network
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=100_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
@@ -79,7 +79,7 @@ services:
       #- CORE_PEER_ID=peer0
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=10_default  # uncomment this to use specific network
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=100_default  # uncomment this to use specific network
      #- CORE_PEER_NETWORKID=dev
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false

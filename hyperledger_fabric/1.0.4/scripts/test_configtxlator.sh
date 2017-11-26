@@ -2,7 +2,7 @@
 # Demo to use configtxlator to modify orderer config
 # More details about configtxlator, see http://hlf.readthedocs.io/en/latest/configtxlator.html
 
-CONFIGTXLATOR_IMG=yeasy/hyperledger-fabric:latest
+CONFIGTXLATOR_IMG=yeasy/hyperledger-fabric:1.0.4
 CONFIGTXLATOR_CONTAINER=configtxlator
 
 # Must run `make gen_kafka` to generate artifacts files first
