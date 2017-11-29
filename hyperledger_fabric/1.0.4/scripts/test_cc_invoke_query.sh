@@ -8,7 +8,7 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 #Query on chaincode on Peer0/Org1
-echo_b "Querying chaincode on peer 3..."
+echo_b "Querying chaincode on peer org2/peer0..."
 chaincodeQuery ${CHANNEL_NAME} 2 1 ${CC_NAME} ${CC_QUERY_ARGS} 100
 
 #Invoke on chaincode on Peer0/Org1
