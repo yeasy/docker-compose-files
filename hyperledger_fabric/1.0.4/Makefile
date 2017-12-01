@@ -114,17 +114,6 @@ test_lscc: # test lscc quries
 test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		docker cp fabric-cli:/tmp/block_0.block kafka/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_1.block kafka/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_2.block kafka/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_3.block kafka/channel-artifacts; \
-	else \
-		docker cp fabric-cli:/tmp/block_0.block solo/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_1.block solo/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_2.block solo/channel-artifacts; \
-		docker cp fabric-cli:/tmp/block_3.block solo/channel-artifacts; \
-	fi
 
 ################## Env setup related, no need to see usually ################
 
@@ -174,8 +163,11 @@ gen_config: # generate config artifacts
 	fi
 
 test_configtxlator: # Test change config using configtxlator
-	bash scripts/test_configtxlator.sh solo
-	bash scripts/test_configtxlator.sh kafka
+	if [ "$(HLF_MODE)" = "solo" ]; then \
+		bash scripts/test_configtxlator.sh solo; \
+	else \
+		bash scripts/test_configtxlator.sh kafka; \
+	fi
 
 download: # download required images
 	@echo "Download Docker images"

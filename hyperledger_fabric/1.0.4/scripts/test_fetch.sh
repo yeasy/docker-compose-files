@@ -14,12 +14,6 @@ peer=0
 
 echo_b "=== Fetching blocks ==="
 
-for i in {0..2}
-do
-	echo_b "Fetch block $i"
-	channelFetch ${SYS_CHANNEL} $org $peer $i
-done
-
 for i in {0..4}
 do
 	echo_b "Fetch block $i"
@@ -27,3 +21,12 @@ do
 done
 
 echo_g "Block fetching done!"
+
+exit 0
+
+for i in {0..2}
+do
+	echo_b "Fetch block $i"
+	channelFetch ${SYS_CHANNEL} $org $peer $i
+done
+

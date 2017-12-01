@@ -80,14 +80,14 @@ channelCreateAction(){
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ./channel-artifacts/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/channel.tx \
 			--timeout $TIMEOUT \
 			>&log.txt
 	else
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ./channel-artifacts/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/channel.tx \
 			--timeout $TIMEOUT \
 			--tls $CORE_PEER_TLS_ENABLED \
 			--cafile ${ORDERER_TLS_CA} \
@@ -171,13 +171,13 @@ updateAnchorPeers() {
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx \
+		-f ${CHANNEL_ARTIFACTS}/${CORE_PEER_LOCALMSPID}anchors.tx \
 		>&log.txt
 	else
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx \
+		-f ${CHANNEL_ARTIFACTS}/${CORE_PEER_LOCALMSPID}anchors.tx \
 		--tls $CORE_PEER_TLS_ENABLED \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
@@ -391,18 +391,18 @@ channelFetch () {
 	local org=$2
 	local peer=$3
 	local num=$4
-	echo_b "=== Fetch block $num on peer$peer in channel $channel === "
+	echo_b "=== Fetch block $num of channel $channel === "
 
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-		peer channel fetch $num ${channel}_block_${num}.block \
+		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel}  \
 			>&log.txt
 	else
-		peer channel fetch $num block_${num}.block \
+		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
 			--tls \
@@ -411,8 +411,8 @@ channelFetch () {
 	fi
 	res=$?
 	cat log.txt
-	verifyResult $res "Fetch block on peer$peer failed"
-	echo_g "=== Fetch block on peer$peer in channel $channel is successful === "
+	verifyResult $res "Fetch block $num of channel $channel failed"
+	echo_g "=== Fetch block $num of channel $channel is successful === "
 }
 
 # configtxlator encode json to pb
@@ -436,7 +436,7 @@ configtxlatorDecode() {
 	local input=$2
 	local output=$3
 
-	echo_b "Config Encode $input --> $output using type $msgType"
+	echo_b "Config Decode $input --> $output using type $msgType"
 	curl -sX POST \
 		--data-binary @${input} \
 		${CTL_DECODE_URL}/${msgType} \

@@ -31,14 +31,8 @@ echo_b "Clean existing container $GEN_CONTAINER"
 pushd ${MODE}
 
 echo_b "Validating path for channel-artifacts and crypto-config"
-[ -d ${CHANNEL_ARTIFACTS} ] || mkdir ${CHANNEL_ARTIFACTS}
-[ -d ${CRYPTO_CONFIG} ] || mkdir ${CRYPTO_CONFIG}
-
-echo_b "Cleaning existing materials"
-rm -rf ${CRYPTO_CONFIG}
-rm -rf ${CHANNEL_ARTIFACTS}/${ORDERER_GENESIS}
-rm -rf ${CHANNEL_ARTIFACTS}/${APP_CHANNEL_TX}
-rm -rf ${CHANNEL_ARTIFACTS}/*MSPanchors.tx
+[ -d ${CRYPTO_CONFIG} ] && echo "${CRYPTO_CONFIG} existed, will stop generating new configs" && exit 0
+mkdir ${CRYPTO_CONFIG}
 
 echo_b "Starting container $GEN_CONTAINER in background"
 docker run \
