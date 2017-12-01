@@ -128,6 +128,7 @@ channelJoinAction () {
 		-b ${channel}.block \
 		>&log.txt
 }
+
 ## Sometimes Join takes time hence RETRY atleast for 5 times
 channelJoinWithRetry () {
 	local channel=$1
@@ -152,24 +153,10 @@ channelJoin () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	echo_b "=== Join peer $peer into channel ${channel} === "
+	echo_b "=== Join org$org/peer$peer into channel ${channel} === "
 	setEnvs $org $peer
 	channelJoinWithRetry ${channel} $peer
-	echo_g "=== peer$peer joined into channel ${channel} === "
-
-	# TODO: Remove this?
-	if [ 1 -eq 0 ]; then
-		peers_to_join=$(seq 0 3)
-		if [ $# -gt 1 ]; then
-			peers_to_join=${@:2}
-		fi
-		for i in $peers_to_join; do
-			#setEnvs $i
-			channelJoinWithRetry ${channel} $i
-			echo_g "=== peer$i joined into channel ${channel} === "
-			sleep 1
-		done
-	fi
+	echo_g "=== org$org/peer$peer joined into channel ${channel} === "
 }
 
 # Update the anchor peer at given channel
@@ -431,11 +418,11 @@ channelFetch () {
 # configtxlator encode json to pb
 # Usage: configtxlatorEncode msgType input output
 configtxlatorEncode() {
-	echo_b "Encode $input --> $output using type $msgType"
 	local msgType=$1
 	local input=$2
 	local output=$3
 
+	echo_b "Encode $input --> $output using type $msgType"
 	curl -sX POST \
 			--data-binary @${input} \
 			${CTL_ENCODE_URL}/${msgType} \
@@ -445,11 +432,11 @@ configtxlatorEncode() {
 # configtxlator decode pb to json
 # Usage: configtxlatorEncode msgType input output
 configtxlatorDecode() {
-	echo_b "Encode $input --> $output using type $msgType"
 	local msgType=$1
 	local input=$2
 	local output=$3
 
+	echo_b "Config Encode $input --> $output using type $msgType"
 	curl -sX POST \
 		--data-binary @${input} \
 		${CTL_DECODE_URL}/${msgType} \
@@ -464,6 +451,7 @@ configtxlatorCompare() {
 	local updated=$3
 	local output=$3
 
+	echo_b "Config Compare $origin vs $updated > ${output} in channel $channel"
 	curl -sX POST \
 		-F channel="${channel}" \
 		-F "original=@${origin}" \

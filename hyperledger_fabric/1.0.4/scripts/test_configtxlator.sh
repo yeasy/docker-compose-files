@@ -14,23 +14,14 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-if [ $# -ne 1 ]; then
-	echo_r "Usage: bash test_configtxlator solo|kafka"
-else
-	mode=$1
-fi
+[ $# -ne 1 ] && echo_r "Usage: bash test_configtxlator solo|kafka" && exit 1
 
-CTL_IMG=yeasy/hyperledger-fabric:1.0.4
-CTL_CONTAINER=configtxlator
+MODE=$1
 
-# Must run `make gen_kafka` and `make gen_solo` to generate artifacts files first
-ARTIFACTS_DIR=$mode/channel-artifacts
+pushd $MODE/${CHANNEL_ARTIFACTS}
 
-ORDERER_GENESIS_BLOCK=${ARTIFACTS_DIR}/orderer.genesis.block
-ORDERER_GENESIS_JSON=${ARTIFACTS_DIR}/orderer.genesis.block.json
-ORDERER_GENESIS_UPDATED_BLOCK=${ARTIFACTS_DIR}/orderer.genesis.updated.block
-ORDERER_GENESIS_UPDATED_JSON=${ARTIFACTS_DIR}/orderer.genesis.updated.json
-MAXBATCHSIZEPATH=".data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count"
+# Must run `make gen_config` to generate config files first
+
 
 echo_b "Clean potential existing container $CTL_CONTAINER"
 [ "$(docker ps -a | grep $CTL_CONTAINER)" ] && docker rm -f $CTL_CONTAINER
@@ -46,22 +37,21 @@ docker run \
 sleep 1
 
 echo_b "Convert all block files into json"
-for BLOCK_FILE in ${ARTIFACTS_DIR}/*.block; do
+for BLOCK_FILE in *.block; do
 	if [ -f ${BLOCK_FILE} ]; then
-		echo_b "Decoding all block file ${BLOCK_FILE} to json"
-		curl -X POST \
-			--data-binary @${BLOCK_FILE} \
-			http://127.0.0.1:7059/protolator/decode/common.Block \
-			> ${BLOCK_FILE}.json
+		configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 		fi
 done
 
-if [ -f ${ORDERER_GENESIS_BLOCK} ]; then
+
+if [ -f ${ORDERER_GENESIS} ]; then
+	jq "$PAYLOAD_PATH" ${ORDERER_GENESIS_JSON} > $ORDERER_GENESIS_PAYLOAD_JSON
+
 	echo_b "Checking existing Orderer.BatchSize.max_message_count in the genesis json"
-	jq "$MAXBATCHSIZEPATH" channel-artifacts/orderer.genesis.json
+	jq "$MAX_BATCH_SIZE_PATH" ${ORDERER_GENESIS_JSON}
 
 	echo_b "Creating new genesis json with updated Orderer.BatchSize.max_message_count"
-	jq "$MAXBATCHSIZEPATH=20" ${ORDERER_GENESIS_JSON} > ${ORDERER_GENESIS_UPDATED_JSON}
+	jq "$MAX_BATCH_SIZE_PATH=20" ${ORDERER_GENESIS_JSON} > ${ORDERER_GENESIS_UPDATED_JSON}
 
 	echo_b "Re-Encoding the orderer genesis json to block"
 	configtxlatorEncode "common.Block" ${ORDERER_GENESIS_UPDATED_JSON} ${ORDERER_GENESIS_UPDATED_BLOCK}
@@ -70,4 +60,4 @@ fi
 echo_b "Stop configtxlator service"
 docker rm -f $CTL_CONTAINER
 
-echo_g "Test configtxlator on $mode Passed"
+echo_g "Test configtxlator on $MODE Passed"

@@ -21,11 +21,13 @@ endif
 all:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
-	sleep 1
+
+	#make gen_config
 
 	make restart
 
-	make test_channel
+	make test_channel_create
+	make test_channel_join
 	# make update_anchors
 	make test_cc_install
 	make test_cc_instantiate
@@ -33,21 +35,11 @@ all:
 	make test_cc_invoke_query
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
-	#make test_fetch_blocks # fetch block files
+	make test_fetch_blocks # fetch block files
+
+	make test_configtxlator
 
 	make stop clean
-
-init: # initialize the fabric network, deprecated
-	if [ "$(HLF_MODE)" = "dev" ]; then \
-			@echo "In DEV mode, wait for rebuilding ..." && sleep $(CODE_BUILD_WAIT); \
-			make init_peer0; \
-	else \
-			echo "In Normal mode ..." && sleep 1; \
-			make test_channel; \
-			\# make update_anchors; \
-			make test_cc_install; \
-			make test_cc_instantiate; \
-	fi
 
 test_cc: # test chaincode, deprecated
 	if [ "$(HLF_MODE)" = "dev" ]; then \
@@ -81,17 +73,17 @@ chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Channel testing operations ################
 
-test_channel: # Init the channel
-	@echo "Init channel on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel.sh"
+test_channel_create: # Init the channel
+	@echo "Create channel on the fabric network"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_create.sh"
+
+test_channel_join: # Init the channel
+	@echo "Join channel"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_join.sh"
 
 update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
-
-init_peer0: # initialize the fabric network
-	@echo "Install and instantiate cc example02 on the fabric dev network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/initialize_peer0.sh"
 
 ################## Chaincode testing operations ################
 test_cc_install: # Install the chaincode
@@ -109,10 +101,6 @@ test_cc_upgrade: # Upgrade the chaincode
 test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
-
-test_cc_peer0: # test single peer
-	@echo "Invoke and query cc example02 on single peer0"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_peer0.sh"
 
 test_qscc: # test qscc queries
 	@echo "Test QSCC query"
@@ -178,11 +166,12 @@ logs_save: # save logs
 logs_view: # view logs
 	less /tmp/dev_peer.log
 
-gen_solo: # generate solo artifacts
-	cd solo && bash gen_artifacts.sh
-
-gen_kafka: # generate kafka artifacts
-	cd kafka && bash gen_artifacts.sh
+gen_config: # generate config artifacts
+	if [ "$(HLF_MODE)" = "solo" ]; then \
+			bash scripts/gen_config.sh solo; \
+	else \
+			bash scripts/gen_config.sh kafka; \
+	fi
 
 test_configtxlator: # Test change config using configtxlator
 	bash scripts/test_configtxlator.sh solo
@@ -199,4 +188,3 @@ download: # download required images
 chaincode_init: # start chaincode in dev mode and do install/instantiate
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
-

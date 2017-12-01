@@ -10,10 +10,3 @@ fi
 ## Create channel
 echo_b "Creating channel ${CHANNEL_NAME}..."
 channelCreate ${CHANNEL_NAME} 1 0
-
-## Join all the peers to the channel
-echo_b "Having all peers join the channel ${CHANNEL_NAME}..."
-channelJoin ${CHANNEL_NAME} 1 0
-channelJoin ${CHANNEL_NAME} 1 1
-channelJoin ${CHANNEL_NAME} 2 0
-channelJoin ${CHANNEL_NAME} 2 1
