@@ -29,6 +29,13 @@ verifyResult () {
 	fi
 }
 
+setOrdererEnvs () {
+	CORE_PEER_LOCALMSPID="OrdererMSP"
+	CORE_PEER_MSPCONFIGPATH=${ORDERER_ADMIN_MSP}
+	CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_ROOTCERT}
+	#t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
+}
+
 # Set global env variables for fabric usage
 # Usage: setEnvs org peer
 setEnvs () {
@@ -393,7 +400,8 @@ channelFetch () {
 	local num=$4
 	echo_b "=== Fetch block $num of channel $channel === "
 
-	setEnvs $org $peer
+	#setEnvs $org $peer
+	setOrdererEnvs
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then

@@ -22,11 +22,11 @@ done
 
 echo_g "Block fetching done!"
 
-exit 0
 
-for i in {0..2}
+for i in {0..1}
 do
 	echo_b "Fetch block $i"
 	channelFetch ${SYS_CHANNEL} $org $peer $i
 done
 
+exit 0
