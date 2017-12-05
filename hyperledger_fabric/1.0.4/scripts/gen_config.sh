@@ -30,9 +30,11 @@ echo_b "Clean existing container $GEN_CONTAINER"
 
 pushd ${MODE}
 
-echo_b "Validating path for channel-artifacts and crypto-config"
+echo_b "Check whether channel-artifacts or crypto-config exist already"
 [ -d ${CRYPTO_CONFIG} ] && echo "${CRYPTO_CONFIG} existed, will stop generating new configs" && exit 0
 mkdir ${CRYPTO_CONFIG}
+[ -d ${CHANNEL_ARTIFACTS} ] && echo "${CHANNEL_ARTIFACTS} existed, will stop generating new configs" && exit 0
+mkdir ${CHANNEL_ARTIFACTS}
 
 echo_b "Starting container $GEN_CONTAINER in background"
 docker run \

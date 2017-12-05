@@ -22,10 +22,13 @@ all:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 
-	#make gen_config
+	make ready  # Finish all testing
 
+	make stop clean
+
+ready: # create/join channel, install/instantiate cc
+	make gen_config  # Will ignore if local config path exists
 	make restart
-
 	make test_channel_create
 	make test_channel_join
 	# make update_anchors
@@ -39,21 +42,6 @@ all:
 
 	make test_configtxlator
 
-	make stop clean
-
-test_cc: # test chaincode, deprecated
-	if [ "$(HLF_MODE)" = "dev" ]; then \
-			make test_cc_peer0; \
-	else \
-			make test_cc_invoke_query; \
-	fi
-
-ready: restart  # create/join channel, install/instantiate cc
-	@echo "Restart, init network and then do cc testing..."
-	make test_channel
-	# make update_anchors
-	make test_cc_install
-	make test_cc_instantiate
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
@@ -62,7 +50,7 @@ restart: stop start
 
 start: # bootup the fabric network
 	@echo "Start a fabric network with ${COMPOSE_FILE}"
-	make clean
+	@make clean
 	@docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 stop: # stop the fabric network
@@ -86,6 +74,13 @@ update_anchors: # Update the anchor peer
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
 ################## Chaincode testing operations ################
+test_cc: # test chaincode, deprecated
+	if [ "$(HLF_MODE)" = "dev" ]; then \
+			make test_cc_peer0; \
+	else \
+			make test_cc_invoke_query; \
+	fi
+
 test_cc_install: # Install the chaincode
 	@echo "Install chaincode on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
@@ -132,6 +127,9 @@ clean_env: # clean up environment
 
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
+
+orderer: # enter the orderer container
+	docker exec -it orderer.example.com bash
 
 peer: # enter the peer container
 	docker exec -it peer0.org1.example.com bash
