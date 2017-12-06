@@ -8,8 +8,7 @@ version: '2'
 
 services:
   ca-base:
-    #image: yeasy/hyperledger-fabric-ca:1.0.4
-    image: hyperledger/fabric-ca:x86_64-1.0.4
+    image: yeasy/hyperledger-fabric-ca:latest
     restart: always
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
@@ -17,8 +16,7 @@ services:
       #- FABRIC_CA_SERVER_TLS_ENABLED=false
 
   orderer-base:
-    #image: yeasy/hyperledger-fabric-orderer:1.0.4
-    image: hyperledger/fabric-orderer:x86_64-1.0.4
+    image: yeasy/hyperledger-fabric-orderer:latest
     restart: always
     environment:
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
@@ -28,7 +26,8 @@ services:
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=file
+      - ORDERER_GENERAL_LEDGERTYPE=json
       - ORDERER_GENERAL_BATCHTIMEOUT=1s
       - ORDERER_GENERAL_MAXMESSAGECOUNT=10
       - ORDERER_GENERAL_MAXWINDOWSIZE=1000
@@ -39,19 +38,21 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
       - "7050"  #
+    #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
     command: orderer start
 
   peer-base:
-    image: yeasy/hyperledger-fabric-peer:1.0.4
-    #image: hyperledger/fabric-peer:x86_64-1.0.4
+    image: yeasy/hyperledger-fabric-peer:latest
     restart: always
     environment:
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=104_default  # uncomment this to use specific network
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=latest_default  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
       - CORE_PEER_PROFILE_ENABLED=false
@@ -61,6 +62,8 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
       - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
       - "7050"  # Rest
       - "7051"  # Grpc
@@ -76,11 +79,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     #volumes:
     #    - /var/run/:/host/var/run/
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: peer node start
 
   cli-base:
-    #image: yeasy/hyperledger-fabric:1.0.4
-    image: hyperledger/fabric-tools:x86_64-1.0.4
+    image: yeasy/hyperledger-fabric:latest
     restart: always
     tty: true
     environment:
@@ -89,12 +92,12 @@ services:
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-      - CHANNEL_NAME:="businesschannel"
+      - APP_CHANNEL:="businesschannel"
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 
   event-listener-base:
-    image: yeasy/hyperledger-fabric:1.0.4
+    image: yeasy/hyperledger-fabric:latest
     restart: always
     tty: true
     environment:
@@ -107,14 +110,14 @@ services:
 
   couchdb-base:
     #container_name: couchdb0
-    image: hyperledger/fabric-couchdb:x86_64-1.0.4
+    image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
     restart: always
     tty: true
     # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
     # for example map it to utilize Fauxton User Interface in dev environments.
 
   zookeeper-base:
-    image: hyperledger/fabric-zookeeper:x86_64-1.0.4
+    image: hyperledger/fabric-zookeeper:x86_64-1.1.0-preview
     restart: always
     tty: true
     expose:
@@ -124,8 +127,8 @@ services:
 
   kafka-base:
     # official repo doesn't have latest tag, however, kafka changes version recently
-    image: yeasy/hyperledger-fabric-kafka:0.10.2.0
-    image: hyperledger/fabric-kafka:x86_64-1.0.4
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: hyperledger/fabric-kafka:x86_64-1.1.0-preview
     restart: always
     tty: true
     environment:

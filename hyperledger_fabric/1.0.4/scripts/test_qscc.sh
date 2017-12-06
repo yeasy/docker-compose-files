@@ -15,19 +15,19 @@ org=1
 peer=0
 
 echo_b "QSCC GetChainInfo"
-chaincodeQuery "" $org $peer qscc '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
+chaincodeQuery "" $org $peer qscc '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
 
 echo_b "QSCC GetBlockByNumber 2"
-chaincodeQuery "" $org $peer qscc '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
+chaincodeQuery "" $org $peer qscc '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
 #peer chaincode query \
 #	-C "" \
 #	-n qscc \
-#	-c '{"Args":["GetChainInfo","'${CHANNEL_NAME}'"]}'
+#	-c '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
 
 #peer chaincode query \
 #	-C "" \
 #	-n qscc \
-#	-c '{"Args":["GetBlockByNumber","'${CHANNEL_NAME}'","2"]}'
+#	-c '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
 echo_g "QSCC testing done!"

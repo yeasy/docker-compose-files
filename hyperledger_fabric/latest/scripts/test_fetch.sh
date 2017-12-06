@@ -9,20 +9,24 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-echo_b "Channel name: $CHANNEL_NAME"
+org=1
+peer=0
 
-echo_b "====================Fetching blocks================================"
+echo_b "=== Fetching blocks ==="
 
-echo_b "Fetch block 0"
-channelFetch 0 0
-
-echo_b "Fetch block 1"
-channelFetch 0 1
-
-echo_b "Fetch block 2"
-channelFetch 0 2
-
-echo_b "Fetch block 3"
-channelFetch 0 3
+for i in {0..4}
+do
+	echo_b "Fetch block $i"
+	channelFetch ${APP_CHANNEL} $org $peer $i
+done
 
 echo_g "Block fetching done!"
+
+
+for i in {0..1}
+do
+	echo_b "Fetch block $i"
+	channelFetch ${SYS_CHANNEL} $org $peer $i
+done
+
+exit 0

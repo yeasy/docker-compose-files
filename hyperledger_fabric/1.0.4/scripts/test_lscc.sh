@@ -20,43 +20,43 @@ peer=0
 	#--cafile ${ORDERER_TLS_CA} \
 
 echo_b "LSCC Get id"
-chaincodeQuery "${CHANNEL_NAME}" $org $peer lscc '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get cc ChaincodeDeploymentSpec"
-chaincodeQuery "${CHANNEL_NAME}" $org $peer lscc '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get cc bytes"
-chaincodeQuery "${CHANNEL_NAME}" $org $peer lscc '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 echo_b "LSCC Get all chaincodes installed on the channel"
-chaincodeQuery "${CHANNEL_NAME}" $org $peer lscc '{"Args":["getinstalledchaincodes"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getinstalledchaincodes"]}'
 
 echo_b "LSCC Get all chaincodes instantiated on the channel"
-chaincodeQuery "${CHANNEL_NAME}" $org $peer lscc '{"Args":["getchaincodes"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getchaincodes"]}'
 
 
 #peer chaincode query \
-#	-C "${CHANNEL_NAME}" \
+#	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#	-c '{"Args":["getid","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+#	-c '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
-#	-C "${CHANNEL_NAME}" \
+#	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#	-c '{"Args":["getdepspec","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+#	-c '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
-#	-C "${CHANNEL_NAME}" \
+#	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#  -c '{"Args":["getccdata","'${CHANNEL_NAME}'", "'$CC_NAME'"]}'
+#  -c '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
-#	-C "${CHANNEL_NAME}" \
+#	-C "${APP_CHANNEL}" \
 #	-n lscc \
 #	-c '{"Args":["getinstalledchaincodes"]}'
 
 #peer chaincode query \
-#	-C "${CHANNEL_NAME}" \
+#	-C "${APP_CHANNEL}" \
 #	-n lscc \
 #	-c '{"Args":["getchaincodes"]}'
 

@@ -4,7 +4,7 @@
 
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
-CHANNEL_NAME="businesschannel"
+APP_CHANNEL="businesschannel"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="60"

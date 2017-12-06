@@ -104,7 +104,7 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
-# channelCreate channel_name org peer
+# channelCreate APP_CHANNEL org peer
 channelCreate() {
 	local channel=$1
 	local org=$2

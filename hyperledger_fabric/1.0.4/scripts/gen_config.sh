@@ -51,11 +51,11 @@ echo_b "Generate genesis block file for system channel using configtx.yaml"
 con_exec configtxgen -profile TwoOrgsOrdererGenesis -outputBlock /tmp/${CHANNEL_ARTIFACTS}/${ORDERER_GENESIS}
 
 echo_b "Create the new app channel tx using configtx.yaml"
-con_exec configtxgen -profile TwoOrgsChannel -outputCreateChannelTx /tmp/$CHANNEL_ARTIFACTS/channel.tx -channelID ${CHANNEL_NAME}
+con_exec configtxgen -profile TwoOrgsChannel -outputCreateChannelTx /tmp/$CHANNEL_ARTIFACTS/channel.tx -channelID ${APP_CHANNEL}
 
 echo_b "Create the anchor peer configuration tx using configtx.yaml"
-con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
-con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
+con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org1MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org1MSP
+con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org2MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org2MSP
 
 echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 

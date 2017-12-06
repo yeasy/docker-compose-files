@@ -17,7 +17,7 @@ echo_b "=== Fetching blocks ==="
 for i in {0..4}
 do
 	echo_b "Fetch block $i"
-	channelFetch ${CHANNEL_NAME} $org $peer $i
+	channelFetch ${APP_CHANNEL} $org $peer $i
 done
 
 echo_g "Block fetching done!"

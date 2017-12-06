@@ -51,14 +51,13 @@ There will be 7 running containers, include 4 peers, 1 cli, 1 ca and 1 orderer.
 
 ```bash
 $ make ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                                 NAMES
-1dc3f2557bdc        hyperledger/fabric-tools              "bash -c 'while tr..."   25 minutes ago       Up 25 minutes                                                                                                            fabric-cli
-5e5f37a0ed3c        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.org1.example.com
-6cce94da6392        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.org2.example.com
-e36c5e8d56c5        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.org1.example.com
-1fdd3d2b6527        hyperledger/fabric-orderer            "orderer start"          25 minutes ago       Up 25 minutes       0.0.0.0:7050->7050/tcp                                                                               orderer.example.com
-8af323340651        hyperledger/fabric-ca                 "fabric-ca-server ..."   25 minutes ago       Up 25 minutes       0.0.0.0:7054->7054/tcp                                                                               fabric-ca
-e41d8bca7fe5        hyperledger/fabric-peer               "peer node start"        25 minutes ago       Up 25 minutes       7050/tcp, 7054-7059/tcp, 0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+CONTAINER ID        IMAGE                                     COMMAND                  CREATED             STATUS              PORTS                                                                                                NAMES
+f6686986fe18        hyperledger/fabric-tools:x86_64-1.0.4     "bash -c 'cd /tmp;..."   6 seconds ago       Up 14 seconds                                                                                                            fabric-cli
+c7f274bf60bc        yeasy/hyperledger-fabric-peer:1.0.4       "peer node start"        6 seconds ago       Up 11 seconds       7050/tcp, 7054-7059/tcp, 0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+c6c5f69f2d53        yeasy/hyperledger-fabric-peer:1.0.4       "peer node start"        6 seconds ago       Up 12 seconds       7050/tcp, 7054-7059/tcp, 0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.org1.example.com
+3cad0c519e6f        yeasy/hyperledger-fabric-peer:1.0.4       "peer node start"        6 seconds ago       Up 13 seconds       7050/tcp, 7054-7059/tcp, 0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.org1.example.com
+8b371209f6b8        yeasy/hyperledger-fabric-peer:1.0.4       "peer node start"        6 seconds ago       Up 11 seconds       7050/tcp, 7054-7059/tcp, 0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.org2.example.com
+ba1f00a9c83c        hyperledger/fabric-orderer:x86_64-1.0.4   "orderer start"          6 seconds ago       Up 14 seconds       0.0.0.0:7050->7050/tcp                                                                               orderer.example.com
 ```
 
 ### Initialize Fabric network
@@ -82,7 +81,7 @@ You should see result like the following if the initialization is successful.
 ==========initialize businesschannel==========
 ==============================================
 
-Channel name : businesschannel
+Channel name: businesschannel
 Creating channel...
 
 ...

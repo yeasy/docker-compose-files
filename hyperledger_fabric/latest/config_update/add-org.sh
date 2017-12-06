@@ -18,10 +18,10 @@ echo "Generate new certificates"
 configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./peer/channel-artifacts/orderer_genesis.block
 
 echo "Create the configuration tx"
-CHANNEL_NAME=newchannel
-configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./peer/channel-artifacts/channel.tx -channelID ${CHANNEL_NAME}
+APP_CHANNEL=newchannel
+configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./peer/channel-artifacts/channel.tx -channelID ${APP_CHANNEL}
 
 echo "Define the anchor peer for Org1 on the channel"
-configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org1MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org1MSP
-configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org2MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org2MSP
-configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org3MSPanchors.tx -channelID ${CHANNEL_NAME} -asOrg Org3MSP
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org1MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org1MSP
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org2MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org2MSP
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./peer/channel-artifacts/Org3MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org3MSP
