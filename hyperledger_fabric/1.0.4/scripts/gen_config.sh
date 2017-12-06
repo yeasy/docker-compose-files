@@ -23,7 +23,7 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-echo_b "Generating artifacts in ${MODE}"
+echo_b "Generating artifacts for ${MODE}"
 
 echo_b "Clean existing container $GEN_CONTAINER"
 [ "$(docker ps -a | grep $GEN_CONTAINER)" ] && docker rm -f $GEN_CONTAINER
@@ -31,32 +31,57 @@ echo_b "Clean existing container $GEN_CONTAINER"
 pushd ${MODE}
 
 echo_b "Check whether channel-artifacts or crypto-config exist already"
-[ -d ${CRYPTO_CONFIG} ] && echo "${CRYPTO_CONFIG} existed, will stop generating new configs" && exit 0
-mkdir ${CRYPTO_CONFIG}
-[ -d ${CHANNEL_ARTIFACTS} ] && echo "${CHANNEL_ARTIFACTS} existed, will stop generating new configs" && exit 0
-mkdir ${CHANNEL_ARTIFACTS}
+GEN_CRYPTO=true
+if [ -d ${CRYPTO_CONFIG} ]; then #already exist, no need to re-gen crypto
+  echo_b "${CRYPTO_CONFIG} existed, won't regenerate it."
+  GEN_CRYPTO=false
+else
+	mkdir ${CRYPTO_CONFIG}
+fi
+
+GEN_ARTIFACTS=true
+if [ -d ${CHANNEL_ARTIFACTS} ]; then
+	echo_b "${CHANNEL_ARTIFACTS} existed, won't regenerate it."
+	GEN_ARTIFACTS=false
+else
+	mkdir ${CHANNEL_ARTIFACTS}
+fi
+
+if [ "${GEN_CRYPTO}" = "false" -a "${GEN_ARTIFACTS}" = "false" ]; then
+	echo_g "No need to generate new config, exiting..."
+	exit 0
+fi
 
 echo_b "Starting container $GEN_CONTAINER in background"
 docker run \
 	-d -it \
 	--name $GEN_CONTAINER \
+	-e "CONFIGTX_LOGGING_LEVEL=DEBUG" \
+	-e "CONFIGTX_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}" \
+	-v $PWD/configtx.yaml:${FABRIC_CFG_PATH}/configtx.yaml \
+	-v $PWD/crypto-config.yaml:${FABRIC_CFG_PATH}/crypto-config.yaml \
 	-v $PWD/${CRYPTO_CONFIG}:${FABRIC_CFG_PATH}/${CRYPTO_CONFIG} \
 	-v $PWD/${CHANNEL_ARTIFACTS}:/tmp/${CHANNEL_ARTIFACTS} \
-	$GEN_IMG bash -c 'while true; do sleep 20171001; done'
+	${GEN_IMG} bash -c 'while true; do sleep 20171001; done'
 
-echo_b "Generating crypto-config"
-con_exec cryptogen generate --config=$FABRIC_CFG_PATH/crypto-config.yaml --output ${FABRIC_CFG_PATH}/crypto-config
+if [ "${GEN_CRYPTO}" = "true" ]; then
+	echo_b "Generating crypto-config"
+	con_exec cryptogen generate --config=$FABRIC_CFG_PATH/crypto-config.yaml --output ${FABRIC_CFG_PATH}/crypto-config
+fi
 
-echo_b "Generate genesis block file for system channel using configtx.yaml"
-con_exec configtxgen -profile TwoOrgsOrdererGenesis -outputBlock /tmp/${CHANNEL_ARTIFACTS}/${ORDERER_GENESIS}
+if [ "${GEN_ARTIFACTS}" = "true" ]; then
+	echo_b "Generate genesis block file for system channel using configtx.yaml"
+	con_exec configtxgen -profile TwoOrgsOrdererGenesis -outputBlock /tmp/${CHANNEL_ARTIFACTS}/${ORDERER_GENESIS}
 
-echo_b "Create the new app channel tx using configtx.yaml"
-con_exec configtxgen -profile TwoOrgsChannel -outputCreateChannelTx /tmp/$CHANNEL_ARTIFACTS/channel.tx -channelID ${APP_CHANNEL}
+	echo_b "Create the new app channel tx using configtx.yaml"
+	con_exec configtxgen -profile TwoOrgsChannel -outputCreateChannelTx /tmp/$CHANNEL_ARTIFACTS/channel.tx -channelID ${APP_CHANNEL}
 
-echo_b "Create the anchor peer configuration tx using configtx.yaml"
-con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org1MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org1MSP
-con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org2MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org2MSP
+	echo_b "Create the anchor peer configuration tx using configtx.yaml"
+	con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org1MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org1MSP
+	con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/Org2MSPanchors.tx -channelID ${APP_CHANNEL} -asOrg Org2MSP
+fi
 
 echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 
-echo_g "Generated artifacts in ${MODE}"
+echo_g "Generated artifacts for ${MODE}"
+

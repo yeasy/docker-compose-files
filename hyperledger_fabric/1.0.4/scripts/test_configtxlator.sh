@@ -60,4 +60,4 @@ fi
 echo_b "Stop configtxlator service"
 docker rm -f $CTL_CONTAINER
 
-echo_g "Test configtxlator on $MODE Passed"
+echo_g "Test configtxlator for $MODE Passed"

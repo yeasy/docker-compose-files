@@ -183,6 +183,7 @@ download: # download required images
 	docker pull hyperledger/fabric-zookeeper:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-kafka:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-couchdb:x86_64-1.1.0-preview
+	docker pull hyperledger/fabric-ccenv:x86_64-1.1.0-preview
 	docker tag yeasy/hyperledger-fabric-peer:latest hyperledger/fabric-ccenv:x86_64-1.1.0
 
 ################## chaincode dev mode ################
