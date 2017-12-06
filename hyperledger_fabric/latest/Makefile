@@ -39,7 +39,7 @@ ready: # create/join channel, install/instantiate cc
 	make test_cc_invoke_query
 
 	make test_lscc # test lscc operations
-	#make test_qscc # TODO: test qscc operations
+	make test_qscc # test qscc operations
 
 	make test_fetch_blocks # fetch block files
 
