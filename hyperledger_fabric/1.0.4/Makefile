@@ -40,6 +40,8 @@ ready: # create/join channel, install/instantiate cc
 	make test_qscc # test qscc operations
 	make test_fetch_blocks # fetch block files
 
+	make logs_save
+
 	make test_configtxlator
 
 	@echo "Now the fabric network is ready to play"
@@ -146,7 +148,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
-	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
+	docker logs peer0.org1.example.com >& /tmp/dev_peer0.log
 	docker logs orderer.example.com >& /tmp/dev_orderer.log
 	docker-compose -f ${COMPOSE_FILE} logs >& /tmp/dev_all.log
 
@@ -170,9 +172,16 @@ test_configtxlator: # Test change config using configtxlator
 download: # download required images
 	@echo "Download Docker images"
 	docker pull yeasy/hyperledger-fabric:latest
-	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
+	docker pull yeasy/hyperledger-fabric-peer:latest
+	docker pull yeasy/hyperledger-fabric-orderer:latest
+	docker pull yeasy/hyperledger-fabric-ca:latest
+	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
-	docker tag yeasy/hyperledger-fabric:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+	docker pull hyperledger/fabric-zookeeper:x86_64-1.0.4
+	docker pull hyperledger/fabric-kafka:x86_64-1.0.4
+	docker pull hyperledger/fabric-couchdb:x86_64-1.0.4
+	docker pull hyperledger/fabric-ccenv:x86_64-1.0.4
+	#docker tag yeasy/hyperledger-fabric-peer:latest hyperledger/fabric-ccenv:x86_64-1.0.4
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate

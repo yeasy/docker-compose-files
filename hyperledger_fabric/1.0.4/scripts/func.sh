@@ -300,37 +300,34 @@ chaincodeQuery () {
   local name=$4
   local args=$5
   [ $# -gt 5 ] && local expected_result=$6
-  echo_b "=== Querying on peer$peer in channel ${channel}... === "
+  echo_b "=== Querying on org$org peer$peer in channel ${channel}... === "
   local rc=1
   local starttime=$(date +%s)
 
   setEnvs $org $peer
   # we either get a successful response, or reach TIMEOUT
-  while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
-  do
+  while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
      echo_b "Attempting to Query peer$peer ...$(($(date +%s)-starttime)) secs"
      peer chaincode query \
 			 -C "${channel}" \
 			 -n "${name}" \
 			 -c "${args}" \
 			 >&log.txt
+			 rc=$?
 			if [ $# -gt 5 ]; then # need to check the result
 			 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
 			 test "$VALUE" = "${expected_result}" && let rc=0
-			 sleep 3
-			else
-				rc=0
+			fi
+			cat log.txt
+			if [ $rc -ne 0 ]; then
+				sleep 2
 			fi
   done
-  echo
-  cat log.txt
-  if test $rc -eq 0 ; then
-	echo_g "=== Query on peer$peer in channel ${channel} is successful === "
+  if [ $rc -eq 0 ]; then
+		echo_g "=== Query on peer$peer in channel ${channel} is successful === "
   else
-	echo_r "!!!!!!!!!!!!!!! Query result on peer$peer is INVALID !!!!!!!!!!!!!!!!"
-  echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
-	echo
-	exit 1
+		echo_r "=== Query result on peer$peer is INVALID, run `make stop clean` to clean ==="
+		exit 1
   fi
 }
 

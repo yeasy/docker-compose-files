@@ -37,7 +37,7 @@ docker run \
 sleep 1
 
 echo_b "Convert all config block files into json"
-for BLOCK_FILE in *_0.block; do
+for BLOCK_FILE in *_0.block *.genesis.block; do
 	if [ -f ${BLOCK_FILE} ]; then
 		configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 		echo_b "Parse payload..."

@@ -29,16 +29,21 @@ all:
 ready: # create/join channel, install/instantiate cc
 	make gen_config  # Will ignore if local config path exists
 	make restart
+
 	make test_channel_create
 	make test_channel_join
 	# make update_anchors
+
 	make test_cc_install
 	make test_cc_instantiate
-
 	make test_cc_invoke_query
+
 	make test_lscc # test lscc operations
-	make test_qscc # test qscc operations
+	#make test_qscc # TODO: test qscc operations
+
 	make test_fetch_blocks # fetch block files
+
+	make logs_save
 
 	make test_configtxlator
 
@@ -146,7 +151,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
-	docker logs peer0.org1.example.com >& /tmp/dev_peer.log
+	docker logs peer0.org1.example.com >& /tmp/dev_peer0.log
 	docker logs orderer.example.com >& /tmp/dev_orderer.log
 	docker-compose -f ${COMPOSE_FILE} logs >& /tmp/dev_all.log
 
