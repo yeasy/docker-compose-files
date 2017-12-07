@@ -1,4 +1,6 @@
-## Environment Setup
+## Detailed Steps
+
+### Environment Setup
 
 The following scripts will setup the environment by installing Docker, Docker-Compose and download required docker images. 
 
@@ -8,13 +10,24 @@ $ make setup # setup environment
 
 If you want to setup the environment manually, then have a look at [manually setup](docs/setup.md).
 
-## Bootup Fabric Network
+### Generate crypto-config and channel-artifacts
+
+```bash
+$ make gen_config
+``` 
+
+The cmd actually calls `scripts/gen_config.sh` to generate the `crypto-config` and `channel-artifacts`. 
+
+More details can be found at [Config Generation](docs/config_generation.md).
+
+### Bootup Fabric Network
 
 Start a 4 peer (belonging to 2 organizations) fabric network.
 
 ```sh
 $ make start  # Start a fabric network
 ```
+
 The script actually uses docker-compose to boot up the fabric network with several containers.
 
 There will be 7 running containers, include 4 peers, 1 cli, 1 ca and 1 orderer.
@@ -30,34 +43,38 @@ c6c5f69f2d53        yeasy/hyperledger-fabric-peer:1.0.4       "peer node start" 
 ba1f00a9c83c        hyperledger/fabric-orderer:x86_64-1.0.4   "orderer start"          6 seconds ago       Up 14 seconds       0.0.0.0:7050->7050/tcp                                                                               orderer.example.com
 ```
 
-### Initialize Fabric network
+### Create Application Channel
 
 ```bash
-$ make init  # Start a fabric network
+$ make test_channel_create 
 ```
 
-The command actually calls the `./scripts/initialize.sh` script in the `fabric-cli` container to:
+The command actually calls the `scripts/test_channel_create.sh` script in the `fabric-cli` container, to create a new application channel with default name of `businesschannel`.
 
-* create a new application channel `businesschannel`
-* join all peers into the channel
-* install and instantiate chaincode `example02` for testing
 
-This script only needs to be executed once.
-
-You should see result like the following if the initialization is successful.
+### Join Peers into Application Channel
 
 ```bash
-==============================================
-==========initialize businesschannel==========
-==============================================
-
-Channel name: businesschannel
-Creating channel...
-
-...
-
-===================== All GOOD, initialization completed ===================== 
+$ make test_channel_join 
 ```
+
+The command actually calls the `scripts/test_channel_join.sh` script in the `fabric-cli` container,  to join all peers into the channel.
+
+### Intall Chaincode to All Peers
+
+```bash
+$ make test_cc_install
+```
+
+The command actually calls the `scripts/test_cc_install.sh` script in the `fabric-cli` container, to install chaincode `example02` for testing.
+
+### Instantiate Chaincode in the Application Channel
+
+```bash
+$ make test_cc_instantiate
+```
+
+The command actually calls the `scripts/test_cc_instantiate.sh` script in the `fabric-cli` container, to instantiate chaincode `example02`.
 
 And there will be new chaincode container generated in the system, looks like
 
@@ -69,24 +86,48 @@ e3092961b81b        dev-peer1.org1.example.com-mycc-1.0   "chaincode -peer.a..."
 57d3555f56e5        dev-peer0.org2.example.com-mycc-1.0   "chaincode -peer.a..."   About a minute ago   Up About a minute                                                                                                        dev-peer0.org2.example.com-mycc-1.0
 c9974dbc21d9        dev-peer0.org1.example.com-mycc-1.0   "chaincode -peer.a..."   23 minutes ago       Up 23 minutes                                                                                                            dev-peer0.org1.example.com-mycc-1.0
 ```
-
-
-## Test Chaincode
+### Test Chaincode
 
 ```bash
-$ make test_cc # test invoke and query with chaincode
+$ make test_cc_invoke_query
 ```
 
-More details, see [chaincode test](docs/chaincode_test.md).
+The command actually calls the `scripts/test_cc_invoke_query.sh` script in the `fabric-cli` container, to test chaincode `example02` with invoke and query.
 
+### Test System Chaincode
 
-## Stop the network
+```bash
+$ make test_lscc # test LSCC
+$ make test_qscc # test QSCC
+```
+
+The command actually calls the `scripts/test_lscc.sh` and `scripts/test_qscc.sh` script in the `fabric-cli` container, to test LSCC and QSCC.
+
+### Test Fetch Blocks
+
+```bash
+$ make test_fetch_blocks # test fetch blocks
+```
+
+The command actually calls the `scripts/test_fetch_blocks.sh` script in the `fabric-cli` container, to test fetching blocks from channels.
+
+### Test Configtxlator
+
+```bash
+$ make test_configtxlator
+```
+
+The command actually calls the `scripts/test_configtxlator.sh` script in the `fabric-cli` container, to test configtxlator to change the channel configuration.
+
+More details can be found at [Configtxlator](docs/configtxlator.md).
+
+### Stop the network
 
 ```bash
 $ make stop # stop the fabric network
 ```
 
-## Clean environment
+### Clean environment
 
 Clean all related containers and images.
 
@@ -94,7 +135,12 @@ Clean all related containers and images.
 $ make clean # clean the environment
 ```
 
-## More to learn
+
+### Enable Event Listener
+
+See [Event Listener](docs/event_listener.md).
+
+### More to learn
 
 Topics | Description
 -- | -- 
@@ -108,6 +154,3 @@ Topics | Description
 [WIP] [Some verification tests](docs/verification_test.md) | 
 
 
-## Acknowledgement
-* [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
-* [Hyperledger Fabric Getting Started](http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html).

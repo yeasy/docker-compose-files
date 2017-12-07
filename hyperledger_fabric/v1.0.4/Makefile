@@ -18,7 +18,9 @@ else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
 
-all:
+all: test
+
+test:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 
@@ -29,15 +31,18 @@ all:
 ready: # create/join channel, install/instantiate cc
 	make gen_config  # Will ignore if local config path exists
 	make restart
+
 	make test_channel_create
 	make test_channel_join
 	# make update_anchors
+
 	make test_cc_install
 	make test_cc_instantiate
-
 	make test_cc_invoke_query
+
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
+
 	make test_fetch_blocks # fetch block files
 
 	make logs_save
@@ -110,7 +115,7 @@ test_lscc: # test lscc quries
 # FIXME: docker doesn't support wildcard in cp right now
 test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
 ################## Env setup related, no need to see usually ################
 

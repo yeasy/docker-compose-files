@@ -3,7 +3,8 @@ Events didn't support TLS, so make sure TLS has been disabled by setting *_TLS_E
 Next, start the network with following command:
 
 ```bash
-$ HLF_MODE=event make restart
+$ HLF_MODE=event
+$ make restart
 ```
 
 when the network starts successfully, we started a block-listener in container `fabric-event-listener`.
@@ -18,8 +19,8 @@ $ docker logs -f fabric-event-listener
 And init channels and chaincodes.
 
 ```bash
-$ HLF_MODE=event make test_channel_create test_channel_join 
-$ HFL_MODE=event make test_cc_install test_cc_instantiate test_cc_invoke_query  # Enable eventhub listener
+$ make test_channel_create test_channel_join 
+$ make test_cc_install test_cc_instantiate test_cc_invoke_query  # Enable eventhub listener
 ```
 
 Then we will get some events at listening terminal looks like following:

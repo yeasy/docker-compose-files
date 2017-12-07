@@ -18,7 +18,9 @@ else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
 
-all:
+all: test
+
+test:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 
@@ -113,7 +115,7 @@ test_lscc: # test lscc quries
 # FIXME: docker doesn't support wildcard in cp right now
 test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch.sh"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
 ################## Env setup related, no need to see usually ################
 
@@ -178,7 +180,7 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-peer:latest
 	docker pull yeasy/hyperledger-fabric-orderer:latest
 	docker pull yeasy/hyperledger-fabric-ca:latest
-	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # official repo does not provide the latest image currently
+	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker pull hyperledger/fabric-zookeeper:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-kafka:x86_64-1.1.0-preview

@@ -12,25 +12,47 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 
 ## Getting Started
 
-### Pick up a fabric version to test
+### Pick up a fabric version
 
-Take fabric latest stable code for example
+Enter the subdir of specific version, e.g., 
 
 ```bash
-$ cd 1.0.5 #
-$ HLF_MODE=solo make
-$ HLF_MODE=kafka make
-$ HLF_MODE=couchdb make
-$ HLF_MODE=dev make
+$ cd 1.0.5 # select a fabric version
 ```
 
-## Supported Releases
+### Quick Test
 
-* [Fabric v0.6.0](v0.6.0/): stable with fabric v0.6.0 code.
-* [Fabric v1.0.0](v1.0.0/): stable with fabric v1.0.0 code.
-* [Fabric v1.0.2](v1.0.2/): deprecated, test fabric v1.0.2 code.
-* [Fabric v1.0.3](v1.0.3/): deprecated, test fabric v1.0.3 code.
-* [Fabric v1.0.4](v1.0.4/): test fabric v1.0.4 code.
-* [Fabric v1.0.5](v1.0.5/): latest stable fabric code with v1.0.5.
-* [Fabric Latest](latest/): experimental with latest fabric code, unstable.
+The following command will run the entire process (start a fabric network, create channel, test chaincode and stop it.) pass-through.
 
+```bash
+$ make setup # Install docker/compose, and pull required images
+$ make test  # Test with default fabric solo mode
+```
+
+### Test with more modes
+
+```bash
+$ HLF_MODE=solo make test # in solo mode
+$ HLF_MODE=kafka make test # in kafka mode
+$ HLF_MODE=couchdb make test  # solo+couchdb support, web UI is at `http://localhost:5984/_utils`
+$ HLF_MODE=event make test  # Enable eventhub listener
+```
+
+### Detailed Steps
+
+See [detailed steps](docs/steps.md)
+
+## Supported Fabric Releases
+
+Fabric Release | Description
+--- | ---
+[Fabric v0.6.0](v0.6.0/) | stable with fabric v0.6.0 code.
+[Fabric v1.0.0](v1.0.0/) | stable with fabric v1.0.0 code.
+[Fabric v1.0.2](v1.0.2/) | deprecated, test fabric v1.0.2 code.
+[Fabric v1.0.4](v1.0.4/) | test fabric v1.0.4 code.
+[Fabric v1.0.5](v1.0.5/) | latest stable fabric code with v1.0.5.
+[Fabric Latest](latest/) | experimental with latest fabric code, unstable.
+
+## Acknowledgement
+* [Hyperledger Fabric](https://github.com/hyperledger/fabric/) project.
+* [Hyperledger Fabric Getting Started](http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html).
