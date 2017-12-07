@@ -1,0 +1,133 @@
+# This is the default base file to config env and command
+# Notice that chaincode is executed inside docker in default net mode
+# https://github.com/yeasy/docker-compose-files
+
+# Depends on the hyperledger/fabric-peer image.
+
+version: '2'
+
+services:
+  ca-base:
+    #image: hyperledger/fabric-ca
+    image: yeasy/hyperledger-fabric-ca:1.0.0
+    #image: hyperledger/fabric-ca:x86_64-1.0.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+
+  orderer-base:
+    image: yeasy/hyperledger-fabric-orderer:1.0.0
+    #image: hyperledger/fabric-orderer:x86_64-1.0.0
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      - ORDERER_GENERAL_BATCHTIMEOUT=2s
+      - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+      - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+      - ORDERER_GENERAL_LISTENPORT=7050
+     #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    expose:
+      - "7050"  #
+    command: orderer start
+
+  peer-base:
+    image: yeasy/hyperledger-fabric-peer:1.0.0
+    #image: hyperledger/fabric-peer:x86_64-1.0.0
+    environment:
+     #- CORE_PEER_ID=peer0
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=v100_default  # uncomment this to use specific network
+     #- CORE_PEER_NETWORKID=dev
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    expose:
+      - "7050"  # Rest
+      - "7051"  # Grpc
+      - "7052"  # Peer CLI
+      - "7053"  # Peer Event
+      - "7054"  # eCAP
+      - "7055"  # eCAA
+      - "7056"  # tCAP
+      - "7057"  # eCAA
+      - "7058"  # tlsCAP
+      - "7059"  # tlsCAA
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    #volumes:
+    #    - /var/run/:/host/var/run/
+    command: peer node start
+
+  peer-base-dev:
+    image: yeasy/hyperledger-fabric:1.0.0
+    environment:
+      #- CORE_PEER_ID=peer0
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=v100_default  # uncomment this to use specific network
+     #- CORE_PEER_NETWORKID=dev
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # this node is the group leader, default to false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    expose:
+      - "7050"  # Rest
+      - "7051"  # Grpc
+      - "7052"  # Peer CLI
+      - "7053"  # Peer Event
+      - "7054"  # eCAP
+      - "7055"  # eCAA
+      - "7056"  # tCAP
+      - "7057"  # eCAA
+      - "7058"  # tlsCAP
+      - "7059"  # tlsCAA
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    #volumes:
+    #    - /var/run/:/host/var/run/
+    command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+
+  cli-base:
+    image: yeasy/hyperledger-fabric:1.0.0
+    #image: hyperledger/fabric-tools:x86_64-1.0.0
+    tty: true
+    environment:
+      #- GOPATH=/opt/gopath
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+      - CHANNEL_NAME:="businesschannel"
+    volumes:
+        #- ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./scripts:/tmp/scripts
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'while true; do sleep 20170504; done'
+
+  couchdb-base:
+    #container_name: couchdb0
+    image: hyperledger/fabric-couchdb:x86_64-1.0.0
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.

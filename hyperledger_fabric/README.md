@@ -2,7 +2,7 @@
 
 This project provides several useful Docker-Compose script to help quickly bootup a Hyperledger Fabric network, and do simple testing with deploy, invoke and query transactions.
 
-Currently we support Hyperledger Fabric v0.6 and v1.0.
+Currently we support Hyperledger Fabric v0.6.x and v1.x.
 
 If you're not familiar with Docker and Blockchain, can have a look at these books (in CN):
 
@@ -14,10 +14,10 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 
 ### Pick up a fabric version to test
 
-Take fabric v1.0.4 for example
+Take fabric latest stable code for example
 
 ```bash
-$ cd 1.0.4 #
+$ cd 1.0.5 #
 $ HLF_MODE=solo make
 $ HLF_MODE=kafka make
 $ HLF_MODE=couchdb make
@@ -26,10 +26,11 @@ $ HLF_MODE=dev make
 
 ## Supported Releases
 
-* [Fabric v0.6.0](0.6.0/): stable with fabric v0.6.0 code.
-* [Fabric v1.0.0](1.0.0/): stable with fabric v1.0.0 code.
-* [Fabric v1.0.2](1.0.2/): deprecated, test fabric v1.0.2 code.
-* [Fabric v1.0.3](1.0.3/): deprecated, test fabric v1.0.3 code.
-* [Fabric v1.0.4](1.0.4/): test fabric v.1.0.4 code.
+* [Fabric v0.6.0](v0.6.0/): stable with fabric v0.6.0 code.
+* [Fabric v1.0.0](v1.0.0/): stable with fabric v1.0.0 code.
+* [Fabric v1.0.2](v1.0.2/): deprecated, test fabric v1.0.2 code.
+* [Fabric v1.0.3](v1.0.3/): deprecated, test fabric v1.0.3 code.
+* [Fabric v1.0.4](v1.0.4/): test fabric v1.0.4 code.
+* [Fabric v1.0.5](v1.0.5/): latest stable fabric code with v1.0.5.
 * [Fabric Latest](latest/): experimental with latest fabric code, unstable.
 
