@@ -254,7 +254,7 @@ chaincodeInstantiate () {
 	res=$?
 	cat log.txt
 	verifyResult $res "ChaincodeInstantiation on peer$peer in channel ${channel} failed"
-	echo_g "=== ChaincodeInstantiation on peer$peer in channel ${channel} is successful ==="
+	echo_g "=== Chaincode Instantiated in channel ${channel} by  peer$peer ==="
 }
 
 
