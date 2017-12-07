@@ -574,13 +574,13 @@
             "channel_header": {
               "channel_id": "testchainid",
               "epoch": "0",
-              "timestamp": "2017-12-06T14:26:08.000Z",
-              "tx_id": "24a9ade9536716e99007a17d0465933b6f693ad6dd88f90aa9d1fef103b0c5d2",
+              "timestamp": "2017-12-07T06:11:27.000Z",
+              "tx_id": "e54a8fb4d1dd62c8471c8f4c921da240a7ffb2b2967de8e88dae19f3f261bf94",
               "type": 1,
               "version": 1
             },
             "signature_header": {
-              "nonce": "L8yPSj9Y11VqQR3Z7cxBc1BEuDb4Z6N1"
+              "nonce": "NBch/fA5Ct9I4k5vF1K9ZlzCGdfU/Wmn"
             }
           }
         }
@@ -588,7 +588,7 @@
     ]
   },
   "header": {
-    "data_hash": "9qQG1DKj9bA2Rt79fAKfXFqfcGPOJGn+i6ZZUSe4Fvw=",
+    "data_hash": "dl28FSEkiDDeSxD3cVnbXuFlXDQWuIzKIedGR3vjIuE=",
     "number": "0"
   },
   "metadata": {

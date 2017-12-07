@@ -70,7 +70,7 @@ if [ "${GEN_CRYPTO}" = "true" ]; then
 fi
 
 if [ "${GEN_ARTIFACTS}" = "true" ]; then
-	echo_b "Generate genesis block file for system channel using configtx.yaml"
+	echo_b "Generate genesis block for system channel using configtx.yaml"
 	con_exec configtxgen -profile TwoOrgsOrdererGenesis -outputBlock /tmp/${CHANNEL_ARTIFACTS}/${ORDERER_GENESIS}
 
 	echo_b "Create the new app channel tx using configtx.yaml"

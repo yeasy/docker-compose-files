@@ -8,8 +8,11 @@ NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
+LOG_PATH ?= "solo/logs"
+
 ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
+	LOG_PATH="kafka/logs"
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
@@ -34,7 +37,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_channel_create
 	make test_channel_join
-	# make update_anchors
+	make update_anchors
 
 	make test_cc_install
 	make test_cc_instantiate
@@ -153,25 +156,26 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
-	docker logs peer0.org1.example.com >& /tmp/dev_peer0.log
-	docker logs orderer.example.com >& /tmp/dev_orderer.log
-	docker-compose -f ${COMPOSE_FILE} logs >& /tmp/dev_all.log
+	[ -d $(LOG_PATH) ] || mkdir $(LOG_PATH)
+	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
+	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log
+	docker-compose -f ${COMPOSE_FILE} logs >& $(LOG_PATH)/dev_all.log
 
 logs_view: # view logs
-	less /tmp/dev_peer.log
+	less $(LOG_PATH)/dev_peer.log
 
 gen_config: # generate config artifacts
-	if [ "$(HLF_MODE)" = "solo" ]; then \
-			bash scripts/gen_config.sh solo; \
-	else \
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
 			bash scripts/gen_config.sh kafka; \
+	else \
+			bash scripts/gen_config.sh solo; \
 	fi
 
 test_configtxlator: # Test change config using configtxlator
-	if [ "$(HLF_MODE)" = "solo" ]; then \
-		bash scripts/test_configtxlator.sh solo; \
-	else \
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
 		bash scripts/test_configtxlator.sh kafka; \
+	else \
+		bash scripts/test_configtxlator.sh solo; \
 	fi
 
 download: # download required images

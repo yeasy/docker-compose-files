@@ -282,6 +282,12 @@
 												"version": "0"
 											}
 										},
+										"values": {
+											"Capabilities": {
+												"mod_policy": "Admins",
+												"version": "0"
+											}
+										},
 										"version": "1"
 									},
 									"Orderer": {
@@ -601,9 +607,6 @@
 											"values": {
 												"Consortium": {
 													"mod_policy": "",
-													"value": {
-														"name": "SampleConsortium"
-													},
 													"version": "0"
 												}
 											},
@@ -659,6 +662,12 @@
 															"version": "0"
 														}
 													},
+													"values": {
+														"Capabilities": {
+															"mod_policy": "Admins",
+															"version": "0"
+														}
+													},
 													"version": "1"
 												}
 											},
@@ -677,13 +686,13 @@
 									},
 									"signatures": [
 										{
-											"signature": "MEQCIClEL7sWQG0g0n6rASGs0Y4sH1BDUMQjOZ6stxoDJPorAiAm8NKtrDDTEIgqaJRqQpC2WI6E6SgDgDKNULqULSwtcw==",
+											"signature": "MEUCIQCXvUTqPd7WpoPLlI5D8qVqWH0h+L4quYdcmX+vN+LFoAIgaamKAqMfrZutqvD3xTh3u+wZUd7RzpGg35v/3q33CoU=",
 											"signature_header": {
 												"creator": {
 													"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNHVENDQWNDZ0F3SUJBZ0lSQVBwU3BQRjFOYWN1YmR1UFlSaVFwSUl3Q2dZSUtvWkl6ajBFQXdJd2N6RUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhHVEFYQmdOVkJBb1RFRzl5WnpFdVpYaGhiWEJzWlM1amIyMHhIREFhQmdOVkJBTVRFMk5oCkxtOXlaekV1WlhoaGJYQnNaUzVqYjIwd0hoY05NVGN4TWpBMk1UUXlNVEEzV2hjTk1qY3hNakEwTVRReU1UQTMKV2pCYk1Rc3dDUVlEVlFRR0V3SlZVekVUTUJFR0ExVUVDQk1LUTJGc2FXWnZjbTVwWVRFV01CUUdBMVVFQnhNTgpVMkZ1SUVaeVlXNWphWE5qYnpFZk1CMEdBMVVFQXd3V1FXUnRhVzVBYjNKbk1TNWxlR0Z0Y0d4bExtTnZiVEJaCk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQk5WWTZST2tEdEdsa1VvU3Q3K01qNnY5Z0NWWVNRVzMKdFRCdTlqbnNVOGZrMkhhS2VJV1BpNFR3YXhjVE5VR3lqRlNSQSsrMFp0T3ZIMFpYUHFPRU8rS2pUVEJMTUE0RwpBMVVkRHdFQi93UUVBd0lIZ0RBTUJnTlZIUk1CQWY4RUFqQUFNQ3NHQTFVZEl3UWtNQ0tBSU9lWjkvcXNLZ09CCng2R3ZkK29WKzAxNGJ2ZXFFSlhvNHVPTXdwcWowcFdsTUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUVaY0htTUsKaFpmSjg0TGNrQVFhQy9RSHUwdTcvSzA1SG96V2FtQS85WVlVQWlCMGhiWXl5U1duckVQd1ZKdWlKaDlQdWx6RgpWaFB2cFZDemdVMThtQTVxWFE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
 													"mspid": "Org1MSP"
 												},
-												"nonce": "q5GldPa7IKhpxVEQsOHgvxiIIPSXQq9I"
+												"nonce": "PSSluEC1hhFAOkO+FF4LTFxBUE5G41d6"
 											}
 										}
 									]
@@ -692,7 +701,7 @@
 									"channel_header": {
 										"channel_id": "businesschannel",
 										"epoch": "0",
-										"timestamp": "2017-12-06T14:26:52.000Z",
+										"timestamp": "2017-12-07T06:11:36.000Z",
 										"tx_id": "",
 										"type": 2,
 										"version": 0
@@ -702,18 +711,18 @@
 											"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNHVENDQWNDZ0F3SUJBZ0lSQVBwU3BQRjFOYWN1YmR1UFlSaVFwSUl3Q2dZSUtvWkl6ajBFQXdJd2N6RUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhHVEFYQmdOVkJBb1RFRzl5WnpFdVpYaGhiWEJzWlM1amIyMHhIREFhQmdOVkJBTVRFMk5oCkxtOXlaekV1WlhoaGJYQnNaUzVqYjIwd0hoY05NVGN4TWpBMk1UUXlNVEEzV2hjTk1qY3hNakEwTVRReU1UQTMKV2pCYk1Rc3dDUVlEVlFRR0V3SlZVekVUTUJFR0ExVUVDQk1LUTJGc2FXWnZjbTVwWVRFV01CUUdBMVVFQnhNTgpVMkZ1SUVaeVlXNWphWE5qYnpFZk1CMEdBMVVFQXd3V1FXUnRhVzVBYjNKbk1TNWxlR0Z0Y0d4bExtTnZiVEJaCk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQk5WWTZST2tEdEdsa1VvU3Q3K01qNnY5Z0NWWVNRVzMKdFRCdTlqbnNVOGZrMkhhS2VJV1BpNFR3YXhjVE5VR3lqRlNSQSsrMFp0T3ZIMFpYUHFPRU8rS2pUVEJMTUE0RwpBMVVkRHdFQi93UUVBd0lIZ0RBTUJnTlZIUk1CQWY4RUFqQUFNQ3NHQTFVZEl3UWtNQ0tBSU9lWjkvcXNLZ09CCng2R3ZkK29WKzAxNGJ2ZXFFSlhvNHVPTXdwcWowcFdsTUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUVaY0htTUsKaFpmSjg0TGNrQVFhQy9RSHUwdTcvSzA1SG96V2FtQS85WVlVQWlCMGhiWXl5U1duckVQd1ZKdWlKaDlQdWx6RgpWaFB2cFZDemdVMThtQTVxWFE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
 											"mspid": "Org1MSP"
 										},
-										"nonce": "IJizUoKhMcO65aWYSnuKc/qw6NeItwZZ"
+										"nonce": "90rTtVmMpuEMhW5cyNxQO3m4GGXPOBAa"
 									}
 								}
 							},
-							"signature": "MEQCIHInMmiMASaRFS31WbSdz67HRT6YKm5gmj1fQcu1pwZYAiBIyQ6t8lBGWZAdUwgIf08FRjVIJ4RO9jeBbaIaV3QsIw=="
+							"signature": "MEQCIDXjjsRCheF6RYC0CV5JgNjYTfHDRkvcIlSX6cVr34M8AiBXnUQYzHX2vT+9Jv7MU06nHlUBuQBkjglhSLhWRjcDiA=="
 						}
 					},
 					"header": {
 						"channel_header": {
 							"channel_id": "businesschannel",
 							"epoch": "0",
-							"timestamp": "2017-12-06T14:26:52.000Z",
+							"timestamp": "2017-12-07T06:11:36.000Z",
 							"tx_id": "",
 							"type": 1,
 							"version": 0
@@ -723,16 +732,16 @@
 								"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNEVENDQWJPZ0F3SUJBZ0lSQUxtQllETzl0elkzeWpKMVdISkJPVkV3Q2dZSUtvWkl6ajBFQXdJd2FURUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhGREFTQmdOVkJBb1RDMlY0WVcxd2JHVXVZMjl0TVJjd0ZRWURWUVFERXc1allTNWxlR0Z0CmNHeGxMbU52YlRBZUZ3MHhOekV5TURZeE5ESXhNRGhhRncweU56RXlNRFF4TkRJeE1EaGFNRmd4Q3pBSkJnTlYKQkFZVEFsVlRNUk13RVFZRFZRUUlFd3BEWVd4cFptOXlibWxoTVJZd0ZBWURWUVFIRXcxVFlXNGdSbkpoYm1OcApjMk52TVJ3d0dnWURWUVFERXhOdmNtUmxjbVZ5TG1WNFlXMXdiR1V1WTI5dE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVoOU9CWHRBR2xDUDBoRi9DaElsTmUvTUlNNWV0c1I3WXY3NjBNRGJKdTZXbm9paUsKcnJpNDFDQURiRWNRUit4NDdjR0xCSWsvNzhuSjllWjUyL1IwdktOTk1Fc3dEZ1lEVlIwUEFRSC9CQVFEQWdlQQpNQXdHQTFVZEV3RUIvd1FDTUFBd0t3WURWUjBqQkNRd0lvQWdDV0tTWmNJTyszQW1FM0JLaGxrUXFJVmRCMmFVCjE5YU9tQW8yQUdtQ1dtTXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBTk0rbm1tdGRsVFRvMm9TbTEydEtPeG0KYUtQOERBVElGOXc5Snh5S051MmRBaUJSWFVCcUNDdmk1Y2cxMGZ4Q3BuYU1icjhoTk5BQUdJYjRqSTdYUSt2ZwpPUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K",
 								"mspid": "OrdererMSP"
 							},
-							"nonce": "1iPiqDLxOJzY18x0gxg2pobchvMFDHEb"
+							"nonce": "ewbkdT4Lz6fdDDUdf5SPrpJ1b3r51XaS"
 						}
 					}
 				},
-				"signature": "MEUCIQDs00k62qnNk5I53lVcG5+rq0GtYLiZfJqBGRHOf7Ph1gIgNrzz2iaNN8n9KmURoeJMPvIoCgle93CrIk6nne5Ft9k="
+				"signature": "MEQCIAHCrezt4Wo0c/IrxiFJFHfy24LXE+iue9YaW3qwSR3ZAiAZhQN7qPuYRFkLUcZBLvK2YB4kB3VF8xhMIBNQDSTdkg=="
 			}
 		]
 	},
 	"header": {
-		"data_hash": "cc++o1bGmPcMwLpTkw4vrAL/CORR96q6Ggy4DcXlzfc=",
+		"data_hash": "KZW1xtTkkT602ecFINzvk9JxWopy6DgdLQYBTlAAvaU=",
 		"number": "0"
 	},
 	"metadata": {
