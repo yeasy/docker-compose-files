@@ -83,18 +83,19 @@ checkOSNAvailability() {
 # Internal func called by channelCreate
 channelCreateAction(){
 	local channel=$1
-	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+	local channel_tx=$2
+	if [ -z "$CORE_PEER_TLS_ENABLED" ] || [ "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ${CHANNEL_ARTIFACTS}/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout $TIMEOUT \
 			>&log.txt
 	else
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ${CHANNEL_ARTIFACTS}/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout $TIMEOUT \
 			--tls $CORE_PEER_TLS_ENABLED \
 			--cafile ${ORDERER_TLS_CA} \
@@ -104,21 +105,22 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
-# channelCreate APP_CHANNEL org peer
+# channelCreate APP_CHANNEL appchannel.tx org peer
 channelCreate() {
 	local channel=$1
-	local org=$2
-	local peer=$3
+	local channel_tx=$2
+	local org=$3
+	local peer=$4
 
 	echo_b "=== Create Channel ${channel} by org $org peer $peer === "
 	local counter=0
 	setEnvs $org $peer
-	channelCreateAction ${channel}
+	channelCreateAction "${channel}" "${channel_tx}"
 	local res=$?
 	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
 		 echo_b "Failed to create channel $channel, retry after 3s"
 		 sleep 3
-		 channelCreateAction ${channel}
+		 channelCreateAction "${channel}" "${channel_tx}"
 		 res=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
@@ -401,7 +403,7 @@ channelFetch () {
 	setOrdererEnvs
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
-	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
+	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
 		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel}  \
@@ -443,9 +445,9 @@ configtxlatorDecode() {
 
 	echo_b "Config Decode $input --> $output using type $msgType"
 	curl -sX POST \
-		--data-binary @${input} \
-		${CTL_DECODE_URL}/${msgType} \
-		> ${output}
+		--data-binary @"${input}" \
+		"${CTL_DECODE_URL}/${msgType}" \
+		> "${output}"
 }
 
 # compute diff between two pb

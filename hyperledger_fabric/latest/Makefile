@@ -8,11 +8,11 @@ NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
-LOG_PATH ?= "solo/logs"
+LOG_PATH ?= solo/logs
 
 ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
-	LOG_PATH="kafka/logs"
+	LOG_PATH=kafka/logs
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
@@ -126,6 +126,10 @@ setup: # setup the environment
 	bash scripts/setup_env.sh # Installing Docker and Docker-Compose
 	bash scripts/download_images.sh # Pull required Docker images
 
+check: # Check shell scripts grammar
+	@echo "Check shell scripts grammar"
+	[ `which shellcheck` ] && shellcheck scripts/*.sh
+
 clean: # clean up containers
 	@echo "Clean all containers and fabric cc images"
 	@-docker rm -f `docker ps -qa`
@@ -196,3 +200,4 @@ download: # download required images
 chaincode_init: # start chaincode in dev mode and do install/instantiate
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
+
