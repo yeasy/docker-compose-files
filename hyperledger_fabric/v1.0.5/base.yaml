@@ -20,23 +20,24 @@ services:
     #image: yeasy/hyperledger-fabric-orderer:1.0.5
     image: hyperledger/fabric-orderer:x86_64-1.0.5
     restart: always
+    # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
     environment:
-      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG  # default: INFO
       - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
-      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      #- ORDERER_GENERAL_LEDGERTYPE=file
-      - ORDERER_GENERAL_LEDGERTYPE=json
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
       - ORDERER_GENERAL_BATCHTIMEOUT=1s
       - ORDERER_GENERAL_MAXMESSAGECOUNT=10
       - ORDERER_GENERAL_MAXWINDOWSIZE=1000
       - ORDERER_GENERAL_LISTENPORT=7050
      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
       # enabled TLS
-      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
@@ -90,7 +91,6 @@ services:
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-      - APP_CHANNEL:="businesschannel"
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 

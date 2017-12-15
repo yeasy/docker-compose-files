@@ -8,9 +8,15 @@ if [ -f ./header.sh ]; then
 elif [ -f scripts/header.sh ]; then
  source scripts/header.sh
 else
- alias echo_r="echo"
- alias echo_g="echo"
- alias echo_b="echo"
+ echo_r() {
+	 echo "$@"
+ }
+ echo_g() {
+	 echo "$@"
+ }
+ echo_b() {
+	 echo "$@"
+ }
 fi
 
 # Define those global variables
@@ -18,6 +24,9 @@ if [ -f ./variables.sh ]; then
  source ./variables.sh
 elif [ -f scripts/variables.sh ]; then
  source scripts/variables.sh
+else
+	echo "Cannot find the variables.sh files, pls check"
+	exit 1
 fi
 
 # Verify $1 is not 0, then output error msg $2 and exit
@@ -467,4 +476,10 @@ configtxlatorCompare() {
 		> "${output}"
 
 	[ $? -eq 0 ] || echo_r "Failed to compute config update"
+}
+
+
+# Run cmd inside the config generator container
+gen_con_exec() {
+	docker exec -it $GEN_CONTAINER "$@"
 }

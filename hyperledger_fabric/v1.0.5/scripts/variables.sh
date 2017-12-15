@@ -53,14 +53,14 @@ CC_QUERY_ARGS='{"Args":["query","a"]}'
 # Generate configs
 APP_CHANNEL_TX=channel.tx
 ORDERER_GENESIS=orderer.genesis.block
-GEN_IMG=yeasy/hyperledger-fabric:1.0.4  # working dir is `/go/src/github.com/hyperledger/fabric`
+GEN_IMG=yeasy/hyperledger-fabric:1.0.5  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
 CRYPTO_CONFIG=crypto-config
 
 # CONFIGTXLATOR
-CTL_IMG=yeasy/hyperledger-fabric:1.0.4
+CTL_IMG=yeasy/hyperledger-fabric:1.0.5
 CTL_CONTAINER=configtxlator
 CTL_BASE_URL=http://127.0.0.1:7059
 CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode

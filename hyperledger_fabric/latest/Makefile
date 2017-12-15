@@ -17,6 +17,8 @@ else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-event.yaml"
+else ifeq ($(HLF_MODE),be)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-solo-be.yaml"
 else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
 endif
@@ -32,8 +34,9 @@ test:
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
+	make stop
 	make gen_config  # Will ignore if local config path exists
-	make restart
+	make start
 
 	make test_channel_create
 	make test_channel_join
@@ -59,12 +62,12 @@ ready: # create/join channel, install/instantiate cc
 restart: stop start
 
 start: # bootup the fabric network
-	@echo "Start a fabric network with ${COMPOSE_FILE}"
+	@echo "Start a fabric network with ${COMPOSE_FILE}..."
 	@make clean
 	@docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 stop: # stop the fabric network
-	@echo "Stop the fabric network..."
+	@echo "Stop the fabric network with ${COMPOSE_FILE}..."
 	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log  # Stop a fabric network
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
@@ -131,8 +134,8 @@ check: # Check shell scripts grammar
 	[ `which shellcheck` ] && shellcheck scripts/*.sh
 
 clean: # clean up containers
-	@echo "Clean all containers and fabric cc images"
-	@-docker rm -f `docker ps -qa`
+	@echo "Clean all HLF containers and fabric cc images"
+	@docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
 	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
 
 clean_env: # clean up environment
@@ -160,7 +163,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
-	[ -d $(LOG_PATH) ] || mkdir $(LOG_PATH)
+	[ -d $(LOG_PATH) ] || mkdir -p $(LOG_PATH)
 	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
 	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log
 	docker-compose -f ${COMPOSE_FILE} logs >& $(LOG_PATH)/dev_all.log
@@ -189,6 +192,7 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-orderer:latest
 	docker pull yeasy/hyperledger-fabric-ca:latest
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
+	docker pull yeasy/blockchain-explorer:latest  # TODO: wait for official images
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker pull hyperledger/fabric-zookeeper:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-kafka:x86_64-1.1.0-preview
