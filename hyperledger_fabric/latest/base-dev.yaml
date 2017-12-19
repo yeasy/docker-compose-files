@@ -75,10 +75,10 @@ services:
       - CORE_PEER_ID=fabric-cli
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
       - CORE_PEER_LOCALMSPID=Org1MSP
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     volumes:
       - $GOPATH/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
       #- /tmp/:/tmp/
@@ -87,11 +87,11 @@ services:
       #- ./solo/channel-artifacts:/tmp/channel-artifacts
       #- ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
       #- ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-      #- ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+      #- ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
       #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
       # kafka mode configuration
       - ./kafka/channel-artifacts:/tmp/channel-artifacts
       - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
       - ./kafka/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-      - ./kafka/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+      - ./kafka/crypto-config:/etc/hyperledger/fabric/crypto-config
       - ./kafka/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
