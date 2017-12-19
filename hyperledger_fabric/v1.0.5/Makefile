@@ -2,6 +2,7 @@
 
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
+HLF_VERSION ?= 1.0.5
 
 CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
@@ -34,8 +35,9 @@ test:
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
+	make stop
 	make gen_config  # Will ignore if local config path exists
-	make restart
+	make start
 
 	make test_channel_create
 	make test_channel_join
@@ -61,12 +63,12 @@ ready: # create/join channel, install/instantiate cc
 restart: stop start
 
 start: # bootup the fabric network
-	@echo "Start a fabric network with ${COMPOSE_FILE}"
+	@echo "Start a fabric network with ${COMPOSE_FILE}..."
 	@make clean
 	@docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 stop: # stop the fabric network
-	@echo "Stop the fabric network..."
+	@echo "Stop the fabric network with ${COMPOSE_FILE}..."
 	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log  # Stop a fabric network
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
@@ -133,8 +135,9 @@ check: # Check shell scripts grammar
 	[ `which shellcheck` ] && shellcheck scripts/*.sh
 
 clean: # clean up containers
-	@echo "Clean all containers and fabric cc images"
-	@-docker rm -f `docker ps -qa`
+	@echo "Clean all HLF containers and fabric cc images"
+	@-docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
+	@-docker rm -f $$(docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1}')
 	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
 
 clean_env: # clean up environment
@@ -186,17 +189,16 @@ test_configtxlator: # Test change config using configtxlator
 
 download: # download required images
 	@echo "Download Docker images"
-	docker pull yeasy/hyperledger-fabric:1.0.5
-	docker pull yeasy/hyperledger-fabric-peer:1.0.5
-	docker pull yeasy/hyperledger-fabric-orderer:1.0.5
-	docker pull yeasy/hyperledger-fabric-ca:1.0.5
-	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
-	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
-	docker pull hyperledger/fabric-zookeeper:x86_64-1.0.5
-	docker pull hyperledger/fabric-kafka:x86_64-1.0.5
-	docker pull hyperledger/fabric-couchdb:x86_64-1.0.5
-	docker pull hyperledger/fabric-ccenv:x86_64-1.0.5
-	#docker tag yeasy/hyperledger-fabric-peer:latest hyperledger/fabric-ccenv:x86_64-1.0.4
+	docker pull yeasy/hyperledger-fabric:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-peer:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-orderer:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-ca:$(HLF_VERSION)
+	docker pull yeasy/blockchain-explorer:latest  # TODO: wait for official images
+	docker pull hyperledger/fabric-baseos:x86_64-0.3.2
+	docker pull hyperledger/fabric-zookeeper:x86_64-$(HLF_VERSION)
+	docker pull hyperledger/fabric-kafka:x86_64-$(HLF_VERSION)
+	docker pull hyperledger/fabric-couchdb:x86_64-$(HLF_VERSION)
+	docker pull hyperledger/fabric-ccenv:x86_64-$(HLF_VERSION)
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate

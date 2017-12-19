@@ -114,7 +114,7 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
-# channelCreate APP_CHANNEL appchannel.tx org peer
+# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer
 channelCreate() {
 	local channel=$1
 	local channel_tx=$2
@@ -427,8 +427,11 @@ channelFetch () {
 	fi
 	res=$?
 	cat log.txt
-	verifyResult $res "Fetch block $num of channel $channel failed"
-	echo_g "=== Fetch block $num of channel $channel is successful === "
+	if [ $res -ne 0 ]; then
+		echo_r "Fetch block $num of channel $channel failed"
+	else
+		echo_g "=== Fetch block $num of channel $channel is successful === "
+	fi
 }
 
 # configtxlator encode json to pb

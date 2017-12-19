@@ -4,7 +4,7 @@
 # * 1 orderer
 # * 4 peers in 2 orgs
 # * cli for testing
-# * blockchain-explorer listen on local port 8080
+# * blockchain-explorer
 
 version: '2.0'
 
@@ -56,11 +56,11 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./config.json:/blockchain-explorer/config.json
+      - ./explorer/config.json:/blockchain-explorer/config.json
       - ./solo/crypto-config:/blockchain-explorer/first-network/crypto-config
     ports:
       - "8080:8080"  # HTTP port
-    command: bash -c 'node main.js'
+    command: bash -c 'sleep 10; node main.js'
 
   mysql: # mysql service
     image: mysql:8.0
@@ -71,7 +71,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=fabricexplorer
     volumes:
-      - ./fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
+      - ./explorer/fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
     expose:
       - "3306"
     #command: bash -c 'mysqld; sleep 1; mysql -uroot -proot < /tmp/fabricexplorer.sql; while true; do sleep 20171117; done'

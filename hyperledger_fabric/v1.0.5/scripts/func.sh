@@ -8,9 +8,15 @@ if [ -f ./header.sh ]; then
 elif [ -f scripts/header.sh ]; then
  source scripts/header.sh
 else
- alias echo_r="echo"
- alias echo_g="echo"
- alias echo_b="echo"
+ echo_r() {
+	 echo "$@"
+ }
+ echo_g() {
+	 echo "$@"
+ }
+ echo_b() {
+	 echo "$@"
+ }
 fi
 
 # Define those global variables
@@ -18,6 +24,9 @@ if [ -f ./variables.sh ]; then
  source ./variables.sh
 elif [ -f scripts/variables.sh ]; then
  source scripts/variables.sh
+else
+	echo "Cannot find the variables.sh files, pls check"
+	exit 1
 fi
 
 # Verify $1 is not 0, then output error msg $2 and exit
@@ -83,18 +92,19 @@ checkOSNAvailability() {
 # Internal func called by channelCreate
 channelCreateAction(){
 	local channel=$1
-	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+	local channel_tx=$2
+	if [ -z "$CORE_PEER_TLS_ENABLED" ] || [ "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ${CHANNEL_ARTIFACTS}/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout $TIMEOUT \
 			>&log.txt
 	else
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
-			-f ${CHANNEL_ARTIFACTS}/channel.tx \
+			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout $TIMEOUT \
 			--tls $CORE_PEER_TLS_ENABLED \
 			--cafile ${ORDERER_TLS_CA} \
@@ -104,21 +114,22 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
-# channelCreate APP_CHANNEL org peer
+# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer
 channelCreate() {
 	local channel=$1
-	local org=$2
-	local peer=$3
+	local channel_tx=$2
+	local org=$3
+	local peer=$4
 
 	echo_b "=== Create Channel ${channel} by org $org peer $peer === "
 	local counter=0
 	setEnvs $org $peer
-	channelCreateAction ${channel}
+	channelCreateAction "${channel}" "${channel_tx}"
 	local res=$?
 	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
 		 echo_b "Failed to create channel $channel, retry after 3s"
 		 sleep 3
-		 channelCreateAction ${channel}
+		 channelCreateAction "${channel}" "${channel_tx}"
 		 res=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
@@ -401,7 +412,7 @@ channelFetch () {
 	setOrdererEnvs
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
-	if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
+	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
 		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
 			-o ${ORDERER_URL} \
 			-c ${channel}  \
@@ -416,8 +427,11 @@ channelFetch () {
 	fi
 	res=$?
 	cat log.txt
-	verifyResult $res "Fetch block $num of channel $channel failed"
-	echo_g "=== Fetch block $num of channel $channel is successful === "
+	if [ $res -ne 0 ]; then
+		echo_r "Fetch block $num of channel $channel failed"
+	else
+		echo_g "=== Fetch block $num of channel $channel is successful === "
+	fi
 }
 
 # configtxlator encode json to pb
@@ -443,9 +457,9 @@ configtxlatorDecode() {
 
 	echo_b "Config Decode $input --> $output using type $msgType"
 	curl -sX POST \
-		--data-binary @${input} \
-		${CTL_DECODE_URL}/${msgType} \
-		> ${output}
+		--data-binary @"${input}" \
+		"${CTL_DECODE_URL}/${msgType}" \
+		> "${output}"
 }
 
 # compute diff between two pb
@@ -465,4 +479,10 @@ configtxlatorCompare() {
 		> "${output}"
 
 	[ $? -eq 0 ] || echo_r "Failed to compute config update"
+}
+
+
+# Run cmd inside the config generator container
+gen_con_exec() {
+	docker exec -it $GEN_CONTAINER "$@"
 }

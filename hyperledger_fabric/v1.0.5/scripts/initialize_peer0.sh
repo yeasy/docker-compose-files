@@ -10,8 +10,8 @@ fi
 echo_b " ========== Network initialization start ========== "
 
 ## Create channel
-echo_b "Creating channel ${APP_CHANNEL}..."
-channelCreate ${APP_CHANNEL}
+echo_b "Creating channel ${APP_CHANNEL} with ${APP_CHANNEL_TX}..."
+channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX}
 
 sleep 1
 

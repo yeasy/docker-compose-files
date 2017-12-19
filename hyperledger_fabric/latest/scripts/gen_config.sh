@@ -63,6 +63,7 @@ echo_b "Generate genesis block for system channel using configtx.yaml"
 
 echo_b "Create the new app channel tx using configtx.yaml"
 [ -f ${CHANNEL_ARTIFACTS}/${APP_CHANNEL_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputCreateChannelTx /tmp/$CHANNEL_ARTIFACTS/${APP_CHANNEL_TX} -channelID ${APP_CHANNEL}
+gen_con_exec bash -c "configtxgen -inspectChannelCreateTx /tmp/${CHANNEL_ARTIFACTS}/${APP_CHANNEL_TX} > /tmp/${CHANNEL_ARTIFACTS}/${APP_CHANNEL_TX}.json"
 
 echo_b "Create the anchor peer configuration tx using configtx.yaml"
 [ -f ${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} -channelID ${APP_CHANNEL} -asOrg Org1MSP

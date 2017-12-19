@@ -37,7 +37,7 @@ docker run \
 sleep 1
 
 echo_b "Convert all config block files into json"
-for BLOCK_FILE in *.block *.genesis.block; do
+for BLOCK_FILE in *.block; do
 	if [ -f ${BLOCK_FILE} ]; then
 		configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 		decode_result=$?
@@ -47,6 +47,7 @@ for BLOCK_FILE in *.block *.genesis.block; do
 done
 
 
+echo_b "Update the content of orderer genesis file"
 if [ -f ${ORDERER_GENESIS} ]; then
 	echo_b "Checking existing Orderer.BatchSize.max_message_count in the genesis json"
 	jq "$MAX_BATCH_SIZE_PATH" ${ORDERER_GENESIS_JSON}

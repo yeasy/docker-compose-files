@@ -48,7 +48,7 @@ CC_INVOKE_ARGS='{"Args":["invoke","a","b","10"]}'
 CC_QUERY_ARGS='{"Args":["query","a"]}'
 
 # TLS config
-: ${CORE_PEER_TLS_ENABLED:="false"}
+CORE_PEER_TLS_ENABLED="true"
 
 # Generate configs
 APP_CHANNEL_TX=channel.tx
@@ -58,6 +58,11 @@ GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
 CRYPTO_CONFIG=crypto-config
+ORDERER_GENESIS=orderer.genesis.block
+ORDERER_PROFILE=TwoOrgsOrdererGenesis
+APP_CHANNEL_TX=new_${APP_CHANNEL}.tx
+UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
+UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 
 # CONFIGTXLATOR
 CTL_IMG=yeasy/hyperledger-fabric:1.0.5

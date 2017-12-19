@@ -3,6 +3,8 @@
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
+HLF_VERSION ?= latest
+
 CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
@@ -135,7 +137,8 @@ check: # Check shell scripts grammar
 
 clean: # clean up containers
 	@echo "Clean all HLF containers and fabric cc images"
-	@docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
+	@-docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
+	@-docker rm -f $$(docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1}')
 	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
 
 clean_env: # clean up environment
@@ -187,10 +190,10 @@ test_configtxlator: # Test change config using configtxlator
 
 download: # download required images
 	@echo "Download Docker images"
-	docker pull yeasy/hyperledger-fabric:latest
-	docker pull yeasy/hyperledger-fabric-peer:latest
-	docker pull yeasy/hyperledger-fabric-orderer:latest
-	docker pull yeasy/hyperledger-fabric-ca:latest
+	docker pull yeasy/hyperledger-fabric:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-peer:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-orderer:$(HLF_VERSION)
+	docker pull yeasy/hyperledger-fabric-ca:$(HLF_VERSION)
 	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
 	docker pull yeasy/blockchain-explorer:latest  # TODO: wait for official images
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
@@ -198,7 +201,7 @@ download: # download required images
 	docker pull hyperledger/fabric-kafka:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-couchdb:x86_64-1.1.0-preview
 	docker pull hyperledger/fabric-ccenv:x86_64-1.1.0-preview
-	docker tag yeasy/hyperledger-fabric-peer:latest hyperledger/fabric-ccenv:x86_64-1.1.0
+	docker tag yeasy/hyperledger-fabric-peer:$(HLF_VERSION) hyperledger/fabric-ccenv:x86_64-1.1.0
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate

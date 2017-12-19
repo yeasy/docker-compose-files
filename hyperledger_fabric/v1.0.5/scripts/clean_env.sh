@@ -9,9 +9,15 @@ if [ -f ./header.sh ]; then
 elif [ -f scripts/header.sh ]; then
  source scripts/header.sh
 else
- alias echo_r="echo"
- alias echo_g="echo"
- alias echo_b="echo"
+ echo_r() {
+	 echo "$@"
+ }
+ echo_g() {
+	 echo "$@"
+ }
+ echo_b() {
+	 echo "$@"
+ }
 fi
 
 echo_b "Clean up all containers..."

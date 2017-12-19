@@ -8,5 +8,5 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Create channel
-echo_b "Creating channel ${APP_CHANNEL}..."
-channelCreate ${APP_CHANNEL} 1 0
+echo_b "Creating channel ${APP_CHANNEL} with ${APP_CHANNEL_TX}..."
+channelCreate "${APP_CHANNEL}" "${APP_CHANNEL_TX}" 1 0
