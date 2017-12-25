@@ -136,9 +136,9 @@ check: # Check shell scripts grammar
 
 clean: # clean up containers
 	@echo "Clean all HLF containers and fabric cc images"
-	@-docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
-	@-docker rm -f $$(docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1}')
-	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
+	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
+	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
+	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
 
 clean_env: # clean up environment
 	@echo "Clean all images and containers"
