@@ -76,7 +76,6 @@ echo_b "Output the json for each org"
 echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 
 echo_b "Generate additional artifacts for new added org"
-
 docker run \
 	-d -it \
 	--name $GEN_CONTAINER \
@@ -94,6 +93,8 @@ if [ "${GEN_CRYPTO}" = "true" ]; then
 fi
 
 [ -f ${CHANNEL_ARTIFACTS}/${ORG3MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG3MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG3MSP}.json"
+
+echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 
 echo_g "Generated artifacts for ${MODE}"
 

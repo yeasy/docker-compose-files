@@ -177,6 +177,60 @@ channelJoin () {
 	echo_g "=== org$org/peer$peer joined into channel ${channel} === "
 }
 
+# Fetch some block from a given channel: channel, peer, blockNum
+channelFetch () {
+	local channel=$1
+	local org=$2
+	local peer=$3
+	local num=$4
+	echo_b "=== Fetch block $num of channel $channel === "
+
+	#setEnvs $org $peer
+	setOrdererEnvs
+	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# lets supply it directly as we know it using the "-o" option
+	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
+		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
+			-o ${ORDERER_URL} \
+			-c ${channel}  \
+			>&log.txt
+	else
+		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
+			-o ${ORDERER_URL} \
+			-c ${channel} \
+			--tls \
+			--cafile ${ORDERER_TLS_CA}  \
+			>&log.txt
+	fi
+	res=$?
+	cat log.txt
+	if [ $res -ne 0 ]; then
+		echo_r "Fetch block $num of channel $channel failed"
+	else
+		echo_g "=== Fetch block $num of channel $channel is successful === "
+	fi
+}
+
+# Sign a channel config tx
+# Usage: channelSignConfigTx channel org peer transaction
+channelSignConfigTx () {
+	local channel=$1
+	local org=$2
+	local peer=$3
+	local txFile=$4
+	echo_b "=== Sign channel config tx for channel $channel by org $org peer $peer === "
+	setEnvs $org $peer
+
+	peer channel signconfigtx -f ${txFile} >&log.txt
+	res=$?
+	cat log.txt
+	if [ $res -ne 0 ]; then
+		echo_r "Sign channel config tx for channel $channel by org $org peer $peer failed"
+	else
+		echo_g "=== Sign channel config tx channel $channel by org $org peer $peer is successful === "
+	fi
+}
+
 # Update the anchor peer at given channel
 # updateAnchorPeers channel peer
 updateAnchorPeers() {
@@ -265,7 +319,7 @@ chaincodeInstantiate () {
 	res=$?
 	cat log.txt
 	verifyResult $res "ChaincodeInstantiation on peer$peer in channel ${channel} failed"
-	echo_g "=== Chaincode Instantiated in channel ${channel} by  peer$peer ==="
+	echo_g "=== Chaincode Instantiated in channel ${channel} by peer$peer ==="
 }
 
 
@@ -398,40 +452,6 @@ chaincodeUpgrade () {
 	verifyResult $res "Upgrade execution on peer$peer failed "
 	echo_g "=== Upgrade transaction on peer$peer in channel ${channel} is successful === "
 	echo
-}
-
-# Fetch some block from a given channel: channel, peer, blockNum
-channelFetch () {
-	local channel=$1
-	local org=$2
-	local peer=$3
-	local num=$4
-	echo_b "=== Fetch block $num of channel $channel === "
-
-	#setEnvs $org $peer
-	setOrdererEnvs
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
-	# lets supply it directly as we know it using the "-o" option
-	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
-			-o ${ORDERER_URL} \
-			-c ${channel}  \
-			>&log.txt
-	else
-		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
-			-o ${ORDERER_URL} \
-			-c ${channel} \
-			--tls \
-			--cafile ${ORDERER_TLS_CA}  \
-			>&log.txt
-	fi
-	res=$?
-	cat log.txt
-	if [ $res -ne 0 ]; then
-		echo_r "Fetch block $num of channel $channel failed"
-	else
-		echo_g "=== Fetch block $num of channel $channel is successful === "
-	fi
 }
 
 # configtxlator encode json to pb

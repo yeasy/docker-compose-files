@@ -1,0 +1,1 @@
+scripts/func.sh: line 198: peer: command not found

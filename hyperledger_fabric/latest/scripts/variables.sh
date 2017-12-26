@@ -79,4 +79,5 @@ ORDERER_GENESIS_PAYLOAD_JSON=${ORDERER_GENESIS}_payload.json
 ORDERER_GENESIS_UPDATED_BLOCK=orderer.genesis.updated.block
 ORDERER_GENESIS_UPDATED_JSON=${ORDERER_GENESIS_UPDATED_BLOCK}.json
 PAYLOAD_PATH=".data.data[0].payload"
+PAYLOAD_CFG_PATH=".data.data[0].payload.data.config"
 MAX_BATCH_SIZE_PATH=".data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count"

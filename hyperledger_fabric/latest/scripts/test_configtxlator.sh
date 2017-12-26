@@ -42,10 +42,9 @@ for BLOCK_FILE in *.block; do
 		configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 		decode_result=$?
 		echo_b "Parse payload..."
-		[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${BLOCK_FILE}.json > ${BLOCK_FILE}_payload.json
+		#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${BLOCK_FILE}.json > ${BLOCK_FILE}_payload.json
 		fi
 done
-
 
 echo_b "Update the content of orderer genesis file"
 if [ -f ${ORDERER_GENESIS} ]; then

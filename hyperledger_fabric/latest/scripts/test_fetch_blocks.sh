@@ -20,6 +20,9 @@ do
 	channelFetch ${APP_CHANNEL} $org $peer $i
 done
 
+echo_b "Fetch config block for app channel"
+channelFetch ${APP_CHANNEL} $org $peer "config"
+
 echo_g "Block fetching done!"
 
 
@@ -28,5 +31,8 @@ do
 	echo_b "Fetch block $i"
 	channelFetch ${SYS_CHANNEL} $org $peer $i
 done
+
+echo_b "Fetch config block for system channel"
+channelFetch ${SYS_CHANNEL} $org $peer "config"
 
 exit 0
