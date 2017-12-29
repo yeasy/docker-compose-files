@@ -48,6 +48,11 @@ services:
       file: base-solo.yaml
       service: peer1.org2.example.com
 
+  #peer0.org3.example.com: # this will join the app channel after a channel update operation
+  #  extends:
+  #    file: base-solo.yaml
+  #    service: peer0.org3.example.com
+
 #networks:
 #  default:
 #    external:

@@ -5,6 +5,7 @@
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
+#APP_CHANNEL="appchannel"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="30"
@@ -27,6 +28,9 @@ ORG2_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/
 ORDERER_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
 ORG1_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+ORG1MSP=Org1MSP
+ORG2MSP=Org2MSP
+ORG3MSP=Org3MSP
 
 # Node URLS
 ORDERER_URL="orderer.example.com:7050"
@@ -51,8 +55,6 @@ CC_QUERY_ARGS='{"Args":["query","a"]}'
 CORE_PEER_TLS_ENABLED="true"
 
 # Generate configs
-APP_CHANNEL_TX=channel.tx
-ORDERER_GENESIS=orderer.genesis.block
 GEN_IMG=yeasy/hyperledger-fabric:1.0.5  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
@@ -77,4 +79,5 @@ ORDERER_GENESIS_PAYLOAD_JSON=${ORDERER_GENESIS}_payload.json
 ORDERER_GENESIS_UPDATED_BLOCK=orderer.genesis.updated.block
 ORDERER_GENESIS_UPDATED_JSON=${ORDERER_GENESIS_UPDATED_BLOCK}.json
 PAYLOAD_PATH=".data.data[0].payload"
+PAYLOAD_CFG_PATH=".data.data[0].payload.data.config"
 MAX_BATCH_SIZE_PATH=".data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count"

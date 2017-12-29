@@ -153,6 +153,28 @@ services:
       - 10052:7052
       - 10053:7053
 
+  peer0.org3.example.com:
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer0.org3.example.com
+    hostname: peer0.org3.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org3.example.com
+      - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org3.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_PEER_TLS_ENABLED=true
+    volumes:
+        - ./solo/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./solo/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 11051:7051
+      - 11052:7052
+      - 11053:7053
+
   cli: # client node
     extends:
       file: base.yaml

@@ -81,3 +81,13 @@ ORDERER_GENESIS_UPDATED_JSON=${ORDERER_GENESIS_UPDATED_BLOCK}.json
 PAYLOAD_PATH=".data.data[0].payload"
 PAYLOAD_CFG_PATH=".data.data[0].payload.data.config"
 MAX_BATCH_SIZE_PATH=".data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count"
+
+# channel update config
+ORIGINAL_CFG_JSON=original_config.json
+ORIGINAL_CFG_PB=original_config.pb
+UPDATED_CFG_JSON=updated_config.json
+UPDATED_CFG_PB=updated_config.pb
+CFG_DELTA_JSON=config_delta.json
+CFG_DELTA_PB=config_delta.pb
+CFG_DELTA_ENV_JSON=config_delta_env.json
+CFG_DELTA_ENV_PB=config_delta_env.pb

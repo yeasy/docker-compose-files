@@ -48,5 +48,3 @@ docker pull hyperledger/fabric-zookeeper:$ARCH-$IMG_TAG
 echo_g "Done, now can startup the network using docker-compose..."
 
 exit 0
-
-

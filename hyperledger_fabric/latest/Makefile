@@ -53,8 +53,11 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_fetch_blocks # fetch block files
 
-	make logs_save
+	make test_config_update
+	make test_channel_update
 
+	make logs_save
+	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
 
 	@echo "Now the fabric network is ready to play"
@@ -88,6 +91,11 @@ update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
+test_channel_update: # send the channel update transaction
+	@echo "Test channel update with adding new org"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_update.sh"
+
+################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
 		bash scripts/test_configtxlator.sh kafka; \
@@ -151,9 +159,9 @@ check: # Check shell scripts grammar
 
 clean: # clean up containers
 	@echo "Clean all HLF containers and fabric cc images"
-	@-docker ps -a | awk '{ print $1,$2 }' | grep "hyperledger/fabric" | awk '{print $1 }' | xargs -I {} docker rm -f {}
-	@-docker rm -f $$(docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1}')
-	@-docker rmi $$(docker images | awk '$$1 ~ /dev-peer/ { print $$3}')
+	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
+	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
+	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
 
 clean_env: # clean up environment
 	@echo "Clean all images and containers"

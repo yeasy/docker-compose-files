@@ -9,7 +9,7 @@ fi
 
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for org1..."
-updateAnchorPeers ${APP_CHANNEL} 1 0
+channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
 
 echo_b "Updating anchor peers for org2..."
-updateAnchorPeers ${APP_CHANNEL} 2 0
+channelUpdate ${APP_CHANNEL} 2 0 Org2MSPanchors.tx

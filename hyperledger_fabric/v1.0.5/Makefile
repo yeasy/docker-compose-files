@@ -87,6 +87,20 @@ update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
+test_configtxlator: # Test change config using configtxlator
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
+		bash scripts/test_configtxlator.sh kafka; \
+	else \
+		bash scripts/test_configtxlator.sh solo; \
+	fi
+
+test_config_update: # Test change config to add new org
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
+		bash scripts/test_config_update.sh kafka; \
+	else \
+		bash scripts/test_config_update.sh solo; \
+	fi
+
 ################## Chaincode testing operations ################
 test_cc: # test chaincode, deprecated
 	if [ "$(HLF_MODE)" = "dev" ]; then \
@@ -180,12 +194,6 @@ gen_config: # generate config artifacts
 			bash scripts/gen_config.sh solo; \
 	fi
 
-test_configtxlator: # Test change config using configtxlator
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		bash scripts/test_configtxlator.sh kafka; \
-	else \
-		bash scripts/test_configtxlator.sh solo; \
-	fi
 
 download: # download required images
 	@echo "Download Docker images"

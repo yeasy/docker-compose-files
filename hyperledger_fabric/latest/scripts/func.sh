@@ -171,10 +171,46 @@ channelJoin () {
 	local channel=$1
 	local org=$2
 	local peer=$3
+
 	echo_b "=== Join org$org/peer$peer into channel ${channel} === "
 	setEnvs $org $peer
 	channelJoinWithRetry ${channel} $peer
 	echo_g "=== org$org/peer$peer joined into channel ${channel} === "
+}
+
+getShasum () {
+	[ ! $# -eq 1 ] && exit 1
+	shasum ${1} | awk '{print $1}'
+}
+# Fetch all blocks for a channel
+# Usage: channelFetchAll channel org peer
+channelFetchAll () {
+	local channel=$1
+	local org=$2
+	local peer=$3
+
+	echo_b "=== Fetch all block for channel $channel === "
+
+	local block_file=/tmp/${channel}_newest.block
+	channelFetch ${channel} $org $peer "newest" ${block_file}
+	[ $? -ne 0 ] && exit 1
+	newest_block_shasum=$(getShasum ${block_file})
+	echo_b "fetch newest block ${block_file} with shasum=${newest_block_shasum}"
+
+	block_file=${CHANNEL_ARTIFACTS}/${channel}_config.block
+	channelFetch ${channel} $org $peer "config" ${block_file}
+	[ $? -ne 0 ] && exit 1
+	echo_b "fetch config block ${block_file}"
+
+	for i in $(seq 1 16); do  # we at most fetch 16 blocks
+		block_file=${CHANNEL_ARTIFACTS}/${channel}_${i}.block
+		channelFetch ${channel} $org $peer $i ${block_file}
+		[ $? -ne 0 ] && exit 1
+		[ -f $block_file ] || break
+		echo_b "fetch block $i and saved into ${block_file}"
+		block_shasum=$(getShasum ${block_file})
+		[ ${block_shasum} = ${newest_block_shasum} ] && { echo_g "Block $i is the last one for channel $channel"; break; }
+	done
 }
 
 # Fetch some block from a given channel: channel, peer, blockNum
@@ -183,6 +219,7 @@ channelFetch () {
 	local org=$2
 	local peer=$3
 	local num=$4
+	local block_file=$5
 	echo_b "=== Fetch block $num of channel $channel === "
 
 	#setEnvs $org $peer
@@ -190,24 +227,25 @@ channelFetch () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
+		peer channel fetch $num ${block_file} \
 			-o ${ORDERER_URL} \
 			-c ${channel}  \
 			>&log.txt
 	else
-		peer channel fetch $num ${CHANNEL_ARTIFACTS}/${channel}_${num}.block \
+		peer channel fetch $num ${block_file} \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
 			--tls \
 			--cafile ${ORDERER_TLS_CA}  \
 			>&log.txt
 	fi
-	res=$?
-	cat log.txt
-	if [ $res -ne 0 ]; then
+	if [ $? -ne 0 ]; then
+		cat log.txt
 		echo_r "Fetch block $num of channel $channel failed"
+		return 1
 	else
 		echo_g "=== Fetch block $num of channel $channel is successful === "
+		return 0
 	fi
 }
 
@@ -218,10 +256,12 @@ channelSignConfigTx () {
 	local org=$2
 	local peer=$3
 	local txFile=$4
-	echo_b "=== Sign channel config tx for channel $channel by org $org peer $peer === "
+	echo_b "=== Sign channel config tx $txFile for channel $channel by org $org peer $peer === "
+	[ -f ${CHANNEL_ARTIFACTS}/${txFile} ] || { echo_r "${txFile} not exist"; exit 1; }
+
 	setEnvs $org $peer
 
-	peer channel signconfigtx -f ${txFile} >&log.txt
+	peer channel signconfigtx -f ${CHANNEL_ARTIFACTS}/${txFile} >&log.txt
 	res=$?
 	cat log.txt
 	if [ $res -ne 0 ]; then
@@ -231,33 +271,35 @@ channelSignConfigTx () {
 	fi
 }
 
-# Update the anchor peer at given channel
-# updateAnchorPeers channel peer
-updateAnchorPeers() {
+# Update a channel config
+# Usage: channelUpdate channel org peer transaction_file
+channelUpdate() {
 	local channel=$1
   local org=$2
   local peer=$3
+  local txFile=$4
   setEnvs $org $peer
-	echo_b "=== Update Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on ${channel} === "
+	echo_b "=== Update config on channel ${channel} === "
+	[ -f ${CHANNEL_ARTIFACTS}/${txFile} ] || { echo_r "${txFile} not exist"; exit 1; }
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ${CHANNEL_ARTIFACTS}/${CORE_PEER_LOCALMSPID}anchors.tx \
+		-f ${CHANNEL_ARTIFACTS}/${txFile} \
 		>&log.txt
 	else
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ${CHANNEL_ARTIFACTS}/${CORE_PEER_LOCALMSPID}anchors.tx \
+		-f ${CHANNEL_ARTIFACTS}/${txFile} \
 		--tls $CORE_PEER_TLS_ENABLED \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
 	fi
 	res=$?
 	cat log.txt
-	verifyResult $res "Anchor peer update failed"
-	echo_g "=== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on ${channel} is updated. === "
+	verifyResult $res "peer channel update failed"
+	echo_g "=== Channel ${channel} is updated. === "
 	sleep 2
 }
 
@@ -476,6 +518,11 @@ configtxlatorDecode() {
 	local output=$3
 
 	echo_b "Config Decode $input --> $output using type $msgType"
+	if [ ! -f $input ]; then
+		echo_r "input file not found"
+		exit 1
+	fi
+
 	curl -sX POST \
 		--data-binary @"${input}" \
 		"${CTL_DECODE_URL}/${msgType}" \
@@ -488,9 +535,14 @@ configtxlatorCompare() {
 	local channel=$1
 	local origin=$2
 	local updated=$3
-	local output=$3
+	local output=$4
 
 	echo_b "Config Compare $origin vs $updated > ${output} in channel $channel"
+	if [ ! -f $origin ] || [ ! -f $updated ]; then
+		echo_r "input file not found"
+		exit 1
+	fi
+
 	curl -sX POST \
 		-F channel="${channel}" \
 		-F "original=@${origin}" \
