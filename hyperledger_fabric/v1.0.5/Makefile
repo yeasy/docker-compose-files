@@ -50,10 +50,12 @@ ready: # create/join channel, install/instantiate cc
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
 
-	make test_fetch_blocks # fetch block files
+	#make test_fetch_blocks # fetch block files
+	#make test_config_update
+	#make test_channel_update
 
 	make logs_save
-
+	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
 
 	@echo "Now the fabric network is ready to play"
@@ -87,6 +89,11 @@ update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
+test_channel_update: # send the channel update transaction
+	@echo "Test channel update with adding new org"
+	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_update.sh"
+
+################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
 		bash scripts/test_configtxlator.sh kafka; \
@@ -212,3 +219,4 @@ download: # download required images
 chaincode_init: # start chaincode in dev mode and do install/instantiate
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
+

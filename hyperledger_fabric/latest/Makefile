@@ -52,7 +52,6 @@ ready: # create/join channel, install/instantiate cc
 	make test_qscc # test qscc operations
 
 	make test_fetch_blocks # fetch block files
-
 	make test_config_update
 	make test_channel_update
 

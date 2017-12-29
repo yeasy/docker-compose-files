@@ -14,25 +14,8 @@ peer=0
 
 echo_b "=== Fetching blocks ==="
 
-for i in {0..6}
-do
-	echo_b "Fetch block $i"
-	channelFetch ${APP_CHANNEL} $org $peer $i
-done
+channelFetchAll ${APP_CHANNEL} $org $peer
 
-echo_b "Fetch config block for app channel"
-channelFetch ${APP_CHANNEL} $org $peer "config"
+channelFetchAll ${SYS_CHANNEL} $org $peer
 
 echo_g "Block fetching done!"
-
-
-for i in {0..1}
-do
-	echo_b "Fetch block $i"
-	channelFetch ${SYS_CHANNEL} $org $peer $i
-done
-
-echo_b "Fetch config block for system channel"
-channelFetch ${SYS_CHANNEL} $org $peer "config"
-
-exit 0

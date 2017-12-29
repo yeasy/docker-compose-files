@@ -38,12 +38,10 @@ sleep 1
 
 echo_b "Convert all config block files into json"
 for BLOCK_FILE in *.block; do
-	if [ -f ${BLOCK_FILE} ]; then
-		configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
-		decode_result=$?
-		echo_b "Parse payload..."
-		#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${BLOCK_FILE}.json > ${BLOCK_FILE}_payload.json
-		fi
+	[ -f ${BLOCK_FILE}.json ] || configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
+	decode_result=$?
+	#echo_b "Parse payload..."
+	#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${BLOCK_FILE}.json > ${BLOCK_FILE}_payload.json
 done
 
 echo_b "Update the content of orderer genesis file"

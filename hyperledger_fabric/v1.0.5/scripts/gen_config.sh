@@ -69,6 +69,7 @@ echo_b "Create the anchor peer configuration tx using configtx.yaml"
 [ -f ${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} -channelID ${APP_CHANNEL} -asOrg ${ORG1MSP}
 [ -f ${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG2_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG2_TX} -channelID ${APP_CHANNEL} -asOrg ${ORG2MSP}
 
+# Not supported in 1.0.x versions
 echo_b "Output the json for each org"
 [ -f ${CHANNEL_ARTIFACTS}/${ORG1MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG1MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG1MSP}.json"
 [ -f ${CHANNEL_ARTIFACTS}/${ORG2MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG2MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG2MSP}.json"

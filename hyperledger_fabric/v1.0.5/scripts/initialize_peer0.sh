@@ -21,7 +21,7 @@ channelJoin ${APP_CHANNEL} 0
 
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
-updateAnchorPeers ${APP_CHANNEL} 0
+channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
 
 ## Install chaincode on all peers
 echo_b "Installing chaincode on peer0..."
