@@ -202,7 +202,7 @@ channelFetchAll () {
 	[ $? -ne 0 ] && exit 1
 	echo_b "fetch config block ${block_file}"
 
-	for i in $(seq 1 16); do  # we at most fetch 16 blocks
+	for i in $(seq 0 16); do  # we at most fetch 16 blocks
 		block_file=${CHANNEL_ARTIFACTS}/${channel}_${i}.block
 		channelFetch ${channel} $org $peer $i ${block_file}
 		[ $? -ne 0 ] && exit 1

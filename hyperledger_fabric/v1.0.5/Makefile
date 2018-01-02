@@ -156,7 +156,7 @@ check: # Check shell scripts grammar
 	[ `which shellcheck` ] && shellcheck scripts/*.sh
 
 clean: # clean up containers
-	@echo "Clean all HLF containers and fabric cc images"
+	@echo "Clean all HLF containers and chaincode images"
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
