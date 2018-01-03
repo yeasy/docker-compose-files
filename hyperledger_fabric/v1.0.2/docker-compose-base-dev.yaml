@@ -23,10 +23,10 @@ services:
       - ORDERER_KAFKA_VERBOSE=true
     volumes:
       - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
-      # for e2e_cli case
-      #- ./e2e_cli/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      #- ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
-      #- ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+      # for solo case
+      #- ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      #- ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      #- ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
       # for kafka case
       - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
@@ -50,8 +50,8 @@ services:
     volumes:
       - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
       # e2e mode configuration
-      #- ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
-      #- ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+      #- ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      #- ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
       # kafka mode configuration
       - ./kafka/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
       - ./kafka/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
@@ -83,11 +83,11 @@ services:
       - /tmp/:/tmp/
       - ./scripts:/tmp/scripts
       # e2e mode configuration
-      #- ./e2e_cli/channel-artifacts:/tmp/channel-artifacts
-      #- ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-      #- ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
-      #- ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
-      #- ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+      #- ./solo/channel-artifacts:/tmp/channel-artifacts
+      #- ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      #- ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      #- ./solo/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
+      #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
       # kafka mode configuration
       - ./kafka/channel-artifacts:/tmp/channel-artifacts
       - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml

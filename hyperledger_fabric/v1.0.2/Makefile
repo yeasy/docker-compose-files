@@ -118,8 +118,8 @@ logs_save: # save logs
 logs_view: # view logs
 	less /tmp/dev_peer.log
 
-gen_e2e: # generate e2e_cli artifacts
-	cd e2e_cli && bash gen_artifacts.sh
+gen_e2e: # generate solo artifacts
+	cd solo && bash gen_artifacts.sh
 
 gen_kafka: # generate kafka artifacts
 	cd kafka && bash gen_artifacts.sh

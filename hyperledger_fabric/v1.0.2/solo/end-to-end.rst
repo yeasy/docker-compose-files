@@ -186,13 +186,13 @@ subsequently output these files into the ``channel-artifacts`` folder.
 Run the shell script
 ^^^^^^^^^^^^^^^^^^^^
 
-Make sure you are in the ``examples/e2e_cli`` directory where the script resides.
+Make sure you are in the ``examples/solo`` directory where the script resides.
 Decide upon a unique name for your channel and replace the <channel-ID> parm
 with a name of your choice.  The script will fail if you do not supply a name.
 
 .. code:: bash
 
-    cd examples/e2e_cli
+    cd examples/solo
     ./generateArtifacts.sh <channel-ID>
 
 The output of the script is somewhat verbose, as it generates the crypto
@@ -253,7 +253,7 @@ Check to make sure it is set properly:
 
 Now let's run the tool.  Our platform specific binary is in the ``release``
 directory, so we need to provide the relative path to where the tool resides.
-Make sure you are in ``examples/e2e_cli``:
+Make sure you are in ``examples/solo``:
 
 .. code:: bash
 
@@ -306,7 +306,7 @@ Define the anchor peer for Org2 on the channel:
 Run the end-to-end test with Docker
 -----------------------------------
 
-Make sure you are in the ``/e2e_cli`` directory. Then use docker-compose
+Make sure you are in the ``/solo`` directory. Then use docker-compose
 to spawn the network entities and drive the tests.  Notice that you can set a
 ``TIMEOUT`` variable (specified in seconds) so that your cli container does not
 exit after the script completes.  You can choose any value:
@@ -495,7 +495,7 @@ OR
 Understanding the docker-compose topology
 -----------------------------------------
 
-The ``e2e_cli`` folder offers us two flavors of docker-compose files, both of which
+The ``solo`` folder offers us two flavors of docker-compose files, both of which
 are extended from the ``docker-compose-base.yaml``.  Our first flavor,
 ``docker-compose-cli.yaml``, provides us with a CLI container, along with an orderer,
 four peers, and the optional couchDB containers.  We use this docker-compose for
@@ -570,13 +570,13 @@ left of the command. For example:
         working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
       # command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}; sleep $TIMEOUT'
 
-Save the file and return to the ``/e2e_cli`` directory.
+Save the file and return to the ``/solo`` directory.
 
 Now restart your network:
 
 .. code:: bash
 
-    # make sure you are in the /e2e_cli directory where your docker-compose script resides
+    # make sure you are in the /solo directory where your docker-compose script resides
     CHANNEL_NAME=<channel-id> TIMEOUT=<pick_a_value> docker-compose -f docker-compose-cli.yaml up -d
 
 If you want to see the realtime logs for your network, then do not supply the ``-d`` flag.
@@ -724,7 +724,7 @@ the network pass the couchdb docker-compose as well:
 
 .. code:: bash
 
-    # make sure you are in the /e2e_cli directory where your docker-compose script resides
+    # make sure you are in the /solo directory where your docker-compose script resides
     CHANNEL_NAME=<channel-id> TIMEOUT=<pick_a_value> docker-compose -f docker-compose-cli.yaml -f docker-compose-couch.yaml up -d
 
 **chaincode_example02** should now work using CouchDB underneath.
