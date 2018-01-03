@@ -1,59 +1,63 @@
 #!/usr/bin/env bash
 
-# This script will run some qscc queries for testing.
+# This script will run some lscc queries for testing.
 
-# Detecting whether can import the header file to render colorful cli output
-# Need add choice option
-if [ -f ./header.sh ]; then
- source ./header.sh
-elif [ -f scripts/header.sh ]; then
- source scripts/header.sh
-else
- alias echo_r="echo"
- alias echo_g="echo"
- alias echo_b="echo"
+# Importing useful functions for cc testing
+if [ -f ./func.sh ]; then
+ source ./func.sh
+elif [ -f scripts/func.sh ]; then
+ source scripts/func.sh
 fi
 
-ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-
-CHANNEL_NAME="$1"
-: ${CHANNEL_NAME:="businesschannel"}
-
 echo_b "LSCC testing"
+
+org=1
+peer=0
 
 # invoke required following params
 	#-o orderer.example.com:7050 \
 	#--tls "true" \
-	#--cafile ${ORDERER_CA} \
+	#--cafile ${ORDERER_TLS_CA} \
 
-echo_b "Get id"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getid","businesschannel", "mycc"]}'
+echo_b "LSCC Get id"
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
-echo_b "Get cc ChaincodeDeploymentSpec"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getdepspec","businesschannel", "mycc"]}'
+echo_b "LSCC Get cc ChaincodeDeploymentSpec"
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
-echo_b "Get cc bytes"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-  -c '{"Args":["getccdata","businesschannel", "mycc"]}'
+echo_b "LSCC Get cc bytes"
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
-echo_b "Get all chaincodes installed on the channel"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getinstalledchaincodes"]}'
+echo_b "LSCC Get all chaincodes installed on the channel"
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getinstalledchaincodes"]}'
 
-echo_b "Get all chaincodes instantiated on the channel"
-peer chaincode query \
-	-C "${CHANNEL_NAME}" \
-	-n lscc \
-	-c '{"Args":["getchaincodes"]}'
+echo_b "LSCC Get all chaincodes instantiated on the channel"
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getchaincodes"]}'
+
+
+#peer chaincode query \
+#	-C "${APP_CHANNEL}" \
+#	-n lscc \
+#	-c '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${APP_CHANNEL}" \
+#	-n lscc \
+#	-c '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${APP_CHANNEL}" \
+#	-n lscc \
+#  -c '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
+
+#peer chaincode query \
+#	-C "${APP_CHANNEL}" \
+#	-n lscc \
+#	-c '{"Args":["getinstalledchaincodes"]}'
+
+#peer chaincode query \
+#	-C "${APP_CHANNEL}" \
+#	-n lscc \
+#	-c '{"Args":["getchaincodes"]}'
 
 echo_g "LSCC testing done!"

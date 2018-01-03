@@ -209,7 +209,6 @@ download: # download required images
 	docker pull yeasy/hyperledger-fabric-peer:$(HLF_VERSION)
 	docker pull yeasy/hyperledger-fabric-orderer:$(HLF_VERSION)
 	docker pull yeasy/hyperledger-fabric-ca:$(HLF_VERSION)
-	docker pull yeasy/hyperledger-fabric-kafka:0.10.2.0  # TODO:official repo does not provide the latest image currently
 	docker pull yeasy/blockchain-explorer:latest  # TODO: wait for official images
 	docker pull hyperledger/fabric-baseos:x86_64-0.4.2
 	docker pull hyperledger/fabric-zookeeper:x86_64-1.1.0-preview

@@ -2,26 +2,32 @@
 
 # This script will run some qscc queries for testing.
 
-# Detecting whether can import the header file to render colorful cli output
-# Need add choice option
-if [ -f ./header.sh ]; then
- source ./header.sh
-elif [ -f scripts/header.sh ]; then
- source scripts/header.sh
-else
- alias echo_r="echo"
- alias echo_g="echo"
- alias echo_b="echo"
+# Importing useful functions for cc testing
+if [ -f ./func.sh ]; then
+ source ./func.sh
+elif [ -f scripts/func.sh ]; then
+ source scripts/func.sh
 fi
 
+echo_b "QSCC testing"
 
-#CHANNEL_NAME="$1"
-#: ${CHANNEL_NAME:="businesschannel"}
+org=1
+peer=0
 
-echo_b "Qscc GetChainInfo"
-peer chaincode query -C "" -n qscc -c '{"Args":["GetChainInfo","businesschannel"]}'
+echo_b "QSCC GetChainInfo"
+chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
 
-echo_b "Qscc GetBlockByNumber 2"
-peer chaincode query -C "" -n qscc -c '{"Args":["GetBlockByNumber","businesschannel","2"]}'
+echo_b "QSCC GetBlockByNumber 2"
+chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
-echo_g "Qscc testing done!"
+#peer chaincode query \
+#	-C "" \
+#	-n qscc \
+#	-c '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
+
+#peer chaincode query \
+#	-C "" \
+#	-n qscc \
+#	-c '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
+
+echo_g "QSCC testing done!"

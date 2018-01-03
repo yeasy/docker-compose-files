@@ -7,55 +7,32 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-echo
-echo " ============================================== "
-echo " ==========initialize businesschannel========== "
-echo " ============================================== "
-echo
-
-echo_b "Channel name : "$CHANNEL_NAME
+echo_b " ========== Network initialization start ========== "
 
 ## Create channel
-echo_b "Creating channel..."
-channelCreate
+echo_b "Creating channel ${APP_CHANNEL} with ${APP_CHANNEL_TX}..."
+channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX}
 
 sleep 1
 
 ## Join all the peers to the channel
 echo_b "Having peer0 join the channel..."
-channelJoin 0
-
-sleep 1
+channelJoin ${APP_CHANNEL} 0
 
 ## Set the anchor peers for each org in the channel
-echo_b "Updating anchor peers for peer0/org1..."
-updateAnchorPeers 0
-
-sleep 1
+echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
+channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
 
 ## Install chaincode on all peers
 echo_b "Installing chaincode on peer0..."
-chaincodeInstall 0 1.0
-
-sleep 1
+chaincodeInstall 0 ${CC_INIT_ARGS}
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node
 echo_b "Instantiating chaincode on the channel..."
-chaincodeInstantiate 0
+chaincodeInstantiate ${APP_CHANNEL} 0
 
-sleep 1
-
-echo
-echo_g "===================== All GOOD, initialization completed ===================== "
-echo
-
-echo
-echo " _____   _   _   ____  "
-echo "| ____| | \ | | |  _ \ "
-echo "|  _|   |  \| | | | | |"
-echo "| |___  | |\  | | |_| |"
-echo "|_____| |_| \_| |____/ "
+echo_g "=============== All GOOD, network initialization done =============== "
 echo
 
 exit 0

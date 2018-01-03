@@ -67,12 +67,12 @@ echo_b "Calculate the config delta between pb files"
 configtxlatorCompare ${APP_CHANNEL} ${ORIGINAL_CFG_PB} ${UPDATED_CFG_PB} ${CFG_DELTA_PB}
 
 echo_b "Decode the config delta pb into json"
-configtxlatorDecode "common.ConfigUpdate" ${CFG_DELTA_PB} ${CFG_DELTA_JSON}
+[ -f ${CFG_DELTA_JSON} ] || configtxlatorDecode "common.ConfigUpdate" ${CFG_DELTA_PB} ${CFG_DELTA_JSON}
 jq . ${CFG_DELTA_JSON} > /dev/null
 [ $? -ne 0 ] && { echo_r "${CFG_DELTA_JSON} is invalid"; clean_exit; }
 
 echo_b "Wrap the config update as envelope"
-echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$APP_CHANNEL"'", "type":2}},"data":{"config_update":'$(cat ${CFG_DELTA_JSON})'}}}' | jq . > ${CFG_DELTA_ENV_JSON}
+[ -f ${CFG_DELTA_ENV_JSON} ] || echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$APP_CHANNEL"'", "type":2}},"data":{"config_update":'$(cat ${CFG_DELTA_JSON})'}}}' | jq . > ${CFG_DELTA_ENV_JSON}
 
 echo_b "Encode the config update envelope into pb"
 configtxlatorEncode "common.Envelope" ${CFG_DELTA_ENV_JSON} ${CFG_DELTA_ENV_PB}
