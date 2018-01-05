@@ -5,7 +5,7 @@ HLF_MODE ?= solo
 
 HLF_VERSION ?= latest
 
-CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
+CODE_BUILD_WAIT=30 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
@@ -39,6 +39,12 @@ ready: # create/join channel, install/instantiate cc
 	make stop
 	make gen_config  # Will ignore if local config path exists
 	make start
+
+	if [ "$(HLF_MODE)" = "dev" ]; then \
+			sleep ${CODE_BUILD_WAIT}; \
+	else \
+			sleep ${NETWORK_INIT_WAIT}; \
+	fi
 
 	make test_channel_create
 	make test_channel_join
@@ -174,9 +180,6 @@ orderer: # enter the orderer container
 
 peer: # enter the peer container
 	docker exec -it peer0.org1.example.com bash
-
-dev_compile: # rebuild the peer
-	docker exec -it peer0.org1.example.com bash /tmp/peer_build.sh
 
 ps: # show existing docker images
 	docker ps -a

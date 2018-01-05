@@ -40,16 +40,15 @@ ORG2_PEER0_URL="peer0.org2.example.com:7051"
 ORG2_PEER1_URL="peer1.org2.example.com:7051"
 
 # Chaincode related
-CC_NAME="mycc"
-#CC_PATH="github.com/hyperledger/fabric/examples/chaincode/go/foodchain"
-CC_PATH="examples/chaincode/go/chaincode_example02"
+CC_02_NAME="exp02"
+CC_02_PATH="examples/chaincode/go/chaincode_example02"
 CC_INIT_VERSION=1.0
 CC_UPGRADE_VERSION=1.1
 
-CC_INIT_ARGS='{"Args":["init","a","100","b","200"]}'
-CC_UPGRADE_ARGS='{"Args":["upgrade","a","100","b","200"]}'
-CC_INVOKE_ARGS='{"Args":["invoke","a","b","10"]}'
-CC_QUERY_ARGS='{"Args":["query","a"]}'
+CC_02_INIT_ARGS='{"Args":["init","a","100","b","200"]}'
+CC_02_UPGRADE_ARGS='{"Args":["upgrade","a","100","b","200"]}'
+CC_02_INVOKE_ARGS='{"Args":["invoke","a","b","10"]}'
+CC_02_QUERY_ARGS='{"Args":["query","a"]}'
 
 # TLS config
 CORE_PEER_TLS_ENABLED="true"

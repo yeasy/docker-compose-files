@@ -87,7 +87,7 @@ services:
         - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./kafka/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
         - ./kafka/crypto-config:/etc/hyperledger/fabric/crypto-config
-        - ./kafka/examples:/opt/gopath/src/examples
+        - ./examples:/opt/gopath/src/examples
 
 ## following are peer nodes ##
 
