@@ -19,14 +19,15 @@ peer=0
 	#--tls "true" \
 	#--cafile ${ORDERER_TLS_CA} \
 
+CC_NAME=${CC_02_NAME}
 echo_b "LSCC Get id"
-chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getid","'${APP_CHANNEL}'", "'${CC_NAME}'"]}'
 
 echo_b "LSCC Get cc ChaincodeDeploymentSpec"
-chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getdepspec","'${APP_CHANNEL}'", "'${CC_NAME}'"]}'
 
 echo_b "LSCC Get cc bytes"
-chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getccdata","'${APP_CHANNEL}'", "'${CC_NAME}'"]}'
 
 echo_b "LSCC Get all chaincodes installed on the channel"
 chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getinstalledchaincodes"]}'
@@ -38,17 +39,17 @@ chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getchaincodes"]}'
 #peer chaincode query \
 #	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#	-c '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+#	-c '{"Args":["getid","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
 #	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#	-c '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+#	-c '{"Args":["getdepspec","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
 #	-C "${APP_CHANNEL}" \
 #	-n lscc \
-#  -c '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_02_NAME'"]}'
+#  -c '{"Args":["getccdata","'${APP_CHANNEL}'", "'$CC_NAME'"]}'
 
 #peer chaincode query \
 #	-C "${APP_CHANNEL}" \
