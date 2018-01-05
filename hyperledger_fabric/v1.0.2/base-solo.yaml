@@ -199,8 +199,8 @@ services:
         - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
         - ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
-        - ./solo/examples:/opt/gopath/src/examples
-        #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./examples:/opt/gopath/src/examples
+        #- ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
 
   event-listener:
     extends:
@@ -221,6 +221,6 @@ services:
         - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
         - ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
-        - ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
     command: bash -c 'while true; do sleep 1; block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP; done'
     #command: bash -c 'while true; do sleep 20170504; done'

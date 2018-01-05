@@ -440,6 +440,7 @@ chaincodeQuery () {
 
 
 # Start chaincode with dev mode
+# TODO: use variables instead of hard-coded value
 chaincodeStartDev () {
 	local peer=$1
 	local version=$2
@@ -448,7 +449,7 @@ chaincodeStartDev () {
 	setEnvs 1 0
 	CORE_CHAINCODE_LOGLEVEL=debug \
 	CORE_PEER_ADDRESS=peer${peer}.org1.example.com:7052 \
-	CORE_CHAINCODE_ID_NAME=mycc:${version} \
+	CORE_CHAINCODE_ID_NAME=${CC_02_NAME}:${version} \
 	nohup ./scripts/chaincode_example02 > chaincode_dev.log &
 	res=$?
 	cat log.txt
