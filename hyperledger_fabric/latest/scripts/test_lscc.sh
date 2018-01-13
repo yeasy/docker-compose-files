@@ -29,7 +29,7 @@ chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getdepspec","'${APP_C
 echo_b "LSCC Get cc bytes"
 chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getccdata","'${APP_CHANNEL}'", "'${CC_NAME}'"]}'
 
-echo_b "LSCC Get all chaincodes installed on the channel"
+echo_b "LSCC Get all chaincodes installed on the peer"
 chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getinstalledchaincodes"]}'
 
 echo_b "LSCC Get all chaincodes instantiated on the channel"

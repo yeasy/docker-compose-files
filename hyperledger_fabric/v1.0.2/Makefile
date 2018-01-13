@@ -50,7 +50,7 @@ ready: # create/join channel, install/instantiate cc
 	#make update_anchors
 
 	make test_cc_install
-	make test_cc_instantiate
+	#make test_cc_instantiate
 	#make test_cc_invoke_query
 
 	#make test_lscc # test lscc operations

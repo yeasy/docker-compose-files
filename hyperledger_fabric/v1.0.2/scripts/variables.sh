@@ -42,6 +42,7 @@ ORG2_PEER1_URL="peer1.org2.example.com:7051"
 # Chaincode related
 CC_02_NAME="exp02"
 CC_02_PATH="examples/chaincode/go/chaincode_example02"
+CC_02_PATH="examples/chaincode/go/fabcar2"
 CC_INIT_VERSION=1.0
 CC_UPGRADE_VERSION=1.1
 
