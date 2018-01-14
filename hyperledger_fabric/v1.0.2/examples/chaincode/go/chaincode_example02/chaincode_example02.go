@@ -22,7 +22,6 @@ import (
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"github.com/pquerna/ffjson/ffjson"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -63,11 +62,6 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-
-	item := map[string]string {"hi":"morning"}
-
-	buf, err := ffjson.Marshal(&item)
-	fmt.Printf("ffjson result=%v\n", buf)
 
 	return shim.Success(nil)
 }

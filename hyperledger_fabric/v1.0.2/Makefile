@@ -47,22 +47,22 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_channel_create
 	make test_channel_join
-	#make update_anchors
+	make update_anchors
 
 	make test_cc_install
-	#make test_cc_instantiate
-	#make test_cc_invoke_query
+	make test_cc_instantiate
+	make test_cc_invoke_query
 
-	#make test_lscc # test lscc operations
-	#make test_qscc # test qscc operations
+	make test_lscc # test lscc operations
+	make test_qscc # test qscc operations
 
-	#make test_fetch_blocks # fetch block files
-	#make test_config_update
-	#make test_channel_update
+	make test_fetch_blocks # fetch block files
+	make test_config_update
+	#make test_channel_update # not work with this version
 
-	#make logs_save
-	#make test_fetch_blocks # fetch block files again
-	#make test_configtxlator
+	make logs_save
+	make test_fetch_blocks # fetch block files again
+	make test_configtxlator
 
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."

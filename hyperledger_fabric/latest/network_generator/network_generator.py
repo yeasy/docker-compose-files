@@ -33,6 +33,7 @@ PEER_TLS_PATH = '/etc/hyperledger/fabric/tls'
 
 
 yaml = YAML()
+yaml.explicit_start = True
 
 
 def list_to_dict(l, sep=':'):

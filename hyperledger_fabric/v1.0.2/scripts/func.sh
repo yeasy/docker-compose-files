@@ -414,7 +414,7 @@ chaincodeQuery () {
   setEnvs $org $peer
   # we either get a successful response, or reach TIMEOUT
   while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
-     echo_b "Attempting to Query peer$peer ...$(($(date +%s)-starttime)) secs"
+     echo_b "Attempting to Query peer${peer}.org${org} ...$(($(date +%s)-starttime)) secs"
      peer chaincode query \
 			 -C "${channel}" \
 			 -n "${name}" \
