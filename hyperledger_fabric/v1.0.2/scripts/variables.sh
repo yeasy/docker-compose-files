@@ -5,7 +5,6 @@
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
-#APP_CHANNEL="appchannel"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="30"
@@ -14,6 +13,8 @@ MAX_RETRY=5
 # Organization and peers
 ORGS=( 1 2 )
 PEERS=( 0 1 )
+#: "${ORGS:=( 1 2 )}"
+#: "${PEERS:=( 0 1 )}"
 
 # MSP related paths
 ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem

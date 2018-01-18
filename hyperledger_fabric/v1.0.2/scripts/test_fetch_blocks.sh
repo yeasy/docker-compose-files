@@ -12,10 +12,12 @@ fi
 org=1
 peer=0
 
-echo_b "=== Fetching blocks ==="
+echo_b "=== Fetching blocks of channel ${APP_CHANNEL} and ${SYS_CHANNEL} ==="
 
 channelFetchAll ${APP_CHANNEL} $org $peer
 
 channelFetchAll ${SYS_CHANNEL} $org $peer
 
-echo_g "Block fetching done!"
+echo_g "=== Fetched Blocks from channels done! ==="
+
+echo

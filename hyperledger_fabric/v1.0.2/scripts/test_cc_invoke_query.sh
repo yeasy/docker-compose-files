@@ -11,6 +11,8 @@ CC_NAME=${CC_02_NAME}
 CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 #Query on chaincode on Peer0/Org1
+echo_g "=== Testing Chaincode invoke/query ==="
+
 echo_b "Querying chaincode ${CC_NAME} on peer org2/peer0..."
 chaincodeQuery ${APP_CHANNEL} 2 1 ${CC_NAME} ${CC_QUERY_ARGS} 100
 
@@ -32,4 +34,6 @@ echo_b "Querying chaincode on all 4peers..."
 chaincodeQuery ${APP_CHANNEL} 1 0 ${CC_NAME} ${CC_QUERY_ARGS} 80
 chaincodeQuery ${APP_CHANNEL} 2 0 ${CC_NAME} ${CC_QUERY_ARGS} 80
 
-echo_g "=== All GOOD, chaincode invoke/query completed ==="
+echo_g "=== Chaincode invoke/query completed ==="
+
+echo

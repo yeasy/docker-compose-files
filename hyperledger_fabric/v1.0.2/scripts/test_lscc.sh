@@ -20,6 +20,7 @@ peer=0
 	#--cafile ${ORDERER_TLS_CA} \
 
 CC_NAME=${CC_02_NAME}
+
 echo_b "LSCC Get id"
 chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getid","'${APP_CHANNEL}'", "'${CC_NAME}'"]}'
 
@@ -62,3 +63,5 @@ chaincodeQuery "${APP_CHANNEL}" $org $peer lscc '{"Args":["getchaincodes"]}'
 #	-c '{"Args":["getchaincodes"]}'
 
 echo_g "LSCC testing done!"
+
+echo

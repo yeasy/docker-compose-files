@@ -8,7 +8,7 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Join all the peers to the channel
-echo_b "Update the channel ${APP_CHANNEL} by adding new Org..."
+echo_b "=== Join peers ${PEERS} from org ${ORGS} into ${APP_CHANNEL}... ==="
 
 for org in "${ORGS[@]}"
 do
@@ -17,3 +17,7 @@ do
 		channelJoin ${APP_CHANNEL} $org $peer
 	done
 done
+
+echo_g "=== Join peers ${PEERS} from org ${ORGS} into ${APP_CHANNEL} Complete ==="
+
+echo
