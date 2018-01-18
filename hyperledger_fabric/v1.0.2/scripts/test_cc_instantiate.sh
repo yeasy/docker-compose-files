@@ -8,9 +8,6 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 # Instantiate chaincode in the channel, executed once on any node is enough
-CC_NAME=${CC_02_NAME}
-CC_INIT_ARGS=${CC_02_INIT_ARGS}
-
 # (once for each channel is enough, we make it concurrent here)
 echo_b "=== Instantiating chaincode on channel ${APP_CHANNEL}... ==="
 
