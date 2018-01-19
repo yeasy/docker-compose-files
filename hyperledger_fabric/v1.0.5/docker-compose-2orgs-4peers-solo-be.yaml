@@ -50,13 +50,13 @@ services:
       service: peer1.org2.example.com
 
   explorer:
-    image: yeasy/blockchain-explorer:latest
+    image: yeasy/blockchain-explorer:0.1.0-preview
     container_name: explorer
     hostname: explorer
     depends_on:
       - mysql
     volumes:
-      - ./explorer/config.json:/blockchain-explorer/config.json
+      - ./explorer-artifacts/config.json:/blockchain-explorer/config.json
       - ./solo/crypto-config:/blockchain-explorer/first-network/crypto-config
     ports:
       - "8080:8080"  # HTTP port
@@ -71,7 +71,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=fabricexplorer
     volumes:
-      - ./explorer/fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
+      - ./explorer-artifacts/fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
     expose:
       - "3306"
     #command: bash -c 'mysqld; sleep 1; mysql -uroot -proot < /tmp/fabricexplorer.sql; while true; do sleep 20171117; done'
