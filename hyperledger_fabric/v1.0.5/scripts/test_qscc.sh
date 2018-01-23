@@ -31,3 +31,5 @@ chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetBlockByNumber","'${A
 #	-c '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
 echo_g "QSCC testing done!"
+
+echo

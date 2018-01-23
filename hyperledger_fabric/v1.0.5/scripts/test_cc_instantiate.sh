@@ -7,10 +7,13 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-# Instantiate chaincode on all peers
-# Instantiate can only be executed once on any node
-echo_b "Instantiating chaincode on channel ${APP_CHANNEL} (once for each channel is enough, we make it concurrent here)..."
+# Instantiate chaincode in the channel, executed once on any node is enough
+# (once for each channel is enough, we make it concurrent here)
+echo_b "=== Instantiating chaincode on channel ${APP_CHANNEL}... ==="
+
 chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
 chaincodeInstantiate "${APP_CHANNEL}" 2 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
 
-echo_g "=== Instantiate chaincode done ==="
+echo_g "=== Instantiate chaincode on channel ${APP_CHANNEL} done ==="
+
+echo

@@ -8,7 +8,7 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Join all the peers to the channel
-echo_b "Having all peers join the channel ${APP_CHANNEL}..."
+echo_b "=== Updating config of channel ${APP_CHANNEL}... ==="
 
 echo_b "Sign the channel update tx by Org1/Peer0 and Org2/Peer0"
 channelSignConfigTx ${APP_CHANNEL} "1" "0" "${CFG_DELTA_ENV_PB}"
@@ -33,3 +33,7 @@ fi
 
 # Now new org is valid to join the channel
 # channelJoin ${APP_CHANNEL} "3" "0"
+
+echo_g "=== Updated config of channel ${APP_CHANNEL}... ==="
+
+echo

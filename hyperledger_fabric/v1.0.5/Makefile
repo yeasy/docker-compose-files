@@ -39,6 +39,12 @@ ready: # create/join channel, install/instantiate cc
 	make gen_config  # Will ignore if local config path exists
 	make start
 
+	if [ "$(HLF_MODE)" = "dev" ]; then \
+			sleep ${CODE_BUILD_WAIT}; \
+	else \
+			sleep ${NETWORK_INIT_WAIT}; \
+	fi
+
 	make test_channel_create
 	make test_channel_join
 	make update_anchors
@@ -50,9 +56,10 @@ ready: # create/join channel, install/instantiate cc
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
 
-	#make test_fetch_blocks # fetch block files
-	#make test_config_update
-	#make test_channel_update
+	make test_fetch_blocks # fetch block files
+
+	make test_config_update # not work with this version
+	make test_channel_update # not work with this version
 
 	make logs_save
 	make test_fetch_blocks # fetch block files again
@@ -79,19 +86,19 @@ chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 test_channel_create: # Init the channel
 	@echo "Create channel on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_create.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_create.sh"
 
 test_channel_join: # Init the channel
 	@echo "Join channel"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_join.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_join.sh"
 
 update_anchors: # Update the anchor peer
 	@echo "Update anchors on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_update_anchors.sh"
 
 test_channel_update: # send the channel update transaction
 	@echo "Test channel update with adding new org"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_update.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_update.sh"
 
 ################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
@@ -118,37 +125,37 @@ test_cc: # test chaincode, deprecated
 
 test_cc_install: # Install the chaincode
 	@echo "Install chaincode on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
 
 test_cc_instantiate: # Instantiate the chaincode
 	@echo "Instantiate chaincode on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_instantiate.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_instantiate.sh"
 
 test_cc_upgrade: # Upgrade the chaincode
 	@echo "Upgrade chaincode on the fabric network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_upgrade.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_upgrade.sh"
 
 test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
 
 test_qscc: # test qscc queries
 	@echo "Test QSCC query"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
 
 test_lscc: # test lscc quries
 	@echo "Test LSCC query"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_lscc.sh"
 
 # FIXME: docker doesn't support wildcard in cp right now
 test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
 ################## Env setup related, no need to see usually ################
 
 setup: # setup the environment
-	bash scripts/setup_env.sh # Installing Docker and Docker-Compose
+	bash scripts/env_setup.sh # Installing Docker and Docker-Compose
 	bash scripts/download_images.sh # Pull required Docker images
 
 check: # Check shell scripts grammar
@@ -161,9 +168,9 @@ clean: # clean up containers
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
 
-clean_env: # clean up environment
+env_clean: # clean up environment
 	@echo "Clean all images and containers"
-	bash scripts/clean_env.sh
+	bash scripts/env_clean.sh
 
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
@@ -173,9 +180,6 @@ orderer: # enter the orderer container
 
 peer: # enter the peer container
 	docker exec -it peer0.org1.example.com bash
-
-dev_compile: # rebuild the peer
-	docker exec -it peer0.org1.example.com bash /tmp/peer_build.sh
 
 ps: # show existing docker images
 	docker ps -a
@@ -218,5 +222,5 @@ download: # download required images
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate
 	@echo "Install and instantiate cc example02 on the fabric dev network"
-	docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
 

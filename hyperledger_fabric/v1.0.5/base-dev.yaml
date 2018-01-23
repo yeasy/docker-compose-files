@@ -88,10 +88,10 @@ services:
       #- ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
       #- ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
       #- ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
-      #- ./solo/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+      #- ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
       # kafka mode configuration
       - ./kafka/channel-artifacts:/tmp/channel-artifacts
       - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
       - ./kafka/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
       - ./kafka/crypto-config:/etc/hyperledger/fabric/crypto-config
-      - ./kafka/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+      - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples

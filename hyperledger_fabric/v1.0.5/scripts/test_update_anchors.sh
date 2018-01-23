@@ -8,8 +8,12 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Set the anchor peers for each org in the channel
-echo_b "Updating anchor peers for org1..."
+echo_b "=== Updating anchor peers to peer0 for org1... ==="
 channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
 
-echo_b "Updating anchor peers for org2..."
+echo_b "=== Updating anchor peers to peer0 for org2... ==="
 channelUpdate ${APP_CHANNEL} 2 0 Org2MSPanchors.tx
+
+echo_b "=== Updated anchor peers ==="
+
+echo
