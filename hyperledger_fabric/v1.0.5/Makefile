@@ -31,7 +31,6 @@ test:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 
 	make ready  # Finish all testing
-
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
@@ -58,8 +57,8 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_fetch_blocks # fetch block files
 
-	make test_config_update # not work with this version
-	make test_channel_update # not work with this version
+	#make test_config_update # not work with this version
+	#make test_channel_update # not work with this version
 
 	make logs_save
 	make test_fetch_blocks # fetch block files again
