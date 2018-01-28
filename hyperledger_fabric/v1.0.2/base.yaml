@@ -52,7 +52,6 @@ services:
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     expose:
       - "7050"  #
-    #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
     command: orderer start
 
   peer-base:

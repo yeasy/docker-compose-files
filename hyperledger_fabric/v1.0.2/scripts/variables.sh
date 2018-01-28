@@ -70,7 +70,7 @@ CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 CORE_PEER_TLS_ENABLED="true"
 
 # Generate configs
-GEN_IMG=yeasy/hyperledger-fabric:latest  # working dir is `/go/src/github.com/hyperledger/fabric`
+GEN_IMG=yeasy/hyperledger-fabric:1.0.2  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
@@ -82,7 +82,7 @@ UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
 UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 
 # CONFIGTXLATOR
-CTL_IMG=yeasy/hyperledger-fabric:latest
+CTL_IMG=yeasy/hyperledger-fabric:1.0.2
 CTL_CONTAINER=configtxlator
 CTL_BASE_URL=http://127.0.0.1:7059
 CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode

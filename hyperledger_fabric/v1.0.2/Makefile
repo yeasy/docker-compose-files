@@ -4,7 +4,7 @@
 HLF_MODE ?= solo
 HLF_VERSION ?= 1.0.2
 
-CODE_BUILD_WAIT=30 # time to wait to build peer/orderer from local code
+CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
@@ -156,7 +156,7 @@ test_fetch_blocks: # test fetching channel blocks fetch
 
 setup: # setup the environment
 	bash scripts/env_setup.sh # Installing Docker and Docker-Compose
-	#bash scripts/download_images.sh # Pull required Docker images
+	bash scripts/download_images.sh # Pull required Docker images
 
 check: # Check shell scripts grammar
 	@echo "Check shell scripts grammar"
