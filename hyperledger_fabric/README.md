@@ -16,8 +16,8 @@ Fabric Release | Description
 [Fabric v0.6.0](v0.6.0/) | stable with fabric v0.6.0 code.
 [Fabric v1.0.0](v1.0.0/) | stable with fabric v1.0.0 code.
 [Fabric v1.0.2](v1.0.2/) | deprecated, test fabric v1.0.2 code.
-[Fabric v1.0.4](v1.0.4/) | test fabric v1.0.4 code.
 [Fabric v1.0.5](v1.0.5/) | latest stable fabric code with v1.0.5.
+[Fabric v1.1.0-alpha](v1.1.0-alpha/) | latest fabric code with v1.1.0-alpha.
 [Fabric Latest](latest/) | experimental with latest fabric code, unstable.
 
 
