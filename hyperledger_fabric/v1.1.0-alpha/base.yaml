@@ -48,12 +48,14 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
       - "7050"  #
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
     command: orderer start
 
-  peer-base:
+  peer-base: # abstract base for fabric-peer, will be used in peer.yaml
     image: yeasy/hyperledger-fabric-peer:1.1.0-alpha
     restart: always
     environment:
@@ -70,19 +72,17 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
       - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
-      - "7050"  # Rest
       - "7051"  # Grpc
       - "7052"  # Peer CLI
       - "7053"  # Peer Event
-      - "7054"  # eCAP
-      - "7055"  # eCAA
-      - "7056"  # tCAP
-      - "7057"  # eCAA
-      - "7058"  # tlsCAP
-      - "7059"  # tlsCAA
     volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
       - /var/run/docker.sock:/var/run/docker.sock
+    #volumes:
+    #    - /var/run/:/host/var/run/
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: peer node start
 
   cli-base:
