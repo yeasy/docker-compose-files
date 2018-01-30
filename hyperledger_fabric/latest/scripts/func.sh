@@ -1,23 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Some useful functions for cc testing
-
-# Detecting whether can import the header file to render colorful cli output
-if [ -f ./header.sh ]; then
- source ./header.sh
-elif [ -f scripts/header.sh ]; then
- source scripts/header.sh
-else
- echo_r() {
-	 echo "$@"
- }
- echo_g() {
-	 echo "$@"
- }
- echo_b() {
-	 echo "$@"
- }
-fi
+echo_r () {
+    [ $# -ne 1 ] && return 0
+    echo -e "\033[31m$1\033[0m"
+}
+echo_g () {
+    [ $# -ne 1 ] && return 0
+    echo -e "\033[32m$1\033[0m"
+}
+echo_y () {
+    [ $# -ne 1 ] && return 0
+    echo -e "\033[33m$1\033[0m"
+}
+echo_b () {
+    [ $# -ne 1 ] && return 0
+    echo -e "\033[34m$1\033[0m"
+}
 
 # Define those global variables
 if [ -f ./variables.sh ]; then
@@ -25,46 +23,66 @@ if [ -f ./variables.sh ]; then
 elif [ -f scripts/variables.sh ]; then
  source scripts/variables.sh
 else
-	echo "Cannot find the variables.sh files, pls check"
+	echo_r "Cannot find the variables.sh files, pls check"
 	exit 1
 fi
 
 # Verify $1 is not 0, then output error msg $2 and exit
 verifyResult () {
 	if [ $1 -ne 0 ] ; then
-		echo_b "$2"
+		echo "$2"
 		echo_r "=== ERROR !!! FAILED to execute End-2-End Scenario ==="
 		exit 1
 	fi
 }
 
+# set env to use orderOrg's identity
 setOrdererEnvs () {
-	CORE_PEER_LOCALMSPID="OrdererMSP"
-	CORE_PEER_MSPCONFIGPATH=${ORDERER_ADMIN_MSP}
-	CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_ROOTCERT}
+	export CORE_PEER_LOCALMSPID="OrdererMSP"
+	export CORE_PEER_MSPCONFIGPATH=${ORDERER_ADMIN_MSP}
+	export CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_ROOTCERT}
 	#t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
 }
 
-# Set global env variables for fabric usage
+# Set global env variables for fabric cli, after setting:
+# client is the admin as given org
+# TLS root cert is configured to given peer's
+# remote peer address is configured to given peer's
+# CORE_PEER_LOCALMSPID=Org1MSP
+# CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+# CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+# CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 # Usage: setEnvs org peer
 setEnvs () {
 	local org=$1  # 1 or 2
 	local peer=$2  # 0 or 1
-	local t=""
-	CORE_PEER_LOCALMSPID="Org${org}MSP"
-	#CORE_PEER_MSPCONFIGPATH=\$${ORG${org}_ADMIN_MSP}
-	t="\${ORG${org}_ADMIN_MSP}" && CORE_PEER_MSPCONFIGPATH=`eval echo $t`
-	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
-	t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
+	[ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
-	# env |grep CORE
+	# a means a mirror peer
+	if [ $peer = "a" ]; then
+	  export CORE_PEER_LOCALMSPID=Org1MSP
+	  export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+	  export CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+	  export CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+		return
+	fi
+
+
+	local t=""
+	export CORE_PEER_LOCALMSPID="Org${org}MSP"
+	#CORE_PEER_MSPCONFIGPATH=\$${ORG${org}_ADMIN_MSP}
+	t="\${ORG${org}_PEER${peer}_URL}" && export CORE_PEER_ADDRESS=`eval echo $t`
+	t="\${ORG${org}_ADMIN_MSP}" && export CORE_PEER_MSPCONFIGPATH=`eval echo $t`
+	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
+
+	#env |grep CORE
 }
 
 checkOSNAvailability() {
 	#Use orderer's MSP for fetching system channel config block
-	CORE_PEER_LOCALMSPID="OrdererMSP"
-	CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_CA}
-	CORE_PEER_MSPCONFIGPATH=${ORDERER_MSP}
+	export CORE_PEER_LOCALMSPID="OrdererMSP"
+	export CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_CA}
+	export CORE_PEER_MSPCONFIGPATH=${ORDERER_MSP}
 
 	local rc=1
 	local starttime=$(date +%s)
@@ -83,7 +101,7 @@ checkOSNAvailability() {
 		 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Received block/ {print $NF}')
 		 test "$VALUE" = "0" && let rc=0
 	done
-	cat log.txt
+	[ $rc -ne 0 ] && cat log.txt
 	verifyResult $rc "Ordering Service is not available, Please try again ..."
 	echo "=== Ordering Service is up and running === "
 	echo
@@ -117,26 +135,26 @@ channelCreateAction(){
 # channelCreate APP_CHANNEL APP_CHANNEL.tx org peer
 channelCreate() {
 	local channel=$1
-	local channel_tx=$2
+	local tx=$2
 	local org=$3
 	local peer=$4
 
-	echo_b "=== Create Channel ${channel} by org $org peer $peer === "
-	local counter=0
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+
+	echo "=== Create Channel ${channel} by org $org/peer $peer === "
 	setEnvs $org $peer
-	channelCreateAction "${channel}" "${channel_tx}"
-	local res=$?
-	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
-		 echo_b "Failed to create channel $channel, retry after 3s"
-		 sleep 3
-		 channelCreateAction "${channel}" "${channel_tx}"
-		 res=$?
+	local rc=1
+	local counter=0
+	while [ ${counter} -lt ${MAX_RETRY} -a ${rc} -ne 0 ]; do
+		 channelCreateAction "${channel}" "${tx}"
+		 rc=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
+		 [ $rc -ne 0 ] && echo "Failed to create channel $channel, retry after 3s" && sleep 3
 	done
-	cat log.txt
-	verifyResult ${res} "Channel ${channel} creation failed"
-	echo_g "=== Channel ${channel} is created. === "
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult ${rc} "Channel ${channel} creation failed"
+	echo "=== Channel ${channel} is created. === "
 }
 
 # called by channelJoinWithRetry
@@ -153,16 +171,16 @@ channelJoinWithRetry () {
 	local peer=$2
 	local counter=0
 	channelJoinAction ${channel}
-	local res=$?
-	while [ ${counter} -lt ${MAX_RETRY} -a ${res} -ne 0 ]; do
-		echo_b "peer${peer} failed to join channel ${channel}, retry after 2s"
+	local rc=$?
+	while [ ${counter} -lt ${MAX_RETRY} -a ${rc} -ne 0 ]; do
+		echo "peer${peer} failed to join channel ${channel}, retry after 2s"
 		sleep 2
 		channelJoinAction ${channel}
-		res=$?
+		rc=$?
 		let counter=${counter}+1
 	done
-	cat log.txt
-  verifyResult ${res} "After $MAX_RETRY attempts, peer${peer} failed to Join the Channel"
+	[ $rc -ne 0 ] && cat log.txt
+  verifyResult ${rc} "After $MAX_RETRY attempts, peer${peer} failed to Join the Channel"
 }
 
 # Join given (by default all) peers into the channel
@@ -171,17 +189,19 @@ channelJoin () {
 	local channel=$1
 	local org=$2
 	local peer=$3
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
-	echo_b "=== Join org$org/peer$peer into channel ${channel} === "
+	echo "=== Join org $org/peer $peer into channel ${channel} === "
 	setEnvs $org $peer
 	channelJoinWithRetry ${channel} $peer
-	echo_g "=== org$org/peer$peer joined into channel ${channel} === "
+	echo "=== org $org/peer $peer joined into channel ${channel} === "
 }
 
 getShasum () {
 	[ ! $# -eq 1 ] && exit 1
 	shasum ${1} | awk '{print $1}'
 }
+
 # Fetch all blocks for a channel
 # Usage: channelFetchAll channel org peer
 channelFetchAll () {
@@ -189,27 +209,27 @@ channelFetchAll () {
 	local org=$2
 	local peer=$3
 
-	echo_b "=== Fetch all block for channel $channel === "
+	echo "=== Fetch all block for channel $channel === "
 
 	local block_file=/tmp/${channel}_newest.block
 	channelFetch ${channel} $org $peer "newest" ${block_file}
 	[ $? -ne 0 ] && exit 1
 	newest_block_shasum=$(getShasum ${block_file})
-	echo_b "fetch newest block ${block_file} with shasum=${newest_block_shasum}"
+	echo "fetch newest block ${block_file} with shasum=${newest_block_shasum}"
 
 	block_file=${CHANNEL_ARTIFACTS}/${channel}_config.block
 	channelFetch ${channel} $org $peer "config" ${block_file}
 	[ $? -ne 0 ] && exit 1
-	echo_b "fetch config block ${block_file}"
+	echo "fetch config block ${block_file}"
 
 	for i in $(seq 0 16); do  # we at most fetch 16 blocks
 		block_file=${CHANNEL_ARTIFACTS}/${channel}_${i}.block
 		channelFetch ${channel} $org $peer $i ${block_file}
 		[ $? -ne 0 ] && exit 1
 		[ -f $block_file ] || break
-		echo_b "fetch block $i and saved into ${block_file}"
+		echo "fetch block $i and saved into ${block_file}"
 		block_shasum=$(getShasum ${block_file})
-		[ ${block_shasum} = ${newest_block_shasum} ] && { echo_g "Block $i is the last one for channel $channel"; break; }
+		[ ${block_shasum} = ${newest_block_shasum} ] && { echo "Block $i is the last one for channel $channel"; break; }
 	done
 }
 
@@ -220,10 +240,10 @@ channelFetch () {
 	local peer=$3
 	local num=$4
 	local block_file=$5
-	echo_b "=== Fetch block $num of channel $channel === "
+	echo "=== Fetch block $num of channel $channel === "
 
 	#setEnvs $org $peer
-	setOrdererEnvs
+	setOrdererEnvs  # system channel required id from ordererOrg
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
@@ -244,7 +264,7 @@ channelFetch () {
 		echo_r "Fetch block $num of channel $channel failed"
 		return 1
 	else
-		echo_g "=== Fetch block $num of channel $channel is successful === "
+		echo "=== Fetch block $num of channel $channel OK === "
 		return 0
 	fi
 }
@@ -255,19 +275,20 @@ channelSignConfigTx () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	local txFile=$4
-	echo_b "=== Sign channel config tx $txFile for channel $channel by org $org peer $peer === "
-	[ -f ${CHANNEL_ARTIFACTS}/${txFile} ] || { echo_r "${txFile} not exist"; exit 1; }
+	local tx=$4
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	echo "=== Sign channel config tx $tx for channel $channel by org $org/peer $peer === "
+	[ -f ${CHANNEL_ARTIFACTS}/${tx} ] || { echo_r "${tx} not exist"; exit 1; }
 
 	setEnvs $org $peer
 
-	peer channel signconfigtx -f ${CHANNEL_ARTIFACTS}/${txFile} >&log.txt
-	res=$?
-	cat log.txt
-	if [ $res -ne 0 ]; then
-		echo_r "Sign channel config tx for channel $channel by org $org peer $peer failed"
+	peer channel signconfigtx -f ${CHANNEL_ARTIFACTS}/${tx} >&log.txt
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	if [ $rc -ne 0 ]; then
+		echo_r "Sign channel config tx for channel $channel by org $org/peer $peer failed"
 	else
-		echo_g "=== Sign channel config tx channel $channel by org $org peer $peer is successful === "
+		echo "=== Sign channel config tx channel $channel by org $org/peer $peer is successful === "
 	fi
 }
 
@@ -277,29 +298,31 @@ channelUpdate() {
 	local channel=$1
   local org=$2
   local peer=$3
-  local txFile=$4
+  local tx=$4
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+
   setEnvs $org $peer
-	echo_b "=== Update config on channel ${channel} === "
-	[ -f ${CHANNEL_ARTIFACTS}/${txFile} ] || { echo_r "${txFile} not exist"; exit 1; }
+	echo "=== Update config on channel ${channel} === "
+	[ -f ${CHANNEL_ARTIFACTS}/${tx} ] || { echo_r "${tx} not exist"; exit 1; }
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ${CHANNEL_ARTIFACTS}/${txFile} \
+		-f ${CHANNEL_ARTIFACTS}/${tx} \
 		>&log.txt
 	else
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
-		-f ${CHANNEL_ARTIFACTS}/${txFile} \
+		-f ${CHANNEL_ARTIFACTS}/${tx} \
 		--tls $CORE_PEER_TLS_ENABLED \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
 	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "peer channel update failed"
-	echo_g "=== Channel ${channel} is updated. === "
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "peer channel update failed"
+	echo "=== Channel ${channel} is updated. === "
 	sleep 2
 }
 
@@ -311,17 +334,18 @@ chaincodeInstall () {
 	local name=$3
 	local version=$4
 	local path=$5
-	echo_b "=== Install Chaincode $name:$version ($path) on org${org} peer$peer === "
+	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
+	echo "=== Install Chaincode $name:$version ($path) on org ${org}/peer $peer === "
 	setEnvs $org $peer
 	peer chaincode install \
 		-n ${name} \
 		-v $version \
 		-p ${path} \
 		>&log.txt
-	res=$?
-	cat log.txt
-  verifyResult $res "Chaincode installation on remote peer$peer has Failed"
-	echo_g "=== Chaincode is installed on remote peer$peer === "
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+  verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
+	echo "=== Chaincode is installed on remote peer$peer === "
 }
 
 # Instantiate chaincode on specifized peer node
@@ -333,8 +357,9 @@ chaincodeInstantiate () {
 	local name=$4
 	local version=$5
 	local args=$6
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
 	setEnvs $org $peer
-	echo_b "=== chaincodeInstantiate for channel ${channel} on org $org peer $peer ===="
+	echo "=== chaincodeInstantiate for channel ${channel} on org $org/peer $peer ===="
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -358,10 +383,10 @@ chaincodeInstantiate () {
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
 	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "ChaincodeInstantiation on peer$peer in channel ${channel} failed"
-	echo_g "=== Chaincode Instantiated in channel ${channel} by peer$peer ==="
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "ChaincodeInstantiation on org $org/peer$peer in channel ${channel} failed"
+	echo "=== Chaincode Instantiated in channel ${channel} by peer$peer ==="
 }
 
 
@@ -372,7 +397,8 @@ chaincodeInvoke () {
 	local peer=$3
 	local name=$4
 	local args=$5
-	echo_g "=== Invoke transaction on peer$peer in channel ${channel} === "
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	echo "=== Invoke transaction on peer$peer in channel ${channel} === "
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
@@ -393,10 +419,10 @@ chaincodeInvoke () {
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
 	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "Invoke execution on peer$peer failed "
-	echo_g "=== Invoke transaction on peer$peer in channel ${channel} is successful === "
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Invoke execution on peer$peer failed "
+	echo "=== Invoke transaction on peer$peer in channel ${channel} is successful === "
 }
 
 # query channel peer name args expected_result
@@ -406,15 +432,16 @@ chaincodeQuery () {
   local peer=$3
   local name=$4
   local args=$5
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
   [ $# -gt 5 ] && local expected_result=$6
-  echo_b "=== Querying on org$org peer$peer in channel ${channel}... === "
+  echo "=== Querying on org $org/peer $peer in channel ${channel}... === "
   local rc=1
   local starttime=$(date +%s)
 
   setEnvs $org $peer
   # we either get a successful response, or reach TIMEOUT
   while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
-     echo_b "Attempting to Query peer$peer ...$(($(date +%s)-starttime)) secs"
+     echo "Attempting to Query org ${org}/peer ${peer} ...$(($(date +%s)-starttime)) secs"
      peer chaincode query \
 			 -C "${channel}" \
 			 -n "${name}" \
@@ -425,13 +452,15 @@ chaincodeQuery () {
 			 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
 			 test "$VALUE" = "${expected_result}" && let rc=0
 			fi
-			cat log.txt
 			if [ $rc -ne 0 ]; then
+				cat log.txt
 				sleep 2
 			fi
   done
+
+  # rc==0, or timeout
   if [ $rc -eq 0 ]; then
-		echo_g "=== Query on peer$peer in channel ${channel} is successful === "
+		echo "=== Query on peer$peer in channel ${channel} is successful === "
   else
 		echo_r "=== Query result on peer$peer is INVALID, run `make stop clean` to clean ==="
 		exit 1
@@ -444,18 +473,16 @@ chaincodeQuery () {
 chaincodeStartDev () {
 	local peer=$1
 	local version=$2
-	#setEnvs $peer
-	#setEnvs 1 0
+	[ -z $peer ] && [ -z $version ] &&  echo_r "input param invalid" && exit -1
 	setEnvs 1 0
 	CORE_CHAINCODE_LOGLEVEL=debug \
 	CORE_PEER_ADDRESS=peer${peer}.org1.example.com:7052 \
 	CORE_CHAINCODE_ID_NAME=${CC_02_NAME}:${version} \
 	nohup ./scripts/chaincode_example02 > chaincode_dev.log &
-	res=$?
-	cat log.txt
-	verifyResult $res "Chaincode start in dev mode has Failed"
-	echo_g "=== Chaincode started in dev mode === "
-	echo
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Chaincode start in dev mode has Failed"
+	echo "=== Chaincode started in dev mode === "
 }
 
 # chaincodeUpgrade channel peer name version args
@@ -466,7 +493,8 @@ chaincodeUpgrade () {
 	local name=$4
 	local version=$5
 	local args=$6
-	echo_b "=== Upgrade chaincode to version $version on peer$peer in channel ${channel}  === "
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	echo "=== Upgrade chaincode to version $version on org ${org}/peer $peer in channel ${channel}  === "
 
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
@@ -490,11 +518,10 @@ chaincodeUpgrade () {
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
 	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "Upgrade execution on peer$peer failed "
-	echo_g "=== Upgrade transaction on peer$peer in channel ${channel} is successful === "
-	echo
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Upgrade execution on peer$peer failed "
+	echo "=== Upgrade transaction on peer$peer in channel ${channel} is successful === "
 }
 
 # configtxlator encode json to pb
@@ -504,7 +531,7 @@ configtxlatorEncode() {
 	local input=$2
 	local output=$3
 
-	echo_b "Encode $input --> $output using type $msgType"
+	echo "Encode $input --> $output using type $msgType"
 	curl -sX POST \
 			--data-binary @${input} \
 			${CTL_ENCODE_URL}/${msgType} \
@@ -518,7 +545,7 @@ configtxlatorDecode() {
 	local input=$2
 	local output=$3
 
-	echo_b "Config Decode $input --> $output using type $msgType"
+	echo "Config Decode $input --> $output using type $msgType"
 	if [ ! -f $input ]; then
 		echo_r "input file not found"
 		exit 1
@@ -538,7 +565,7 @@ configtxlatorCompare() {
 	local updated=$3
 	local output=$4
 
-	echo_b "Config Compare $origin vs $updated > ${output} in channel $channel"
+	echo "Config Compare $origin vs $updated > ${output} in channel $channel"
 	if [ ! -f $origin ] || [ ! -f $updated ]; then
 		echo_r "input file not found"
 		exit 1
@@ -553,7 +580,6 @@ configtxlatorCompare() {
 
 	[ $? -eq 0 ] || echo_r "Failed to compute config update"
 }
-
 
 # Run cmd inside the config generator container
 gen_con_exec() {
