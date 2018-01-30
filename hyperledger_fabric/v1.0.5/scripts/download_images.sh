@@ -6,7 +6,7 @@ ARCH=x86_64
 BASE_IMG_TAG=0.3.2
 
 # For fabric images, including peer, orderer, ca
-FABRIC_IMG_TAG=1.0.2
+FABRIC_IMG_TAG=1.0.5
 
 echo "Downloading images from DockerHub... need a while"
 

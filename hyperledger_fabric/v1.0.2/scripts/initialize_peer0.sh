@@ -24,8 +24,10 @@ echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
 channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
 
 ## Install chaincode on all peers
-echo_b "Installing chaincode on peer0..."
-chaincodeInstall 0 ${CC_02_INIT_ARGS}
+CC_NAME=${CC_02_NAME}
+CC_PATH=${CC_02_PATH}
+echo_b "Installing chaincode ${CC_NAME} on peer0..."
+chaincodeInstall 1 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
 
 # Instantiate chaincode on all peers
 # Instantiate can only be executed once on any node

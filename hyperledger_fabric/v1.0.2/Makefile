@@ -8,7 +8,6 @@ CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
-#COMPOSE_FILE ?= "test-solo.yaml"
 
 LOG_PATH ?= solo/logs
 
@@ -32,6 +31,7 @@ test:
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
 
 	make ready  # Finish all testing
+
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
@@ -61,9 +61,10 @@ ready: # create/join channel, install/instantiate cc
 	#make test_config_update # not work with this version
 	#make test_channel_update # not work with this version
 
-	make logs_save
 	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
+
+	make logs_save
 
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
@@ -208,16 +209,7 @@ gen_config: # generate config artifacts
 
 download: # download required images
 	@echo "Download Docker images"
-	docker pull yeasy/hyperledger-fabric:$(HLF_VERSION)
-	docker pull yeasy/hyperledger-fabric-peer:$(HLF_VERSION)
-	docker pull yeasy/hyperledger-fabric-orderer:$(HLF_VERSION)
-	docker pull yeasy/hyperledger-fabric-ca:$(HLF_VERSION)
-	docker pull yeasy/blockchain-explorer:latest  # TODO: wait for official images
-	docker pull hyperledger/fabric-baseos:x86_64-0.3.2
-	docker pull hyperledger/fabric-zookeeper:x86_64-$(HLF_VERSION)
-	docker pull hyperledger/fabric-kafka:x86_64-$(HLF_VERSION)
-	docker pull hyperledger/fabric-couchdb:x86_64-$(HLF_VERSION)
-	docker pull hyperledger/fabric-ccenv:x86_64-$(HLF_VERSION)
+	bash scripts/download_images.sh
 
 ################## chaincode dev mode ################
 chaincode_init: # start chaincode in dev mode and do install/instantiate
