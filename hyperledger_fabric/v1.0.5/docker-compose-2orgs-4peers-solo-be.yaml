@@ -59,7 +59,7 @@ services:
       - mysql
     volumes:
       - ./explorer-artifacts/config.json:/blockchain-explorer/config.json
-      - ./solo/crypto-config:/blockchain-explorer/first-network/crypto-config
+      - ./crypto-config:/blockchain-explorer/first-network/crypto-config
     ports:
       - "8080:8080"  # HTTP port
 
