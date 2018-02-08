@@ -66,9 +66,6 @@ CC_UPGRADE_VERSION=1.1
 CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 
-# TLS config
-CORE_PEER_TLS_ENABLED="true"
-
 # Generate configs
 GEN_IMG=yeasy/hyperledger-fabric:1.0.5  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator

@@ -89,7 +89,6 @@ services:
     command: peer node start
 
   cli-base:
-
     image: hyperledger/fabric-tools:x86_64-1.0.5
     restart: always
     tty: true
