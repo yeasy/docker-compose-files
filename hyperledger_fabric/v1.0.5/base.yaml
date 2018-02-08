@@ -18,16 +18,14 @@ version: '2' # compose v3 still doesn't support `extends`, shame!
 
 services:
   ca-base:
-    #image: yeasy/hyperledger-fabric-ca:1.0.5
-    image: hyperledger/fabric-ca:x86_64-1.0.5
+    image: yeasy/hyperledger-fabric-ca:1.0.5
     restart: always
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_TLS_ENABLED=true # change to false to disable TLS
 
   orderer-base:
-    #image: yeasy/hyperledger-fabric-orderer:1.0.5
-    image: hyperledger/fabric-orderer:x86_64-1.0.5
+    image: yeasy/hyperledger-fabric-orderer:1.0.5
     restart: always
     # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
     environment:
@@ -50,8 +48,8 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
-    volumes:
-      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    #volumes:
+    #  - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
       - "7050"  #
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
@@ -59,7 +57,6 @@ services:
 
   peer-base:
     image: yeasy/hyperledger-fabric-peer:1.0.5
-    #image: hyperledger/fabric-peer:x86_64-1.0.5
     restart: always
     environment:
       - CORE_PEER_ADDRESSAUTODETECT=false
@@ -68,15 +65,15 @@ services:
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=v105_default  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the group leader, default to false
-      - CORE_PEER_PROFILE_ENABLED=false
+        #- CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
       - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
-    volumes:
-      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    #volumes:
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
       - "7051"  # Grpc
       - "7052"  # Peer CLI
@@ -93,7 +90,6 @@ services:
     restart: always
     tty: true
     environment:
-      #- GOPATH=/opt/gopath
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true

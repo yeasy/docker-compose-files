@@ -66,9 +66,6 @@ CC_UPGRADE_VERSION=1.1
 CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 
-# TLS config
-CORE_PEER_TLS_ENABLED="true"
-
 # Generate configs
 GEN_IMG=yeasy/hyperledger-fabric:latest  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
@@ -106,3 +103,13 @@ CFG_DELTA_JSON=config_delta.json
 CFG_DELTA_PB=config_delta.pb
 CFG_DELTA_ENV_JSON=config_delta_env.json
 CFG_DELTA_ENV_PB=config_delta_env.pb
+
+ARCH=x86_64
+
+# for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
+BASE_IMG_TAG=0.4.5
+
+# For fabric images, including peer, orderer, ca
+FABRIC_IMG_TAG=latest
+
+PROJECT_VERSION=1.1.0

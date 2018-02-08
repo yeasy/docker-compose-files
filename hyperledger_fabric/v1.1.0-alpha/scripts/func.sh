@@ -58,16 +58,6 @@ setEnvs () {
 	local peer=$2  # 0 or 1
 	[ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
-	# a means a mirror peer
-	if [ $peer = "a" ]; then
-	  export CORE_PEER_LOCALMSPID=Org1MSP
-	  export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-	  export CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-	  export CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-		return
-	fi
-
-
 	local t=""
 	export CORE_PEER_LOCALMSPID="Org${org}MSP"
 	#CORE_PEER_MSPCONFIGPATH=\$${ORG${org}_ADMIN_MSP}
@@ -96,7 +86,7 @@ checkOSNAvailability() {
 		 if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 			 peer channel fetch 0 -o ${ORDERER_URL} -c "testchainid" >&log.txt
 		 else
-			 peer channel fetch 0 -o ${ORDERER_URL} -c "testchainid" --tls $CORE_PEER_TLS_ENABLED --cafile ${ORDERER_TLS_CA} >&log.txt
+			 peer channel fetch 0 -o ${ORDERER_URL} -c "testchainid" --tls --cafile ${ORDERER_TLS_CA} >&log.txt
 		 fi
 		 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Received block/ {print $NF}')
 		 test "$VALUE" = "0" && let rc=0
@@ -124,7 +114,7 @@ channelCreateAction(){
 			-c ${channel} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout $TIMEOUT \
-			--tls $CORE_PEER_TLS_ENABLED \
+			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
 	fi
@@ -315,7 +305,7 @@ channelUpdate() {
 		-o ${ORDERER_URL} \
 		-c ${channel} \
 		-f ${CHANNEL_ARTIFACTS}/${tx} \
-		--tls $CORE_PEER_TLS_ENABLED \
+		--tls \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
 	fi
@@ -379,7 +369,7 @@ chaincodeInstantiate () {
 			-v ${version} \
 			-c ${args} \
 			-P "OR	('Org1MSP.member','Org2MSP.member')" \
-			--tls $CORE_PEER_TLS_ENABLED \
+			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
 	fi
@@ -415,7 +405,7 @@ chaincodeInvoke () {
 			-C ${channel} \
 			-n ${name} \
 			-c ${args} \
-			--tls $CORE_PEER_TLS_ENABLED \
+			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
 	fi
@@ -447,14 +437,19 @@ chaincodeQuery () {
 			 -n "${name}" \
 			 -c "${args}" \
 			 >&log.txt
-			 rc=$?
-			if [ $# -gt 5 ]; then # need to check the result
+		 rc=$?
+		 if [ $# -gt 5 ]; then # need to check the result
 			 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
-			 test "$VALUE" = "${expected_result}" && let rc=0
+			 if [ "$VALUE" = "${expected_result}" ]; then
+				 let rc=0
+			 else
+				 let rc=1
+				 echo_b "$VALUE != ${expected_result}, will retry"
+			 fi
 			fi
 			if [ $rc -ne 0 ]; then
-				cat log.txt
-				sleep 2
+				 cat log.txt
+				 sleep 2
 			fi
   done
 
@@ -514,7 +509,7 @@ chaincodeUpgrade () {
 		-n ${name} \
 		-v ${version} \
 		-c ${args} \
-		--tls $CORE_PEER_TLS_ENABLED \
+		--tls \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt
 	fi
