@@ -42,7 +42,7 @@ done
 
 echo "===Pulling fabric images from official repo... with tag = ${FABRIC_IMG_TAG}"
 for IMG in peer tools orderer ca ccenv; do
-	HLF_IMG=hyperledger/fabric-zookeeper:$ARCH-$BASE_IMG_TAG
+	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$BASE_IMG_TAG
 	pull_image $HLF_IMG
 done
 docker pull hyperledger/fabric-ccenv:x86_64-1.1.0-alpha # no latest tag for ccenv
