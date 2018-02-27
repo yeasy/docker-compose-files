@@ -16,8 +16,9 @@ Fabric Release | Description
 [Fabric v0.6.0](v0.6.0/) | stable with fabric v0.6.0 code.
 [Fabric v1.0.0](v1.0.0/) | stable with fabric v1.0.0 code.
 [Fabric v1.0.2](v1.0.2/) | deprecated, test fabric v1.0.2 code.
-[Fabric v1.0.5](v1.0.5/) | latest stable fabric code with v1.0.5.
+[Fabric v1.0.5](v1.0.5/) | deprecated, test fabric v1.0.5 code.
 [Fabric v1.1.0-alpha](v1.1.0-alpha/) | latest fabric code with v1.1.0-alpha.
+[Fabric v1.0.6](v1.0.6/) | latest stable fabric v1.0.6 code.
 [Fabric Latest](latest/) | experimental with latest fabric code, unstable.
 
 
@@ -28,7 +29,7 @@ Fabric Release | Description
 Enter the subdir of specific version, e.g., 
 
 ```bash
-$ cd 1.0.5 # select a fabric version
+$ cd 1.0.6 # select a fabric version
 ```
 
 ### Quick Test

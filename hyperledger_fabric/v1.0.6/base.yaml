@@ -1,0 +1,150 @@
+# Contains the base template for all Hyperledger Fabric services
+# Never directly use services in this template, but inherent
+# All services are abstract without any names, config or port mapping
+# https://github.com/yeasy/docker-compose-files
+#
+# * ca-base: base for fabric-ca
+# * orderer-base: base for fabric-orderer
+# * peer-base: base for fabric-peer
+# * cli-base: base for fabric peer client
+# * event-listener-base: base for fabric eventhub listener
+# * kafka-base: base for kafka
+# * zookeeper-base: base for fabric-zookeeper
+# * couchdb-base: base for couchdb
+# * explorer-base: base for Hyperledger blockchain-explorer
+# * mysql-base: base for MySQL
+
+version: '2' # compose v3 still doesn't support `extends`, shame!
+
+services:
+  ca-base:
+    image: yeasy/hyperledger-fabric-ca:1.0.6
+    restart: always
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_TLS_ENABLED=true # change to false to disable TLS
+
+  orderer-base:
+    image: yeasy/hyperledger-fabric-orderer:1.0.6
+    restart: always
+    # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG  # default: INFO
+      - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
+      - ORDERER_GENERAL_BATCHTIMEOUT=1s
+      - ORDERER_GENERAL_MAXMESSAGECOUNT=10
+      - ORDERER_GENERAL_MAXWINDOWSIZE=1000
+      - ORDERER_GENERAL_LISTENPORT=7050
+     #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    #volumes:
+    #  - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    expose:
+      - "7050"  #
+    #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
+    command: orderer start
+
+  peer-base:
+    image: yeasy/hyperledger-fabric-peer:1.0.6
+    restart: always
+    environment:
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=v106_default  # uncomment this to use specific network
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the group leader, default to false
+        #- CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
+      - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+    #volumes:
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    expose:
+      - "7051"  # Grpc
+      - "7052"  # Peer CLI
+      - "7053"  # Peer Event
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    #volumes:
+    #    - /var/run/:/host/var/run/
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    command: peer node start
+
+  cli-base:
+    image: hyperledger/fabric-tools:x86_64-1.0.6
+    restart: always
+    tty: true
+    environment:
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
+
+  event-listener-base:
+    image: yeasy/hyperledger-fabric:1.0.6
+    restart: always
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-event-listener
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=false  # event-listener doesn't support TLS
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    #command: bash -c 'block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP'
+    command: bash -c 'while true; do sleep 20170504; done'
+
+  zookeeper-base:
+    image: hyperledger/fabric-zookeeper:x86_64-1.0.6
+    restart: always
+    tty: true
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+  kafka-base:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: hyperledger/fabric-kafka:x86_64-1.0.6
+    restart: always
+    tty: true
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+    expose:
+      - '9092'
+
+  couchdb-base:
+    image: hyperledger/fabric-couchdb:x86_64-1.0.6
+    restart: always
+    tty: true
+
+  explorer-base:
+    image: yeasy/blockchain-explorer:0.1.0-preview # Till we have official image
+    expose:
+      - "8080"  # HTTP port
+    command: bash -c 'sleep 10; node main.js'
+
+  mysql-base: # mysql service
+    image: mysql:8.0
+    restart: always
+    expose:
+      - "3306"

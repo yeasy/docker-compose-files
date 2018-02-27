@@ -27,12 +27,12 @@ for IMG in base peer orderer ca; do
 	HLF_IMG=yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done
-docker pull yeasy/hyperledger-fabric:$FABRIC_IMG_TAG \
-&& docker pull docker pull yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
+pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG
+pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
 
 
-echo "===Pulling base images from fabric repo... with tag = ${BASE_IMG_TAG}"
-for IMG in baseimage baseos couchdb kafka zookeeper; do
+echo "===Pulling base images from official repo... with tag = ${BASE_IMG_TAG}"
+for IMG in baseimage baseos; do
 	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$BASE_IMG_TAG
 	pull_image $HLF_IMG
 done
@@ -41,10 +41,12 @@ done
 # docker pull yeasy/hyperledger-fabric
 
 echo "===Pulling fabric images from official repo... with tag = ${FABRIC_IMG_TAG}"
-for IMG in peer tools orderer ca ccenv; do
-	HLF_IMG=hyperledger/fabric-zookeeper:$ARCH-$BASE_IMG_TAG
+for IMG in peer tools orderer ca ccenv couchdb kafka zookeeper; do
+	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done
+
+pull_image mysql:8.0
 
 echo "Image pulling done, now can startup the network using docker-compose..."
 
