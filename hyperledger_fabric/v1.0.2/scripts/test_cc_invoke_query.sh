@@ -7,9 +7,10 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-CC_NAME=${CC_02_NAME}
-CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
-CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
+CC_NAME=${CC_NAME:-$CC_02_NAME}
+CC_INVOKE_ARGS=${CC_INVOKE_ARGS:-$CC_02_INVOKE_ARGS}
+CC_QUERY_ARGS=${CC_QUERY_ARGS:-$CC_02_QUERY_ARGS}
+
 #Query on chaincode on Peer0/Org1
 echo_g "=== Testing Chaincode invoke/query ==="
 
