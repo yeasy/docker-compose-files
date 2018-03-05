@@ -8,8 +8,9 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Install chaincode on all peers
-CC_NAME=${CC_02_NAME}
-CC_PATH=${CC_02_PATH}
+CC_NAME=${CC_NAME:-$CC_02_NAME}
+CC_PATH=${CC_PATH:-$CC_02_PATH}
+
 echo_b "=== Installing chaincode ${CC_NAME} on all 4 peers... ==="
 
 for org in "${ORGS[@]}"

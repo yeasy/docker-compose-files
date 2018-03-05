@@ -12,26 +12,23 @@ fi
 
 pull_image() {
 	IMG=$1
-	if [ -z "$(docker images -q ${IMG} 2> /dev/null)" ]; then  # not exist
+	#if [ -z "$(docker images -q ${IMG} 2> /dev/null)" ]; then  # not exist
 		docker pull ${IMG}
-	else
-		echo "${IMG} already exist locally"
-	fi
 }
 
 echo "Downloading images from DockerHub... need a while"
 
 # TODO: we may need some checking on pulling result?
-echo "===Pulling fabric images from yeasy repo... with tag = ${FABRIC_IMG_TAG}"
+echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from yeasy repo... ==="
 for IMG in base peer orderer ca; do
 	HLF_IMG=yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done
-docker pull yeasy/hyperledger-fabric:$FABRIC_IMG_TAG \
-&& docker pull docker pull yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
+pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG
+pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
 
 
-echo "===Pulling base images from fabric repo... with tag = ${BASE_IMG_TAG}"
+echo "=== Pulling base images ${BASE_IMG_TAG} from fabric repo... ==="
 for IMG in baseimage baseos couchdb kafka zookeeper; do
 	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$BASE_IMG_TAG
 	pull_image $HLF_IMG
@@ -40,9 +37,9 @@ done
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
 
-echo "===Pulling fabric images from official repo... with tag = ${FABRIC_IMG_TAG}"
+echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from fabric repo... ==="
 for IMG in peer tools orderer ca ccenv; do
-	HLF_IMG=hyperledger/fabric-zookeeper:$ARCH-$BASE_IMG_TAG
+	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done
 

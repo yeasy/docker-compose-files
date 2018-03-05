@@ -7,9 +7,11 @@ elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
 
-CC_NAME=${CC_02_NAME}
-CC_PATH=${CC_02_PATH}
-CC_UPGRADE_ARGS=${CC_02_UPGRADE_ARGS}
+CC_NAME=${CC_NAME:-$CC_02_NAME}
+CC_PATH=${CC_PATH:-$CC_02_PATH}
+CC_UPGRADE_ARGS=${CC_UPGRADE_ARGS:-$CC_02_UPGRADE_ARGS}
+CC_QUERY_ARGS=${CC_QUERY_ARGS:-$CC_02_QUERY_ARGS}
+
 #Upgrade to new version
 echo_b "=== Upgrade chaincode ${CC_NAME} to new version... ==="
 
