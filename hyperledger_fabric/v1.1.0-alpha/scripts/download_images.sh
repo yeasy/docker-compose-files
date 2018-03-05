@@ -12,11 +12,8 @@ fi
 
 pull_image() {
 	IMG=$1
-	if [ -z "$(docker images -q ${IMG} 2> /dev/null)" ]; then  # not exist
+	#if [ -z "$(docker images -q ${IMG} 2> /dev/null)" ]; then  # not exist
 		docker pull ${IMG}
-	else
-		echo "${IMG} already exist locally"
-	fi
 }
 
 echo "Downloading images from DockerHub... need a while"
@@ -40,9 +37,9 @@ done
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
 
-echo "===Pulling fabric images from official repo... with tag = ${FABRIC_IMG_TAG}"
+echo "===Pulling fabric images from fabric repo... with tag = ${FABRIC_IMG_TAG}"
 for IMG in peer tools orderer ca ccenv; do
-	HLF_IMG=hyperledger/fabric-zookeeper:$ARCH-$BASE_IMG_TAG
+	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done
 

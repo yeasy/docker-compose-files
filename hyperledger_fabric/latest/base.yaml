@@ -90,7 +90,6 @@ services:
     restart: always
     tty: true
     environment:
-      #- GOPATH=/opt/gopath
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
@@ -111,7 +110,7 @@ services:
     command: bash -c 'while true; do sleep 20170504; done'
 
   zookeeper-base:
-    image: hyperledger/fabric-zookeeper:x86_64-0.4.5
+    image: hyperledger/fabric-zookeeper:x86_64-0.4.6
     restart: always
     tty: true
     expose:
@@ -122,7 +121,7 @@ services:
   kafka-base:
     # official repo doesn't have 1.1.0-alpha tag, however, kafka changes version recently
     #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
-    image: hyperledger/fabric-kafka:x86_64-0.4.5
+    image: hyperledger/fabric-kafka:x86_64-0.4.6
     restart: always
     tty: true
     environment:
@@ -134,7 +133,7 @@ services:
       - '9092'
 
   couchdb-base:
-    image: hyperledger/fabric-couchdb:x86_64-0.4.5
+    image: hyperledger/fabric-couchdb:x86_64-0.4.6
     restart: always
     tty: true
 

@@ -111,3 +111,4 @@ BASE_IMG_TAG=0.4.5
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=1.1.0-alpha
+PROJECT_VERSION=1.1.0

@@ -1,0 +1,6 @@
+# Copyright, All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+ruamel.yaml>=0.15.0,<=0.16.0
