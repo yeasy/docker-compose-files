@@ -13,13 +13,12 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 
 Fabric Release | Description
 --- | ---
-[Fabric v0.6.0](v0.6.0/) | stable with fabric v0.6.0 code.
-[Fabric v1.0.0](v1.0.0/) | stable with fabric v1.0.0 code.
-[Fabric v1.0.2](v1.0.2/) | deprecated, test fabric v1.0.2 code.
-[Fabric v1.0.5](v1.0.5/) | deprecated, test fabric v1.0.5 code.
-[Fabric v1.1.0-alpha](v1.1.0-alpha/) | deprecated, v1.1.0-alpha.
-[Fabric v1.0.6](v1.0.6/) | latest stable fabric v1.0.6 code.
-[Fabric v1.1.0-rc1](v1.1.0-rc1/) | latest fabric code with v1.1.0-rc1.
+[Fabric v0.6.0](v0.6.0/) | fabric v0.6.0 release (too old, not recommend to use).
+[Fabric v1.0.0](v1.0.0/) | fabric v1.0.0 release.
+[Fabric v1.0.2](v1.0.2/) | fabric v1.0.2 release.
+[Fabric v1.0.5](v1.0.5/) | fabric v1.0.5 release.
+[Fabric v1.0.6](v1.0.6/) | fabric v1.0.6 release.
+[Fabric v1.1.0](v1.1.0/) | latest stable fabric 1.1.0 release.
 [Fabric Latest](latest/) | experimental with latest fabric code, unstable.
 
 

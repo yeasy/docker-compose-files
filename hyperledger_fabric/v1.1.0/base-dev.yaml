@@ -1,0 +1,97 @@
+# This is the development compose file to config env and command
+# Notice that chaincode is executed inside docker in default net mode
+# https://github.com/yeasy/docker-compose-files
+
+# Depends on the yeasy/hyperledger-fabric image.
+
+version: '2'
+
+services:
+  orderer.example.com:  # There can be multiple orderers
+    extends:
+      file: base.yaml
+      service: orderer-base
+    image: yeasy/hyperledger-fabric:1.1.0
+    container_name: orderer.example.com
+    hostname: orderer.example.com
+    ports:
+      - "7050:7050"
+    environment:
+      # Kafka related configurations
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
+      - ORDERER_KAFKA_VERBOSE=true
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+      # for solo case
+      #- ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      #- ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      #- ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+      # for kafka case
+      - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      - ./kafka/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
+    #command: bash -c 'orderer start'
+
+  peer0.org1.example.com:
+    extends:
+      file: base.yaml
+      service: peer-base
+    image: yeasy/hyperledger-fabric:1.1.0
+    container_name: peer0.org1.example.com
+    hostname: peer0.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+      # solo mode configuration
+      #- ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      #- ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+      # kafka mode configuration
+      - ./kafka/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./kafka/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 7051:7051
+      - 7052:7052
+      - 7053:7053
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    command: bash -c 'peer node start'
+    #command: bash -c 'peer node start --peer-chaincodedev=true'  # DEV mode
+
+  cli:
+    extends:
+      file: base.yaml
+      service: cli-base
+    image: yeasy/hyperledger-fabric:1.1.0
+    container_name: fabric-cli
+    hostname: fabric-cli
+    tty: true
+    environment:
+      - CORE_PEER_ID=fabric-cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+      #- /tmp/:/tmp/
+      - ./scripts:/tmp/scripts
+      # solo mode configuration
+      #- ./solo/channel-artifacts:/tmp/channel-artifacts
+      #- ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      #- ./solo/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      #- ./solo/crypto-config:/etc/hyperledger/fabric/crypto-config
+      #- ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+      # kafka mode configuration
+      - ./kafka/channel-artifacts:/tmp/channel-artifacts
+      - ./kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      - ./kafka/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      - ./kafka/crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
