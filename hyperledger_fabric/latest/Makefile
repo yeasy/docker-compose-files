@@ -28,13 +28,14 @@ all: test
 
 test:
 	@echo "Run test with $(COMPOSE_FILE)"
-	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
+	@echo "Please make sure u have setup Docker and pulled images by 'make setup download'."
 
-	make ready  # Finish all testing
+	make ready  # Run all testing till ready
 
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
+ # TODO: Sometimes the first time to run will trigger "/bin/sh: 1: Syntax error: Bad fd number". Just run `make start` to init once
 	make stop
 	make gen_config  # Will ignore if local config path exists
 	make start
@@ -45,13 +46,11 @@ ready: # create/join channel, install/instantiate cc
 			sleep ${NETWORK_INIT_WAIT}; \
 	fi
 
-	make test_channel_create
-	make test_channel_join
+	make channel_test
+
 	make update_anchors
 
-	make test_cc_install
-	make test_cc_instantiate
-	make test_cc_invoke_query
+	make cc_test
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
@@ -69,6 +68,10 @@ ready: # create/join channel, install/instantiate cc
 	@echo "Now the fabric network is ready to play"
 	@echo "run 'make cli' to enter into the fabric-cli container."
 	@echo "run 'make stop' when done."
+
+channel_test: test_channel_create test_channel_join
+
+cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
 
 restart: stop start
 
@@ -157,7 +160,6 @@ test_fetch_blocks: # test fetching channel blocks fetch
 
 setup: # setup the environment
 	bash scripts/env_setup.sh # Installing Docker and Docker-Compose
-	bash scripts/download_images.sh # Pull required Docker images
 
 check: # Check shell scripts grammar
 	@echo "Check shell scripts grammar"
@@ -215,4 +217,3 @@ download: # download required images
 chaincode_init: # start chaincode in dev mode and do install/instantiate
 	@echo "Install and instantiate cc example02 on the fabric dev network"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/init_chaincode_dev.sh"
-

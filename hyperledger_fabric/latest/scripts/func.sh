@@ -439,7 +439,7 @@ chaincodeQuery () {
 			 >&log.txt
 		 rc=$?
 		 if [ $# -gt 5 ]; then # need to check the result
-			 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
+			 test $? -eq 0 && VALUE=$(cat log.txt | awk 'END {print $NF}')
 			 if [ "$VALUE" = "${expected_result}" ]; then
 				 let rc=0
 			 else

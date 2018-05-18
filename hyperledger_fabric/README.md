@@ -26,7 +26,7 @@ Fabric Release | Description
 
 ### Pick up a fabric version
 
-Enter the subdir of specific version, e.g., 
+Enter the subdir of specific version, e.g.,
 
 ```bash
 $ cd 1.0.6 # select a fabric version
@@ -37,7 +37,7 @@ $ cd 1.0.6 # select a fabric version
 The following command will run the entire process (start a fabric network, create channel, test chaincode and stop it.) pass-through.
 
 ```bash
-$ make setup # Install docker/compose, and pull required images
+$ make setup download # Install docker/compose, and pull required images
 $ make test  # Test with default fabric solo mode
 ```
 
