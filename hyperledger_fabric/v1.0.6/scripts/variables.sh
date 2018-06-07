@@ -74,7 +74,7 @@ CHANNEL_ARTIFACTS=channel-artifacts
 CRYPTO_CONFIG=crypto-config
 ORDERER_GENESIS=orderer.genesis.block
 ORDERER_PROFILE=TwoOrgsOrdererGenesis
-APP_CHANNEL_TX=new_${APP_CHANNEL}.tx
+APP_CHANNEL_TX=${APP_CHANNEL}.tx
 UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
 UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 

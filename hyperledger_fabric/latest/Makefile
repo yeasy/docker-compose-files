@@ -1,5 +1,9 @@
 # Makefile to bootup the network, and do operations (channel, chaincode)
 
+
+# support advanced bash grammar
+SHELL:=/bin/bash
+
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 HLF_VERSION ?= latest
@@ -82,7 +86,7 @@ start: # bootup the fabric network
 
 stop: # stop the fabric network
 	@echo "Stop the fabric network with ${COMPOSE_FILE}..."
-	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log  # Stop a fabric network
+	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
@@ -170,6 +174,7 @@ clean: # clean up containers
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
+	echo "May need to clean the solo/channel-artifacts and crypto-config path"
 
 env_clean: # clean up environment
 	@echo "Clean all images and containers"
@@ -207,7 +212,6 @@ gen_config: # generate config artifacts
 	else \
 			bash scripts/gen_config.sh solo; \
 	fi
-
 
 download: # download required images
 	@echo "Download Docker images"

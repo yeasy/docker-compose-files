@@ -67,9 +67,9 @@ echo_b "Create the anchor peer configuration tx using configtx.yaml"
 [ -f ${MODE}/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG1_TX} -channelID ${APP_CHANNEL} -asOrg ${ORG1MSP}
 [ -f ${MODE}/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG2_TX} ] || gen_con_exec configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate /tmp/${CHANNEL_ARTIFACTS}/${UPDATE_ANCHOR_ORG2_TX} -channelID ${APP_CHANNEL} -asOrg ${ORG2MSP}
 
-#echo_b "Output the json for each org"
-#[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG1MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG1MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG1MSP}.json"
-#[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG2MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG2MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG2MSP}.json"
+echo_b "Output the json for each org"
+[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG1MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG1MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG1MSP}.json"
+[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG2MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG2MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG2MSP}.json"
 
 echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 
@@ -90,7 +90,7 @@ if [ "${GEN_CRYPTO}" = "true" ]; then
 	gen_con_exec cryptogen generate --config=$FABRIC_CFG_PATH/crypto-config.yaml --output ${FABRIC_CFG_PATH}/${CRYPTO_CONFIG}
 fi
 
-#[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG3MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG3MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG3MSP}.json"
+[ -f ${MODE}/${CHANNEL_ARTIFACTS}/${ORG3MSP}.json ] || gen_con_exec bash -c "configtxgen -printOrg ${ORG3MSP} >/tmp/${CHANNEL_ARTIFACTS}/${ORG3MSP}.json"
 
 echo_b "Remove the container $GEN_CONTAINER" && docker rm -f $GEN_CONTAINER
 

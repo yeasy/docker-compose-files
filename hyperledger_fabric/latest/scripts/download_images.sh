@@ -48,8 +48,8 @@ for IMG in peer tools orderer ca ccenv couchdb kafka zookeeper; do
 	pull_image $HLF_IMG
 done
 
-pull_image hyperledger/fabric-ccenv:x86_64-1.1.0-rc1 # no latest tag for ccenv
-docker tag hyperledger/fabric-ccenv:x86_64-1.1.0-rc1 hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION
+#pull_image hyperledger/fabric-ccenv:x86_64-1.1.0 # no latest tag for ccenv
+#docker tag hyperledger/fabric-ccenv:x86_64-1.1.0 hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION
 
 echo "Image pulling done, now can startup the network using docker-compose..."
 
