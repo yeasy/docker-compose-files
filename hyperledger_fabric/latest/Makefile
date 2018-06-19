@@ -41,8 +41,9 @@ test:
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
- # TODO: Sometimes the first time to run will trigger "/bin/sh: 1: Syntax error: Bad fd number". Just run `make start` to init once
 	make stop
+	# make clean_crypto_config # Remove existing crypto-config.
+	# make clean_channel_artifacts # Remove existing channel artifacts.
 	make gen_config  # Will ignore if local config path exists
 	make start
 
@@ -224,6 +225,17 @@ gen_config: # generate config artifacts
 	else \
 			bash scripts/gen_config.sh solo; \
 	fi
+
+clean_channel_artifacts: # clean channel related artifacts
+	if [ "$(HLF_MODE)" = "solo" ]; then \
+		rm -rf solo/channel-artifacts; \
+	else \
+		rm -rf kafka/channel-artifacts; \
+	fi
+
+clean_crypto_config: # clean config artifacts
+	rm -rf crypto-config
+	rm -rf org3/crypto-config
 
 download: # download required images
 	@echo "Download Docker images"

@@ -12,10 +12,6 @@ OrdererOrgs:
   # ---------------------------------------------------------------------------
   - Name: Orderer
     Domain: example.com
-    CA:
-        Country: US
-        Province: California
-        Locality: San Francisco
     # ---------------------------------------------------------------------------
     # "Specs" - See PeerOrgs below for complete description
     # ---------------------------------------------------------------------------
@@ -30,10 +26,7 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Org1
     Domain: org1.example.com
-    CA:
-        Country: US
-        Province: California
-        Locality: San Francisco
+    EnableNodeOUs: true
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -83,10 +76,7 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Org2
     Domain: org2.example.com
-    CA:
-        Country: US
-        Province: California
-        Locality: San Francisco
+    EnableNodeOUs: true
     Template:
       Count: 2
     Users:

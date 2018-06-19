@@ -106,14 +106,14 @@ channelCreateAction(){
 			-o ${ORDERER_URL} \
 			-c ${channel} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
-			--timeout $TIMEOUT \
+			--timeout "${TIMEOUT}s" \
 			>&log.txt
 	else
 		peer channel create \
 			-o ${ORDERER_URL} \
 			-c ${channel} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
-			--timeout $TIMEOUT \
+			--timeout "${TIMEOUT}s" \
 			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
