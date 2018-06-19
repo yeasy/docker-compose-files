@@ -1,4 +1,6 @@
-# Makefile to bootup the network, and do operations (channel, chaincode)
+# Makefile to bootup the network, and do testing with channel, chaincode
+# Run `make test` will pass all testing cases, and delete the network
+# Run `make ready` will create a network, pass testing cases, and stand there for manual test, e.g., make test_channel_list
 
 
 # support advanced bash grammar
@@ -70,11 +72,13 @@ ready: # create/join channel, install/instantiate cc
 	make logs_save
 
 	@echo "Now the fabric network is ready to play"
-	@echo "run 'make cli' to enter into the fabric-cli container."
-	@echo "run 'make stop' when done."
+	@echo "* run 'make cli' to enter into the fabric-cli container."
+	@echo "* run 'make stop' when done."
 
-channel_test: test_channel_create test_channel_join
+# channel related operations
+channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
+# chaincode related operations
 cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
 
 restart: stop start
@@ -91,6 +95,14 @@ stop: # stop the fabric network
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Channel testing operations ################
+
+test_channel_list: # List the channel that peer joined
+	@echo "List the joined channels"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_list.sh"
+
+test_channel_getinfo: # Get info of a channel
+	@echo "Get info of the app channel"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_getinfo.sh"
 
 test_channel_create: # Init the channel
 	@echo "Create channel on the fabric network"
@@ -174,7 +186,7 @@ clean: # clean up containers
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May need to clean the solo/channel-artifacts and crypto-config path"
+	echo "May manually clean the solo|kafka/channel-artifacts and crypto-config path"
 
 env_clean: # clean up environment
 	@echo "Clean all images and containers"
