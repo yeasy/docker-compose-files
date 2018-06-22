@@ -7,7 +7,7 @@ SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
 
 # Client cmd execute timeout and retry times
-TIMEOUT="30"
+TIMEOUT="60"
 MAX_RETRY=5
 
 # Organization and peers

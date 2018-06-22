@@ -42,9 +42,9 @@ test:
 
 ready: # create/join channel, install/instantiate cc
 	make stop
-	# make clean_crypto_config # Remove existing crypto-config.
-	# make clean_channel_artifacts # Remove existing channel artifacts.
+	# make clean_config # Remove existing crypto-config and channel artifacts.
 	make gen_config  # Will ignore if local config path exists
+
 	make start
 
 	if [ "$(HLF_MODE)" = "dev" ]; then \
@@ -64,8 +64,8 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_fetch_blocks # fetch block files
 
-	make test_config_update # not work with this version
-	make test_channel_update # not work with this version
+	make test_config_update
+	make test_channel_update
 
 	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
@@ -187,7 +187,9 @@ clean: # clean up containers
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May manually clean the solo|kafka/channel-artifacts and crypto-config path"
+	echo "May manually clean the crypto-config and $(MODE)/channel-artifacts"
+
+clean_config: clean_channel_artifacts clean_crypto_config
 
 env_clean: # clean up environment
 	@echo "Clean all images and containers"
@@ -227,10 +229,10 @@ gen_config: # generate config artifacts
 	fi
 
 clean_channel_artifacts: # clean channel related artifacts
-	if [ "$(HLF_MODE)" = "solo" ]; then \
-		rm -rf solo/channel-artifacts; \
-	else \
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
 		rm -rf kafka/channel-artifacts; \
+	else \
+		rm -rf solo/channel-artifacts; \
 	fi
 
 clean_crypto_config: # clean config artifacts
