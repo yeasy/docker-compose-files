@@ -207,4 +207,4 @@ Capabilities:
         # modification of which would cause imcompatibilities.  Users should
         # leave this flag set to true.
         # TODO, re-enable once the new lifecycle work is complete
-        V1_1: false 
+        V1_1: false
