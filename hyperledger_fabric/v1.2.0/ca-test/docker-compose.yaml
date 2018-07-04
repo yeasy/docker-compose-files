@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+
+    ca.org1.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca.org1.example.com
+        hostname: ca.org1.example.com
+        volumes:
+            - $PWD/fabric-ca-server/ca.org1.example.com:/etc/hyperledger/fabric-ca-server
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CSR_CN=ca.org1.example.com
+            # CA cannot support following fields as env variables now
+            # - FABRIC_CA_SERVER_CSR_NAMES_L="San Francisco"
+            # - FABRIC_CA_SERVER_CSR_NAMES_O=org1.example.com
+        working_dir: /etc/hyperledger/fabric-ca-server
+        #command: sh ca_server_start.sh
+        command: fabric-ca-server start -b admin:adminpw
+        #--csr.names C=US,ST="California",L="San Francisco",O="org1.example.com"
+
+    tlsca.org1.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: tlsca.org1.example.com
+        hostname: tlsca.org1.example.com
+        volumes:
+            - $PWD/fabric-ca-server/tlsca.org1.example.com:/etc/hyperledger/fabric-ca-server
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CSR_CN=tlsca.org1.example.com
+            # CA cannot support following fields as env variables now
+            # - FABRIC_CA_SERVER_CSR_NAMES_L="San Francisco"
+            # - FABRIC_CA_SERVER_CSR_NAMES_O=org1.example.com
+        working_dir: /etc/hyperledger/fabric-ca-server
+        # command: sh ca_server_start.sh
+        command: fabric-ca-server start -b admin:adminpw
+        #--csr.names C=US,ST="California",L="San Francisco",O="org1.example.com"
+
+    ca-client:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca-client
+        hostname: ca-client
+        volumes:
+            - $PWD/fabric-ca-client:/etc/hyperledger/fabric-ca-client
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+        depends_on:
+            - ca.org1.example.com
+            - tlsca.org1.example.com
+        working_dir: /etc/hyperledger/fabric-ca-client
+        # command: sh -c "while true; do sleep 1; done"
+        command: sh -c "sleep 1; bash /etc/hyperledger/fabric-ca-client/client-test.sh ca.org1.example.com"

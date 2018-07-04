@@ -19,17 +19,24 @@ Fabric Release | Description
 [Fabric v1.0.5](v1.0.5/) | fabric v1.0.5 release.
 [Fabric v1.0.6](v1.0.6/) | fabric v1.0.6 release.
 [Fabric v1.1.0](v1.1.0/) | latest stable fabric 1.1.0 release.
+[Fabric v1.2.0](v1.2.0/) | latest stable fabric 1.2.0 release.
 [Fabric Latest](latest/) | experimental with latest fabric code, unstable.
 
 
 ## Getting Started
+
+### TLDR
+
+```bash
+$ cd v1.2.0; make
+```
 
 ### Pick up a fabric version
 
 Enter the subdir of specific version, e.g.,
 
 ```bash
-$ cd 1.0.6 # select a fabric version
+$ cd v1.2.0 # select a fabric version
 ```
 
 ### Quick Test
