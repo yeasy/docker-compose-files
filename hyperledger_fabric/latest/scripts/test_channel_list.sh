@@ -18,6 +18,6 @@ do
 	done
 done
 
-echo_g "=== Done listign joined channels ==="
+echo_g "=== Done listing joined channels ==="
 
 echo

@@ -46,12 +46,14 @@ setOrdererEnvs () {
 
 # Set global env variables for fabric cli, after setting:
 # client is the admin as given org
-# TLS root cert is configured to given peer's
+# TLS root cert is configured to given peer's tls ca
 # remote peer address is configured to given peer's
-# CORE_PEER_LOCALMSPID=Org1MSP
-# CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-# CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-# CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+
+# CORE_PEER_LOCALMSPID=Org1MSP  # local msp id to use
+# CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp  # local msp path to use
+# CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt  # local trusted tls ca cert
+# CORE_PEER_ADDRESS=peer0.org1.example.com:7051  # remote peer to send proposal to
+
 # Usage: setEnvs org peer
 setEnvs () {
 	local org=$1  # 1 or 2
