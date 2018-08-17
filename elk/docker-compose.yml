@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}"
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    #command: ["bash", "-c", "echo 'discovery.type: single-node'>>/usr/share/elasticsearch/config/elasticsearch.yml; /usr/local/bin/docker-entrypoint.sh eswrapper"]
+    command: ["bash", "-c", "/usr/local/bin/docker-entrypoint.sh eswrapper"]
+    networks:
+      - elk
+
+  logstash:
+    image: "docker.elastic.co/logstash/logstash:${ELK_VERSION}"
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+    command: ["bash", "-c", "echo 'path.config: /usr/share/logstash/pipeline'>>/usr/share/logstash/config/logstash.yml; /usr/local/bin/docker-entrypoint"]
+    networks:
+      - elk
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:${ELK_VERSION}"
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge
