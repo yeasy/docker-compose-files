@@ -22,3 +22,4 @@ install_docker_compose() {
 command -v "docker" >/dev/null 2>&1 && echo "Docker already installed" || install_docker
 
 command -v "docker-compose" >/dev/null 2>&1 && echo "Docker-Compose already installed" || install_docker_compose
+command -v "jq" >/dev/null 2>&1 && echo "jq already installed" || sudo apt-get install jq

@@ -1,5 +1,9 @@
-# Makefile to bootup the network, and do operations (channel, chaincode)
+# Makefile to bootup the network, and do testing with channel, chaincode
+# Run `make test` will pass all testing cases, and delete the network
+# Run `make ready` will create a network, pass testing cases, and stand there for manual test, e.g., make test_channel_list
 
+# support advanced bash grammar
+SHELL:=/bin/bash
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 HLF_VERSION ?= 1.1.0
@@ -28,14 +32,15 @@ all: test
 
 test:
 	@echo "Run test with $(COMPOSE_FILE)"
-	@echo "Please make sure u have setup Docker and pulled images by 'make setup'."
+	@echo "Please make sure u have setup Docker and pulled images by 'make setup download'."
 
-	make ready  # Finish all testing
+	make ready  # Run all testing till ready
 
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
 	make stop
+	# make clean_config # Remove existing crypto-config and channel artifacts.
 	make gen_config  # Will ignore if local config path exists
 	make start
 
@@ -45,21 +50,19 @@ ready: # create/join channel, install/instantiate cc
 			sleep ${NETWORK_INIT_WAIT}; \
 	fi
 
-	make test_channel_create
-	make test_channel_join
+	make channel_test
+
 	make update_anchors
 
-	make test_cc_install
-	make test_cc_instantiate
-	make test_cc_invoke_query
+	make cc_test
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
 
 	make test_fetch_blocks # fetch block files
 
-	make test_config_update # not work with this version
-	make test_channel_update # not work with this version
+	make test_config_update
+	make test_channel_update
 
 	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
@@ -67,9 +70,13 @@ ready: # create/join channel, install/instantiate cc
 	make logs_save
 
 	@echo "Now the fabric network is ready to play"
-	@echo "run 'make cli' to enter into the fabric-cli container."
-	@echo "run 'make stop' when done."
+	@echo "* run 'make cli' to enter into the fabric-cli container."
+	@echo "* run 'make stop' when done."
 
+# channel related operations
+channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
+# chaincode related operations
+cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
 restart: stop start
 
 start: # bootup the fabric network
@@ -84,6 +91,12 @@ stop: # stop the fabric network
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Channel testing operations ################
+test_channel_list: # List the channel that peer joined
+	@echo "List the joined channels"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_list.sh"
+test_channel_getinfo: # Get info of a channel
+	@echo "Get info of the app channel"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_getinfo.sh"
 
 test_channel_create: # Init the channel
 	@echo "Create channel on the fabric network"
@@ -168,6 +181,8 @@ clean: # clean up containers
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
+	echo "May manually clean the crypto-config and $(MODE)/channel-artifacts"
+clean_config: clean_channel_artifacts clean_crypto_config
 
 env_clean: # clean up environment
 	@echo "Clean all images and containers"
@@ -206,7 +221,16 @@ gen_config: # generate config artifacts
 			bash scripts/gen_config.sh solo; \
 	fi
 
+clean_channel_artifacts: # clean channel related artifacts
+	if [ "$(HLF_MODE)" = "kafka" ]; then \
+		rm -rf kafka/channel-artifacts; \
+	else \
+		rm -rf solo/channel-artifacts; \
+	fi
 
+clean_crypto_config: # clean config artifacts
+	rm -rf crypto-config
+	rm -rf org3/crypto-config
 download: # download required images
 	@echo "Download Docker images"
 	bash scripts/download_images.sh

@@ -65,7 +65,7 @@ services:
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=v110_default  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the group leader, default to false
-        #- CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key

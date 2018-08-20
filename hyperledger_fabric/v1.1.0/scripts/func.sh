@@ -65,7 +65,7 @@ setEnvs () {
 	t="\${ORG${org}_ADMIN_MSP}" && export CORE_PEER_MSPCONFIGPATH=`eval echo $t`
 	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
 
-	#env |grep CORE
+	env |grep CORE_PEER
 }
 
 checkOSNAvailability() {
@@ -190,6 +190,35 @@ channelJoin () {
 getShasum () {
 	[ ! $# -eq 1 ] && exit 1
 	shasum ${1} | awk '{print $1}'
+}
+channelList () {
+	local org=$1
+	local peer=$2
+	echo "=== List the channels that org${org}/peer${peer} joined === "
+	setEnvs $org $peer
+	peer channel list >&log.txt
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	if [ $rc -ne 0 ]; then
+		echo "=== Failed to list the channels that org${org}/peer${peer} joined === "
+	else
+		echo "=== Done to list the channels that org${org}/peer${peer} joined === "
+	fi
+}
+channelGetInfo () {
+	local channel=$1
+	local org=$2
+	local peer=$3
+	echo "=== Get channel info of ${channel} with id of org${org}/peer${peer} === "
+	setEnvs $org $peer
+	peer channel getinfo -c ${channel} >&log.txt
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	if [ $rc -ne 0 ]; then
+		echo "=== Fail to get channel info of ${channel} with id of org${org}/peer${peer} === "
+	else
+		echo "=== Done to get channel info of ${channel} with id of org${org}/peer${peer} === "
+	fi
 }
 
 # Fetch all blocks for a channel

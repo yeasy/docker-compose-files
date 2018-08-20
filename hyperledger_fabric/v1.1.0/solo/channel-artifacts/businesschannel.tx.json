@@ -1,0 +1,116 @@
+{
+	"payload": {
+		"data": {
+			"config_update": {
+				"channel_id": "businesschannel",
+				"read_set": {
+					"groups": {
+						"Application": {
+							"groups": {
+								"Org1MSP": {
+									"mod_policy": "",
+									"version": "0"
+								},
+								"Org2MSP": {
+									"mod_policy": "",
+									"version": "0"
+								}
+							},
+							"mod_policy": "",
+							"version": "0"
+						}
+					},
+					"mod_policy": "",
+					"values": {
+						"Consortium": {
+							"mod_policy": "",
+							"version": "0"
+						}
+					},
+					"version": "0"
+				},
+				"type": 0,
+				"write_set": {
+					"groups": {
+						"Application": {
+							"groups": {
+								"Org1MSP": {
+									"mod_policy": "",
+									"version": "0"
+								},
+								"Org2MSP": {
+									"mod_policy": "",
+									"version": "0"
+								}
+							},
+							"mod_policy": "Admins",
+							"policies": {
+								"Admins": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "MAJORITY",
+											"sub_policy": "Admins"
+										}
+									},
+									"version": "0"
+								},
+								"Readers": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "ANY",
+											"sub_policy": "Readers"
+										}
+									},
+									"version": "0"
+								},
+								"Writers": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "ANY",
+											"sub_policy": "Writers"
+										}
+									},
+									"version": "0"
+								}
+							},
+							"values": {
+								"Capabilities": {
+									"mod_policy": "Admins",
+									"version": "0"
+								}
+							},
+							"version": "1"
+						}
+					},
+					"mod_policy": "",
+					"values": {
+						"Consortium": {
+							"mod_policy": "",
+							"value": {
+								"name": "SampleConsortium"
+							},
+							"version": "0"
+						}
+					},
+					"version": "0"
+				}
+			}
+		},
+		"header": {
+			"channel_header": {
+				"channel_id": "businesschannel",
+				"epoch": "0",
+				"timestamp": "2018-08-20T02:21:38.000Z",
+				"tx_id": "",
+				"type": 2,
+				"version": 0
+			}
+		}
+	}
+}
