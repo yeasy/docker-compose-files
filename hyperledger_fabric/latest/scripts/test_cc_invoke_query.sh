@@ -36,9 +36,9 @@ chaincodeQuery ${APP_CHANNEL} 1 0 ${CC_NAME} ${CC_QUERY_ARGS} 80
 
 # sideDB testing
 
-# both org1 and org2 can invoke
-echo_b "Invoke chaincode with collection on org2/peer0"
-chaincodeInvoke ${APP_CHANNEL} 2 0 ${CC_MARBLES_NAME} ${CC_MARBLES_INVOKE_INIT_ARGS}
+# both org1 and org2 can invoke, but gossip is the problem to cross org
+echo_b "Invoke chaincode with collection on org1/peer0"
+chaincodeInvoke ${APP_CHANNEL} 1 0 ${CC_MARBLES_NAME} ${CC_MARBLES_INVOKE_INIT_ARGS}
 
 # both org1 and org2 can do normal read
 echo_b "Query chaincode with collection collectionMarbles on org1/peer1"
