@@ -64,7 +64,8 @@ services:
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=latest_default  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
-      - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the group leader, default to false
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the org leader, default to false
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=0.0.0.0:7051  # external addr for peers in other orgs
       - CORE_PEER_PROFILE_ENABLED=false
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt

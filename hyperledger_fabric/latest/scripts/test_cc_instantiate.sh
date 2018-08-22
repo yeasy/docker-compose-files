@@ -14,8 +14,12 @@ CC_INIT_ARGS=${CC_INIT_ARGS:-$CC_02_INIT_ARGS}
 # (once for each channel is enough, we make it concurrent here)
 echo_b "=== Instantiating chaincode on channel ${APP_CHANNEL}... ==="
 
+# Instantiate at org1.peer0 and org2.peer0, actually it can be triggered once per channel
 chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
-chaincodeInstantiate "${APP_CHANNEL}" 2 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
+#chaincodeInstantiate "${APP_CHANNEL}" 2 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
+
+# test sideDB feature
+chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_MARBLES_NAME} ${CC_INIT_VERSION} ${CC_MARBLES_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG}
 
 echo_g "=== Instantiate chaincode on channel ${APP_CHANNEL} done ==="
 

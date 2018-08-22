@@ -56,6 +56,16 @@ CC_MAP_UPGRADE_ARGS='{"Args":["upgrade",""]}'
 CC_MAP_INVOKE_ARGS='{"Args":["invoke","put","key","value"]}'
 CC_MAP_QUERY_ARGS='{"Args":["get","key"]}'
 
+# Chaincode marbles related
+CC_MARBLES_NAME="marblesp"
+CC_MARBLES_PATH="examples/chaincode/go/marbles02_private/go"
+CC_MARBLES_INIT_ARGS='{"Args":["init"]}'
+CC_MARBLES_UPGRADE_ARGS='{"Args":["upgrade",""]}'
+CC_MARBLES_INVOKE_INIT_ARGS='{"Args":["initMarble","marble1","blue","35","tom","99"]}' # price is in collectionMarblePrivateDetails
+CC_MARBLES_QUERY_READ_ARGS='{"Args":["readMarble","marble1"]}' # this requires 'collectionMarbles' collection
+CC_MARBLES_QUERY_READPVTDETAILS_ARGS='{"Args":["readMarblePrivateDetails","marble1"]}' # this requires 'collectionMarblePrivateDetails' collection
+CC_MARBLES_COLLECTION_CONFIG="/go/src/examples/chaincode/go/marbles02_private/collections_config.json"
+
 # unique chaincode params
 CC_NAME=${CC_02_NAME}
 CC_PATH=${CC_02_PATH}

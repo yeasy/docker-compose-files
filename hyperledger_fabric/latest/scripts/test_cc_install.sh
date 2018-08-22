@@ -18,6 +18,9 @@ do
 	for peer in "${PEERS[@]}"
 	do
 		chaincodeInstall $org $peer ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+
+		# test for sideDB feature
+		chaincodeInstall $org $peer ${CC_MARBLES_NAME} ${CC_INIT_VERSION} ${CC_MARBLES_PATH}
 	done
 done
 

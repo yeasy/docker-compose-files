@@ -22,6 +22,10 @@ See [Docker Compose Documentation](https://docs.docker.com/compose/).
 ## [consul-discovery](consul-discovery)
 Using consul to make a service-discoverable architecture.
 
+## [elk](elk)
+ELK example.
+
+
 ## [elk_netflow](elk_netflow)
 Elk cluster, with netflow support.
 ```sh

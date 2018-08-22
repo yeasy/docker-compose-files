@@ -370,15 +370,19 @@ chaincodeInstall () {
 # Instantiate chaincode on specifized peer node
 # chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
+	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
+		echo "Wrong param number for chaincode instantaite"
+		exit -1
+	fi
 	local channel=$1
 	local org=$2
 	local peer=$3
 	local name=$4
 	local version=$5
 	local args=$6
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+
 	setEnvs $org $peer
-	echo "=== chaincodeInstantiate for channel ${channel} on org $org/peer $peer ===="
+	echo "=== chaincodeInstantiate for channel ${channel} by org $org/peer $peer ===="
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -388,7 +392,6 @@ chaincodeInstantiate () {
 			-n ${name} \
 			-v ${version} \
 			-c ${args} \
-			-P "OR	('Org1MSP.member','Org2MSP.member')" \
 			>&log.txt
 	else
 		peer chaincode instantiate \
@@ -397,7 +400,8 @@ chaincodeInstantiate () {
 			-n ${name} \
 			-v ${version} \
 			-c ${args} \
-			-P "OR	('Org1MSP.member','Org2MSP.member')" \
+			-P ${policy} \
+			--collections-config ${collection_config} \
 			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
