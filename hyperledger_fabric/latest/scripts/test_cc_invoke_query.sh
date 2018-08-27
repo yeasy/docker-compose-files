@@ -34,20 +34,4 @@ chaincodeInvoke ${APP_CHANNEL} 2 1 ${CC_NAME} ${CC_INVOKE_ARGS}
 echo_b "Query chaincode on org1/peer0 4peers..."
 chaincodeQuery ${APP_CHANNEL} 1 0 ${CC_NAME} ${CC_QUERY_ARGS} 80
 
-# sideDB testing
-
-# both org1 and org2 can invoke, but gossip is the problem to cross org
-echo_b "Invoke chaincode with collection on org1/peer0"
-chaincodeInvoke ${APP_CHANNEL} 1 0 ${CC_MARBLES_NAME} ${CC_MARBLES_INVOKE_INIT_ARGS}
-
-# both org1 and org2 can do normal read
-echo_b "Query chaincode with collection collectionMarbles on org1/peer1"
-chaincodeQuery ${APP_CHANNEL} 1 1 ${CC_MARBLES_NAME} ${CC_MARBLES_QUERY_READ_ARGS}
-
-# only org1 can do detailed read
-echo_b "Query chaincode with collection collectionMarblePrivateDetails on org1/peer1"
-chaincodeQuery ${APP_CHANNEL} 1 1 ${CC_MARBLES_NAME} ${CC_MARBLES_QUERY_READPVTDETAILS_ARGS}
-
 echo_g "=== Chaincode invoke/query completed ==="
-
-echo

@@ -75,14 +75,12 @@ services:
       - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     volumes:
       - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
     expose:
       - "7051"  # Grpc
       - "7052"  # Peer CLI
       - "7053"  # Peer Event
-    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
-      - /var/run/docker.sock:/var/run/docker.sock
-    #volumes:
-    #    - /var/run/:/host/var/run/
     #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: peer node start
 
@@ -98,6 +96,7 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 
+#deprecated
   event-listener-base:
     image: yeasy/hyperledger-fabric:latest
     restart: always

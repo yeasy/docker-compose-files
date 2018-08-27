@@ -386,7 +386,7 @@ chaincodeInstall () {
 # chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
 	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
-		echo "Wrong param number for chaincode instantaite"
+		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
 	local channel=$1
@@ -405,6 +405,7 @@ chaincodeInstantiate () {
 	if [ ! -z "$8" ]; then
 		policy=$8
 	fi
+
 	setEnvs $org $peer
 	echo "=== chaincodeInstantiate for channel ${channel} on org $org/peer $peer ===="
 	echo "name=${name}, version=${version}, args=${args}, collection_config=${collection_config}, policy=${policy}"
@@ -546,15 +547,21 @@ chaincodeStartDev () {
 
 # chaincodeUpgrade channel peer name version args
 chaincodeUpgrade () {
+	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
+		echo_r "Wrong param number for chaincode instantaite"
+		exit -1
+	fi
 	local channel=$1
 	local org=$2
 	local peer=$3
 	local name=$4
 	local version=$5
 	local args=$6
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	local collection_config=""  # collection config file path for sideDB
+	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
+
 	echo "=== chaincodeUpgrade to orderer by id of org ${org}/peer $peer === "
-	echo "channel=${channel}, name=${name}, args=${args}"
+	echo "name=${name}, version=${version}, args=${args}, collection_config=${collection_config}, policy=${policy}"
 
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
@@ -566,6 +573,8 @@ chaincodeUpgrade () {
 		-n ${name} \
 		-v ${version} \
 		-c ${args} \
+		-P "${policy}" \
+		--collections-config "${collection_config}" \
 		>&log.txt
 	else
 		peer chaincode upgrade \
@@ -574,6 +583,8 @@ chaincodeUpgrade () {
 		-n ${name} \
 		-v ${version} \
 		-c ${args} \
+		-P "${policy}" \
+		--collections-config "${collection_config}" \
 		--tls \
 		--cafile ${ORDERER_TLS_CA} \
 		>&log.txt

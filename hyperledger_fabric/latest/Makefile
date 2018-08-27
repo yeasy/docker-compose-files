@@ -173,6 +173,14 @@ test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
+test_eventsclient: # test get event notification in a loop
+	@echo "Test fetching event notification"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/start_eventsclient.sh"
+
+test_sidedb: # test sideDB/private data feature
+	@echo "Test sideDB"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_sideDB.sh"
+
 temp: # test temp instructions, used for experiment
 	@echo "Test experimental instructions"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_temp.sh"

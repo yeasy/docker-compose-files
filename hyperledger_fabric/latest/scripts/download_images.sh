@@ -43,7 +43,7 @@ done
 # docker pull yeasy/hyperledger-fabric
 
 echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from fabric repo... ==="
-for IMG in peer tools orderer ca ccenv couchdb kafka zookeeper; do
+for IMG in peer tools orderer ca ccenv tools couchdb kafka zookeeper; do
 	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
 	pull_image $HLF_IMG
 done

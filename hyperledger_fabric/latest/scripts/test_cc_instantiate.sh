@@ -18,9 +18,6 @@ echo_b "=== Instantiating chaincode on channel ${APP_CHANNEL}... ==="
 chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
 #chaincodeInstantiate "${APP_CHANNEL}" 2 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS}
 
-# test sideDB feature
-chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_MARBLES_NAME} ${CC_INIT_VERSION} ${CC_MARBLES_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG}
-
 echo_g "=== Instantiate chaincode on channel ${APP_CHANNEL} done ==="
 
 echo

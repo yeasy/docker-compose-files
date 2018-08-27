@@ -16,22 +16,27 @@ PEERS=( 0 1 )
 #: "${ORGS:=( 1 2 )}"
 #: "${PEERS:=( 0 1 )}"
 
-# MSP related paths
-ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-ORDERER_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp
+ORG1MSP="Org1MSP"
+ORG2MSP="Org2MSP"
+ORG3MSP="Org3MSP"
 
+# MSP related paths
+ORDERER_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp
+ORDERER_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
+ORG1_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+ORG1_PEER0_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
+ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+
+# cert related path
+ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 ORDERER_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
 ORG1_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 ORG1_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
+ORG1_ADMIN_TLS_CLIENT_KEY=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/client.key
+ORG1_ADMIN_TLS_CLIENT_CERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/client.crt
+ORG1_ADMIN_TLS_CA_CERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/ca.crt
 ORG2_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 ORG2_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
-
-ORDERER_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
-ORG1_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
-ORG1MSP=Org1MSP
-ORG2MSP=Org2MSP
-ORG3MSP=Org3MSP
 
 # Node URLS
 ORDERER_URL="orderer.example.com:7050"
@@ -55,6 +60,18 @@ CC_MAP_INIT_ARGS='{"Args":["init",""]}'
 CC_MAP_UPGRADE_ARGS='{"Args":["upgrade",""]}'
 CC_MAP_INVOKE_ARGS='{"Args":["invoke","put","key","value"]}'
 CC_MAP_QUERY_ARGS='{"Args":["get","key"]}'
+
+# Chaincode marbles related
+CC_MARBLES_NAME="marblesp"
+CC_MARBLES_PATH="examples/chaincode/go/marbles02_private/go"
+CC_MARBLES_INIT_ARGS='{"Args":["init"]}'
+CC_MARBLES_UPGRADE_ARGS='{"Args":["upgrade",""]}'
+CC_MARBLES_INVOKE_INIT_ARGS='{"Args":["initMarble","marble1","blue","10","tom","100"]}' # price is in collectionMarblePrivateDetails
+CC_MARBLES_INVOKE_TRANSFER_ARGS='{"Args":["transferMarble","marble1","jerry"]}' # price is in collectionMarblePrivateDetails
+CC_MARBLES_QUERY_READ_ARGS='{"Args":["readMarble","marble1"]}' # this requires 'collectionMarbles' collection
+CC_MARBLES_QUERY_READPVTDETAILS_ARGS='{"Args":["readMarblePrivateDetails","marble1"]}' # this requires 'collectionMarblePrivateDetails' collection
+CC_MARBLES_COLLECTION_CONFIG="/go/src/examples/chaincode/go/marbles02_private/collections_config.json"
+CC_MARBLES_COLLECTION_CONFIG_NEW="/go/src/examples/chaincode/go/marbles02_private/collections_config_new.json"
 
 # unique chaincode params
 CC_NAME=${CC_02_NAME}
