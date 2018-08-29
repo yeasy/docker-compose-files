@@ -178,6 +178,7 @@ services:
         - ./solo/channel-artifacts:/tmp/channel-artifacts
         - ./examples:/opt/gopath/src/examples
 
+  #deprecated
   event-listener:
     extends:
       file: base.yaml
@@ -190,13 +191,13 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
     volumes:
         - ./scripts:/tmp/scripts
         - ./crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
         - ./crypto-config:/etc/hyperledger/fabric/crypto-config
-        - ./solo/channel-artifacts:/tmp/channel-artifacts
         - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./examples:/opt/gopath/src/examples
     command: bash -c 'while true; do sleep 1; block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP; done'
     #command: bash -c 'while true; do sleep 20170504; done'

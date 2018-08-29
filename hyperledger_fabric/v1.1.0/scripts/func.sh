@@ -46,12 +46,14 @@ setOrdererEnvs () {
 
 # Set global env variables for fabric cli, after setting:
 # client is the admin as given org
-# TLS root cert is configured to given peer's
+# TLS root cert is configured to given peer's tls ca
 # remote peer address is configured to given peer's
-# CORE_PEER_LOCALMSPID=Org1MSP
-# CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-# CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-# CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+
+# CORE_PEER_LOCALMSPID=Org1MSP  # local msp id to use
+# CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp  # local msp path to use
+# CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt  # local trusted tls ca cert
+# CORE_PEER_ADDRESS=peer0.org1.example.com:7051  # remote peer to send proposal to
+
 # Usage: setEnvs org peer
 setEnvs () {
 	local org=$1  # 1 or 2
@@ -65,7 +67,7 @@ setEnvs () {
 	t="\${ORG${org}_ADMIN_MSP}" && export CORE_PEER_MSPCONFIGPATH=`eval echo $t`
 	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
 
-	env |grep CORE_PEER
+	#env |grep CORE
 }
 
 checkOSNAvailability() {
@@ -191,6 +193,10 @@ getShasum () {
 	[ ! $# -eq 1 ] && exit 1
 	shasum ${1} | awk '{print $1}'
 }
+
+# List the channel that the peer joined
+# E.g., for peer 0 at org 1, will do
+# channelList 1 0
 channelList () {
 	local org=$1
 	local peer=$2
@@ -205,12 +211,18 @@ channelList () {
 		echo "=== Done to list the channels that org${org}/peer${peer} joined === "
 	fi
 }
+
+# Get the info of specific channel, including {height, currentBlockHash, previousBlockHash}.
+# E.g., for peer 0 at org 1, get info of business channel will do
+# channelGetInfo businesschannel 1 0
 channelGetInfo () {
 	local channel=$1
 	local org=$2
 	local peer=$3
 	echo "=== Get channel info of ${channel} with id of org${org}/peer${peer} === "
+
 	setEnvs $org $peer
+
 	peer channel getinfo -c ${channel} >&log.txt
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
@@ -354,7 +366,8 @@ chaincodeInstall () {
 	local version=$4
 	local path=$5
 	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
-	echo "=== Install Chaincode $name:$version ($path) on org ${org}/peer $peer === "
+	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
+	echo "name=${name}, version=${version}, path=${path}"
 	setEnvs $org $peer
 	peer chaincode install \
 		-n ${name} \
@@ -371,7 +384,7 @@ chaincodeInstall () {
 # chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
 	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
-		echo "Wrong param number for chaincode instantaite"
+		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
 	local channel=$1
@@ -380,9 +393,20 @@ chaincodeInstantiate () {
 	local name=$4
 	local version=$5
 	local args=$6
+	local collection_config=""  # collection config file path for sideDB
+	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
+
+	if [ ! -z "$7" ]; then
+		collection_config=$7
+	fi
+
+	if [ ! -z "$8" ]; then
+		policy=$8
+	fi
 
 	setEnvs $org $peer
-	echo "=== chaincodeInstantiate for channel ${channel} by org $org/peer $peer ===="
+	echo "=== chaincodeInstantiate for channel ${channel} on org $org/peer $peer ===="
+	echo "name=${name}, version=${version}, args=${args}, collection_config=${collection_config}, policy=${policy}"
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -392,6 +416,8 @@ chaincodeInstantiate () {
 			-n ${name} \
 			-v ${version} \
 			-c ${args} \
+			-P "${policy}" \
+			--collections-config "${collection_config}" \
 			>&log.txt
 	else
 		peer chaincode instantiate \
@@ -400,8 +426,8 @@ chaincodeInstantiate () {
 			-n ${name} \
 			-v ${version} \
 			-c ${args} \
-			-P ${policy} \
-			--collections-config ${collection_config} \
+			-P "${policy}" \
+			--collections-config "${collection_config}" \
 			--tls \
 			--cafile ${ORDERER_TLS_CA} \
 			>&log.txt
@@ -421,7 +447,8 @@ chaincodeInvoke () {
 	local name=$4
 	local args=$5
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
-	echo "=== Invoke transaction on peer$peer in channel ${channel} === "
+	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
+	echo "channel=${channel}, name=${name}, args=${args}"
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
@@ -457,7 +484,8 @@ chaincodeQuery () {
   local args=$5
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
   [ $# -gt 5 ] && local expected_result=$6
-  echo "=== Querying on org $org/peer $peer in channel ${channel}... === "
+  echo "=== chaincodeQuery to org $org/peer $peer === "
+	echo "channel=${channel}, name=${name}, args=${args}"
   local rc=1
   local starttime=$(date +%s)
 
@@ -479,18 +507,20 @@ chaincodeQuery () {
 				 let rc=1
 				 echo_b "$VALUE != ${expected_result}, will retry"
 			 fi
-			fi
-			if [ $rc -ne 0 ]; then
+		 else
+				 cat log.txt
+		 fi
+     if [ $rc -ne 0 ]; then
 				 cat log.txt
 				 sleep 2
-			fi
+     fi
   done
 
   # rc==0, or timeout
   if [ $rc -eq 0 ]; then
-		echo "=== Query on peer$peer in channel ${channel} is successful === "
+		echo "=== Query on org $org/peer$peer in channel ${channel} is successful === "
   else
-		echo_r "=== Query result on peer$peer is INVALID, run `make stop clean` to clean ==="
+		echo_r "=== Query on org $org/peer$peer is INVALID, run `make stop clean` to clean ==="
 		exit 1
   fi
 }

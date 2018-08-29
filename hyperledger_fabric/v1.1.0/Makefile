@@ -42,6 +42,7 @@ ready: # create/join channel, install/instantiate cc
 	make stop
 	# make clean_config # Remove existing crypto-config and channel artifacts.
 	make gen_config  # Will ignore if local config path exists
+
 	make start
 
 	if [ "$(HLF_MODE)" = "dev" ]; then \
@@ -75,8 +76,10 @@ ready: # create/join channel, install/instantiate cc
 
 # channel related operations
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
+
 # chaincode related operations
 cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
+
 restart: stop start
 
 start: # bootup the fabric network
@@ -86,14 +89,16 @@ start: # bootup the fabric network
 
 stop: # stop the fabric network
 	@echo "Stop the fabric network with ${COMPOSE_FILE}..."
-	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log  # Stop a fabric network
+	@docker-compose -f ${COMPOSE_FILE} down >& /tmp/docker-compose.log
 
 chaincode_dev: restart chaincode_init test_cc_peer0 stop
 
 ################## Channel testing operations ################
+
 test_channel_list: # List the channel that peer joined
 	@echo "List the joined channels"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_list.sh"
+
 test_channel_getinfo: # Get info of a channel
 	@echo "Get info of the app channel"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_channel_getinfo.sh"
@@ -166,11 +171,14 @@ test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
+temp: # test temp instructions, used for experiment
+	@echo "Test experimental instructions"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_temp.sh"
+
 ################## Env setup related, no need to see usually ################
 
 setup: # setup the environment
 	bash scripts/env_setup.sh # Installing Docker and Docker-Compose
-	bash scripts/download_images.sh # Pull required Docker images
 
 check: # Check shell scripts grammar
 	@echo "Check shell scripts grammar"
@@ -182,6 +190,7 @@ clean: # clean up containers
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
 	echo "May manually clean the crypto-config and $(MODE)/channel-artifacts"
+
 clean_config: clean_channel_artifacts clean_crypto_config
 
 env_clean: # clean up environment
@@ -231,6 +240,7 @@ clean_channel_artifacts: # clean channel related artifacts
 clean_crypto_config: # clean config artifacts
 	rm -rf crypto-config
 	rm -rf org3/crypto-config
+
 download: # download required images
 	@echo "Download Docker images"
 	bash scripts/download_images.sh
