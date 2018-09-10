@@ -12,6 +12,11 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Org3
     Domain: org3.example.com
+    EnableNodeOUs: true
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
     Template:
       Count: 2
     Users:

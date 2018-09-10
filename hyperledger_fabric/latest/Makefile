@@ -10,7 +10,7 @@ SHELL:=/bin/bash
 HLF_MODE ?= solo
 HLF_VERSION ?= latest
 
-CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
+CODE_BUILD_WAIT=55 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
@@ -47,7 +47,8 @@ ready: # create/join channel, install/instantiate cc
 
 	make start
 
-	if [ "$(HLF_MODE)" = "dev" ]; then \
+	#if [ "$(HLF_MODE)" = "dev" ]; then \
+	if [ "$(HLF_MODE)" = "kafka" -o "$(HLF_MODE)" = "dev" ]; then \
 			sleep ${CODE_BUILD_WAIT}; \
 	else \
 			sleep ${NETWORK_INIT_WAIT}; \
@@ -225,6 +226,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
+	@echo "All tests done, saving logs locally"
 	[ -d $(LOG_PATH) ] || mkdir -p $(LOG_PATH)
 	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
 	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log

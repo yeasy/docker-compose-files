@@ -8,7 +8,7 @@ APP_CHANNEL="businesschannel"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="60"
-MAX_RETRY=5
+MAX_RETRY=10
 
 # Organization and peers
 ORGS=( 1 2 )

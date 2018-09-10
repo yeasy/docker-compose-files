@@ -25,7 +25,8 @@ echo_b "Clean existing container $GEN_CONTAINER"
 
 echo_b "Make sure crypto-config dir exists already"
 if [ ! -d ${CRYPTO_CONFIG} ]; then # already exist, no need to re-gen crypto
-  echo_g "${CRYPTO_CONFIG} not exists, generating it."
+  echo_g "Path ${CRYPTO_CONFIG} not exists, re-generating it."
+  echo_b "Path org3/crypto-config will keep unchanged by default if exists."
 	mkdir -p ${CRYPTO_CONFIG}
 
 	docker run \
@@ -45,7 +46,7 @@ fi
 
 echo_b "Make sure channel-artifacts dir exists already"
 if [ ! -d ${MODE}/${CHANNEL_ARTIFACTS} ]; then
-	echo_g "${CHANNEL_ARTIFACTS} not exists, generating it."
+	echo_g "Path ${CHANNEL_ARTIFACTS} not exists, generating it."
 	mkdir -p ${MODE}/${CHANNEL_ARTIFACTS}
 
 	docker run \

@@ -36,6 +36,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Generating crypto-config for org3..."
+
 cryptogen generate \
 	--config=org3/crypto-config.yaml \
 	--output org3/${CRYPTO_CONFIG}
