@@ -3,7 +3,7 @@
 # All nodes will become a cluster automatically.
 # You can run: docker-compose scale worker=2
 # After startup, try submit a pi calculation application.
-#  /urs/local/spark/bin/spark-submit --master spark://master:7077 --class org.apache.spark.examples.SparkPi /usr/local/spark/lib/spark-examples-1.4.0-hadoop2.6.0.jar 1000
+#  /usr/local/spark/bin/spark-submit --master spark://master:7077 --class org.apache.spark.examples.SparkPi /usr/local/spark/lib/spark-examples-1.4.0-hadoop2.6.0.jar 1000
 
 master:
   image: sequenceiq/spark:1.4.0
