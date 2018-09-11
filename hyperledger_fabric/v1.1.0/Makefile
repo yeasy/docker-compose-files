@@ -171,6 +171,14 @@ test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
 
+test_eventsclient: # test get event notification in a loop
+	@echo "Test fetching event notification"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/start_eventsclient.sh"
+
+test_sidedb: # test sideDB/private data feature
+	@echo "Test sideDB"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_sideDB.sh"
+
 temp: # test temp instructions, used for experiment
 	@echo "Test experimental instructions"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_temp.sh"
@@ -215,6 +223,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
+	@echo "All tests done, saving logs locally"
 	[ -d $(LOG_PATH) ] || mkdir -p $(LOG_PATH)
 	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
 	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log

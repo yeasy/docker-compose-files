@@ -10,7 +10,7 @@ SHELL:=/bin/bash
 HLF_MODE ?= solo
 HLF_VERSION ?= latest
 
-CODE_BUILD_WAIT=55 # time to wait to build peer/orderer from local code
+CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
 NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"

@@ -133,4 +133,4 @@ BASE_IMG_TAG=0.4.10
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
 
-PROJECT_VERSION=1.2.0
+PROJECT_VERSION=1.3.0
