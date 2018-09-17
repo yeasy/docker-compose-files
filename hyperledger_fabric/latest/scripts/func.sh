@@ -227,7 +227,7 @@ channelGetInfo () {
 
 	peer channel getinfo -c ${channel} >&log.txt
 	rc=$?
-	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
 	if [ $rc -ne 0 ]; then
 		echo "=== Fail to get channel info of ${channel} with id of org${org}/peer${peer} === "
 	else

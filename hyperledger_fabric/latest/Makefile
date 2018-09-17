@@ -71,6 +71,9 @@ ready: # create/join channel, install/instantiate cc
 	make test_fetch_blocks # fetch block files again
 	make test_configtxlator
 
+	make test_channel_list
+	make test_channel_getinfo
+
 	make logs_save
 
 	@echo "Now the fabric network is ready to play"

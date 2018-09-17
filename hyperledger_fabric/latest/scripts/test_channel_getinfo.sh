@@ -10,6 +10,8 @@ fi
 ## Join all the peers to the channel
 echo_b "=== Getting info of channel ${APP_CHANNEL}... ==="
 
+#set -x
+
 for org in "${ORGS[@]}"
 do
 	for peer in "${PEERS[@]}"

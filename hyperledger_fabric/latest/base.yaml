@@ -110,7 +110,7 @@ services:
     command: bash -c 'while true; do sleep 20170504; done'
 
   zookeeper-base:
-    image: hyperledger/fabric-zookeeper:amd64-0.4.10
+    image: hyperledger/fabric-zookeeper:amd64-0.4.11
     restart: always
     tty: true
     expose:
@@ -121,7 +121,7 @@ services:
   kafka-base:
     # official repo doesn't have 1.1.0-alpha tag, however, kafka changes version recently
     #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
-    image: hyperledger/fabric-kafka:amd64-0.4.10
+    image: hyperledger/fabric-kafka:amd64-0.4.11
     restart: always
     tty: true
     environment:
@@ -133,7 +133,7 @@ services:
       - '9092'
 
   couchdb-base:
-    image: hyperledger/fabric-couchdb:amd64-0.4.10
+    image: hyperledger/fabric-couchdb:amd64-0.4.11
     restart: always
     tty: true
 
