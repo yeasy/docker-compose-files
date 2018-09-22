@@ -1,0 +1,425 @@
+#
+# Copyright O Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * 1 ca
+# * 1 orderer
+# * 4 peers in 2 orgs
+# * cli for testing
+
+version: '3.2'
+
+services:
+  ca.org1.example.com:
+    image: "hyperledger/fabric-ca:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_ca_org1
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca_peerOrg1
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/640931c23ef3b5256db282a6f5a0a54b809467eed33bd1e4a02a88db80332ee8_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/640931c23ef3b5256db282a6f5a0a54b809467eed33bd1e4a02a88db80332ee8_sk
+    ports:
+      - ${CA_ORG1_ECAP_PORT}:7054
+    volumes:
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+  ca.org2.example.com:
+    image: "hyperledger/fabric-ca:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_ca_org2
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca_peerOrg2
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/af8f87f16f62161a8ca7e84f9c7041d59f0330d9387316603986fe732e9e5f8a_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/af8f87f16f62161a8ca7e84f9c7041d59f0330d9387316603986fe732e9e5f8a_sk
+    ports:
+      - ${CA_ORG2_ECAP_PORT}:7054
+    volumes:
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+  orderer.example.com:
+    image: "hyperledger/fabric-orderer:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_orderer
+    restart: always
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    ports:
+      - ${ORDERER_PORT}:7050
+    volumes:
+    - ${COMPOSE_PROJECT_PATH}/kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ${COMPOSE_PROJECT_PATH}/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+    - ${COMPOSE_PROJECT_PATH}/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    external_links:
+      - ${COMPOSE_PROJECT_NAME}_peer0.org1.example.com:peer0.org1.example.com
+      - ${COMPOSE_PROJECT_NAME}_peer0.org2.example.com:peer0.org2.example.com
+      - ${COMPOSE_PROJECT_NAME}_peer1.org1.example.com:peer1.org1.example.com
+      - ${COMPOSE_PROJECT_NAME}_peer1.org2.example.com:peer1.org2.example.com
+    command: orderer
+
+  peer0.org1.example.com:
+    image: "hyperledger/fabric-peer:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_peer0_org1
+    restart: always
+    depends_on:
+      - orderer.example.com
+    environment:
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_default
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_VM_DOCKER_HOSTCONFIG_MEMORY=268435456 #256M
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    ports:
+      - ${PEER0_ORG1_GRPC_PORT}:7051
+      - ${PEER0_ORG1_EVENT_PORT}:7053
+    volumes: # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+
+  peer1.org1.example.com:
+    image: "hyperledger/fabric-peer:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_peer1_org1
+    restart: always
+    ports:
+      - ${PEER1_ORG1_GRPC_PORT}:7051
+      - ${PEER1_ORG1_EVENT_PORT}:7053
+    depends_on:
+      - orderer.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_default
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_VM_DOCKER_HOSTCONFIG_MEMORY=268435456 #256M
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+
+  peer0.org2.example.com:
+    image: "hyperledger/fabric-peer:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_peer0_org2
+    restart: always
+    depends_on:
+      - orderer.example.com
+    ports:
+      - ${PEER0_ORG2_GRPC_PORT}:7051
+      - ${PEER0_ORG2_EVENT_PORT}:7053
+    environment:
+      - CORE_PEER_ID=peer0.org2.example.com
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_default
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_VM_DOCKER_HOSTCONFIG_MEMORY=268435456 #256M
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+
+  peer1.org2.example.com:
+    image: "hyperledger/fabric-peer:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_peer1_org2
+    restart: always
+    ports:
+      - ${PEER1_ORG2_GRPC_PORT}:7051
+      - ${PEER1_ORG2_EVENT_PORT}:7053
+    depends_on:
+      - orderer.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org2.example.com
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_default
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_VM_DOCKER_HOSTCONFIG_MEMORY=268435456 #256M
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
+      - ${COMPOSE_PROJECT_PATH}/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+
+  cli: # client node
+    image: "hyperledger/fabric-tools:1.2.0"
+    container_name: ${COMPOSE_PROJECT_NAME}_cli
+    hostname: cli
+    restart: always
+    tty: true
+    environment:
+      #- GOPATH=/opt/gopath
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    depends_on:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    volumes:
+      - ${COMPOSE_PROJECT_PATH}/scripts:/tmp/scripts
+      - ${COMPOSE_PROJECT_PATH}/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      - ${COMPOSE_PROJECT_PATH}/crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ${COMPOSE_PROJECT_PATH}/kafka/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      - ${COMPOSE_PROJECT_PATH}/kafka/channel-artifacts:/tmp/channel-artifacts
+      - ${COMPOSE_PROJECT_PATH}/examples:/opt/gopath/src/examples
+    command: bash -c 'sleep 15; cd /tmp; source scripts/func.sh; bash scripts/test_channel_create.sh; bash scripts/test_channel_join.sh; bash scripts/test_cc_install.sh; while true; do sleep 20180101; done'
+
+  explorer:
+    image: yeasy/blockchain-explorer:0.1.0-preview
+    container_name: ${COMPOSE_PROJECT_NAME}_explorer
+    hostname: explorer
+    restart: always
+    volumes:
+      - ${COMPOSE_PROJECT_PATH}/explorer-artifacts/config.json:/blockchain-explorer/config.json
+      - ${COMPOSE_PROJECT_PATH}/crypto-config:/blockchain-explorer/first-network/crypto-config
+    ports:
+      - "${EXPLORER_PORT}:8080"
+    depends_on:
+      - mysql
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    links:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    command: bash -c 'sleep 30; node main.js'
+
+  mysql: # mysql service
+    image: mysql:5.7
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql
+    hostname: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=fabricexplorer
+      - STARTUP_SQL=/fabricexplorer.sql
+    volumes:
+      - ${COMPOSE_PROJECT_PATH}/explorer-artifacts/fabricexplorer.sql:/docker-entrypoint-initdb.d/fabricexplorer.sql
+    expose:
+      - "3306"
+    command: mysqld
+
+  kafka0:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: "hyperledger/fabric-kafka:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_kafka0
+    hostname: kafka0
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    expose:
+      - '9092'
+
+  kafka1:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: "hyperledger/fabric-kafka:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_kafka1
+    hostname: kafka1
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_BROKER_ID=1
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    expose:
+      - '9092'
+
+  kafka2:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: "hyperledger/fabric-kafka:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_kafka2
+    hostname: kafka2
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_BROKER_ID=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    expose:
+      - '9092'
+
+  kafka3:
+    # official repo doesn't have latest tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: "hyperledger/fabric-kafka:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_kafka3
+    hostname: kafka3
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_BROKER_ID=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    expose:
+      - '9092'
+
+  zookeeper0:
+    image: "hyperledger/fabric-zookeeper:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_zookeeper0
+    hostname: zookeeper0
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+  zookeeper1:
+    image: "hyperledger/fabric-zookeeper:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_zookeeper1
+    hostname: zookeeper1
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+  zookeeper2:
+    image: "hyperledger/fabric-zookeeper:1.2.0"
+    restart: always
+    tty: true
+    container_name: ${COMPOSE_PROJECT_NAME}_zookeeper2
+    hostname: zookeeper2
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+networks:
+  default:
+    external:
+      name: ${CLUSTER_NETWORK}
