@@ -36,7 +36,7 @@ docker run \
 
 sleep 1
 
-echo_b "Convert all config block files into json"
+echo_b "Convert all block files into json"
 for BLOCK_FILE in *.block; do
 	[ -f ${BLOCK_FILE}.json ] || configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 	decode_result=$?

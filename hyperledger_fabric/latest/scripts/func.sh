@@ -527,6 +527,34 @@ chaincodeQuery () {
   fi
 }
 
+# List Installed chaincode on specified peer node, and instantiated chaincodes at specific channel
+# chaincodeList org1 peer0 businesschannel
+chaincodeList () {
+	local org=$1
+	local peer=$2
+	local channel=$3
+
+	[ -z $org ] && [ -z $peer ] && [ -z $channel ] &&  echo_r "input param invalid" && exit -1
+	echo "=== ChaincodeList on org ${org}/peer ${peer} === "
+	setEnvs $org $peer
+	echo_b "Get installed chaincodes at peer$peer.org$org"
+	peer chaincode list \
+		--installed > log.txt &
+	# \
+	#--peerAddresses "peer${peer}.org${org}.example.com" --tls false
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+  verifyResult $rc "List installed chaincodes on remote org ${org}/peer$peer has Failed"
+
+	echo_b "Get instantiated chaincodes at channel $org"
+	peer chaincode list \
+		--instantiated \
+		-C ${channel} > log.txt &
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+  verifyResult $rc "List installed chaincodes on remote org ${org}/peer$peer has Failed"
+	echo "=== ChaincodeList is done at peer${peer}.org${org} === "
+}
 
 # Start chaincode with dev mode
 # TODO: use variables instead of hard-coded value

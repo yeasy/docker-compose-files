@@ -694,15 +694,15 @@
               "channel_id": "testchainid",
               "epoch": "0",
               "extension": null,
-              "timestamp": "2018-09-10T06:11:14Z",
+              "timestamp": "2018-09-28T08:19:49Z",
               "tls_cert_hash": null,
-              "tx_id": "a5e0b85fc0a07de6086e8a9d19fde779f39c729cf8d2cfa88fe2907d59503082",
+              "tx_id": "27c021da8b31d2d16ef5a8580752958528b7c06fd82091c2d85d1511d90f99b9",
               "type": 1,
               "version": 1
             },
             "signature_header": {
               "creator": null,
-              "nonce": "QdQeBGv99aUGGOLI/9186MeW4Nwe/nCC"
+              "nonce": "TDJKe+xREHTuVizxx4ID8L/57Z0DgceY"
             }
           }
         },
@@ -711,7 +711,7 @@
     ]
   },
   "header": {
-    "data_hash": "tdORA7dPQiXdCBDMxZ/gdiuKHh1UbVI2CaWnsH35C5M=",
+    "data_hash": "7Yl2VdBBWHPDNS/ciPmokT2RQ6+xsmk0M9pY7FzR2u8=",
     "number": "0",
     "previous_hash": null
   },

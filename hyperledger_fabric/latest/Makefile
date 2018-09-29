@@ -160,6 +160,10 @@ test_cc_upgrade: # Upgrade the chaincode
 	@echo "Upgrade chaincode on the fabric network"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_upgrade.sh"
 
+test_cc_list: # List the chaincode
+	@echo "List chaincode information (installed and instantited)"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_list.sh"
+
 test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"

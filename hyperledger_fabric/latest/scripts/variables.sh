@@ -128,7 +128,7 @@ CFG_DELTA_ENV_PB=config_delta_env.pb
 ARCH=amd64
 
 # for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.11
+BASE_IMG_TAG=0.4.12
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
