@@ -38,7 +38,7 @@ configtxgen \
 	-configPath ${FABRIC_CFG_PATH} \
 	-profile ${APP_CHANNEL_PROFILE} \
 	-channelID ${APP_CHANNEL} \
-	-outputCreateChannelTx ${APP_CHANNEL_TX} \
+	-outputCreateChannelTx ${APP_CHANNEL_TX}
 configtxgen \
 	-inspectChannelCreateTx ${APP_CHANNEL_TX} > ${APP_CHANNEL_TX}.json
 
