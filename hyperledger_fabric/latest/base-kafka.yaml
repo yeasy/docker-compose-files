@@ -3,7 +3,8 @@
 
 # ca.org1.example.com
 # ca.org2.example.com
-# orderer.example.com
+# orderer0.example.com
+# orderer1.example.com
 # peer0.org1.example.com
 # peer1.org1.example.com
 # peer0.org2.example.com
@@ -47,12 +48,12 @@ services:
       - ./crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/1ee551a8753171c0377366e96a1d7ec01afddb868c9483cc501b6f8ac7ae752f_sk -b admin:adminpw -d'
 
-  orderer.example.com:  # There can be multiple orderers
+  orderer0.example.com:  # There can be multiple orderers
     extends:
       file: base.yaml
       service: orderer-base
-    container_name: orderer.example.com
-    hostname: orderer.example.com
+    container_name: orderer0.example.com
+    hostname: orderer0.example.com
     ports:
       - "7050:7050"
     environment:
@@ -61,8 +62,27 @@ services:
       - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
       - ORDERER_KAFKA_VERBOSE=true
     volumes:
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
+    - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    command: orderer start
+
+  orderer1.example.com:  # There can be multiple orderers
+    extends:
+      file: base.yaml
+      service: orderer-base
+    container_name: orderer1.example.com
+    hostname: orderer1.example.com
+    ports:
+      - "8050:7050"
+    environment:
+      # Kafka related configurations
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
+      - ORDERER_KAFKA_VERBOSE=true
+    volumes:
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/var/hyperledger/orderer/tls
     - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     command: orderer start
 

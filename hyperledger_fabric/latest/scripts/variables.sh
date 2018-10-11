@@ -31,15 +31,15 @@ ORG2MSP="Org2MSP"
 ORG3MSP="Org3MSP"
 
 # MSP related paths
-ORDERER_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp
+ORDERER_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp
 ORDERER_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
 ORG1_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 ORG1_PEER0_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
 ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
 
 # cert related path
-ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-ORDERER_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+ORDERER_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt
 ORG1_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 ORG1_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
 ORG1_ADMIN_TLS_CLIENT_KEY=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/client.key
@@ -49,7 +49,7 @@ ORG2_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/
 ORG2_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
 
 # Node URLS
-ORDERER_URL="orderer.example.com:7050"
+ORDERER_URL="orderer0.example.com:7050"
 ORG1_PEER0_URL="peer0.org1.example.com:7051"
 ORG1_PEER1_URL="peer1.org1.example.com:7051"
 ORG2_PEER0_URL="peer0.org2.example.com:7051"
