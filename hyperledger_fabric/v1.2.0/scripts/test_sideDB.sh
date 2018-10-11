@@ -13,6 +13,8 @@ CC_NAME=${CC_MARBLES_NAME}
 CC_PATH=${CC_MARBLES_PATH}
 CC_INIT_ARGS=${CC_MARBLES_INIT_ARGS}
 
+echo_b "=== Testing the private data feature ==="
+
 echo_b "=== Installing chaincode ${CC_NAME} on all 4 peers... ==="
 
 for org in "${ORGS[@]}"
@@ -46,7 +48,7 @@ echo_b "Query chaincode with collection collectionMarblePrivateDetails on org1/p
 chaincodeQuery ${APP_CHANNEL} 1 1 ${CC_MARBLES_NAME} ${CC_MARBLES_QUERY_READPVTDETAILS_ARGS}
 echo_g "=== Query read details chaincode done ==="
 
-echo_b "Update chaincode with new collection config"
+echo_b "Install chaincode with new collection config"
 for org in "${ORGS[@]}"
 do
 	for peer in "${PEERS[@]}"

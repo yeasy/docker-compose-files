@@ -8,7 +8,7 @@ APP_CHANNEL="businesschannel"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="60"
-MAX_RETRY=5
+MAX_RETRY=10
 
 # Organization and peers
 ORGS=( 1 2 )
@@ -84,7 +84,7 @@ CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 
 # Generate configs
-GEN_IMG=yeasy/hyperledger-fabric:1.2.0  # working dir is `/go/src/github.com/hyperledger/fabric`
+GEN_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
@@ -97,7 +97,7 @@ UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
 UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 
 # CONFIGTXLATOR
-CTL_IMG=yeasy/hyperledger-fabric:1.2.0
+CTL_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}
 CTL_CONTAINER=configtxlator
 CTL_BASE_URL=http://127.0.0.1:7059
 CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode

@@ -22,7 +22,6 @@ pushd $MODE/${CHANNEL_ARTIFACTS}
 
 # Must run `make gen_config` to generate config files first
 
-
 echo_b "Clean potential existing container $CTL_CONTAINER"
 [ "$(docker ps -a | grep $CTL_CONTAINER)" ] && docker rm -f $CTL_CONTAINER
 

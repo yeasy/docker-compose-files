@@ -227,7 +227,7 @@ channelGetInfo () {
 
 	peer channel getinfo -c ${channel} >&log.txt
 	rc=$?
-	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
 	if [ $rc -ne 0 ]; then
 		echo "=== Fail to get channel info of ${channel} with id of org${org}/peer${peer} === "
 	else
@@ -386,7 +386,7 @@ chaincodeInstall () {
 # chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
 	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
-		echo "Wrong param number for chaincode instantaite"
+		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
 	local channel=$1

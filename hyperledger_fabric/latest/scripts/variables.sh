@@ -2,6 +2,16 @@
 # Before running `make`, config this files
 # Define some global variables for usage. Will be included by func.sh.
 
+ARCH=amd64
+
+# for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
+BASE_IMG_TAG=0.4.13
+
+# For fabric images, including peer, orderer, ca
+FABRIC_IMG_TAG=latest
+
+PROJECT_VERSION=1.3.0
+
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
@@ -86,7 +96,7 @@ CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 
 # Generate configs
-GEN_IMG=yeasy/hyperledger-fabric:latest  # working dir is `/go/src/github.com/hyperledger/fabric`
+GEN_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}  # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
@@ -99,7 +109,7 @@ UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
 UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 
 # CONFIGTXLATOR
-CTL_IMG=yeasy/hyperledger-fabric:latest
+CTL_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}
 CTL_CONTAINER=configtxlator
 CTL_BASE_URL=http://127.0.0.1:7059
 CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode
@@ -123,14 +133,3 @@ CFG_DELTA_JSON=config_delta.json
 CFG_DELTA_PB=config_delta.pb
 CFG_DELTA_ENV_JSON=config_delta_env.json
 CFG_DELTA_ENV_PB=config_delta_env.pb
-
-#ARCH=x86_64
-ARCH=amd64
-
-# for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.13
-
-# For fabric images, including peer, orderer, ca
-FABRIC_IMG_TAG=latest
-
-PROJECT_VERSION=1.3.0

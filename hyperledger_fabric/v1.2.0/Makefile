@@ -47,7 +47,8 @@ ready: # create/join channel, install/instantiate cc
 
 	make start
 
-	if [ "$(HLF_MODE)" = "dev" ]; then \
+	#if [ "$(HLF_MODE)" = "dev" ]; then \
+	if [ "$(HLF_MODE)" = "kafka" -o "$(HLF_MODE)" = "dev" ]; then \
 			sleep ${CODE_BUILD_WAIT}; \
 	else \
 			sleep ${NETWORK_INIT_WAIT}; \
@@ -225,6 +226,7 @@ logs: # show logs
 logs_check: logs_save logs_view
 
 logs_save: # save logs
+	@echo "All tests done, saving logs locally"
 	[ -d $(LOG_PATH) ] || mkdir -p $(LOG_PATH)
 	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
 	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log
@@ -236,6 +238,7 @@ logs_view: # view logs
 elk: # insert logs into elk
 	# curl -XDELETE http://localhost:9200/logstash-\*
 	nc localhost 5000 < $(LOG_PATH)/dev_all.log
+
 gen_config: # generate config artifacts
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
 			bash scripts/gen_config.sh kafka; \
