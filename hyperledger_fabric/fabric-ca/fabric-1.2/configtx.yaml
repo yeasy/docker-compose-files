@@ -19,10 +19,10 @@ Organizations:
     - &OrdererOrg
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: OrdererMSP
+        Name: orderer
 
         # ID to load the MSP definition as
-        ID: OrdererMSP
+        ID: ordererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
         MSPDir: crypto-config/ordererOrganizations/example.com/msp
@@ -30,10 +30,10 @@ Organizations:
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org1MSP
+        Name: org1
 
         # ID to load the MSP definition as
-        ID: Org1MSP
+        ID: org1MSP
 
         MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
 
@@ -47,10 +47,10 @@ Organizations:
     - &Org2
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org2MSP
+        Name: org2
 
         # ID to load the MSP definition as
-        ID: Org2MSP
+        ID: org2MSP
 
         MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
 

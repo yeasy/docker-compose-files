@@ -279,6 +279,25 @@ function generateChannelArtifacts() {
   if [ "$?" -ne 0 ]; then
     fatal "Failed to generate orderer genesis block"
   fi
+
+  log "Generating channel configuration transaction at $CHANNEL_TX_FILE"
+  configtxgen -configPath /data -profile TwoOrgsChannel -outputCreateChannelTx $CHANNEL_TX_FILE -channelID $CHANNEL_NAME
+  if [ "$?" -ne 0 ]; then
+    fatal "Failed to generate channel configuration transaction"
+  fi
+
+  for ORG in $PEER_ORGS; do
+     initPeerOrgVars $ORG
+#     org=`echo ${ORG:0:1}|tr '[a-z]' '[A-Z]'`
+#     org=${org}${ORG:1}MSP
+     log "Generating anchor peer update transaction for $org at $ANCHOR_TX_FILE"
+     configtxgen -configPath /data -profile TwoOrgsChannel -outputAnchorPeersUpdate $ANCHOR_TX_FILE \
+                 -channelID $CHANNEL_NAME -asOrg $ORG
+     if [ "$?" -ne 0 ]; then
+        fatal "Failed to generate anchor peer update for $ORG"
+     fi
+  done
+
 }
 
 set -e
@@ -287,3 +306,8 @@ SDIR=$(dirname "$0")
 source $SDIR/env.sh
 
 main
+
+while true
+do
+  sleep 9
+done

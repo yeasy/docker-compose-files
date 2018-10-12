@@ -30,7 +30,6 @@ cp $CORE_PEER_TLS_CERT_FILE ${DATA_TLSDIR}/server.crt
 cp $FABRIC_CA_CLIENT_TLS_CERTFILES ${DATA_TLSDIR}/ca.crt
 rm -rf /tmp/tls
 
-
 # Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 
 mkdir -p ${CORE_PEER_MSPCONFIGPATH}

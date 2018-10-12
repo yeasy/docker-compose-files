@@ -117,7 +117,7 @@ function initOrdererOrgVars {
 
    ORG_DIR=${CRYPTO_ORDERER}/${DOMAIN}
    ROOT_CA_CERTFILE=/${ORG_DIR}/ca/${ROOT_CA_HOST}-cert.pem
-   ANCHOR_TX_FILE=/${CRYPTO_ORDERER}/${DOMAIN}/anchors.tx
+   ANCHOR_TX_FILE=/${ORG_DIR}/anchors.tx
    ORG_MSP_ID=${ORG}MSP
    ORG_MSP_DIR=/${ORG_DIR}/msp
    ORG_ADMIN_CERT_FILENAME=Admin@${DOMAIN}-cert.pem
@@ -248,8 +248,8 @@ function initPeerVars {
    export CORE_PEER_TLS_ENABLED=true
    export CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
    export CORE_PEER_TLS_ROOTCERT_FILE=$CA_CHAINFILE
-   export CORE_PEER_TLS_CLIENTCERT_FILE=/$DATA/orgs/${ORG}/peer${NUM}/tls/server.crt
-   export CORE_PEER_TLS_CLIENTKEY_FILE=/$DATA/orgs/${ORG}/peer${NUM}/tls/server.key
+   export CORE_PEER_TLS_CLIENTCERT_FILE=/$ORG_DIR/peers/$PEER_NAME/tls/server.crt
+   export CORE_PEER_TLS_CLIENTKEY_FILE=/$ORG_DIR/peers/$PEER_NAME/tls/server.key
    export CORE_PEER_PROFILE_ENABLED=true
    # gossip variables
    export CORE_PEER_GOSSIP_USELEADERELECTION=true
