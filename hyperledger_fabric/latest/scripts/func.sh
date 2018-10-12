@@ -629,10 +629,15 @@ configtxlatorEncode() {
 	local output=$3
 
 	echo "Encode $input --> $output using type $msgType"
-	curl -sX POST \
-			--data-binary @${input} \
-			${CTL_ENCODE_URL}/${msgType} \
-			>${output}
+	docker exec -it ${CTL_CONTAINER} configtxlator proto_encode \
+		--type=${msgType} \
+		--input=${input} \
+		--output=${output}
+
+	#curl -sX POST \
+	#		--data-binary @${input} \
+	#		${CTL_ENCODE_URL}/${msgType} \
+	#		>${output}
 }
 
 # configtxlator decode pb to json
@@ -648,10 +653,15 @@ configtxlatorDecode() {
 		exit 1
 	fi
 
-	curl -sX POST \
-		--data-binary @"${input}" \
-		"${CTL_DECODE_URL}/${msgType}" \
-		> "${output}"
+	docker exec -it ${CTL_CONTAINER} configtxlator proto_decode \
+		--type=${msgType} \
+		--input=${input} \
+		--output=${output}
+
+	#curl -sX POST \
+	#	--data-binary @"${input}" \
+	#	"${CTL_DECODE_URL}/${msgType}" \
+	#	> "${output}"
 }
 
 # compute diff between two pb
@@ -668,12 +678,18 @@ configtxlatorCompare() {
 		exit 1
 	fi
 
-	curl -sX POST \
-		-F channel="${channel}" \
-		-F "original=@${origin}" \
-		-F "updated=@${updated}" \
-		"${CTL_COMPARE_URL}" \
-		> "${output}"
+	docker exec -it ${CTL_CONTAINER} configtxlator compute_update \
+		--original=${origin} \
+		--updated=${updated} \
+		--channel_id=${channel} \
+		--output=${output}
+
+	#curl -sX POST \
+	#	-F channel="${channel}" \
+	#	-F "original=@${origin}" \
+	#	-F "updated=@${updated}" \
+	#	"${CTL_COMPARE_URL}" \
+	#	> "${output}"
 
 	[ $? -eq 0 ] || echo_r "Failed to compute config update"
 }

@@ -22,6 +22,7 @@ pushd $MODE/${CHANNEL_ARTIFACTS}
 
 # Must run `make gen_config` to generate config files first
 
+
 echo_b "Clean potential existing container $CTL_CONTAINER"
 [ "$(docker ps -a | grep $CTL_CONTAINER)" ] && docker rm -f $CTL_CONTAINER
 
@@ -30,6 +31,8 @@ docker run \
 	-d -it \
 	--name ${CTL_CONTAINER} \
 	-p 127.0.0.1:7059:7059 \
+	-v ${PWD}:/tmp \
+	-w /tmp \
 	${CTL_IMG} \
 	configtxlator start --port=7059
 

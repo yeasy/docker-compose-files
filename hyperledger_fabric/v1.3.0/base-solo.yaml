@@ -58,18 +58,6 @@ services:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
     - ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
 
-  orderer1.example.com:  # orderer in solo mode
-    extends:
-      file: base.yaml
-      service: orderer-base
-    container_name: orderer1.example.com
-    hostname: orderer1.example.com
-    ports:
-    - "8050:7050"
-    volumes:
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/orderer/msp
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/var/hyperledger/orderer/tls
-
 ## following are peer nodes ##
 
   peer0.org1.example.com:

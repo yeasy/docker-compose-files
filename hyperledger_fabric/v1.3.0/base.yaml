@@ -31,7 +31,7 @@ services:
     network_mode: ${NETWORK}
     # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
     environment:
-      - ORDERER_GENERAL_LOGLEVEL=DEBUG  # default: INFO
+      - ORDERER_GENERAL_LOGLEVEL=INFO  # default: INFO
       - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
       - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
@@ -62,8 +62,8 @@ services:
     restart: always
     network_mode: ${NETWORK}
     environment:
+      - CORE_LOGGING_LEVEL=INFO
       - CORE_PEER_ADDRESSAUTODETECT=false
-      - CORE_LOGGING_LEVEL=DEBUG
       - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${NETWORK}  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
@@ -94,9 +94,9 @@ services:
     tty: true
     environment:
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
-      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 

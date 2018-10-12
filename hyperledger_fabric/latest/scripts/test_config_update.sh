@@ -30,8 +30,11 @@ docker run \
 	-d -it \
 	--name ${CTL_CONTAINER} \
 	-p 127.0.0.1:7059:7059 \
+	-v ${PWD}:/tmp \
+	-w /tmp \
 	${CTL_IMG} \
 	configtxlator start --port=7059
+
 sleep 1
 
 # clean env and exit

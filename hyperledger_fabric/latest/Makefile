@@ -9,8 +9,7 @@ SHELL:=/bin/bash
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
-CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
-NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
+NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
@@ -19,6 +18,7 @@ LOG_PATH ?= solo/logs
 ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
 	LOG_PATH=kafka/logs
+	NETWORK_INIT_WAIT=20
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
@@ -27,6 +27,7 @@ else ifeq ($(HLF_MODE),be)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-solo-be.yaml"
 else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
+	NETWORK_INIT_WAIT=40
 endif
 
 all: test
@@ -46,12 +47,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make start
 
-	#if [ "$(HLF_MODE)" = "dev" ]; then \
-	if [ "$(HLF_MODE)" = "kafka" -o "$(HLF_MODE)" = "dev" ]; then \
-			sleep ${CODE_BUILD_WAIT}; \
-	else \
-			sleep ${NETWORK_INIT_WAIT}; \
-	fi
+	sleep ${NETWORK_INIT_WAIT}
 
 	make channel_test
 

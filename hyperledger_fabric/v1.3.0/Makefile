@@ -9,8 +9,7 @@ SHELL:=/bin/bash
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
-CODE_BUILD_WAIT=40 # time to wait to build peer/orderer from local code
-NETWORK_INIT_WAIT=2 # time to wait the fabric network finish initialization
+NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
@@ -19,6 +18,7 @@ LOG_PATH ?= solo/logs
 ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
 	LOG_PATH=kafka/logs
+	NETWORK_INIT_WAIT=20
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
@@ -27,6 +27,7 @@ else ifeq ($(HLF_MODE),be)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-solo-be.yaml"
 else ifeq ($(HLF_MODE),dev)
 	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
+	NETWORK_INIT_WAIT=40
 endif
 
 all: test
@@ -41,17 +42,12 @@ test:
 
 ready: # create/join channel, install/instantiate cc
 	make stop
-	# make clean_config # Remove existing crypto-config and channel artifacts.
+	# make clean_config # Remove existing crypto-config, channel artifacts and org3/crypto-config.
 	make gen_config  # Will ignore if local config path exists
 
 	make start
 
-	#if [ "$(HLF_MODE)" = "dev" ]; then \
-	if [ "$(HLF_MODE)" = "kafka" -o "$(HLF_MODE)" = "dev" ]; then \
-			sleep ${CODE_BUILD_WAIT}; \
-	else \
-			sleep ${NETWORK_INIT_WAIT}; \
-	fi
+	sleep ${NETWORK_INIT_WAIT}
 
 	make channel_test
 
@@ -206,7 +202,7 @@ clean: # clean up containers
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May manually clean the crypto-config and $(MODE)/channel-artifacts"
+	echo "May manually clean the crypto-config, $(HLF_MODE)/channel-artifacts and org3/crypto-config"
 
 clean_config: clean_channel_artifacts clean_crypto_config
 
@@ -217,11 +213,21 @@ env_clean: # clean up environment
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
 
-orderer: # enter the orderer container
-	docker exec -it orderer.example.com bash
+orderer: orderer0
 
-peer: # enter the peer container
+orderer0: # enter the orderer0 container
+	docker exec -it orderer0.example.com bash
+
+orderer1: # enter the orderer0 container
+	docker exec -it orderer1.example.com bash
+
+peer: peer0
+
+peer0: # enter the peer container
 	docker exec -it peer0.org1.example.com bash
+
+peer1: # enter the peer container
+	docker exec -it peer1.org1.example.com bash
 
 ps: # show existing docker images
 	docker ps -a
@@ -235,7 +241,7 @@ logs_save: # save logs
 	@echo "All tests done, saving logs locally"
 	[ -d $(LOG_PATH) ] || mkdir -p $(LOG_PATH)
 	docker logs peer0.org1.example.com >& $(LOG_PATH)/dev_peer0.log
-	docker logs orderer.example.com >& $(LOG_PATH)/dev_orderer.log
+	docker logs orderer0.example.com >& $(LOG_PATH)/dev_orderer.log
 	docker-compose -f ${COMPOSE_FILE} logs >& $(LOG_PATH)/dev_all.log
 
 logs_view: # view logs
@@ -254,14 +260,14 @@ gen_config: # generate config artifacts
 
 clean_channel_artifacts: # clean channel related artifacts
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		rm -rf kafka/channel-artifacts; \
+		rm -rf kafka/channel-artifacts/*; \
 	else \
-		rm -rf solo/channel-artifacts; \
+		rm -rf solo/channel-artifacts/*; \
 	fi
 
 clean_crypto_config: # clean config artifacts
-	rm -rf crypto-config
-	rm -rf org3/crypto-config
+	rm -rf crypto-config/*
+	rm -rf org3/crypto-config/*
 
 download: # download required images
 	@echo "Download Docker images"
