@@ -15,7 +15,6 @@ function main {
    log "Beginning building channel artifacts ..."
    registerIdentities
    enrollIdentities
-   #makeConfigTxYaml
    generateChannelArtifacts
    log "Finished building channel artifacts"
    touch /$SETUP_SUCCESS_FILE
@@ -140,131 +139,6 @@ function printPeerOrg {
          Port: 7051"
 }
 
-function makeConfigTxYaml {
-   {
-   echo "
-################################################################################
-#
-#   Section: Organizations
-#
-#   - This section defines the different organizational identities which will
-#   be referenced later in the configuration.
-#
-################################################################################
-Organizations:"
-
-   for ORG in $ORDERER_ORGS; do
-      printOrdererOrg $ORG
-   done
-
-   for ORG in $PEER_ORGS; do
-      printPeerOrg $ORG 1
-   done
-
-   echo "
-################################################################################
-#
-#   SECTION: Application
-#
-#   This section defines the values to encode into a config transaction or
-#   genesis block for application related parameters
-#
-################################################################################
-Application: &ApplicationDefaults
-
-    # Organizations is the list of orgs which are defined as participants on
-    # the application side of the network
-    Organizations:
-"
-   echo "
-################################################################################
-#
-#   Profile
-#
-#   - Different configuration profiles may be encoded here to be specified
-#   as parameters to the configtxgen tool
-#
-################################################################################
-Profiles:
-
-  OrgsOrdererGenesis:
-    Orderer:
-      # Orderer Type: The orderer implementation to start
-      # Available types are \"solo\" and \"kafka\"
-      OrdererType: solo
-      Addresses:"
-
-   for ORG in $ORDERER_ORGS; do
-      local COUNT=1
-      while [[ "$COUNT" -le $NUM_ORDERERS ]]; do
-         initOrdererVars $ORG
-         echo "        - $ORDERER_HOST:7050"
-         COUNT=$((COUNT+1))
-      done
-   done
-
-   echo "
-      # Batch Timeout: The amount of time to wait before creating a batch
-      BatchTimeout: 2s
-
-      # Batch Size: Controls the number of messages batched into a block
-      BatchSize:
-
-        # Max Message Count: The maximum number of messages to permit in a batch
-        MaxMessageCount: 10
-
-        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
-        # the serialized messages in a batch.
-        AbsoluteMaxBytes: 99 MB
-
-        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
-        # the serialized messages in a batch. A message larger than the preferred
-        # max bytes will result in a batch larger than preferred max bytes.
-        PreferredMaxBytes: 512 KB
-
-      Kafka:
-        # Brokers: A list of Kafka brokers to which the orderer connects
-        # NOTE: Use IP:port notation
-        Brokers:
-          - 127.0.0.1:9092
-
-      # Organizations is the list of orgs which are defined as participants on
-      # the orderer side of the network
-      Organizations:"
-
-   for ORG in $ORDERER_ORGS; do
-      initOrdererOrgVars $ORG
-      echo "        - *${ORG_CONTAINER_NAME}"
-   done
-
-   echo "
-    Consortiums:
-
-      SampleConsortium:
-
-        Organizations:"
-
-   for ORG in $PEER_ORGS; do
-      initPeerOrgVars $ORG
-      echo "          - *${ORG_CONTAINER_NAME}"
-   done
-
-   echo "
-  OrgsChannel:
-    Consortium: SampleConsortium
-    Application:
-      <<: *ApplicationDefaults
-      Organizations:"
-
-   for ORG in $PEER_ORGS; do
-      initPeerOrgVars $ORG
-      echo "        - *${ORG_CONTAINER_NAME}"
-   done
-
-   } > /etc/hyperledger/fabric/configtx.yaml
-   # Copy it to the data directory to make debugging easier
-   cp /etc/hyperledger/fabric/configtx.yaml /$DATA
-}
 
 function generateChannelArtifacts() {
   which configtxgen
