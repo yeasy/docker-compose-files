@@ -8,7 +8,7 @@ services:
   ca.example.com:
     container_name: ${COMPOSE_PROJECT_NAME}_ca_orderer
     image: "hyperledger/fabric-ca:1.2.0"
-    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.orderer.example.com.log'
+    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.orderer.example.com.log;'
     environment:
       - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_SERVER_TLS_ENABLED=true
@@ -29,7 +29,7 @@ services:
   ca.org1.example.com:
     container_name: ${COMPOSE_PROJECT_NAME}_ca_org1
     image: "hyperledger/fabric-ca:1.2.0"
-    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.org1.example.com.log'
+    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.org1.example.com.log;'
     environment:
       - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_SERVER_TLS_ENABLED=true
@@ -50,7 +50,7 @@ services:
   ca.org2.example.com:
     container_name: ${COMPOSE_PROJECT_NAME}_ca_org2
     image: "hyperledger/fabric-ca:1.2.0"
-    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.org2.example.com.log'
+    command: /bin/bash -c '/scripts/start-root-ca.sh 2>&1 | tee /data/logs/ca.org2.example.com.log;'
     environment:
       - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_SERVER_TLS_ENABLED=true
@@ -96,7 +96,7 @@ services:
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/data/genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
@@ -107,7 +107,7 @@ services:
       - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
       - ORDERER=orderer
       - DOMAIN=example.com
-    command: /bin/bash -c '/scripts/start-orderer.sh 2>&1 | tee /data/logs/orderer.example.com.log'
+    command: /bin/bash -c '/scripts/start-orderer.sh 2>&1 | tee /data/logs/orderer.example.com.log';
     volumes:
       - ../scripts:/scripts
       - ./:/data
@@ -132,7 +132,7 @@ services:
       - DOMAIN=org1.example.com
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID=org1MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=net_fabric-ca
@@ -146,7 +146,7 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1-org1:7051
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer0.org1.example.com.log'
+    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer0.org1.example.com.log;'
     volumes:
       - ../scripts:/scripts
       - ./:/data
@@ -169,7 +169,7 @@ services:
       - PEER_NAME_PASS=peer1.org1.example.com:peer1.org1.example.compw
       - CORE_PEER_ID=peer1.org1.example.com
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID=org1MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=net_fabric-ca
@@ -188,7 +188,7 @@ services:
       - DOMAIN=org1.example.com
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer1.org1.example.com.log'
+    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer1.org1.example.com.log;'
     volumes:
       - ../scripts:/scripts
       - ./:/data
@@ -211,7 +211,7 @@ services:
       - PEER_NAME_PASS=peer0.org2.example.com:peer0.org2.example.compw
       - CORE_PEER_ID=peer0.org2.example.com
       - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_LOCALMSPID=org2MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=net_fabric-ca
@@ -229,7 +229,7 @@ services:
       - PEER=peer0
       - DOMAIN=org2.example.com
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer0.org2.example.com.log'
+    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer0.org2.example.com.log;'
     volumes:
       - ../scripts:/scripts
       - ./:/data
@@ -252,7 +252,7 @@ services:
       - PEER_NAME_PASS=peer1.org2.example.com:peer1.org2.example.compw
       - CORE_PEER_ID=peer1.org2.example.com
       - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_LOCALMSPID=org2MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=net_fabric-ca
@@ -271,7 +271,7 @@ services:
       - DOMAIN=org2.example.com
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer1.org2.example.com.log'
+    command: /bin/bash -c '/scripts/start-peer.sh 2>&1 | tee /data/logs/peer1.org2.example.com.log;'
     volumes:
       - ../scripts:/scripts
       - ./:/data
@@ -280,3 +280,23 @@ services:
       - fabric-ca
     depends_on:
       - setup
+
+  run:
+    container_name: ${COMPOSE_PROJECT_NAME}_run
+    image: "hyperledger/fabric-ca-tools:1.2.0"
+    environment:
+      - GOPATH=/opt/gopath
+    command: /bin/bash -c 'sleep 3;/scripts/run-fabric.sh 2>&1 | tee /data/logs/run.log; sleep 99999'
+    volumes:
+      - ../scripts:/scripts
+      - ./:/data
+      - ./chaincode:/opt/gopath/src/github.com/hyperledger/fabric-samples
+      - /src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+    networks:
+      - fabric-ca
+    depends_on:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
