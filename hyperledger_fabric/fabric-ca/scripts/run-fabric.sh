@@ -85,26 +85,6 @@ function main {
    switchToUserIdentity
    chaincodeQuery 90
 
-   initPeerVars ${PORGS[0]} 0
-   switchToUserIdentity
-
-   # Revoke the user and generate CRL using admin's credentials
-   revokeFabricUserAndGenerateCRL
-
-   # Fetch config block
-   fetchConfigBlock
-
-   # Create config update envelope with CRL and update the config block of the channel
-   createConfigUpdatePayloadWithCRL
-   updateConfigBlock
-
-   # querying the chaincode should fail as the user is revoked
-   switchToUserIdentity
-   queryAsRevokedUser
-   if [ "$?" -ne 0 ]; then
-      logr "The revoked user $USER_NAME should have failed to query the chaincode in the channel '$CHANNEL_NAME'"
-      exit 1
-   fi
    logr "Congratulations! The tests ran successfully."
 
    done=true
@@ -204,7 +184,7 @@ function makePolicy  {
       if [ $COUNT -ne 0 ]; then
          POLICY="${POLICY},"
       fi
-      initOrgVars $ORG
+      initPeerOrgVars $ORG
       POLICY="${POLICY}'${ORG_MSP_ID}.member'"
       COUNT=$((COUNT+1))
    done
@@ -215,7 +195,7 @@ function makePolicy  {
 function installChaincode {
    switchToAdminIdentity
    logr "Installing chaincode on $PEER_HOST ..."
-   peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric-samples/chaincode/abac/go
+   peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric-samples/go
 }
 
 function fetchConfigBlock {
