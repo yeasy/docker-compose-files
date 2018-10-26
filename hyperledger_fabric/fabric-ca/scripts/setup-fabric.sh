@@ -174,6 +174,7 @@ function generateChannelArtifacts() {
 
 }
 
+cp /data/fabric-ca-cmd/fabric-ca-client /usr/local/bin
 set -e
 
 SDIR=$(dirname "$0")
