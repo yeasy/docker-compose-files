@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
+cp /data/fabric-ca-cmd/fabric-ca-client /usr/local/bin
 set -e
 
 source $(dirname "$0")/env.sh
