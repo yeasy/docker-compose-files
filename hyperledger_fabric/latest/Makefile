@@ -57,6 +57,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
+	make test_cscc # test cscc operations
 
 	make test_fetch_blocks # fetch block files
 
@@ -162,6 +163,10 @@ test_cc_list: # List the chaincode
 test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
+
+test_cscc: # test cscc queries
+	@echo "Test CSCC query"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cscc.sh"
 
 test_qscc: # test qscc queries
 	@echo "Test QSCC query"

@@ -158,6 +158,10 @@ test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
 
+test_cscc: # test cscc queries
+	@echo "Test CSCC query"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cscc.sh"
+
 test_qscc: # test qscc queries
 	@echo "Test QSCC query"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
