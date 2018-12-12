@@ -1,0 +1,203 @@
+# All elements in this file should depend on the base.yaml
+# Provided solo-base fabric network with:
+
+# ca.org1.example.com
+# ca.org2.example.com
+# orderer.example.com
+# peer0.org1.example.com
+# peer1.org1.example.com
+# peer0.org2.example.com
+# peer1.org2.example.com
+# cli
+
+version: '2'  # v3 does not support 'extends' yet
+
+services:
+  ca.org1.example.com: # ca node for org1
+    extends:
+      file: base.yaml
+      service: ca-base
+    container_name: ca.org1.example.com
+    hostname: ca.org1.example.com
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca-org1
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/c843d3f021118963ce5d340e95286e8869bb7bd051454cd4166aa2887a2ad451_sk
+    ports:
+      - "7054:7054"
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/c843d3f021118963ce5d340e95286e8869bb7bd051454cd4166aa2887a2ad451_sk -b admin:adminpw -d'
+
+  ca.org2.example.com: # ca node for org2
+    extends:
+      file: base.yaml
+      service: ca-base
+    container_name: ca.org2.example.com
+    hostname: ca.org2.example.com
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca-org2
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/1ee551a8753171c0377366e96a1d7ec01afddb868c9483cc501b6f8ac7ae752f_sk
+    ports:
+      - "8054:7054"
+    volumes:
+      - ./crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/1ee551a8753171c0377366e96a1d7ec01afddb868c9483cc501b6f8ac7ae752f_sk -b admin:adminpw -d'
+
+  orderer0.example.com:  # orderer in solo mode
+    extends:
+      file: base.yaml
+      service: orderer-base
+    container_name: orderer0.example.com
+    hostname: orderer0.example.com
+    ports:
+      - "7050:7050"
+    volumes:
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
+    - ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+
+## following are peer nodes ##
+
+  peer0.org1.example.com:
+    extends:
+      file: peer.yaml
+      service: peer-solo
+    container_name: peer0.org1.example.com
+    hostname: peer0.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 7051:7051
+      - 7052:7052
+      - 7053:7053
+
+  peer1.org1.example.com:
+    extends:
+      file: peer.yaml
+      service: peer-solo
+    container_name: peer1.org1.example.com
+    hostname: peer1.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org1.example.com
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org1.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 8051:7051
+      - 8052:7052
+      - 8053:7053
+
+  peer0.org2.example.com:
+    extends:
+      file: peer.yaml
+      service: peer-solo
+    container_name: peer0.org2.example.com
+    hostname: peer0.org2.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org2.example.com
+      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org2.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 9051:7051
+      - 9052:7052
+      - 9053:7053
+
+  peer1.org2.example.com:
+    extends:
+      file: peer.yaml
+      service: peer-solo
+    container_name: peer1.org2.example.com
+    hostname: peer1.org2.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org2.example.com
+      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org2.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 10051:7051
+      - 10052:7052
+      - 10053:7053
+
+  peer0.org3.example.com:
+    extends:
+      file: peer.yaml
+      service: peer-solo
+    container_name: peer0.org3.example.com
+    hostname: peer0.org3.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org3.example.com
+      - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org3.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org3MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 11051:7051
+      - 11052:7052
+      - 11053:7053
+
+  cli: # client node
+    extends:
+      file: base.yaml
+      service: cli-base
+    container_name: fabric-cli
+    hostname: fabric-cli
+    volumes:
+        - ./scripts:/tmp/scripts
+        - ./crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./examples:/opt/gopath/src/examples
+
+  #deprecated
+  event-listener:
+    extends:
+      file: base.yaml
+      service: event-listener-base
+    container_name: fabric-event-listener
+    hostname: fabric-event-listener
+    environment:
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
+    volumes:
+        - ./scripts:/tmp/scripts
+        - ./crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+        - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./solo/channel-artifacts:/tmp/channel-artifacts
+        - ./examples:/opt/gopath/src/examples
+    command: bash -c 'while true; do sleep 1; block-listener -events-address=peer0.org1.example.com:7053 -events-mspdir=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/ -events-mspid=Org1MSP; done'
+    #command: bash -c 'while true; do sleep 20170504; done'

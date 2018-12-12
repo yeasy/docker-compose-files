@@ -5,12 +5,12 @@
 ARCH=amd64
 
 # for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.13
+BASE_IMG_TAG=0.4.14
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
 
-PROJECT_VERSION=1.3.0
+PROJECT_VERSION=1.4.0
 
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"

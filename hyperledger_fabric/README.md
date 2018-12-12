@@ -14,12 +14,11 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest/) | latest fabric code, unstable.
+[Fabric v1.4.0](v1.3.0/) | stable fabric 1.4.0 release.
 [Fabric v1.3.0](v1.3.0/) | stable fabric 1.3.0 release.
 [Fabric v1.2.0](v1.2.0/) | stable fabric 1.2.0 release.
 [Fabric v1.1.0](v1.1.0/) | stable fabric 1.1.0 release.
 [Fabric v1.0.6](v1.0.6/) | fabric v1.0.6 release.
-[Fabric v1.0.5](v1.0.5/) | fabric v1.0.5 release.
-[Fabric v1.0.2](v1.0.2/) | fabric v1.0.2 release.
 [Fabric v1.0.0](v1.0.0/) | fabric v1.0.0 release.
 [Fabric v0.6.0](v0.6.0/) | fabric v0.6.0 release (too old, not recommend to use).
 

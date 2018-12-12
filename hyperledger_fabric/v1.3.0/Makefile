@@ -18,7 +18,7 @@ LOG_PATH ?= solo/logs
 ifeq ($(HLF_MODE),kafka)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
 	LOG_PATH=kafka/logs
-	NETWORK_INIT_WAIT=20
+	NETWORK_INIT_WAIT=30
 else ifeq ($(HLF_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
 else ifeq ($(HLF_MODE),event)
@@ -57,6 +57,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
+	make test_cscc # test cscc operations
 
 	make test_fetch_blocks # fetch block files
 
@@ -163,6 +164,10 @@ test_cc_invoke_query: # test user chaincode on all peers
 	@echo "Invoke and query cc example02 on all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_invoke_query.sh"
 
+test_cscc: # test cscc queries
+	@echo "Test CSCC query"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cscc.sh"
+
 test_qscc: # test qscc queries
 	@echo "Test QSCC query"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_qscc.sh"
@@ -197,16 +202,20 @@ check: # Check shell scripts grammar
 	@echo "Check shell scripts grammar"
 	[ `which shellcheck` ] && shellcheck scripts/*.sh
 
-clean: # clean up containers
+clean: # clean up containers and chaincode images
 	@echo "Clean all HLF containers and chaincode images"
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May manually clean the crypto-config, $(HLF_MODE)/channel-artifacts and org3/crypto-config"
+	echo "May clean the config: make clean_config"
 
+# Clean these config files including channel artifacts and credential files
 clean_config: clean_channel_artifacts clean_crypto_config
 
-env_clean: # clean up environment
+# Clean deeply by removing all generated files: container, artifacts, credentials
+purge: clean clean_config
+
+env_clean: # clean up Docker environment
 	@echo "Clean all images and containers"
 	bash scripts/env_clean.sh
 
@@ -266,6 +275,7 @@ clean_channel_artifacts: # clean channel related artifacts
 	fi
 
 clean_crypto_config: # clean config artifacts
+	echo "Warning: re-generating credentials will affect artifacts in both solo and kafka mode"
 	rm -rf crypto-config/*
 	rm -rf org3/crypto-config/*
 
