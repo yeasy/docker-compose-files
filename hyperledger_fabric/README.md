@@ -51,6 +51,8 @@ The following command will run the entire process (start a fabric network, creat
 $ make test  # Test with default fabric solo mode
 ```
 
+[Prometheus](https://prometheus.io) dashboard listens at [http://localhost:9090](http://localhost:9090) to track the network statistics.
+
 ### Test with more modes
 
 ```bash

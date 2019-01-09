@@ -31,8 +31,8 @@ services:
     network_mode: ${NETWORK}
     # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
     environment:
-      - ORDERER_GENERAL_LOGLEVEL=INFO  # default: INFO
-      - ORDERER_GENERAL_LOGFORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - FABRIC_LOGGING_SPEC=INFO  # default: INFO
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
       - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
@@ -44,16 +44,19 @@ services:
       - ORDERER_GENERAL_MAXMESSAGECOUNT=10
       - ORDERER_GENERAL_MAXWINDOWSIZE=1000
       - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
+      - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
       # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true # default: false
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
-    volumes:
-      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    #volumes:
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
-      - "7050"  #
+      - "7050"  # gRPC
+      - "8443"  # Operation REST
     #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
     command: orderer start
 
@@ -62,13 +65,15 @@ services:
     restart: always
     network_mode: ${NETWORK}
     environment:
-      - CORE_LOGGING_LEVEL=INFO
+      - FABRIC_LOGGING_SPEC=INFO
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_ADDRESSAUTODETECT=false
-      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${NETWORK}  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the org leader, default to false
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=0.0.0.0:7051  # change to external addr for peers in other orgs
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9443  # operation RESTful API
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
       - CORE_PEER_PROFILE_ENABLED=false
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -77,13 +82,12 @@ services:
       - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
       - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     volumes:
-      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     # docker.sock is mapped as the default CORE_VM_ENDPOINT
       - /var/run/docker.sock:/var/run/docker.sock
     expose:
-      - "7051"  # Grpc
-      - "7052"  # Peer CLI
-      - "7053"  # Peer Event
+      - "7051"  # gRPC
+      - "9443"  # Operation REST
     #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: peer node start
 
@@ -93,13 +97,42 @@ services:
     network_mode: ${NETWORK}
     tty: true
     environment:
-      - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 
+  prometheus: # prometheus will pull metrics from fabric
+    image: prom/prometheus:v2.6.0
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    volumes:
+       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  #deprecated
+  event-listener:
+    extends:
+      file: base.yaml
+      service: event-listener-base
+    container_name: fabric-event-listener
+    hostname: fabric-event-listener
+    environment:
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
+    volumes:
+      - ./scripts:/tmp/scripts
+      - ./crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      - ./solo/channel-artifacts:/tmp/channel-artifacts
+      - ./examples:/opt/gopath/src/examples
 #deprecated
   event-listener-base:
     image: yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}

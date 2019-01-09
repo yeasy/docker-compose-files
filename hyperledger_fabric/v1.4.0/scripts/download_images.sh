@@ -39,12 +39,19 @@ for IMG in baseimage baseos couchdb kafka zookeeper; do
 	pull_image $HLF_IMG
 done
 
+# TODO: official core.yaml still use PROJECT_VERSION for fabric-baseos, however, dockerhub does not have the version
+docker tag hyperledger/fabric-baseos:$ARCH-$BASE_IMG_TAG hyperledger/fabric-baseos:$FABRIC_IMG_TAG
+
 # Only useful for debugging
 # docker pull yeasy/hyperledger-fabric
 
 echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from fabric repo... ==="
 for IMG in peer tools orderer ca ccenv tools; do
-	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
+	if ["$FABRIC_IMG_TAG" == "latest"]; then
+		HLF_IMG=hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG
+	else
+		HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
+	fi
 	pull_image $HLF_IMG
 done
 

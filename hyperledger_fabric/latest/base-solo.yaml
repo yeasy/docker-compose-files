@@ -53,6 +53,7 @@ services:
     hostname: orderer0.example.com
     ports:
       - "7050:7050"
+      - "8443:8443"
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
@@ -76,9 +77,10 @@ services:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
-      - 7051:7051
-      - 7052:7052
-      - 7053:7053
+      - "7051:7051"
+      - "7052:7052"
+      - "7053:7053"
+      - "9443:9443"
 
   peer1.org1.example.com:
     extends:
@@ -97,9 +99,9 @@ services:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
-      - 8051:7051
-      - 8052:7052
-      - 8053:7053
+      - "8051:7051"
+      - "8052:7052"
+      - "8053:7053"
 
   peer0.org2.example.com:
     extends:
@@ -118,9 +120,9 @@ services:
         - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
-      - 9051:7051
-      - 9052:7052
-      - 9053:7053
+      - "9051:7051"
+      - "9052:7052"
+      - "9053:7053"
 
   peer1.org2.example.com:
     extends:
@@ -139,9 +141,9 @@ services:
         - ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
-      - 10051:7051
-      - 10052:7052
-      - 10053:7053
+      - "10051:7051"
+      - "10052:7052"
+      - "10053:7053"
 
   peer0.org3.example.com:
     extends:
@@ -160,9 +162,9 @@ services:
         - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
-      - 11051:7051
-      - 11052:7052
-      - 11053:7053
+      - "11051:7051"
+      - "11052:7052"
+      - "11053:7053"
 
   cli: # client node
     extends:
@@ -177,6 +179,15 @@ services:
         - ./solo/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./solo/channel-artifacts:/tmp/channel-artifacts
         - ./examples:/opt/gopath/src/examples
+
+  prometheus: # prometheus will pull metrics from fabric
+    extends:
+      file: base.yaml
+      service: prometheus
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - "9090:9090"
 
   #deprecated
   event-listener:
