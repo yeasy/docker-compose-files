@@ -8,7 +8,7 @@ ARCH=amd64
 BASE_IMG_TAG=0.4.14
 
 # For fabric images, including peer, orderer, ca
-FABRIC_IMG_TAG=1.4.0
+FABRIC_IMG_TAG=latest
 
 PROJECT_VERSION=1.4.0
 

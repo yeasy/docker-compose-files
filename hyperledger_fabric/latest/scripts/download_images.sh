@@ -47,7 +47,7 @@ docker tag hyperledger/fabric-baseos:$ARCH-$BASE_IMG_TAG hyperledger/fabric-base
 
 echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from fabric repo... ==="
 for IMG in peer tools orderer ca ccenv tools; do
-	if ["$FABRIC_IMG_TAG" == "latest"]; then
+	if [ "$FABRIC_IMG_TAG" == "latest" ]; then
 		HLF_IMG=hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG
 	else
 		HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
