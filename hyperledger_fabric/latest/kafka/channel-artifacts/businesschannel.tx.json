@@ -72,6 +72,28 @@
 									},
 									"version": "0"
 								},
+								"Endorsement": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "MAJORITY",
+											"sub_policy": "Endorsement"
+										}
+									},
+									"version": "0"
+								},
+								"LifecycleEndorsement": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "MAJORITY",
+											"sub_policy": "Endorsement"
+										}
+									},
+									"version": "0"
+								},
 								"Readers": {
 									"mod_policy": "Admins",
 									"policy": {
@@ -96,6 +118,62 @@
 								}
 							},
 							"values": {
+								"ACLs": {
+									"mod_policy": "Admins",
+									"value": {
+										"acls": {
+											"cscc/GetConfigBlock": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"cscc/GetConfigTree": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"cscc/SimulateConfigTreeUpdate": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"event/Block": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"event/FilteredBlock": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"lscc/ChaincodeExists": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"lscc/GetChaincodeData": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"lscc/GetDeploymentSpec": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"lscc/GetInstantiatedChaincodes": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"peer/ChaincodeToChaincode": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"peer/Propose": {
+												"policy_ref": "/Channel/Application/Writers"
+											},
+											"qscc/GetBlockByHash": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"qscc/GetBlockByNumber": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"qscc/GetBlockByTxID": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"qscc/GetChainInfo": {
+												"policy_ref": "/Channel/Application/Readers"
+											},
+											"qscc/GetTransactionByID": {
+												"policy_ref": "/Channel/Application/Readers"
+											}
+										}
+									},
+									"version": "0"
+								},
 								"Capabilities": {
 									"mod_policy": "Admins",
 									"value": {
@@ -130,7 +208,7 @@
 				"channel_id": "businesschannel",
 				"epoch": "0",
 				"extension": null,
-				"timestamp": "2018-12-19T08:06:56Z",
+				"timestamp": "2019-02-28T03:15:16Z",
 				"tls_cert_hash": null,
 				"tx_id": "",
 				"type": 2,

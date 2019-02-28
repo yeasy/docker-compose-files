@@ -1,180 +1,181 @@
-[34m[001 01-10 05:17:20.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer:
+[34m[001 02-28 03:11:50.87 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer:
  Version: 1.4.0
  Commit SHA: development build
- Go version: go1.11.4
+ Go version: go1.11.5
  OS/Arch: linux/amd64
  Chaincode:
   Base Docker Namespace: hyperledger
   Base Docker Label: org.hyperledger.fabric
   Docker Namespace: hyperledger
-[34m[002 01-10 05:17:20.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initializing ledger mgmt
-[34m[003 01-10 05:17:20.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initializing ledger provider
-[34m[004 01-10 05:17:21.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m ledger provider Initialized
-[34m[005 01-10 05:17:21.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m ledger mgmt initialized
-[34m[006 01-10 05:17:21.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Auto-detected peer address: 172.24.0.5:7051
-[34m[007 01-10 05:17:21.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Returning peer0.org1.example.com:7051
-[34m[008 01-10 05:17:21.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Auto-detected peer address: 172.24.0.5:7051
-[34m[009 01-10 05:17:21.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Returning peer0.org1.example.com:7051
-[34m[00a 01-10 05:17:21.59 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer with TLS enabled
-[34m[00b 01-10 05:17:21.60 UTC] [%{longpkg}] %{callpath} -> INFO[0m Entering computeChaincodeEndpoint with peerHostname: peer0.org1.example.com
-[34m[00c 01-10 05:17:21.60 UTC] [%{longpkg}] %{callpath} -> INFO[0m Exit with ccEndpoint: peer0.org1.example.com:7052
-[34m[00d 01-10 05:17:21.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc(github.com/hyperledger/fabric/core/scc/lscc) registered
-[34m[00e 01-10 05:17:21.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc(github.com/hyperledger/fabric/core/scc/cscc) registered
-[34m[00f 01-10 05:17:21.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc(github.com/hyperledger/fabric/core/scc/qscc) registered
-[34m[010 01-10 05:17:21.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode +lifecycle(github.com/hyperledger/fabric/core/chaincode/lifecycle) registered
-[34m[011 01-10 05:17:21.69 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initialize gossip with endpoint peer0.org1.example.com:7051 and bootstrap set [127.0.0.1:7051]
-[34m[012 01-10 05:17:21.69 UTC] [%{longpkg}] %{callpath} -> INFO[0m Creating gossip service with self membership of Endpoint: peer0.org1.example.com:7051, InternalEndpoint: peer0.org1.example.com:7051, PKI-ID: 099f13cbe2db0d065da1feceffb3833bdda3e3ec7893a40a37b60bd0b54245d9, Metadata: 
-[34m[013 01-10 05:17:21.69 UTC] [%{longpkg}] %{callpath} -> INFO[0m Gossip instance peer0.org1.example.com:7051 started
-[34m[014 01-10 05:17:21.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc/(github.com/hyperledger/fabric/core/scc/lscc) deployed
-[34m[015 01-10 05:17:21.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init CSCC
-[34m[016 01-10 05:17:21.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc/(github.com/hyperledger/fabric/core/scc/cscc) deployed
-[34m[017 01-10 05:17:21.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init QSCC
-[34m[018 01-10 05:17:21.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc/(github.com/hyperledger/fabric/core/scc/qscc) deployed
-[34m[019 01-10 05:17:21.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode +lifecycle/(github.com/hyperledger/fabric/core/chaincode/lifecycle) deployed
-[34m[01a 01-10 05:17:21.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m Deployed system chaincodes
-[34m[01b 01-10 05:17:21.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m Created with config TLS: true, authCacheMaxSize: 1000, authCachePurgeRatio: 0.750000
-[34m[01c 01-10 05:17:21.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m Discovery service activated
-[34m[01d 01-10 05:17:21.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer with ID=[name:"peer0.org1.example.com" ], network ID=[dev], address=[peer0.org1.example.com:7051]
-[34m[01e 01-10 05:17:21.73 UTC] [%{longpkg}] %{callpath} -> INFO[0m Started peer with ID=[name:"peer0.org1.example.com" ], network ID=[dev], address=[peer0.org1.example.com:7051]
-[34m[01f 01-10 05:17:21.89 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:21.895Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:23.895Z", "grpc.peer_address": "172.24.0.6:51718", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "225.1µs"}
-[34m[020 01-10 05:17:21.91 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:21.9Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:31.9Z", "grpc.peer_address": "172.24.0.6:51718", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "10.0061ms"}
-[34m[021 01-10 05:17:21.92 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:21.926Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:23.926Z", "grpc.peer_address": "172.24.0.6:51720", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "190.4µs"}
-[34m[022 01-10 05:17:27.49 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][4b1de27c] Entry chaincode: name:"cscc" 
-[34m[023 01-10 05:17:27.49 UTC] [%{longpkg}] %{callpath} -> INFO[0m Creating ledger [businesschannel] with genesis block
-[34m[024 01-10 05:17:27.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m Getting block information from block storage
-[34m[025 01-10 05:17:27.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [0] with 1 transaction(s) in 26ms (state_validation=3ms block_commit=13ms state_commit=5ms)
-[34m[026 01-10 05:17:27.54 UTC] [%{longpkg}] %{callpath} -> INFO[0m Created ledger [businesschannel] with genesis block
-[34m[027 01-10 05:17:27.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
-[34m[028 01-10 05:17:27.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org2MSP for channel businesschannel to learn about
-[34m[029 01-10 05:17:27.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org1MSP for channel businesschannel to learn about
-[34m[02a 01-10 05:17:27.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m Updating metadata information, current ledger sequence is at = 0, next expected block is = 1
-[34m[02b 01-10 05:17:27.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc/businesschannel(github.com/hyperledger/fabric/core/scc/lscc) deployed
-[34m[02c 01-10 05:17:27.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init CSCC
-[34m[02d 01-10 05:17:27.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc/businesschannel(github.com/hyperledger/fabric/core/scc/cscc) deployed
-[34m[02e 01-10 05:17:27.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init QSCC
-[34m[02f 01-10 05:17:27.59 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc/businesschannel(github.com/hyperledger/fabric/core/scc/qscc) deployed
-[34m[030 01-10 05:17:27.59 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode +lifecycle/businesschannel(github.com/hyperledger/fabric/core/chaincode/lifecycle) deployed
-[34m[031 01-10 05:17:27.59 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][4b1de27c] Exit chaincode: name:"cscc"  (97ms)
-[34m[032 01-10 05:17:27.59 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:27.493Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:53726", "grpc.code": "OK", "grpc.call_duration": "100.0681ms"}
-[34m[033 01-10 05:17:29.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f771aef4] Entry chaincode: name:"cscc" 
-[34m[034 01-10 05:17:29.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f771aef4] Exit chaincode: name:"cscc"  (1ms)
-[34m[035 01-10 05:17:29.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:29.414Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:53738", "grpc.code": "OK", "grpc.call_duration": "3.6057ms"}
-[34m[036 01-10 05:17:30.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][ceca573d] Entry chaincode: name:"qscc" 
-[34m[037 01-10 05:17:30.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][ceca573d] Exit chaincode: name:"qscc"  (1ms)
-[34m[038 01-10 05:17:30.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:30.536Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:53748", "grpc.code": "OK", "grpc.call_duration": "3.1422ms"}
-[34m[039 01-10 05:17:32.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Membership view has changed. peers went online:  [[peer1.org1.example.com:7051]] , current view:  [[peer1.org1.example.com:7051]]
-[34m[03a 01-10 05:17:33.60 UTC] [%{longpkg}] %{callpath} -> INFO[0m 099f13cbe2db0d065da1feceffb3833bdda3e3ec7893a40a37b60bd0b54245d9 : Becoming a leader
-[34m[03b 01-10 05:17:33.60 UTC] [%{longpkg}] %{callpath} -> INFO[0m Elected as a leader, starting delivery service for channel businesschannel
-[34m[03c 01-10 05:17:33.63 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [1] from buffer
-[34m[03d 01-10 05:17:33.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
-[34m[03e 01-10 05:17:33.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org2MSP for channel businesschannel to learn about
-[34m[03f 01-10 05:17:33.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
-[34m[040 01-10 05:17:33.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
-[34m[041 01-10 05:17:33.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:33.682Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:35.681Z", "grpc.peer_address": "172.24.0.6:51782", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "5.0419ms"}
-[34m[042 01-10 05:17:33.69 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [1] in 62ms
-[34m[043 01-10 05:17:33.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:21.929Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.peer_address": "172.24.0.6:51720", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "11.8086072s"}
-[34m[044 01-10 05:17:33.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:33.699Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:43.699Z", "grpc.peer_address": "172.24.0.6:51782", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "4.3082ms"}
-[34m[045 01-10 05:17:34.33 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [1] with 1 transaction(s) in 635ms (state_validation=1ms block_commit=603ms state_commit=23ms)
-[34m[046 01-10 05:17:34.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:34.505Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:36.505Z", "grpc.peer_address": "172.24.0.4:45966", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "241.9µs"}
-[34m[047 01-10 05:17:34.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:34.582Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:36.582Z", "grpc.peer_address": "172.24.0.3:52654", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "192.1µs"}
-[34m[048 01-10 05:17:34.61 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:34.521Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:44.521Z", "grpc.peer_address": "172.24.0.4:45966", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "93.5015ms"}
-[34m[049 01-10 05:17:34.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:34.6Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:44.597Z", "grpc.peer_address": "172.24.0.3:52654", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "75.4057ms"}
-[34m[04a 01-10 05:17:34.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:34.686Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:36.683Z", "grpc.peer_address": "172.24.0.4:45974", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "262.5µs"}
-[34m[04b 01-10 05:17:34.73 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:34.734Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:36.734Z", "grpc.peer_address": "172.24.0.3:52662", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "220.9µs"}
-[34m[04c 01-10 05:17:34.89 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [2] from buffer
-[34m[04d 01-10 05:17:35.08 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
-[34m[04e 01-10 05:17:35.12 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org2MSP for channel businesschannel : [{peer0.org2.example.com 7051}]
-[34m[04f 01-10 05:17:35.14 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
-[34m[050 01-10 05:17:35.14 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
-[34m[051 01-10 05:17:35.15 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:35.153Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:37.153Z", "grpc.peer_address": "172.24.0.3:52668", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "1.8412ms"}
-[34m[052 01-10 05:17:35.18 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:35.179Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:37.176Z", "grpc.peer_address": "172.24.0.4:45980", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "1.1714ms"}
-[34m[053 01-10 05:17:35.22 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:34.692Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.peer_address": "172.24.0.4:45974", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "533.8832ms"}
-[34m[054 01-10 05:17:35.22 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:35.21Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:45.21Z", "grpc.peer_address": "172.24.0.4:45980", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "17.7686ms"}
-[34m[055 01-10 05:17:35.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:34.739Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.peer_address": "172.24.0.3:52662", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "505.9239ms"}
-[34m[056 01-10 05:17:35.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:35.23Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:45.23Z", "grpc.peer_address": "172.24.0.3:52668", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "19.551ms"}
-[34m[057 01-10 05:17:35.28 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [2] in 389ms
-[34m[058 01-10 05:17:35.34 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:35.335Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:17:37.333Z", "grpc.peer_address": "172.24.0.6:51810", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "6.2104ms"}
-[34m[059 01-10 05:17:35.47 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:17:35.409Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:17:45.407Z", "grpc.peer_address": "172.24.0.6:51810", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "68.2264ms"}
-[34m[05a 01-10 05:17:35.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [2] with 1 transaction(s) in 212ms (state_validation=10ms block_commit=170ms state_commit=13ms)
-[34m[05b 01-10 05:17:37.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m Membership view has changed. peers went online:  [[peer0.org2.example.com:7051 ] [peer1.org2.example.com:7051 ]] , current view:  [[peer1.org1.example.com:7051] [peer0.org2.example.com:7051 ] [peer1.org2.example.com:7051 ]]
-[34m[05c 01-10 05:17:52.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][d21b53d1] Entry chaincode: name:"lscc" 
-[34m[05d 01-10 05:17:52.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m Installed Chaincode [exp02] Version [1.0] to peer
-[34m[05e 01-10 05:17:52.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][d21b53d1] Exit chaincode: name:"lscc"  (2ms)
-[34m[05f 01-10 05:17:52.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:52.104Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:53824", "grpc.code": "OK", "grpc.call_duration": "3.4329ms"}
-[34m[060 01-10 05:17:55.98 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][1ac6c31f] Entry chaincode: name:"lscc" 
-[34m[061 01-10 05:17:56.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m building chaincode with ldflagsOpt: '-ldflags "-linkmode external -extldflags '-static'"'
-[34m[062 01-10 05:18:57.62 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][1ac6c31f] Exit chaincode: name:"lscc"  (61708ms)
-[34m[063 01-10 05:18:57.63 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:17:55.967Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:53880", "grpc.code": "OK", "grpc.call_duration": "1m1.7335863s"}
-[34m[064 01-10 05:18:59.66 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [3] from buffer
-[34m[065 01-10 05:18:59.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [3] in 14ms
-[34m[066 01-10 05:18:59.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m Channel [businesschannel]: Handling deploy or update of chaincode [exp02]
-[34m[067 01-10 05:18:59.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [3] with 1 transaction(s) in 32ms (state_validation=4ms block_commit=16ms state_commit=7ms)
-[34m[068 01-10 05:19:49.89 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][e820f319] Entry chaincode: name:"exp02" 
-[34m[069 01-10 05:19:49.90 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][e820f319] Exit chaincode: name:"exp02"  (6ms)
-[34m[06a 01-10 05:19:49.90 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:49.893Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54010", "grpc.code": "OK", "grpc.call_duration": "8.5871ms"}
-[34m[06b 01-10 05:19:51.92 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [4] from buffer
-[34m[06c 01-10 05:19:51.92 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [4] in 3ms
-[34m[06d 01-10 05:19:51.96 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [4] with 1 transaction(s) in 36ms (state_validation=0ms block_commit=27ms state_commit=4ms)
-[34m[06e 01-10 05:19:53.44 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][147169ab] Entry chaincode: name:"exp02" 
-[34m[06f 01-10 05:19:53.45 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][147169ab] Exit chaincode: name:"exp02"  (8ms)
-[34m[070 01-10 05:19:53.45 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:53.443Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54030", "grpc.code": "OK", "grpc.call_duration": "15.0675ms"}
-[34m[071 01-10 05:19:54.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [5] from buffer
-[34m[072 01-10 05:19:54.74 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [5] in 39ms
-[34m[073 01-10 05:19:54.76 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [5] with 1 transaction(s) in 17ms (state_validation=1ms block_commit=12ms state_commit=1ms)
-[34m[074 01-10 05:19:55.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][6605af27] Entry chaincode: name:"exp02" 
-[34m[075 01-10 05:19:55.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][6605af27] Exit chaincode: name:"exp02"  (3ms)
-[34m[076 01-10 05:19:55.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:55.717Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54036", "grpc.code": "OK", "grpc.call_duration": "8.2748ms"}
-[34m[077 01-10 05:19:56.28 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][f4f77a0a] Entry chaincode: name:"lscc" 
-[34m[078 01-10 05:19:56.29 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][f4f77a0a] Exit chaincode: name:"lscc"  (6ms)
-[34m[079 01-10 05:19:56.29 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:56.283Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54042", "grpc.code": "OK", "grpc.call_duration": "8.3235ms"}
-[34m[07a 01-10 05:19:56.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][f20e4045] Entry chaincode: name:"lscc" 
-[34m[07b 01-10 05:19:56.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][f20e4045] Exit chaincode: name:"lscc"  (3ms)
-[34m[07c 01-10 05:19:56.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:56.555Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54046", "grpc.code": "OK", "grpc.call_duration": "10.0431ms"}
-[34m[07d 01-10 05:19:56.84 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][38b75db0] Entry chaincode: name:"lscc" 
-[34m[07e 01-10 05:19:56.85 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][38b75db0] Exit chaincode: name:"lscc"  (6ms)
-[34m[07f 01-10 05:19:56.85 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:56.845Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54050", "grpc.code": "OK", "grpc.call_duration": "7.6001ms"}
-[34m[080 01-10 05:19:57.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][58235426] Entry chaincode: name:"lscc" 
-[34m[081 01-10 05:19:57.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][58235426] Exit chaincode: name:"lscc"  (2ms)
-[34m[082 01-10 05:19:57.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:57.102Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54054", "grpc.code": "OK", "grpc.call_duration": "6.5752ms"}
-[34m[083 01-10 05:19:57.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][fe4b059b] Entry chaincode: name:"lscc" 
-[34m[084 01-10 05:19:57.83 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][fe4b059b] Exit chaincode: name:"lscc"  (4ms)
-[34m[085 01-10 05:19:57.83 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:57.826Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54058", "grpc.code": "OK", "grpc.call_duration": "5.8628ms"}
-[34m[086 01-10 05:19:58.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5dffd595] Entry chaincode: name:"qscc" 
-[34m[087 01-10 05:19:58.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5dffd595] Exit chaincode: name:"qscc"  (5ms)
-[34m[088 01-10 05:19:58.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:58.505Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54062", "grpc.code": "OK", "grpc.call_duration": "7.7577ms"}
-[34m[089 01-10 05:19:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][8210374a] Entry chaincode: name:"qscc" 
-[34m[08a 01-10 05:19:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][8210374a] Exit chaincode: name:"qscc"  (3ms)
-[34m[08b 01-10 05:19:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:58.769Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54066", "grpc.code": "OK", "grpc.call_duration": "3.9343ms"}
-[34m[08c 01-10 05:19:59.57 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][a7fddd05] Entry chaincode: name:"cscc" 
-[34m[08d 01-10 05:19:59.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][a7fddd05] Exit chaincode: name:"cscc"  (2ms)
-[34m[08e 01-10 05:19:59.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:59.578Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54070", "grpc.code": "OK", "grpc.call_duration": "4.5801ms"}
-[34m[08f 01-10 05:19:59.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][b8caa76f] Entry chaincode: name:"cscc" 
-[34m[090 01-10 05:19:59.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][b8caa76f] Exit chaincode: name:"cscc"  (1ms)
-[34m[091 01-10 05:19:59.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:19:59.823Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54074", "grpc.code": "OK", "grpc.call_duration": "2.203ms"}
-[34m[092 01-10 05:20:00.23 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][006a85ae] Entry chaincode: name:"cscc" 
-[34m[093 01-10 05:20:00.23 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][006a85ae] Exit chaincode: name:"cscc"  (2ms)
-[34m[094 01-10 05:20:00.23 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:00.236Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54078", "grpc.code": "OK", "grpc.call_duration": "3.0486ms"}
-[34m[095 01-10 05:20:10.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [6] from buffer
-[33m[096 01-10 05:20:10.95 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP4a990d9ddc475ae0c719a406e0fbf388bcf3fe81bfd34a9c11f3a18eb4a4ed23] at index 2 in signature set
-[33m[097 01-10 05:20:10.96 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP4a990d9ddc475ae0c719a406e0fbf388bcf3fe81bfd34a9c11f3a18eb4a4ed23] at index 2 in signature set
-[34m[098 01-10 05:20:11.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:11.106Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:20:13.105Z", "grpc.peer_address": "172.24.0.6:52134", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "199.7µs"}
-[34m[099 01-10 05:20:11.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 3 organizations
-[34m[09a 01-10 05:20:11.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
-[34m[09b 01-10 05:20:11.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
-[34m[09c 01-10 05:20:11.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org2MSP for channel businesschannel : [{peer0.org2.example.com 7051}]
-[34m[09d 01-10 05:20:11.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org3MSP for channel businesschannel to learn about
-[34m[09e 01-10 05:20:11.14 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:11.147Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:20:13.14Z", "grpc.peer_address": "172.24.0.4:46316", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "424.6µs"}
-[34m[09f 01-10 05:20:11.16 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [6] in 225ms
-[34m[0a0 01-10 05:20:11.22 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [6] with 1 transaction(s) in 55ms (state_validation=5ms block_commit=30ms state_commit=7ms)
-[34m[0a1 01-10 05:20:11.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:20:11.185Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:20:21.185Z", "grpc.peer_address": "172.24.0.4:46316", "grpc.peer_subject": "CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "54.8585ms"}
-[34m[0a2 01-10 05:20:11.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:11.216Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:20:13.215Z", "grpc.peer_address": "172.24.0.3:52996", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "27.4677ms"}
-[34m[0a3 01-10 05:20:11.26 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:20:11.158Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:20:21.12Z", "grpc.peer_address": "172.24.0.6:52134", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "108.366ms"}
-[34m[0a4 01-10 05:20:11.27 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:11.277Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:20:13.276Z", "grpc.peer_address": "172.24.0.6:52140", "grpc.peer_subject": "CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "354.3µs"}
-[34m[0a5 01-10 05:20:11.27 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed {"grpc.start_time": "2019-01-10T05:20:11.252Z", "grpc.service": "gossip.Gossip", "grpc.method": "GossipStream", "grpc.request_deadline": "2019-01-10T05:20:21.252Z", "grpc.peer_address": "172.24.0.3:52996", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "error": "rpc error: code = Canceled desc = context canceled", "grpc.code": "Canceled", "grpc.call_duration": "26.7045ms"}
-[34m[0a6 01-10 05:20:11.33 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:11.332Z", "grpc.service": "gossip.Gossip", "grpc.method": "Ping", "grpc.request_deadline": "2019-01-10T05:20:13.332Z", "grpc.peer_address": "172.24.0.3:53008", "grpc.peer_subject": "CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US", "grpc.code": "OK", "grpc.call_duration": "206.7µs"}
-[34m[0a7 01-10 05:20:22.34 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f86d218b] Entry chaincode: name:"cscc" 
-[34m[0a8 01-10 05:20:22.34 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f86d218b] Exit chaincode: name:"cscc"  (1ms)
-[34m[0a9 01-10 05:20:22.34 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:22.339Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54178", "grpc.code": "OK", "grpc.call_duration": "3.1889ms"}
-[34m[0aa 01-10 05:20:23.98 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][57a7ae07] Entry chaincode: name:"qscc" 
-[34m[0ab 01-10 05:20:23.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][57a7ae07] Exit chaincode: name:"qscc"  (3ms)
-[34m[0ac 01-10 05:20:23.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed {"grpc.start_time": "2019-01-10T05:20:23.982Z", "grpc.service": "protos.Endorser", "grpc.method": "ProcessProposal", "grpc.peer_address": "172.24.0.8:54186", "grpc.code": "OK", "grpc.call_duration": "10.1591ms"}
+[34m[002 02-28 03:11:50.87 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initializing ledger mgmt
+[34m[003 02-28 03:11:50.87 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initializing ledger provider
+[34m[004 02-28 03:11:50.92 UTC] [%{longpkg}] %{callpath} -> INFO[0m ledger provider Initialized
+[34m[005 02-28 03:11:50.96 UTC] [%{longpkg}] %{callpath} -> INFO[0m ledger mgmt initialized
+[34m[006 02-28 03:11:50.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m Auto-detected peer address: 172.28.0.4:7051
+[34m[007 02-28 03:11:50.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m Returning peer0.org1.example.com:7051
+[34m[008 02-28 03:11:50.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m Auto-detected peer address: 172.28.0.4:7051
+[34m[009 02-28 03:11:50.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m Returning peer0.org1.example.com:7051
+[34m[00a 02-28 03:11:51.02 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer with TLS enabled
+[34m[00b 02-28 03:11:51.02 UTC] [%{longpkg}] %{callpath} -> INFO[0m Entering computeChaincodeEndpoint with peerHostname: peer0.org1.example.com
+[34m[00c 02-28 03:11:51.02 UTC] [%{longpkg}] %{callpath} -> INFO[0m Exit with ccEndpoint: peer0.org1.example.com:7052
+[34m[00d 02-28 03:11:51.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc(github.com/hyperledger/fabric/core/scc/lscc) registered
+[34m[00e 02-28 03:11:51.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc(github.com/hyperledger/fabric/core/scc/cscc) registered
+[34m[00f 02-28 03:11:51.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc(github.com/hyperledger/fabric/core/scc/qscc) registered
+[34m[010 02-28 03:11:51.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode _lifecycle(github.com/hyperledger/fabric/core/chaincode/lifecycle) registered
+[34m[011 02-28 03:11:51.05 UTC] [%{longpkg}] %{callpath} -> INFO[0m Initialize gossip with endpoint peer0.org1.example.com:7051 and bootstrap set [127.0.0.1:7051]
+[34m[012 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m Creating gossip service with self membership of Endpoint: peer0.org1.example.com:7051, InternalEndpoint: peer0.org1.example.com:7051, PKI-ID: c9c5adf89df1ba87cbcda5671ba3be9f0e2de4d6e153f1b9a1aa09d076a204a9, Metadata: 
+[34m[013 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m Gossip instance peer0.org1.example.com:7051 started
+[34m[014 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc/(github.com/hyperledger/fabric/core/scc/lscc) deployed
+[34m[015 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init CSCC
+[34m[016 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc/(github.com/hyperledger/fabric/core/scc/cscc) deployed
+[34m[017 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init QSCC
+[34m[018 02-28 03:11:51.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc/(github.com/hyperledger/fabric/core/scc/qscc) deployed
+[34m[019 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode _lifecycle/(github.com/hyperledger/fabric/core/chaincode/lifecycle) deployed
+[34m[01a 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m Deployed system chaincodes
+[34m[01b 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m Created with config TLS: true, authCacheMaxSize: 1000, authCachePurgeRatio: 0.750000
+[34m[01c 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m Discovery service activated
+[34m[01d 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting peer with ID=[name:"peer0.org1.example.com" ], network ID=[dev], address=[peer0.org1.example.com:7051]
+[34m[01e 02-28 03:11:51.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m Started peer with ID=[name:"peer0.org1.example.com" ], network ID=[dev], address=[peer0.org1.example.com:7051]
+[34m[01f 02-28 03:11:52.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:11:54.105Z grpc.peer_address=172.28.0.5:41902 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=144µs
+[34m[020 02-28 03:11:52.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:02.108Z grpc.peer_address=172.28.0.5:41902 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=20.6549ms
+[34m[021 02-28 03:11:52.14 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:11:54.148Z grpc.peer_address=172.28.0.5:41904 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=177.6µs
+[34m[022 02-28 03:11:58.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f6fe0f49] Entry chaincode: name:"cscc" 
+[34m[023 02-28 03:11:58.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m Creating ledger [businesschannel] with genesis block
+[34m[024 02-28 03:11:58.73 UTC] [%{longpkg}] %{callpath} -> INFO[0m Getting block information from block storage
+[34m[025 02-28 03:11:58.75 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [0] with 1 transaction(s) in 16ms (state_validation=1ms block_commit=8ms state_commit=2ms)
+[34m[026 02-28 03:11:58.76 UTC] [%{longpkg}] %{callpath} -> INFO[0m Created ledger [businesschannel] with genesis block
+[34m[027 02-28 03:11:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
+[34m[028 02-28 03:11:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org2MSP for channel businesschannel to learn about
+[34m[029 02-28 03:11:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org1MSP for channel businesschannel to learn about
+[34m[02a 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m Updating metadata information, current ledger sequence is at = 0, next expected block is = 1
+[34m[02b 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode lscc/businesschannel(github.com/hyperledger/fabric/core/scc/lscc) deployed
+[34m[02c 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init CSCC
+[34m[02d 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode cscc/businesschannel(github.com/hyperledger/fabric/core/scc/cscc) deployed
+[34m[02e 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m Init QSCC
+[34m[02f 02-28 03:11:58.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode qscc/businesschannel(github.com/hyperledger/fabric/core/scc/qscc) deployed
+[34m[030 02-28 03:11:58.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m system chaincode _lifecycle/businesschannel(github.com/hyperledger/fabric/core/chaincode/lifecycle) deployed
+[34m[031 02-28 03:11:58.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][f6fe0f49] Exit chaincode: name:"cscc"  (84ms)
+[34m[032 02-28 03:11:58.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50558 grpc.code=OK grpc.call_duration=85.3542ms
+[34m[033 02-28 03:12:00.09 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][7a9b0255] Entry chaincode: name:"cscc" 
+[34m[034 02-28 03:12:00.09 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][7a9b0255] Exit chaincode: name:"cscc"  (1ms)
+[34m[035 02-28 03:12:00.09 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50566 grpc.code=OK grpc.call_duration=2.4813ms
+[34m[036 02-28 03:12:01.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][ff20d6ae] Entry chaincode: name:"qscc" 
+[34m[037 02-28 03:12:01.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][ff20d6ae] Exit chaincode: name:"qscc"  (2ms)
+[34m[038 02-28 03:12:01.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50574 grpc.code=OK grpc.call_duration=4.3913ms
+[34m[039 02-28 03:12:03.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m Membership view has changed. peers went online:  [[peer1.org1.example.com:7051]] , current view:  [[peer1.org1.example.com:7051]]
+[34m[03a 02-28 03:12:04.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m c9c5adf89df1ba87cbcda5671ba3be9f0e2de4d6e153f1b9a1aa09d076a204a9 : Becoming a leader
+[34m[03b 02-28 03:12:04.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m Elected as a leader, starting delivery service for channel businesschannel
+[31m[03c 02-28 03:12:07.80 UTC] [%{longpkg}] %{callpath} -> ERRO[0m Failed connecting to orderer1.example.com:7050 , error: context deadline exceeded
+[34m[03d 02-28 03:12:07.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [1] from buffer
+[34m[03e 02-28 03:12:07.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
+[34m[03f 02-28 03:12:07.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
+[34m[040 02-28 03:12:07.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
+[34m[041 02-28 03:12:07.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org2MSP for channel businesschannel to learn about
+[34m[042 02-28 03:12:07.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [1] in 59ms
+[34m[043 02-28 03:12:07.90 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:09.902Z grpc.peer_address=172.28.0.5:41960 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=191µs
+[34m[044 02-28 03:12:07.90 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.peer_address=172.28.0.5:41904 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=15.7545569s
+[34m[045 02-28 03:12:07.91 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [1] with 1 transaction(s) in 28ms (state_validation=1ms block_commit=12ms state_commit=7ms)
+[34m[046 02-28 03:12:07.91 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [2] from buffer
+[34m[047 02-28 03:12:07.91 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:17.907Z grpc.peer_address=172.28.0.5:41960 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=6.7888ms
+[34m[048 02-28 03:12:07.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 2 organizations
+[34m[049 02-28 03:12:07.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
+[34m[04a 02-28 03:12:07.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
+[34m[04b 02-28 03:12:07.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org2MSP for channel businesschannel : [{peer0.org2.example.com 7051}]
+[34m[04c 02-28 03:12:07.97 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [2] in 66ms
+[34m[04d 02-28 03:12:08.02 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [2] with 1 transaction(s) in 42ms (state_validation=9ms block_commit=24ms state_commit=7ms)
+[34m[04e 02-28 03:12:08.03 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.036Z grpc.peer_address=172.28.0.5:41966 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=205.7µs
+[34m[04f 02-28 03:12:08.05 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:18.04Z grpc.peer_address=172.28.0.5:41966 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.4874ms
+[34m[050 02-28 03:12:08.09 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.095Z grpc.peer_address=172.28.0.5:41972 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=187.7µs
+[34m[051 02-28 03:12:08.38 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.385Z grpc.peer_address=172.28.0.6:53684 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=220.8µs
+[34m[052 02-28 03:12:08.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:18.392Z grpc.peer_address=172.28.0.6:53684 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=25.0766ms
+[34m[053 02-28 03:12:08.42 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.42Z grpc.peer_address=172.28.0.7:49238 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=144.4µs
+[34m[054 02-28 03:12:08.44 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:18.428Z grpc.peer_address=172.28.0.7:49238 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=17.7278ms
+[34m[055 02-28 03:12:08.45 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.455Z grpc.peer_address=172.28.0.7:49240 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=203.5µs
+[34m[056 02-28 03:12:08.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.512Z grpc.peer_address=172.28.0.6:53690 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=218.9µs
+[34m[057 02-28 03:12:08.54 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:18.523Z grpc.peer_address=172.28.0.6:53690 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=19.2652ms
+[34m[058 02-28 03:12:08.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.565Z grpc.peer_address=172.28.0.6:53692 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=154.9µs
+[34m[059 02-28 03:12:08.61 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:12:10.618Z grpc.peer_address=172.28.0.7:49246 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=139.8µs
+[34m[05a 02-28 03:12:08.62 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.peer_address=172.28.0.7:49240 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=170.3829ms
+[34m[05b 02-28 03:12:08.62 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:12:18.622Z grpc.peer_address=172.28.0.7:49246 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=5.7908ms
+[34m[05c 02-28 03:12:08.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][c57e36ce] Entry chaincode: name:"lscc" 
+[34m[05d 02-28 03:12:08.66 UTC] [%{longpkg}] %{callpath} -> INFO[0m Installed Chaincode [exp02] Version [1.0] to peer
+[34m[05e 02-28 03:12:08.66 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][c57e36ce] Exit chaincode: name:"lscc"  (8ms)
+[34m[05f 02-28 03:12:08.66 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50596 grpc.code=OK grpc.call_duration=9.129ms
+[34m[060 02-28 03:12:11.38 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5e8eee63] Entry chaincode: name:"lscc" 
+[34m[061 02-28 03:12:11.39 UTC] [%{longpkg}] %{callpath} -> INFO[0m building chaincode with ldflagsOpt: '-ldflags "-linkmode external -extldflags '-static'"'
+[34m[062 02-28 03:12:13.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m Membership view has changed. peers went online:  [[peer0.org2.example.com:7051 ] [peer1.org2.example.com:7051 ]] , current view:  [[peer0.org2.example.com:7051 ] [peer1.org2.example.com:7051 ] [peer1.org1.example.com:7051]]
+[34m[063 02-28 03:12:48.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5e8eee63] Exit chaincode: name:"lscc"  (37207ms)
+[34m[064 02-28 03:12:48.55 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50652 grpc.code=OK grpc.call_duration=37.2094059s
+[34m[065 02-28 03:12:50.54 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [3] from buffer
+[34m[066 02-28 03:12:50.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [3] in 23ms
+[34m[067 02-28 03:12:50.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m Channel [businesschannel]: Handling deploy or update of chaincode [exp02]
+[34m[068 02-28 03:12:50.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [3] with 1 transaction(s) in 21ms (state_validation=1ms block_commit=13ms state_commit=2ms)
+[34m[069 02-28 03:13:26.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][8803c6ca] Entry chaincode: name:"exp02" 
+[34m[06a 02-28 03:13:26.78 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][8803c6ca] Exit chaincode: name:"exp02"  (11ms)
+[34m[06b 02-28 03:13:26.78 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50722 grpc.code=OK grpc.call_duration=14.3933ms
+[34m[06c 02-28 03:13:28.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [4] from buffer
+[34m[06d 02-28 03:13:28.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [4] in 2ms
+[34m[06e 02-28 03:13:28.85 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [4] with 1 transaction(s) in 42ms (state_validation=1ms block_commit=33ms state_commit=4ms)
+[34m[06f 02-28 03:13:29.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][6442ccff] Entry chaincode: name:"exp02" 
+[34m[070 02-28 03:13:29.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][6442ccff] Exit chaincode: name:"exp02"  (4ms)
+[34m[071 02-28 03:13:29.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50742 grpc.code=OK grpc.call_duration=7.4255ms
+[34m[072 02-28 03:13:31.46 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [5] from buffer
+[34m[073 02-28 03:13:31.47 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [5] in 10ms
+[34m[074 02-28 03:13:31.49 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [5] with 1 transaction(s) in 27ms (state_validation=0ms block_commit=17ms state_commit=5ms)
+[34m[075 02-28 03:13:31.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][1f55d65b] Entry chaincode: name:"exp02" 
+[34m[076 02-28 03:13:31.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][1f55d65b] Exit chaincode: name:"exp02"  (3ms)
+[34m[077 02-28 03:13:31.89 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50750 grpc.code=OK grpc.call_duration=7.9494ms
+[34m[078 02-28 03:13:32.43 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][9968fc31] Entry chaincode: name:"lscc" 
+[34m[079 02-28 03:13:32.43 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][9968fc31] Exit chaincode: name:"lscc"  (3ms)
+[34m[07a 02-28 03:13:32.44 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50756 grpc.code=OK grpc.call_duration=5.5645ms
+[34m[07b 02-28 03:13:32.67 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5ced7d66] Entry chaincode: name:"lscc" 
+[34m[07c 02-28 03:13:32.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][5ced7d66] Exit chaincode: name:"lscc"  (2ms)
+[34m[07d 02-28 03:13:32.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50760 grpc.code=OK grpc.call_duration=6.4374ms
+[34m[07e 02-28 03:13:33.00 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][3d55077f] Entry chaincode: name:"lscc" 
+[34m[07f 02-28 03:13:33.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][3d55077f] Exit chaincode: name:"lscc"  (2ms)
+[34m[080 02-28 03:13:33.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50764 grpc.code=OK grpc.call_duration=4.7702ms
+[34m[081 02-28 03:13:33.20 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][bb64283e] Entry chaincode: name:"lscc" 
+[34m[082 02-28 03:13:33.20 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][bb64283e] Exit chaincode: name:"lscc"  (1ms)
+[34m[083 02-28 03:13:33.20 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50768 grpc.code=OK grpc.call_duration=5.1006ms
+[34m[084 02-28 03:13:33.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][78c64283] Entry chaincode: name:"lscc" 
+[34m[085 02-28 03:13:33.42 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][78c64283] Exit chaincode: name:"lscc"  (3ms)
+[34m[086 02-28 03:13:33.42 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50772 grpc.code=OK grpc.call_duration=5.4229ms
+[34m[087 02-28 03:13:33.87 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][9e6cd877] Entry chaincode: name:"qscc" 
+[34m[088 02-28 03:13:33.87 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][9e6cd877] Exit chaincode: name:"qscc"  (1ms)
+[34m[089 02-28 03:13:33.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50776 grpc.code=OK grpc.call_duration=3.0637ms
+[34m[08a 02-28 03:13:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][dd1e5cfd] Entry chaincode: name:"qscc" 
+[34m[08b 02-28 03:13:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][dd1e5cfd] Exit chaincode: name:"qscc"  (1ms)
+[34m[08c 02-28 03:13:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50780 grpc.code=OK grpc.call_duration=3.3502ms
+[34m[08d 02-28 03:13:34.52 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][ef5480dd] Entry chaincode: name:"cscc" 
+[34m[08e 02-28 03:13:34.52 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][ef5480dd] Exit chaincode: name:"cscc"  (2ms)
+[34m[08f 02-28 03:13:34.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50784 grpc.code=OK grpc.call_duration=4.3908ms
+[34m[090 02-28 03:13:34.78 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][82c80487] Entry chaincode: name:"cscc" 
+[34m[091 02-28 03:13:34.78 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][82c80487] Exit chaincode: name:"cscc"  (1ms)
+[34m[092 02-28 03:13:34.79 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50788 grpc.code=OK grpc.call_duration=3.8783ms
+[34m[093 02-28 03:13:35.10 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][e60110c4] Entry chaincode: name:"cscc" 
+[34m[094 02-28 03:13:35.11 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel][e60110c4] Exit chaincode: name:"cscc"  (3ms)
+[34m[095 02-28 03:13:35.11 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50792 grpc.code=OK grpc.call_duration=6.0426ms
+[34m[096 02-28 03:13:48.81 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Received block [6] from buffer
+[33m[097 02-28 03:13:48.84 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[33m[098 02-28 03:13:48.84 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[34m[099 02-28 03:13:48.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Joining gossip network of channel businesschannel with 3 organizations
+[34m[09a 02-28 03:13:48.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org2MSP for channel businesschannel : [{peer0.org2.example.com 7051}]
+[34m[09b 02-28 03:13:48.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m No configured anchor peers of Org3MSP for channel businesschannel to learn about
+[34m[09c 02-28 03:13:48.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Learning about the configured anchor peers of Org1MSP for channel businesschannel : [{peer0.org1.example.com 7051}]
+[34m[09d 02-28 03:13:48.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Anchor peer with same endpoint, skipping connecting to myself
+[34m[09e 02-28 03:13:48.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.peer_address=172.28.0.6:53692 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" error=EOF grpc.code=Unknown grpc.call_duration=1m40.4446737s
+[34m[09f 02-28 03:13:48.88 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Validated block [6] in 105ms
+[34m[0a0 02-28 03:13:48.93 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:13:50.935Z grpc.peer_address=172.28.0.6:53902 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=1.7022ms
+[34m[0a1 02-28 03:13:48.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m [businesschannel] Committed block [6] with 1 transaction(s) in 60ms (state_validation=2ms block_commit=16ms state_commit=35ms)
+[34m[0a2 02-28 03:13:48.94 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:13:50.948Z grpc.peer_address=172.28.0.5:42196 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=173.5µs
+[34m[0a3 02-28 03:13:48.98 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:13:58.956Z grpc.peer_address=172.28.0.6:53902 grpc.peer_subject="CN=peer0.org2.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=27.7711ms
+[34m[0a4 02-28 03:13:49.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.peer_address=172.28.0.5:41972 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=1m41.0505281s
+[34m[0a5 02-28 03:13:49.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:13:58.974Z grpc.peer_address=172.28.0.5:42196 grpc.peer_subject="CN=peer1.org1.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=23.5187ms
+[34m[0a6 02-28 03:13:49.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=gossip.Gossip grpc.method=Ping grpc.request_deadline=2019-02-28T03:13:51.045Z grpc.peer_address=172.28.0.7:49462 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" grpc.code=OK grpc.call_duration=157.9µs
+[34m[0a7 02-28 03:13:49.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=gossip.Gossip grpc.method=GossipStream grpc.request_deadline=2019-02-28T03:13:59.053Z grpc.peer_address=172.28.0.7:49462 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=18.5083ms
+[34m[0a8 02-28 03:14:03.48 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][15a0f7c7] Entry chaincode: name:"cscc" 
+[34m[0a9 02-28 03:14:03.49 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][15a0f7c7] Exit chaincode: name:"cscc"  (2ms)
+[34m[0aa 02-28 03:14:03.49 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50896 grpc.code=OK grpc.call_duration=4.8859ms
+[34m[0ab 02-28 03:14:04.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][7568dd08] Entry chaincode: name:"qscc" 
+[34m[0ac 02-28 03:14:04.52 UTC] [%{longpkg}] %{callpath} -> INFO[0m [][7568dd08] Exit chaincode: name:"qscc"  (4ms)
+[34m[0ad 02-28 03:14:04.52 UTC] [%{longpkg}] %{callpath} -> INFO[0m unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.28.0.3:50904 grpc.code=OK grpc.call_duration=5.4357ms

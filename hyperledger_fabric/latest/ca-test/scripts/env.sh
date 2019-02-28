@@ -8,11 +8,8 @@ DEFAULT_PASS="boot-pass"
 CA_SERVER_DEFAULT_CONFIG=""
 read -r -d '' CA_SERVER_DEFAULT_CONFIG << EOF
 version: 1.4.0
-
 port: 7054
-
 debug: false
-
 crlsizelimit: 512000
 
 tls:
@@ -35,9 +32,10 @@ crl:
 registry:
   maxenrollments: -1
 
+  # Contains identity information which is used when LDAP is disabled
   identities:
-     - name: ${DEFAULT_USER}
-       pass: ${DEFAULT_PASS}
+     - name: admin
+       pass: adminpw
        type: client
        affiliation: ""
        attrs:
@@ -88,8 +86,6 @@ signing:
     default:
       usage:
         - digital signature
-        - cert sign
-        - crl sign
       expiry: 87600h
     profiles:
       ca:
@@ -107,7 +103,7 @@ signing:
             - server auth
             - client auth
             - key agreement
-         expiry: 87600h
+         expiry: 8760h
 
 csr:
    cn: fabric-ca-server
@@ -121,10 +117,10 @@ csr:
         O: Hyperledger
         OU: Fabric
    hosts:
-     - fabric-ca-server
+     - 4462096fc0ba
      - localhost
    ca:
-      expiry: 1314000h
+      expiry: 131400h
       pathlength: 1
 
 idemix:
@@ -138,7 +134,9 @@ bccsp:
         hash: SHA2
         security: 256
         filekeystore:
+            # The directory used for the software file-based keystore
             keystore: msp/keystore
+
 
 cacount:
 
@@ -148,15 +146,21 @@ intermediate:
   parentserver:
     url:
     caname:
+
   enrollment:
     hosts:
     profile:
     label:
+
   tls:
     certfiles:
     client:
       certfile:
       keyfile:
+
+cfg:
+  identities:
+    passwordattempts: 10
 EOF
 
 #echo "${CA_SERVER_DEFAULT_CONFIG}"

@@ -2,8 +2,6 @@
 
 source env.sh
 
-#TODO: check param number is 2
-
 if [ "$#" -ne 2 ]; then
 	echo "Illegal number of parameters"
 	exit 1

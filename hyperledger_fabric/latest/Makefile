@@ -9,7 +9,7 @@ SHELL:=/bin/bash
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
 
-NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
+NETWORK_INIT_WAIT ?= 5 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
@@ -35,6 +35,8 @@ all: test
 test:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup download'."
+	@echo "Make sure the local hlf_net docker bridge exists"
+	docker network ls|grep hlf_net > /dev/null || docker network create hlf_net
 
 	make ready  # Run all testing till ready
 
@@ -42,8 +44,9 @@ test:
 
 ready: # create/join channel, install/instantiate cc
 	make stop
-	# make clean_config # Remove existing crypto-config, channel artifacts and org3/crypto-config.
-	make gen_config  # Will ignore if local config path exists
+	# make clean_config_channel # Remove existing channel artifacts
+	make gen_config_crypto  # Will ignore if local config path exists
+	make gen_config_channel  # Will ignore if local config path exists
 
 	make start
 
@@ -207,13 +210,13 @@ clean: # clean up containers and chaincode images
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May clean the config: make clean_config"
-
-# Clean these config files including channel artifacts and credential files
-clean_config: clean_channel_artifacts clean_crypto_config
+	echo "May clean the config: HLF_MODE=solo make clean_config_channel"
 
 # Clean deeply by removing all generated files: container, artifacts, credentials
-purge: clean clean_config
+purge: clean
+	HLF_MODE=solo make clean_config_channel
+	HLF_MODE=kafka make clean_config_channel
+	make clean_config_crypto
 
 env_clean: # clean up Docker environment
 	@echo "Clean all images and containers"
@@ -260,22 +263,25 @@ elk: # insert logs into elk
 	# curl -XDELETE http://localhost:9200/logstash-\*
 	nc localhost 5000 < $(LOG_PATH)/dev_all.log
 
-gen_config: # generate config artifacts
+gen_config_crypto: # generate crypto config
+	bash scripts/gen_config_crypto.sh
+
+gen_config_channel: # generate channel artifacts
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
-			bash scripts/gen_config.sh kafka; \
+			bash scripts/gen_config_channel.sh kafka; \
 	else \
-			bash scripts/gen_config.sh solo; \
+			bash scripts/gen_config_channel.sh solo; \
 	fi
 
-clean_channel_artifacts: # clean channel related artifacts
+clean_config_channel: # clean channel related artifacts
 	if [ "$(HLF_MODE)" = "kafka" ]; then \
 		rm -rf kafka/channel-artifacts/*; \
 	else \
 		rm -rf solo/channel-artifacts/*; \
 	fi
 
-clean_crypto_config: # clean config artifacts
-	echo "Warning: re-generating credentials will affect artifacts in both solo and kafka mode"
+clean_config_crypto: # clean config artifacts
+	echo "Warning: Cleaning credentials will affect artifacts in both solo and kafka mode"
 	rm -rf crypto-config/*
 	rm -rf org3/crypto-config/*
 
