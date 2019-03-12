@@ -10,6 +10,7 @@ BASE_IMG_TAG=0.4.14
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
 
+# Can deprecate now?
 PROJECT_VERSION=1.4.0
 
 # Name of app channel, need to align with the gen_artifacts.sh

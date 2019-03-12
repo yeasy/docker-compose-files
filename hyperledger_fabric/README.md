@@ -26,7 +26,10 @@ Fabric Release | Description
 ## Getting Started
 
 ### TLDR
-RELEASE=v1.3.0
+
+```bash
+$ export RELEASE=v1.4.0
+```
 
 ```bash
 $ cd ${RELEASE}; make setup test
@@ -66,6 +69,11 @@ $ HLF_MODE=be make test  # Start a blockchain-explorer to view network info
 ## Detailed Steps
 
 See [detailed steps](docs/steps.md)
+
+## Specify Version Numbers
+
+* `.env`: docker images tags, used by those docker-compose files;
+* `scripts/variable.sh`: docker images tags and project versions, used by scripts;
 
 ## Acknowledgement
 
