@@ -35,15 +35,15 @@ all: test
 test:
 	@echo "Run test with $(COMPOSE_FILE)"
 	@echo "Please make sure u have setup Docker and pulled images by 'make setup download'."
-	@echo "Make sure the local hlf_net docker bridge exists"
-	docker network ls|grep hlf_net > /dev/null || docker network create hlf_net
-
 	make ready  # Run all testing till ready
 
 	make stop clean
 
 ready: # create/join channel, install/instantiate cc
 	make stop
+	@echo "Make sure the local hlf_net docker bridge exists"
+	docker network ls|grep hlf_net > /dev/null || docker network create hlf_net
+
 	# make clean_config_channel # Remove existing channel artifacts
 	make gen_config_crypto  # Will ignore if local config path exists
 	make gen_config_channel  # Will ignore if local config path exists
