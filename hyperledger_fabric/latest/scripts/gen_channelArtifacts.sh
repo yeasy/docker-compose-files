@@ -27,7 +27,11 @@ configtxgen \
 
 [ ! -f ${ORDERER_GENESIS} ] && echo "Fail to generate genesis block for system channel" && exit -1
 
-echo "Create the new app channel tx using configtx.yaml"
+for (( i=1; i<150; i++ ));
+do
+APP_CHANNEL="channel"$i
+APP_CHANNEL_TX=${APP_CHANNEL}".tx"
+echo "Create the new app channel ${APP_CHANNEL} tx using configtx.yaml"
 configtxgen \
 	-configPath /tmp \
 	-profile ${APP_CHANNEL_PROFILE} \
@@ -35,6 +39,7 @@ configtxgen \
 	-outputCreateChannelTx ${APP_CHANNEL_TX}
 
 [ ! -f ${APP_CHANNEL_TX} ] && echo "Fail to generate app channel tx file" && exit -1
+done
 
 configtxgen \
 	-inspectChannelCreateTx ${APP_CHANNEL_TX} > ${APP_CHANNEL_TX}.json
