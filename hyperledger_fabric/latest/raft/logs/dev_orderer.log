@@ -1,0 +1,222 @@
+[34m2019-02-28 03:15:33.126 UTC [localconfig] completeInitialization -> INFO 001[0m Kafka.Version unset, setting to 0.10.2.0
+[34m[002 02-28 03:15:33.37 UTC] [%{longpkg}] %{callpath} -> INFO[0m Orderer config values:
+	General.LedgerType = "file"
+	General.ListenAddress = "0.0.0.0"
+	General.ListenPort = 7050
+	General.TLS.Enabled = true
+	General.TLS.PrivateKey = "/var/hyperledger/orderer/tls/server.key"
+	General.TLS.Certificate = "/var/hyperledger/orderer/tls/server.crt"
+	General.TLS.RootCAs = [/var/hyperledger/orderer/tls/ca.crt]
+	General.TLS.ClientAuthRequired = false
+	General.TLS.ClientRootCAs = []
+	General.Cluster.ListenAddress = ""
+	General.Cluster.ListenPort = 0
+	General.Cluster.ServerCertificate = ""
+	General.Cluster.ServerPrivateKey = ""
+	General.Cluster.ClientCertificate = ""
+	General.Cluster.ClientPrivateKey = ""
+	General.Cluster.RootCAs = [/etc/hyperledger/fabric/tls/ca.crt]
+	General.Cluster.DialTimeout = 5s
+	General.Cluster.RPCTimeout = 7s
+	General.Cluster.ReplicationBufferSize = 20971520
+	General.Cluster.ReplicationPullTimeout = 5s
+	General.Cluster.ReplicationRetryTimeout = 5s
+	General.Cluster.ReplicationBackgroundRefreshInterval = 5m0s
+	General.Cluster.ReplicationMaxRetries = 12
+	General.Cluster.SendBufferSize = 10
+	General.Keepalive.ServerMinInterval = 1m0s
+	General.Keepalive.ServerInterval = 2h0m0s
+	General.Keepalive.ServerTimeout = 20s
+	General.GenesisMethod = "file"
+	General.GenesisProfile = "SampleInsecureSolo"
+	General.SystemChannel = "test-system-channel-name"
+	General.GenesisFile = "/var/hyperledger/orderer/orderer.genesis.block"
+	General.Profile.Enabled = false
+	General.Profile.Address = "0.0.0.0:6060"
+	General.LocalMSPDir = "/var/hyperledger/orderer/msp"
+	General.LocalMSPID = "OrdererMSP"
+	General.BCCSP.ProviderName = "SW"
+	General.BCCSP.SwOpts.SecLevel = 256
+	General.BCCSP.SwOpts.HashFamily = "SHA2"
+	General.BCCSP.SwOpts.Ephemeral = false
+	General.BCCSP.SwOpts.FileKeystore.KeyStorePath = "/var/hyperledger/orderer/msp/keystore"
+	General.BCCSP.SwOpts.DummyKeystore =
+	General.BCCSP.SwOpts.InmemKeystore =
+	General.BCCSP.PluginOpts =
+	General.Authentication.TimeWindow = 15m0s
+	FileLedger.Location = "/var/hyperledger/production/orderer"
+	FileLedger.Prefix = "hyperledger-fabric-ordererledger"
+	RAMLedger.HistorySize = 1000
+	Kafka.Retry.ShortInterval = 1s
+	Kafka.Retry.ShortTotal = 30s
+	Kafka.Retry.LongInterval = 5m0s
+	Kafka.Retry.LongTotal = 12h0m0s
+	Kafka.Retry.NetworkTimeouts.DialTimeout = 10s
+	Kafka.Retry.NetworkTimeouts.ReadTimeout = 10s
+	Kafka.Retry.NetworkTimeouts.WriteTimeout = 10s
+	Kafka.Retry.Metadata.RetryMax = 3
+	Kafka.Retry.Metadata.RetryBackoff = 250ms
+	Kafka.Retry.Producer.RetryMax = 3
+	Kafka.Retry.Producer.RetryBackoff = 100ms
+	Kafka.Retry.Consumer.RetryBackoff = 2s
+	Kafka.Verbose = true
+	Kafka.Version = 0.10.2.0
+	Kafka.TLS.Enabled = false
+	Kafka.TLS.PrivateKey = ""
+	Kafka.TLS.Certificate = ""
+	Kafka.TLS.RootCAs = []
+	Kafka.TLS.ClientAuthRequired = false
+	Kafka.TLS.ClientRootCAs = []
+	Kafka.SASLPlain.Enabled = false
+	Kafka.SASLPlain.User = ""
+	Kafka.SASLPlain.Password = ""
+	Kafka.Topic.ReplicationFactor = 3
+	Debug.BroadcastTraceDir = ""
+	Debug.DeliverTraceDir = ""
+	Consensus = map[WALDir:/var/hyperledger/production/orderer/etcdraft/wal SnapDir:/var/hyperledger/production/orderer/etcdraft/snapshot EvictionSuspicion:10m]
+	Operations.ListenAddress = "0.0.0.0:8443"
+	Operations.TLS.Enabled = false
+	Operations.TLS.PrivateKey = ""
+	Operations.TLS.Certificate = ""
+	Operations.TLS.RootCAs = []
+	Operations.TLS.ClientAuthRequired = false
+	Operations.TLS.ClientRootCAs = []
+	Metrics.Provider = "prometheus"
+	Metrics.Statsd.Network = "udp"
+	Metrics.Statsd.Address = "127.0.0.1:8125"
+	Metrics.Statsd.WriteInterval = 30s
+	Metrics.Statsd.Prefix = ""
+[34m[003 02-28 03:15:33.86 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting orderer with TLS enabled
+[34m[004 02-28 03:15:33.89 UTC] [%{longpkg}] %{callpath} -> INFO[0m Getting block information from block storage
+[34m[005 02-28 03:15:34.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Starting chain with last persisted offset -3 and last recorded block 0
+[34m[006 02-28 03:15:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting system channel 'testchainid' with genesis block hash 771af1716c1f80986256250b678791d672cb8b75b2d5b8871393510f89d488d7 and orderer type kafka
+[34m[007 02-28 03:15:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m Starting orderer:
+ Version: 1.4.0
+ Commit SHA: development build
+ Go version: go1.11.5
+ OS/Arch: linux/amd64
+[34m[008 02-28 03:15:34.04 UTC] [%{longpkg}] %{callpath} -> INFO[0m Beginning to serve requests
+[34m[009 02-28 03:15:34.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Setting up the topic for this channel...
+[34m[00a 02-28 03:15:56.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Setting up the producer for this channel...
+[34m[00b 02-28 03:15:56.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Producer set up successfully
+[34m[00c 02-28 03:15:56.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] About to post the CONNECT message...
+[34m[00d 02-28 03:15:58.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] CONNECT message posted successfully
+[34m[00e 02-28 03:15:58.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Setting up the parent consumer for this channel...
+[34m[00f 02-28 03:15:58.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Parent consumer set up successfully
+[34m[010 02-28 03:15:58.71 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Setting up the channel consumer for this channel (start offset: -2)...
+[34m[011 02-28 03:15:58.77 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Channel consumer set up successfully
+[34m[012 02-28 03:15:58.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: testchainid] Start phase completed successfully
+[34m[013 02-28 03:16:08.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m Getting block information from block storage
+[34m[014 02-28 03:16:09.01 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:53832 grpc.code=OK grpc.call_duration=155.0212ms
+[34m[015 02-28 03:16:09.05 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Starting chain with last persisted offset -3 and last recorded block 0
+[34m[016 02-28 03:16:09.05 UTC] [%{longpkg}] %{callpath} -> INFO[0m Created and starting new chain businesschannel
+[34m[017 02-28 03:16:09.05 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Setting up the topic for this channel...
+[33m[018 02-28 03:16:09.06 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53830 because of consenter error
+[34m[019 02-28 03:16:09.06 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53830 grpc.code=OK grpc.call_duration=224.5306ms
+[33m[01a 02-28 03:16:09.30 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53838 because of consenter error
+[34m[01b 02-28 03:16:09.30 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53838 grpc.code=OK grpc.call_duration=212.243ms
+[34m[01c 02-28 03:16:09.43 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Setting up the producer for this channel...
+[34m[01d 02-28 03:16:09.46 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Producer set up successfully
+[34m[01e 02-28 03:16:09.46 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] About to post the CONNECT message...
+[33m[01f 02-28 03:16:09.58 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53840 because of consenter error
+[34m[020 02-28 03:16:09.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53840 grpc.code=OK grpc.call_duration=200.4706ms
+[33m[021 02-28 03:16:09.80 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53846 because of consenter error
+[34m[022 02-28 03:16:09.80 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53846 grpc.code=OK grpc.call_duration=204.0983ms
+[33m[023 02-28 03:16:10.02 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53848 because of consenter error
+[34m[024 02-28 03:16:10.02 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53848 grpc.code=OK grpc.call_duration=202.0332ms
+[33m[025 02-28 03:16:10.23 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53854 because of consenter error
+[34m[026 02-28 03:16:10.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53854 grpc.code=OK grpc.call_duration=201.8249ms
+[33m[027 02-28 03:16:10.45 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53858 because of consenter error
+[34m[028 02-28 03:16:10.46 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53858 grpc.code=OK grpc.call_duration=204.577ms
+[33m[029 02-28 03:16:10.68 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53860 because of consenter error
+[34m[02a 02-28 03:16:10.68 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53860 grpc.code=OK grpc.call_duration=218.503ms
+[33m[02b 02-28 03:16:10.96 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53864 because of consenter error
+[34m[02c 02-28 03:16:10.96 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53864 grpc.code=OK grpc.call_duration=204.0672ms
+[33m[02d 02-28 03:16:11.24 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53866 because of consenter error
+[34m[02e 02-28 03:16:11.25 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53866 grpc.code=OK grpc.call_duration=222.4605ms
+[34m[02f 02-28 03:16:11.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] CONNECT message posted successfully
+[34m[030 02-28 03:16:11.50 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Setting up the parent consumer for this channel...
+[34m[031 02-28 03:16:11.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Parent consumer set up successfully
+[34m[032 02-28 03:16:11.51 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Setting up the channel consumer for this channel (start offset: -2)...
+[33m[033 02-28 03:16:11.53 UTC] [%{longpkg}] %{callpath} -> WARN[0m [channel: businesschannel] Rejecting deliver request for 172.28.0.6:53868 because of consenter error
+[34m[034 02-28 03:16:11.53 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53868 grpc.code=OK grpc.call_duration=205.1203ms
+[34m[035 02-28 03:16:11.70 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Channel consumer set up successfully
+[34m[036 02-28 03:16:11.73 UTC] [%{longpkg}] %{callpath} -> INFO[0m [channel: businesschannel] Start phase completed successfully
+[34m[037 02-28 03:16:11.84 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53874 grpc.code=OK grpc.call_duration=256.1619ms
+[33m[038 02-28 03:16:16.58 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53908: rpc error: code = Canceled desc = context canceled
+[34m[03a 02-28 03:16:16.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53908 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=69.4443ms
+[33m[039 02-28 03:16:16.58 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53910: rpc error: code = Canceled desc = context canceled
+[34m[03b 02-28 03:16:16.58 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:53910 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=56.0448ms
+[33m[03c 02-28 03:16:18.92 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53916: rpc error: code = Canceled desc = context canceled
+[34m[03d 02-28 03:16:18.93 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:53916 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=144.3606ms
+[33m[03e 02-28 03:16:18.94 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53918: rpc error: code = Canceled desc = context canceled
+[34m[03f 02-28 03:16:18.95 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:53918 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=140.6368ms
+[34m[040 02-28 03:16:24.24 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.14:47114 grpc.peer_subject="CN=peer1.org2.example.com,L=San Francisco,ST=California,C=US" error="context finished before block retrieved: context canceled" grpc.code=Unknown grpc.call_duration=4.5387103s
+[33m[041 02-28 03:17:11.85 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53980: rpc error: code = Canceled desc = context canceled
+[34m[042 02-28 03:17:11.85 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:53980 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=43.5368747s
+[33m[043 02-28 03:17:55.56 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:53998: rpc error: code = Canceled desc = context canceled
+[34m[044 02-28 03:17:55.56 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:53998 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=46.1122ms
+[33m[045 02-28 03:17:58.26 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54012: rpc error: code = Canceled desc = context canceled
+[34m[046 02-28 03:17:58.26 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:54012 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=46.6709ms
+[33m[047 02-28 03:18:04.72 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54062: rpc error: code = Canceled desc = context canceled
+[34m[048 02-28 03:18:04.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54062 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=18.5046ms
+[33m[049 02-28 03:18:05.12 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54064: rpc error: code = Canceled desc = context canceled
+[34m[04a 02-28 03:18:05.12 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54064 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=21.9987ms
+[33m[04b 02-28 03:18:05.36 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54066: rpc error: code = Canceled desc = context canceled
+[34m[04c 02-28 03:18:05.36 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54066 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.2082ms
+[33m[04d 02-28 03:18:05.66 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54068: rpc error: code = Canceled desc = context canceled
+[34m[04e 02-28 03:18:05.66 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54068 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=32.1116ms
+[33m[04f 02-28 03:18:05.97 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54070: rpc error: code = Canceled desc = context canceled
+[34m[050 02-28 03:18:05.97 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54070 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=61.9088ms
+[33m[051 02-28 03:18:06.16 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54072: rpc error: code = Canceled desc = context canceled
+[34m[052 02-28 03:18:06.16 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54072 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=15.2948ms
+[33m[053 02-28 03:18:06.39 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54074: rpc error: code = Canceled desc = context canceled
+[34m[054 02-28 03:18:06.39 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54074 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.2278ms
+[33m[055 02-28 03:18:06.64 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54076: rpc error: code = Canceled desc = context canceled
+[34m[056 02-28 03:18:06.65 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54076 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=21.0671ms
+[33m[057 02-28 03:18:06.92 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54078: rpc error: code = Canceled desc = context canceled
+[34m[058 02-28 03:18:06.92 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54078 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=14.1341ms
+[33m[059 02-28 03:18:07.13 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54080: rpc error: code = Canceled desc = context canceled
+[34m[05a 02-28 03:18:07.13 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54080 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.0353ms
+[33m[05b 02-28 03:18:07.39 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54082: rpc error: code = Canceled desc = context canceled
+[34m[05c 02-28 03:18:07.40 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54082 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=17.0492ms
+[33m[05d 02-28 03:18:07.63 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54084: rpc error: code = Canceled desc = context canceled
+[34m[05e 02-28 03:18:07.63 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54084 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=8.009ms
+[33m[05f 02-28 03:18:19.75 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[33m[060 02-28 03:18:19.76 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[33m[061 02-28 03:18:19.81 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[33m[062 02-28 03:18:19.81 UTC] [%{longpkg}] %{callpath} -> WARN[0m De-duplicating identity [Org1MSP57bc58e35af7f98e5c999a4dc02b50d567ed50514c1fd7131f9d0a54de794a60] at index 2 in signature set
+[33m[063 02-28 03:18:19.82 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54086: rpc error: code = Canceled desc = context canceled
+[34m[064 02-28 03:18:19.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54086 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=89.9368ms
+[33m[065 02-28 03:18:19.82 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54088: rpc error: code = Canceled desc = context canceled
+[34m[066 02-28 03:18:19.82 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.28.0.6:54088 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=77.9045ms
+[33m[067 02-28 03:18:22.00 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54112: rpc error: code = Canceled desc = context canceled
+[34m[068 02-28 03:18:22.00 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54112 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=6.8183ms
+[33m[069 02-28 03:18:22.18 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54114: rpc error: code = Canceled desc = context canceled
+[34m[06a 02-28 03:18:22.18 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54114 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=7.2779ms
+[33m[06b 02-28 03:18:22.84 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54116: rpc error: code = Canceled desc = context canceled
+[34m[06c 02-28 03:18:22.84 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54116 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.5206ms
+[33m[06d 02-28 03:18:23.05 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54118: rpc error: code = Canceled desc = context canceled
+[34m[06e 02-28 03:18:23.07 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54118 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=27.4903ms
+[33m[06f 02-28 03:18:23.26 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54120: rpc error: code = Canceled desc = context canceled
+[34m[070 02-28 03:18:23.26 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54120 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=8.6267ms
+[33m[071 02-28 03:18:23.52 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54122: rpc error: code = Canceled desc = context canceled
+[34m[072 02-28 03:18:23.52 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54122 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.9503ms
+[33m[073 02-28 03:18:23.75 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54124: rpc error: code = Canceled desc = context canceled
+[34m[074 02-28 03:18:23.75 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54124 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.2949ms
+[33m[075 02-28 03:18:23.98 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54126: rpc error: code = Canceled desc = context canceled
+[34m[076 02-28 03:18:23.98 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54126 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=14.5484ms
+[33m[077 02-28 03:18:24.20 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54128: rpc error: code = Canceled desc = context canceled
+[34m[078 02-28 03:18:24.20 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54128 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.6568ms
+[33m[079 02-28 03:18:24.44 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54130: rpc error: code = Canceled desc = context canceled
+[34m[07a 02-28 03:18:24.44 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54130 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.9623ms
+[33m[07b 02-28 03:18:24.72 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54132: rpc error: code = Canceled desc = context canceled
+[34m[07c 02-28 03:18:24.72 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54132 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=8.5518ms
+[33m[07d 02-28 03:18:24.99 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54134: rpc error: code = Canceled desc = context canceled
+[34m[07e 02-28 03:18:24.99 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54134 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=7.9978ms
+[33m[07f 02-28 03:18:25.21 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54136: rpc error: code = Canceled desc = context canceled
+[34m[080 02-28 03:18:25.21 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54136 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.8164ms
+[33m[081 02-28 03:18:25.41 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54138: rpc error: code = Canceled desc = context canceled
+[34m[082 02-28 03:18:25.41 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54138 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.071ms
+[33m[083 02-28 03:18:25.76 UTC] [%{longpkg}] %{callpath} -> WARN[0m Error reading from 172.28.0.6:54140: rpc error: code = Canceled desc = context canceled
+[34m[084 02-28 03:18:25.76 UTC] [%{longpkg}] %{callpath} -> INFO[0m streaming call completed grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.28.0.6:54140 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.1155ms

@@ -31,8 +31,8 @@ services:
     network_mode: ${NETWORK}
     # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
     environment:
-      - FABRIC_LOGGING_SPEC=INFO  # default: INFO
-      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - FABRIC_LOGGING_SPEC=DEBUG  # default: INFO
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
       - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
@@ -52,6 +52,10 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      # Only required by raft mode
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     #volumes:
       #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     expose:
@@ -66,7 +70,7 @@ services:
     network_mode: ${NETWORK}
     environment:
       - FABRIC_LOGGING_SPEC=INFO
-      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
       - CORE_PEER_ADDRESSAUTODETECT=false
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${NETWORK}  # uncomment this to use specific network
       - CORE_PEER_GOSSIP_USELEADERELECTION=true

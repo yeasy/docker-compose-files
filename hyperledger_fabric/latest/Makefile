@@ -8,26 +8,25 @@ SHELL:=/bin/bash
 
 # mode of the network: solo, kafka, couchdb, event, dev
 HLF_MODE ?= solo
+DB_MODE ?= golevel
 
-NETWORK_INIT_WAIT ?= 5 # time to wait the fabric network finish initialization
+NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
 
 LOG_PATH ?= solo/logs
 
 ifeq ($(HLF_MODE),kafka)
-	COMPOSE_FILE="docker-compose-2orgs-4peers-kafka.yaml"
-	LOG_PATH=kafka/logs
 	NETWORK_INIT_WAIT=30
-else ifeq ($(HLF_MODE),couchdb)
+else ifeq ($(HLF_MODE),raft)
+	NETWORK_INIT_WAIT=5
+endif
+
+COMPOSE_FILE="docker-compose-2orgs-4peers-$(HLF_MODE).yaml"
+LOG_PATH=$(HLF_MODE)/logs
+
+ifeq ($(DB_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
-else ifeq ($(HLF_MODE),event)
-	COMPOSE_FILE="docker-compose-2orgs-4peers-event.yaml"
-else ifeq ($(HLF_MODE),be)
-	COMPOSE_FILE="docker-compose-2orgs-4peers-solo-be.yaml"
-else ifeq ($(HLF_MODE),dev)
-	COMPOSE_FILE="docker-compose-1orgs-1peers-dev.yaml"
-	NETWORK_INIT_WAIT=40
 endif
 
 all: test
@@ -126,18 +125,10 @@ test_channel_update: # send the channel update transaction
 
 ################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		bash scripts/test_configtxlator.sh kafka; \
-	else \
-		bash scripts/test_configtxlator.sh solo; \
-	fi
+	bash scripts/test_configtxlator.sh ${HLF_MODE}
 
 test_config_update: # Test change config to add new org
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		bash scripts/test_config_update.sh kafka; \
-	else \
-		bash scripts/test_config_update.sh solo; \
-	fi
+	bash scripts/test_config_update.sh ${HLF_MODE}
 
 ################## Chaincode testing operations ################
 test_cc: # test chaincode, deprecated
@@ -210,12 +201,13 @@ clean: # clean up containers and chaincode images
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May clean the config: HLF_MODE=solo make clean_config_channel"
+	echo "May clean the config: HLF_MODE=${HLF_MODE} make clean_config_channel"
 
 # Clean deeply by removing all generated files: container, artifacts, credentials
 purge: clean
 	HLF_MODE=solo make clean_config_channel
 	HLF_MODE=kafka make clean_config_channel
+	HLF_MODE=raft make clean_config_channel
 	make clean_config_crypto
 
 env_clean: # clean up Docker environment
@@ -267,21 +259,13 @@ gen_config_crypto: # generate crypto config
 	bash scripts/gen_config_crypto.sh
 
 gen_config_channel: # generate channel artifacts
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-			bash scripts/gen_config_channel.sh kafka; \
-	else \
-			bash scripts/gen_config_channel.sh solo; \
-	fi
+	bash scripts/gen_config_channel.sh ${HLF_MODE}
 
 clean_config_channel: # clean channel related artifacts
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		rm -rf kafka/channel-artifacts/*; \
-	else \
-		rm -rf solo/channel-artifacts/*; \
-	fi
+	rm -rf ${HLF_MODE}/channel-artifacts/*
 
 clean_config_crypto: # clean config artifacts
-	echo "Warning: Cleaning credentials will affect artifacts in both solo and kafka mode"
+	echo "Warning: Cleaning credentials will affect artifacts in solo/kafka/raft mode"
 	rm -rf crypto-config/*
 	rm -rf org3/crypto-config/*
 

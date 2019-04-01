@@ -46,8 +46,9 @@ echo "=== Pulling fabric core images ${FABRIC_IMG_TAG} from fabric repo... ==="
 for IMG in peer orderer ca ccenv tools baseos javaenv nodeenv; do
 	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG
 done
-# core.yaml requires a latest tag
-pull_image hyperledger/fabric-javaenv:latest
+# core.yaml requires a PROJECT_VERSION tag, only need when testing latest code
+docker tag hyperledger/fabric-ccenv:$FABRIC_IMG_TAG hyperledger/fabric-ccenv:${PROJECT_VERSION}
+pull_image hyperledger/fabric-javaenv:latest # core.yaml requires a latest tag
 # core.yaml requires a latest tag, but nodeenv is not available in docker hub yet
 # pull_image hyperledger/fabric-nodeenv:latest
 pull_image hyperledger/fabric-baseos:latest # fabric-baseos does not have 1.4/2.0 tag yet, but core.yaml requires a PROJECT_VERSION tag

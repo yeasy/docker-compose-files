@@ -15,6 +15,10 @@ cryptogen generate \
 	--config=crypto-config.yaml \
 	--output ${CRYPTO_CONFIG}
 
+#cryptogen extend \
+#	--input ${CRYPTO_CONFIG} \
+#	--config=crypto-config.yaml
+
 if [ $? -ne 0 ]; then
 	echo "Failed to generate certificates for org1 and org2..."
 	exit 1

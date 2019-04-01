@@ -10,7 +10,7 @@ BASE_IMG_TAG=0.4.15
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
 
-# Used in core.yaml
+# Keep the same as in core.yaml, will tag ccenv with this value
 PROJECT_VERSION=2.0.0
 
 # Name of app channel, need to align with the gen_artifacts.sh
