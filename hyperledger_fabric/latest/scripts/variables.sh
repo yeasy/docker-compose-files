@@ -4,14 +4,14 @@
 
 ARCH=amd64
 
-# for the base images, including baseimage, baseos, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.14
+# for the base images, including baseimage, couchdb, kafka, zookeeper
+BASE_IMG_TAG=0.4.15
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest
 
-# Can deprecate now?
-PROJECT_VERSION=1.4.0
+# Used in core.yaml
+PROJECT_VERSION=2.0.0
 
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"

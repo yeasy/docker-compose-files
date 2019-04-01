@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# peer/orderer/ca/ccenv/tools/javaenv/baseos: 1.4, 1.4.0, 1.4.1, 2.0.0, latest
+# baseimage (runtime for golang chaincode)/couchdb: 0.4.15, latest
+# Noted:
+# * the fabric-baseos 1.4/2.0 tags are not available at dockerhub yet, only latest/0.4.15 now
+# * the fabric-nodeenv is not available at dockerhub yet
+
+# In core.yaml, it requires:
+# * fabric-ccenv:$(PROJECT_VERSION)
+# * fabric-baseos:$(PROJECT_VERSION)
+# * fabric-javaenv:latest
+# * fabric-nodeenv:latest
+
 # Define those global variables
 if [ -f ./variables.sh ]; then
  source ./variables.sh
@@ -23,38 +35,29 @@ pull_image() {
 echo "Downloading images from DockerHub... need a while"
 
 # TODO: we may need some checking on pulling result?
-echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from yeasy repo... ==="
+echo "=== Pulling yeasy/hyperledger-fabric-* images with tag ${FABRIC_IMG_TAG}... ==="
 for IMG in base peer orderer ca; do
-	HLF_IMG=yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG
-	pull_image $HLF_IMG
+	pull_image yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG
 done
-
 pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG
-pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
 
+# pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
+echo "=== Pulling fabric core images ${FABRIC_IMG_TAG} from fabric repo... ==="
+for IMG in peer orderer ca ccenv tools baseos javaenv nodeenv; do
+	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG
+done
+# core.yaml requires a latest tag
+pull_image hyperledger/fabric-javaenv:latest
+# core.yaml requires a latest tag, but nodeenv is not available in docker hub yet
+# pull_image hyperledger/fabric-nodeenv:latest
+pull_image hyperledger/fabric-baseos:latest # fabric-baseos does not have 1.4/2.0 tag yet, but core.yaml requires a PROJECT_VERSION tag
+docker tag hyperledger/fabric-baseos:latest hyperledger/fabric-baseos:${PROJECT_VERSION}
 
-echo "=== Pulling base images ${BASE_IMG_TAG} from fabric repo... ==="
-for IMG in baseimage baseos couchdb kafka zookeeper; do
-	HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$BASE_IMG_TAG
-	pull_image $HLF_IMG
+echo "=== Pulling base/3rd-party images with tag ${BASE_IMG_TAG} from fabric repo... ==="
+for IMG in baseimage couchdb kafka zookeeper; do
+	pull_image hyperledger/fabric-${IMG}:$BASE_IMG_TAG
 done
 
-# TODO: official core.yaml still use PROJECT_VERSION for fabric-baseos, however, dockerhub does not have the version
-docker tag hyperledger/fabric-baseos:$ARCH-$BASE_IMG_TAG hyperledger/fabric-baseos:$FABRIC_IMG_TAG
-
-# Only useful for debugging
-# docker pull yeasy/hyperledger-fabric
-
-echo "=== Pulling fabric images ${FABRIC_IMG_TAG} from fabric repo... ==="
-for IMG in peer tools orderer ca ccenv tools; do
-	if [ "$FABRIC_IMG_TAG" == "latest" ]; then
-		HLF_IMG=hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG
-	else
-		HLF_IMG=hyperledger/fabric-${IMG}:$ARCH-$FABRIC_IMG_TAG
-	fi
-	pull_image $HLF_IMG
-done
-
-echo "Image pulling done, now can startup the network using docker-compose..."
+echo "Image pulling done, now can startup the network using make start..."
 
 exit 0

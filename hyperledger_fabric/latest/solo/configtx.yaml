@@ -13,6 +13,7 @@
 #
 ################################################################################
 Organizations:
+
     # SampleOrg defines an MSP using the sampleconfig. It should never be used
     # in production but may be used as a template for other definitions.
     - &SampleOrg
@@ -289,6 +290,17 @@ Application: &ApplicationDefaults
         # User's can override these defaults with their own policy mapping by defining the
         # mapping under ACLs in their channel definition
 
+        #---New Lifecycle System Chaincode (_lifecycle) function to policy mapping for access control--#
+
+        # ACL policy for _lifecycle's "CommitChaincodeDefinition" function
+        _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
+
+        # ACL policy for _lifecycle's "QueryChaincodeDefinition" function
+        _lifecycle/QueryChaincodeDefinition: /Channel/Application/Readers
+
+        # ACL policy for _lifecycle's "QueryNamespaceDefinitions" function
+        _lifecycle/QueryNamespaceDefinitions: /Channel/Application/Readers
+
         #---Lifecycle System Chaincode (lscc) function to policy mapping for access control---#
 
         # ACL policy for lscc's "getid" function
@@ -412,7 +424,7 @@ Orderer: &OrdererDefaults
 
         # Max Message Count: The maximum number of messages to permit in a
         # batch.  No block will contain more than this number of messages.
-        MaxMessageCount: 10
+        MaxMessageCount: 500
 
         # Absolute Max Bytes: The absolute maximum number of bytes allowed for
         # the serialized messages in a batch. The maximum block size is this value
@@ -434,7 +446,7 @@ Orderer: &OrdererDefaults
         # will contain only that message.  Because messages may be larger than
         # preferred max bytes (up to AbsoluteMaxBytes), some batches may exceed
         # the preferred max bytes, but will always contain exactly one transaction.
-        PreferredMaxBytes: 512 KB
+        PreferredMaxBytes: 2 MB
 
     # Max Channels is the maximum number of channels to allow on the ordering
     # network. When set to 0, this implies no maximum number of channels.
@@ -474,10 +486,8 @@ Orderer: &OrdererDefaults
         # are the defaults for all new channels and can be modified on a
         # per-channel basis via configuration updates.
         Options:
-            # TickInterval is the time interval between two Node.Tick
-            # invocations.
-            # Unit: millisecond
-            TickInterval: 500
+            # TickInterval is the time interval between two Node.Tick invocations.
+            TickInterval: 500ms
 
             # ElectionTick is the number of Node.Tick invocations that must pass
             # between elections. That is, if a follower does not receive any
@@ -491,18 +501,12 @@ Orderer: &OrdererDefaults
             # messages to maintain its leadership every HeartbeatTick ticks.
             HeartbeatTick: 1
 
-            # MaxInflightMsgs limits the max number of in-flight append messages
+            # MaxInflightBlocks limits the max number of in-flight append messages
             # during optimistic replication phase.
-            MaxInflightMsgs: 256
+            MaxInflightBlocks: 5
 
-            # MaxSizePerMsg limits the max size of each append message. Smaller
-            # value lowers the raft recovery cost(initial probing and message
-            # lost during normal operation). On the other side, it might affect
-            # the throughput during normal replication.
-            MaxSizePerMsg: 1048576
-
-            # SnapshotInterval defines number of bytes per which a snapshot is taken
-            SnapshotInterval: 100 MB
+            # SnapshotIntervalSize defines number of bytes per which a snapshot is taken
+            SnapshotIntervalSize: 20 MB
 
     # Organizations lists the orgs participating on the orderer side of the
     # network.
