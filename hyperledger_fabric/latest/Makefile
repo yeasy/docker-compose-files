@@ -6,8 +6,10 @@
 # support advanced bash grammar
 SHELL:=/bin/bash
 
-# mode of the network: solo, kafka, couchdb, event, dev
-HLF_MODE ?= solo
+# mode of the network: solo, kafka
+HLF_MODE ?= raft
+
+# mode of db: golevel, couchdb
 DB_MODE ?= golevel
 
 NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
@@ -55,7 +57,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make update_anchors
 
-	make cc_test
+	make cc_test # test_cc_install test_cc_instantiate test_cc_invoke_query
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations

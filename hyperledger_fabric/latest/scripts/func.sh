@@ -360,6 +360,7 @@ channelUpdate() {
 }
 
 # Install chaincode on specified peer node
+# In v2.x it will package, install and approve
 # chaincodeInstall peer cc_name version path
 chaincodeInstall () {
 	local org=$1
@@ -371,14 +372,29 @@ chaincodeInstall () {
 	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
 	echo "name=${name}, version=${version}, path=${path}"
 	setEnvs $org $peer
-	peer chaincode install \
-		-n ${name} \
-		-v $version \
-		-p ${path} \
-		>&log.txt
+	echo "packaging chaincode"
+	peer lifecycle chaincode package ${name}.tar.gz \
+        --path ${path} \
+        --lang golang \
+        --label ${name}_${version}
+
+	echo "installing chaincode"
+	peer lifecycle chaincode install ${name}.tar.gz >&log.txt
+
+	echo "querying installed chaincode"
+	peer lifecycle chaincode queryinstalled >&query.log
+	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
+	echo "package id=${package_id}"
+
+	# v1.x action
+	#peer chaincode install \
+	#	-n ${name} \
+	#	-v $version \
+	#	-p ${path} \
+	#	>&log.txt
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
-  verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
+	verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
 	echo "=== Chaincode is installed on remote peer$peer === "
 }
 
