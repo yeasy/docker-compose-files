@@ -20,6 +20,8 @@ chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetChainInfo","'${APP_C
 echo_b "QSCC GetBlockByNumber 2"
 chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
+#chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetTransactionByID","'${APP_CHANNEL}'","2361df2089384d27470f62327bdde3eced8c64cc9b21e4da2abf78b45aadbf6b"]}'
+
 #peer chaincode query \
 #	-C "" \
 #	-n qscc \
