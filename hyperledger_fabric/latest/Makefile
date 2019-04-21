@@ -57,7 +57,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make update_anchors
 
-	make cc_test # test_cc_install test_cc_instantiate test_cc_invoke_query
+	make cc_test # test_cc_install test_cc_approve test_cc_commit test_cc_invoke_query
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations
@@ -84,7 +84,7 @@ ready: # create/join channel, install/instantiate cc
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 # chaincode related operations
-cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
+cc_test: test_cc_install test_cc_approve test_cc_commit test_cc_invoke_query
 
 restart: stop start
 
@@ -141,8 +141,16 @@ test_cc: # test chaincode, deprecated
 	fi
 
 test_cc_install: # Install the chaincode
-	@echo "Install chaincode on the fabric network"
+	@echo "Install chaincode to all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
+
+test_cc_approve: # Approve the chaincode definition
+	@echo "Approve the chaincode by all orgs"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_approve.sh"
+
+test_cc_commit: # Commit the chaincode definition
+	@echo "Commit the chaincode by any org"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_commit.sh"
 
 test_cc_instantiate: # Instantiate the chaincode
 	@echo "Instantiate chaincode on the fabric network"

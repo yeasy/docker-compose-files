@@ -80,7 +80,7 @@ ready: # create/join channel, install/instantiate cc
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 # chaincode related operations
-cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query
+cc_test: test_cc_install test_cc_instantiate test_cc_invoke_query test_cc_upgrade
 
 restart: stop start
 

@@ -17,7 +17,9 @@ for org in "${ORGS[@]}"
 do
 	for peer in "${PEERS[@]}"
 	do
-		chaincodeInstall $org $peer ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+		t="\${ORG${org}_PEER${peer}_URL}" && peer_url=`eval echo $t`
+		t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && peer_tls_rootcert=`eval echo $t`
+		chaincodeInstall $org $peer "${peer_url}" "${peer_tls_rootcert}" ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
 	done
 done
 

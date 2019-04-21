@@ -51,6 +51,9 @@ ORG2_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/
 
 # Node URLS
 ORDERER_URL="orderer0.example.com:7050"
+ORDERER0_URL="orderer0.example.com:7050"
+ORDERER1_URL="orderer1.example.com:7050"
+ORDERER2_URL="orderer2.example.com:7050"
 ORG1_PEER0_URL="peer0.org1.example.com:7051"
 ORG1_PEER1_URL="peer1.org1.example.com:7051"
 ORG2_PEER0_URL="peer0.org2.example.com:7051"

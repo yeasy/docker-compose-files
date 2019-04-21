@@ -329,15 +329,15 @@ channelSignConfigTx () {
 # Usage: channelUpdate channel org peer transaction_file
 channelUpdate() {
 	local channel=$1
-  local org=$2
-  local peer=$3
-  local tx=$4
+	local org=$2
+	local peer=$3
+	local tx=$4
 	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
-  setEnvs $org $peer
+	setEnvs $org $peer
 	echo "=== Update config on channel ${channel} === "
 	[ -f ${CHANNEL_ARTIFACTS}/${tx} ] || { echo_r "${tx} not exist"; exit 1; }
-  if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update \
 		-o ${ORDERER_URL} \
 		-c ${channel} \
@@ -359,32 +359,37 @@ channelUpdate() {
 	sleep 2
 }
 
-# Install chaincode on specified peer node
+# Install chaincode on the peer node
 # In v2.x it will package, install and approve
 # chaincodeInstall peer cc_name version path
 chaincodeInstall () {
+	if [ "$#" -ne 7 ]; then
+		echo_r "Wrong param number for chaincode install"
+		exit -1
+	fi
 	local org=$1
 	local peer=$2
-	local name=$3
-	local version=$4
-	local path=$5
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+	local name=$5
+	local version=$6
+	local path=$7
+
 	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
 	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
 	echo "name=${name}, version=${version}, path=${path}"
 	setEnvs $org $peer
-	echo "packaging chaincode"
+	echo "packaging chaincode into tar.gz package"
 	peer lifecycle chaincode package ${name}.tar.gz \
         --path ${path} \
         --lang golang \
         --label ${name}_${version}
 
-	echo "installing chaincode"
-	peer lifecycle chaincode install ${name}.tar.gz >&log.txt
-
-	echo "querying installed chaincode"
-	peer lifecycle chaincode queryinstalled >&query.log
-	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
-	echo "package id=${package_id}"
+	echo "installing chaincode to peer${peer}/org${org}"
+	peer lifecycle chaincode install \
+		--peerAddresses ${peer_url} \
+		--tlsRootCertFiles ${peer_tls_root_cert} \
+        ${name}.tar.gz >&log.txt
 
 	# v1.x action
 	#peer chaincode install \
@@ -397,6 +402,156 @@ chaincodeInstall () {
 	verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
 	echo "=== Chaincode is installed on remote peer$peer === "
 }
+
+# Approve the chaincode definition
+# chaincodeApprove channel org peer name version
+chaincodeApprove () {
+	if [ "$#" -ne 7 -a "$#" -ne 9 ]; then
+		echo_r "Wrong param number for chaincode approval"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+	local channel=$5
+	local name=$6
+	local version=$7
+	local collection_config=""  # collection config file path for sideDB
+	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
+
+	if [ ! -z "$8" ]; then
+		collection_config=$8
+	fi
+
+	if [ ! -z "$9" ]; then
+		policy=$9
+	fi
+
+	setEnvs $org $peer
+	echo "querying installed chaincode and get its package id"
+	peer lifecycle chaincode queryinstalled >&query.log
+	cat query.log
+	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
+	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log)
+	echo "Approve package id=${package_id} by Org ${org}/Peer ${peer}"
+
+	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+		peer lifecycle chaincode approveformyorg \
+			--peerAddresses ${peer_url} \
+			--tlsRootCertFiles ${peer_tls_root_cert} \
+			--channelID ${channel} \
+			--name ${name} \
+			--version ${version} \
+			--init-required \
+            --package-id ${package_id} \
+			--sequence 1 \
+			--signature-policy "${policy}" \
+			--waitForEvent >&log.txt
+	else
+		peer lifecycle chaincode approveformyorg \
+			--peerAddresses ${peer_url} \
+			--tlsRootCertFiles ${peer_tls_root_cert} \
+			--channelID ${channel} \
+			--name ${name} \
+			--version ${version} \
+			--init-required \
+			--package-id ${package_id} \
+			--sequence 1 \
+			--signature-policy "${policy}" \
+			--waitForEvent \
+			--tls true \
+			--cafile ${ORDERER_TLS_CA} >&log.txt
+	fi
+
+	peer lifecycle chaincode queryapprovalstatus \
+		--peerAddresses ${peer_url} \
+		--tlsRootCertFiles ${peer_tls_root_cert} \
+		--channelID ${channel} \
+		--name ${name} \
+		--version ${version}
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Chaincode Approval on remote org ${org}/peer$peer has Failed"
+	echo "=== Chaincode is approved on remote peer$peer === "
+}
+
+# Anyone can commit the chaincode definition once it's approved by major
+# chaincodeCommit org peer channel orderer name version [collection-config] [endorse-policy]
+chaincodeCommit () {
+	if [ "$#" -ne 6 -a "$#" -ne 8 ]; then
+		echo_r "Wrong param number for chaincode approval"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local channel=$3
+	local orderer=$4
+	local name=$5
+	local version=$6
+	local collection_config=""  # collection config file path for sideDB
+	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
+
+	if [ ! -z "$7" ]; then
+		collection_config=$7
+	fi
+
+	if [ ! -z "$8" ]; then
+		policy=$8 # chaincode endorsement policy
+	fi
+
+	setEnvs $org $peer
+	echo "querying installed chaincode and get its package id"
+	peer lifecycle chaincode queryinstalled >&query.log
+	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
+	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log)
+	echo "Committing package id=${package_id} by Org ${org}/Peer ${peer}"
+
+	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+		peer lifecycle chaincode commit \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--version ${version} \
+			--init-required \
+			--sequence 1 \
+			--peerAddresses ${ORG1_PEER0_URL} \
+            --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
+            --peerAddresses ${ORG2_PEER0_URL} \
+            --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
+			--waitForEvent \
+			--collections-config "${collection_config}" \
+			--signature-policy "${policy}"
+	else
+		peer lifecycle chaincode commit \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--version ${version} \
+			--init-required \
+			--sequence 1 \
+			--peerAddresses ${ORG1_PEER0_URL} \
+            --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
+            --peerAddresses ${ORG2_PEER0_URL} \
+            --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
+			--waitForEvent \
+			--collections-config "${collection_config}" \
+			--signature-policy "${policy}" \
+			--tls true \
+			--cafile ${ORDERER_TLS_CA}
+	fi
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Chaincode Commit on remote org ${org}/peer$peer has Failed"
+	echo "=== Chaincode is committed on channel $channel === "
+
+	peer lifecycle chaincode querycommitted \
+			--channelID ${channel} \
+			--name ${name}
+}
+
 
 # Instantiate chaincode on specifized peer node
 # chaincodeInstantiate channel org peer name version args
@@ -456,32 +611,42 @@ chaincodeInstantiate () {
 	echo "=== Chaincode Instantiated in channel ${channel} by peer$peer ==="
 }
 
+# Invoke the Init func of chaincode to start the container
+# Usage: chaincodeInit org peer channel orderer name args peer_url peer_org_tlsca
+chaincodeInit () {
+	local org=$1
+	local peer=$2
+	local channel=$3
+	local orderer=$4
+	local name=$5
+	local args=$6
+	local peer_url=$7
+	local peer_org_tlsca=$8
 
-# Usage: chaincodeInvoke channel org peer name args
-chaincodeInvoke () {
-	local channel=$1
-	local org=$2
-	local peer=$3
-	local name=$4
-	local args=$5
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
-	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
+	echo "=== chaincodeInit to orderer by id of org${org}/peer${peer} === "
 	echo "channel=${channel}, name=${name}, args=${args}"
 	setEnvs $org $peer
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer chaincode invoke \
-			-o ${ORDERER_URL} \
-			-C ${channel} \
-			-n ${name} \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--peerAddresses ${peer_url} \
+            --tlsRootCertFiles ${peer_org_tlsca} \
+			--isInit \
 			-c ${args} \
 			>&log.txt
 	else
 		peer chaincode invoke \
-			-o ${ORDERER_URL} \
-			-C ${channel} \
-			-n ${name} \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--peerAddresses ${peer_url} \
+            --tlsRootCertFiles ${peer_org_tlsca} \
+			--isInit \
 			-c ${args} \
 			--tls \
 			--cafile ${ORDERER_TLS_CA} \
@@ -493,52 +658,96 @@ chaincodeInvoke () {
 	echo "=== Invoke transaction on peer$peer in channel ${channel} is successful === "
 }
 
-# query channel peer name args expected_result
-chaincodeQuery () {
-  local channel=$1
-  local org=$2
-  local peer=$3
-  local name=$4
-  local args=$5
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
-  [ $# -gt 5 ] && local expected_result=$6
-  echo "=== chaincodeQuery to org $org/peer $peer === "
-	echo "channel=${channel}, name=${name}, args=${args}"
-  local rc=1
-  local starttime=$(date +%s)
+# Usage: chaincodeInvoke org peer channel orderer name args peer_url peer_org_tlsca
+chaincodeInvoke () {
+	local org=$1
+	local peer=$2
+	local channel=$3
+	local orderer=$4
+	local name=$5
+	local args=$6
+	local peer_url=$7
+	local peer_org_tlsca=$8
 
-  setEnvs $org $peer
-  # we either get a successful response, or reach TIMEOUT
-  while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
-     echo "Attempting to Query org ${org}/peer ${peer} ...$(($(date +%s)-starttime)) secs"
-     peer chaincode query \
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
+	echo "channel=${channel}, name=${name}, args=${args}"
+	setEnvs $org $peer
+	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# lets supply it directly as we know it using the "-o" option
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+		peer chaincode invoke \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--peerAddresses ${peer_url} \
+            --tlsRootCertFiles ${peer_org_tlsca} \
+			-c ${args} \
+			>&log.txt
+	else
+		peer chaincode invoke \
+			-o ${orderer} \
+			--channelID ${channel} \
+			--name ${name} \
+			--peerAddresses ${peer_url} \
+            --tlsRootCertFiles ${peer_org_tlsca} \
+			-c ${args} \
+			--tls \
+			--cafile ${ORDERER_TLS_CA} \
+			>&log.txt
+	fi
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Invoke execution on peer$peer failed "
+	echo "=== Invoke transaction on peer$peer in channel ${channel} is successful === "
+}
+
+# query org peer channel name args expected_result
+chaincodeQuery () {
+	local org=$1
+	local peer=$2
+	local channel=$3
+	local name=$4
+	local args=$5
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	[ $# -gt 5 ] && local expected_result=$6
+	echo "=== chaincodeQuery to org $org/peer $peer === "
+	echo "channel=${channel}, name=${name}, args=${args}"
+	local rc=1
+	local starttime=$(date +%s)
+
+	setEnvs $org $peer
+	# we either get a successful response, or reach TIMEOUT
+	while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
+		echo "Attempting to Query org ${org}/peer ${peer} ...$(($(date +%s)-starttime)) secs"
+		peer chaincode query \
 			 -C "${channel}" \
 			 -n "${name}" \
 			 -c "${args}" \
 			 >&log.txt
-		 rc=$?
-		 if [ $# -gt 5 ]; then # need to check the result
-			 test $? -eq 0 && VALUE=$(cat log.txt | awk 'END {print $NF}')
-			 if [ "$VALUE" = "${expected_result}" ]; then
-				 let rc=0
-			 else
-				 let rc=1
-				 echo_b "$VALUE != ${expected_result}, will retry"
-			 fi
-		 fi
-     if [ $rc -ne 0 ]; then
-				 cat log.txt
-				 sleep 2
-     fi
-  done
+		rc=$?
+		if [ $# -gt 5 ]; then # need to check the result
+			test $? -eq 0 && VALUE=$(cat log.txt | awk 'END {print $NF}')
+			if [ "$VALUE" = "${expected_result}" ]; then
+				let rc=0
+			else
+				let rc=1
+				echo_b "$VALUE != ${expected_result}, will retry"
+			fi
+		fi
+		if [ $rc -ne 0 ]; then
+			cat log.txt
+			sleep 2
+		fi
+	done
 
-  # rc==0, or timeout
-  if [ $rc -eq 0 ]; then
+	# rc==0, or timeout
+	if [ $rc -eq 0 ]; then
 		echo "=== Query on org $org/peer$peer in channel ${channel} is successful === "
-  else
+	else
 		echo_r "=== Query on org $org/peer$peer is INVALID, run `make stop clean` to clean ==="
 		exit 1
-  fi
+	fi
 }
 
 # List Installed chaincode on specified peer node, and instantiated chaincodes at specific channel
