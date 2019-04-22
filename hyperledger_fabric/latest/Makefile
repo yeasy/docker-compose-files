@@ -57,9 +57,9 @@ ready: # create/join channel, install/instantiate cc
 
 	make update_anchors
 
-	make cc_test # test_cc_install test_cc_approve test_cc_commit test_cc_invoke_query
+	make cc_test # test_cc_install test_cc_approve test_cc_queryapprove test_cc_commit test_cc_querycommit test_cc_invoke_query
 
-	make test_lscc # test lscc operations
+	# make test_lscc # test lscc operations, in v2.0, legacy lscc won't work
 	make test_qscc # test qscc operations
 	make test_cscc # test cscc operations
 
@@ -84,7 +84,7 @@ ready: # create/join channel, install/instantiate cc
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 # chaincode related operations
-cc_test: test_cc_install test_cc_approve test_cc_commit test_cc_invoke_query
+cc_test: test_cc_install test_cc_approve test_cc_queryapprove test_cc_commit test_cc_querycommit test_cc_invoke_query
 
 restart: stop start
 
@@ -148,9 +148,17 @@ test_cc_approve: # Approve the chaincode definition
 	@echo "Approve the chaincode by all orgs"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_approve.sh"
 
+test_cc_queryapprove: # Query the approval status of chaincode
+	@echo "Query the chaincode approval status by all orgs"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_queryapprove.sh"
+
 test_cc_commit: # Commit the chaincode definition
 	@echo "Commit the chaincode by any org"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_commit.sh"
+
+test_cc_querycommit: # Query the commit status of the chaincode definition
+	@echo "Query the commit status of chaincode"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_querycommit.sh"
 
 test_cc_instantiate: # Instantiate the chaincode
 	@echo "Instantiate chaincode on the fabric network"

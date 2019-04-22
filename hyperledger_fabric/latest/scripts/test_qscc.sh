@@ -20,7 +20,7 @@ peer=0
 #	-c '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
 
 echo_b "QSCC GetChainInfo"
-chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
+chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} qscc '{"Args":["GetChainInfo","'${APP_CHANNEL}'"]}'
 
 #peer chaincode query \
 #	-C "" \
@@ -28,7 +28,7 @@ chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetChainInfo","'${APP_C
 #	-c '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
 echo_b "QSCC GetBlockByNumber 2"
-chaincodeQuery ${APP_CHANNEL} $org $peer qscc '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
+chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} qscc '{"Args":["GetBlockByNumber","'${APP_CHANNEL}'","2"]}'
 
 echo_g "QSCC testing done!"
 

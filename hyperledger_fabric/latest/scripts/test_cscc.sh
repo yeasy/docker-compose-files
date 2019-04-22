@@ -20,13 +20,13 @@ peer=0
 #	-c '{"Args":["GetConfigBlock","'${APP_CHANNEL}'"]}'
 
 echo_b "CSCC GetConfigBlock"
-chaincodeQuery ${APP_CHANNEL} $org $peer cscc '{"Args":["GetConfigBlock","'${APP_CHANNEL}'"]}'
+chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} cscc '{"Args":["GetConfigBlock","'${APP_CHANNEL}'"]}'
 
 echo_b "CSCC GetChannels"
-chaincodeQuery ${APP_CHANNEL} $org $peer cscc '{"Args":["GetChannels"]}'
+chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} cscc '{"Args":["GetChannels"]}'
 
 echo_b "CSCC GetConfigTree"
-chaincodeQuery ${APP_CHANNEL} $org $peer cscc '{"Args":["GetConfigTree","'${APP_CHANNEL}'"]}'
+chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} cscc '{"Args":["GetConfigTree","'${APP_CHANNEL}'"]}'
 
 echo_g "CSCC testing done!"
 

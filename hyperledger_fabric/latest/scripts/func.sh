@@ -221,13 +221,13 @@ channelGetInfo () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	echo "=== Get channel info of ${channel} with id of org${org}/peer${peer} === "
+	echo "=== Get channel info (height, currentBlockHash, previousBlockHash) of ${channel} with id of org${org}/peer${peer} === "
 
 	setEnvs $org $peer
 
 	peer channel getinfo -c ${channel} >&log.txt
 	rc=$?
-	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
 	if [ $rc -ne 0 ]; then
 		echo "=== Fail to get channel info of ${channel} with id of org${org}/peer${peer} === "
 	else
@@ -407,7 +407,7 @@ chaincodeInstall () {
 # chaincodeApprove channel org peer name version
 chaincodeApprove () {
 	if [ "$#" -ne 7 -a "$#" -ne 9 ]; then
-		echo_r "Wrong param number for chaincode approval"
+		echo_r "Wrong param number for chaincode approve"
 		exit -1
 	fi
 	local org=$1
@@ -465,6 +465,30 @@ chaincodeApprove () {
 			--cafile ${ORDERER_TLS_CA} >&log.txt
 	fi
 
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "Chaincode Approval on remote org ${org}/peer$peer has Failed"
+	echo "=== Chaincode is approved on remote peer$peer === "
+}
+
+# Query the Approve the chaincode definition
+# chaincodeQueryApprove channel org peer name version
+chaincodeQueryApprove () {
+	if [ "$#" -ne 7 ]; then
+		echo_r "Wrong param number for chaincode queryapproval"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+	local channel=$5
+	local name=$6
+	local version=$7
+
+	setEnvs $org $peer
+
+	echo "Query the approval status of the  chaincode $name $version"
 	peer lifecycle chaincode queryapprovalstatus \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
@@ -473,15 +497,14 @@ chaincodeApprove () {
 		--version ${version}
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
-	verifyResult $rc "Chaincode Approval on remote org ${org}/peer$peer has Failed"
-	echo "=== Chaincode is approved on remote peer$peer === "
+	verifyResult $rc "ChaincodeQueryApproval Failed: org ${org}/peer$peer"
 }
 
 # Anyone can commit the chaincode definition once it's approved by major
 # chaincodeCommit org peer channel orderer name version [collection-config] [endorse-policy]
 chaincodeCommit () {
 	if [ "$#" -ne 6 -a "$#" -ne 8 ]; then
-		echo_r "Wrong param number for chaincode approval"
+		echo_r "Wrong param number for chaincode commit"
 		exit -1
 	fi
 	local org=$1
@@ -506,8 +529,8 @@ chaincodeCommit () {
 	peer lifecycle chaincode queryinstalled >&query.log
 	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
 	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log)
-	echo "Committing package id=${package_id} by Org ${org}/Peer ${peer}"
 
+	echo "Committing package id=${package_id} by Org ${org}/Peer ${peer}"
 	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer lifecycle chaincode commit \
@@ -546,17 +569,40 @@ chaincodeCommit () {
 	[ $rc -ne 0 ] && cat log.txt
 	verifyResult $rc "Chaincode Commit on remote org ${org}/peer$peer has Failed"
 	echo "=== Chaincode is committed on channel $channel === "
+}
 
+# Query the Commit the chaincode definition
+# chaincodeQueryCommit channel org peer name version
+chaincodeQueryCommit () {
+	if [ "$#" -ne 6 ]; then
+		echo_r "Wrong param number for chaincode querycommit"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+	local channel=$5
+	local name=$6
+
+	setEnvs $org $peer
+
+	echo "Query the committed status of chaincode $name with ${ORG1_PEER0_URL} "
 	peer lifecycle chaincode querycommitted \
+			--peerAddresses ${peer_url} \
+            --tlsRootCertFiles ${peer_tls_root_cert} \
 			--channelID ${channel} \
 			--name ${name}
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	verifyResult $rc "ChaincodeQueryCommit Failed: org ${org}/peer$peer"
 }
 
 
 # Instantiate chaincode on specifized peer node
 # chaincodeInstantiate channel org peer name version args
 chaincodeInstantiate () {
-	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
+	if [ "$#" -gt 8 -a "$#" -lt 6 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
@@ -614,6 +660,10 @@ chaincodeInstantiate () {
 # Invoke the Init func of chaincode to start the container
 # Usage: chaincodeInit org peer channel orderer name args peer_url peer_org_tlsca
 chaincodeInit () {
+	if [ "$#" -ne 8 ]; then
+		echo_r "Wrong param number for chaincode Init"
+		exit -1
+	fi
 	local org=$1
 	local peer=$2
 	local channel=$3
@@ -654,20 +704,24 @@ chaincodeInit () {
 	fi
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
-	verifyResult $rc "Invoke execution on peer$peer failed "
-	echo "=== Invoke transaction on peer$peer in channel ${channel} is successful === "
+	verifyResult $rc "Chaincode Init failed: peer$peer in channel ${channel}"
+	echo "=== Chaincode Init done: peer$peer in channel ${channel} === "
 }
 
 # Usage: chaincodeInvoke org peer channel orderer name args peer_url peer_org_tlsca
 chaincodeInvoke () {
+	if [ "$#" -ne 8 ]; then
+		echo_r "Wrong param number for chaincode Invoke"
+		exit -1
+	fi
 	local org=$1
 	local peer=$2
-	local channel=$3
-	local orderer=$4
-	local name=$5
-	local args=$6
-	local peer_url=$7
-	local peer_org_tlsca=$8
+	local peer_url=$3
+	local peer_org_tlsca=$4
+	local channel=$5
+	local orderer=$6
+	local name=$7
+	local args=$8
 
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
 	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
@@ -704,32 +758,47 @@ chaincodeInvoke () {
 
 # query org peer channel name args expected_result
 chaincodeQuery () {
+	if [ "$#" -ne 7 -a "$#" -ne 8 ]; then
+		echo_r "Wrong param number $# for chaincode Query"
+		echo $*
+		exit -1
+	fi
 	local org=$1
 	local peer=$2
-	local channel=$3
-	local name=$4
-	local args=$5
+	local peer_url=$3
+	local peer_org_tlsca=$4
+	local channel=$5
+	local name=$6
+	local args=$7
+	local expected_result=""
+
+	[ $# -eq 8 ] && local expected_result=$8
+
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
-	[ $# -gt 5 ] && local expected_result=$6
+
 	echo "=== chaincodeQuery to org $org/peer $peer === "
-	echo "channel=${channel}, name=${name}, args=${args}"
+	echo "channel=${channel}, name=${name}, args=${args}, expected_result=${expected_result}"
 	local rc=1
 	local starttime=$(date +%s)
 
 	setEnvs $org $peer
+
 	# we either get a successful response, or reach TIMEOUT
 	while [ "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0 ]; do
 		echo "Attempting to Query org ${org}/peer ${peer} ...$(($(date +%s)-starttime)) secs"
 		peer chaincode query \
 			 -C "${channel}" \
 			 -n "${name}" \
+			 --peerAddresses ${peer_url} \
+			 --tlsRootCertFiles ${peer_org_tlsca} \
 			 -c "${args}" \
 			 >&log.txt
 		rc=$?
-		if [ $# -gt 5 ]; then # need to check the result
+		if [ -n "${expected_result}" ]; then # need to check the result
 			test $? -eq 0 && VALUE=$(cat log.txt | awk 'END {print $NF}')
 			if [ "$VALUE" = "${expected_result}" ]; then
 				let rc=0
+				echo_b "$VALUE == ${expected_result}, passed"
 			else
 				let rc=1
 				echo_b "$VALUE != ${expected_result}, will retry"
@@ -743,9 +812,9 @@ chaincodeQuery () {
 
 	# rc==0, or timeout
 	if [ $rc -eq 0 ]; then
-		echo "=== Query on org $org/peer$peer in channel ${channel} is successful === "
+		echo "=== Query is done: org $org/peer$peer in channel ${channel} === "
 	else
-		echo_r "=== Query on org $org/peer$peer is INVALID, run `make stop clean` to clean ==="
+		echo_r "=== Query failed: org $org/peer$peer, run `make stop clean` to clean ==="
 		exit 1
 	fi
 }

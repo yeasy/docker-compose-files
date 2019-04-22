@@ -22,10 +22,10 @@ echo_b "Generating channel artifacts with ${GEN_IMG} in mode ${MODE}"
 [ ! -d ${MODE}/${CHANNEL_ARTIFACTS} ] && mkdir -p ${MODE}/${CHANNEL_ARTIFACTS}
 
 echo_b "Make sure channel-artifacts dir exists already"
-#if [ -d ${MODE}/${CHANNEL_ARTIFACTS} -a ! -z "$(ls -A ${MODE}/${CHANNEL_ARTIFACTS})" ]; then
-#	echo_b "${CHANNEL_ARTIFACTS} exists, ignore."
-#	exit 0
-#fi
+if [ -d ${MODE}/${CHANNEL_ARTIFACTS} -a ! -z "$(ls -A ${MODE}/${CHANNEL_ARTIFACTS})" ]; then
+	echo_b "${CHANNEL_ARTIFACTS} exists, ignore."
+	exit 0
+fi
 
 echo_g "Generating ${CHANNEL_ARTIFACTS}..."
 docker run \

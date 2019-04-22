@@ -515,6 +515,7 @@ chaincodeQuery () {
 				 sleep 2
      fi
   done
+	cat log.txt
 
   # rc==0, or timeout
   if [ $rc -eq 0 ]; then
