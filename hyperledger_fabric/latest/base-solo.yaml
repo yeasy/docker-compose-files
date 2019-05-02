@@ -57,7 +57,7 @@ services:
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./solo/channel-artifacts/orderer0.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
 
 ## following are peer nodes ##
 

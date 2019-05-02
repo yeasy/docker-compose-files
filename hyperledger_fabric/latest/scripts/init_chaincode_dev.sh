@@ -21,7 +21,7 @@ echo_b "Channel name: "${APP_CHANNEL}
 
 ## Create channel
 echo_b "Creating channel..."
-channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX}
+channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX} ${ORDERER0_URL}
 
 sleep 1
 

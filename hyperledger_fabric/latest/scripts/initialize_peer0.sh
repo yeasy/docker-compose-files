@@ -11,7 +11,7 @@ echo_b " ========== Network initialization start ========== "
 
 ## Create channel
 echo_b "Creating channel ${APP_CHANNEL} with ${APP_CHANNEL_TX}..."
-channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX}
+channelCreate ${APP_CHANNEL} ${APP_CHANNEL_TX} ${ORDERER0_URL}
 
 sleep 1
 
@@ -21,7 +21,7 @@ channelJoin ${APP_CHANNEL} 0
 
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
-channelUpdate ${APP_CHANNEL} 1 0 Org1MSPanchors.tx
+channelUpdate ${APP_CHANNEL} 1 0 ${ORDERER0_URL}  ${ORDERER0_TLS_ROOTCERT} Org1MSPanchors.tx
 
 ## Install chaincode on all peers
 CC_NAME=${CC_02_NAME}

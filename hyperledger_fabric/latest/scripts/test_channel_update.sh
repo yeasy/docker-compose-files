@@ -14,14 +14,14 @@ echo_b "Sign the channel update tx by Org1/Peer0 and Org2/Peer0"
 channelSignConfigTx ${APP_CHANNEL} "1" "0" "${CFG_DELTA_ENV_PB}"
 channelSignConfigTx ${APP_CHANNEL} "2" "0" "${CFG_DELTA_ENV_PB}"
 
-channelUpdate ${APP_CHANNEL} "1" "0" ${CFG_DELTA_ENV_PB}
+channelUpdate ${APP_CHANNEL} "1" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} ${CFG_DELTA_ENV_PB}
 
 newest_block_file1=/tmp/${APP_CHANNEL}_newest1.block
-channelFetch ${APP_CHANNEL} "1" "0" "newest" ${newest_block_file1}
+channelFetch ${APP_CHANNEL} "1" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "newest" ${newest_block_file1}
 [ -f ${newest_block_file1} ] || exit 1
 
 newest_block_file2=/tmp/${APP_CHANNEL}_newest2.block
-channelFetch ${APP_CHANNEL} "3" "0" "newest" ${newest_block_file2}
+channelFetch ${APP_CHANNEL} "3" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "newest" ${newest_block_file2}
 [ -f ${newest_block_file2} ] || exit 1
 
 if [ $(getShasum ${newest_block_file1}) = $(getShasum ${newest_block_file2}) ]; then

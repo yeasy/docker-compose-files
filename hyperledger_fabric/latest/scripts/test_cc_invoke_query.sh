@@ -16,7 +16,7 @@ echo_b "=== Testing Chaincode invoke/query ==="
 
 #Invoke on chaincode on Peer0/Org1
 echo_b "Init chaincode by org1/peer0..."
-chaincodeInit 1 0 ${APP_CHANNEL} "${ORDERER_URL}" ${CC_NAME} ${CC_INIT_ARGS} "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}"
+chaincodeInit 1 0 ${APP_CHANNEL} "${ORDERER0_URL}" ${CC_NAME} ${CC_INIT_ARGS} "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}"
 
 sleep 5 # wait for chaincode is up
 
@@ -26,7 +26,7 @@ chaincodeQuery 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNE
 
 #Invoke on chaincode on Peer0/Org1
 echo_b "Invoke transaction (transfer 10) by org1/peer0..."
-chaincodeInvoke 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER_URL}" ${CC_NAME} ${CC_INVOKE_ARGS}
+chaincodeInvoke 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER0_URL}" ${ORDERER0_TLS_ROOTCERT} ${CC_NAME} ${CC_INVOKE_ARGS}
 
 #Query on chaincode on Peer1/Org2, check if the result is 90
 echo_b "Query chaincode on org2/peer1..."
@@ -34,7 +34,7 @@ chaincodeQuery 2 1 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNE
 
 #Invoke on chaincode on Peer1/Org2
 echo_b "Send invoke transaction on org2/peer1..."
-chaincodeInvoke 2 1 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER_URL}" ${CC_NAME} ${CC_INVOKE_ARGS}
+chaincodeInvoke 2 1 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER0_URL}" ${ORDERER0_TLS_ROOTCERT} ${CC_NAME} ${CC_INVOKE_ARGS}
 
 #Query on chaincode on Peer1/Org2, check if the result is 80
 echo_b "Query chaincode on org1/peer0 4peers..."

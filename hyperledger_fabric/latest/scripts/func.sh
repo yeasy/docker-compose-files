@@ -39,8 +39,8 @@ verifyResult () {
 # set env to use orderOrg's identity
 setOrdererEnvs () {
 	export CORE_PEER_LOCALMSPID="OrdererMSP"
-	export CORE_PEER_MSPCONFIGPATH=${ORDERER_ADMIN_MSP}
-	export CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_ROOTCERT}
+	export CORE_PEER_MSPCONFIGPATH=${ORDERER0_ADMIN_MSP}
+	export CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER0_TLS_ROOTCERT}
 	#t="\${ORG${org}_PEER${peer}_URL}" && CORE_PEER_ADDRESS=`eval echo $t`
 }
 
@@ -70,71 +70,41 @@ setEnvs () {
 	#env |grep CORE
 }
 
-checkOSNAvailability() {
-	#Use orderer's MSP for fetching system channel config block
-	export CORE_PEER_LOCALMSPID="OrdererMSP"
-	export CORE_PEER_TLS_ROOTCERT_FILE=${ORDERER_TLS_CA}
-	export CORE_PEER_MSPCONFIGPATH=${ORDERER_MSP}
-
-	local rc=1
-	local starttime=$(date +%s)
-
-	# continue to poll
-	# we either get a successful response, or reach TIMEOUT
-	while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
-	do
-		 sleep 3
-		 echo "Attempting to fetch system channel ...$(($(date +%s)-starttime)) secs"
-		 if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-			 peer channel fetch 0 -o ${ORDERER_URL} -c "testchainid" >&log.txt
-		 else
-			 peer channel fetch 0 -o ${ORDERER_URL} -c "testchainid" --tls --cafile ${ORDERER_TLS_CA} >&log.txt
-		 fi
-		 test $? -eq 0 && VALUE=$(cat log.txt | awk '/Received block/ {print $NF}')
-		 test "$VALUE" = "0" && let rc=0
-	done
-	[ $rc -ne 0 ] && cat log.txt
-	verifyResult $rc "Ordering Service is not available, Please try again ..."
-	echo "=== Ordering Service is up and running === "
-	echo
-}
-
 # Internal func called by channelCreate
+# channelCreateAction channel tx orderer_url orderer_tls_rootcert
 channelCreateAction(){
 	local channel=$1
 	local channel_tx=$2
 	local orderer_url=$3
-	[ -z $orderer_url ] && orderer_url=${ORDERER_URL}
+	local orderer_tls_rootcert=$4
 
 	if [ -z "$CORE_PEER_TLS_ENABLED" ] || [ "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create \
-			-o ${orderer_url} \
 			-c ${channel} \
+			-o ${orderer_url} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
-			--timeout "${TIMEOUT}s" \
-			>&log.txt
+			--timeout "${TIMEOUT}s"
 	else
 		peer channel create \
-			-o ${orderer_url} \
 			-c ${channel} \
+			-o ${orderer_url} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout "${TIMEOUT}s" \
 			--tls \
-			--cafile ${ORDERER_TLS_CA} \
-			>&log.txt
+			--cafile ${orderer_tls_rootcert}
 	fi
 	return $?
 }
 
-# Use peer0/org1 to create a channel
-# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer [orderer]
+# Use peer0/org1's identity to create a channel
+# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer orderer_url orderer_tls_rootcert
 channelCreate() {
 	local channel=$1
 	local tx=$2
 	local org=$3
 	local peer=$4
 	local orderer_url=$5
-	[ -z $orderer_url ] && orderer_url=${ORDERER_URL}
+	local orderer_tls_rootcert=$6
 
 	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
@@ -143,7 +113,7 @@ channelCreate() {
 	local rc=1
 	local counter=0
 	while [ ${counter} -lt ${MAX_RETRY} -a ${rc} -ne 0 ]; do
-		 channelCreateAction "${channel}" "${tx}" "${orderer_url}"
+		 channelCreateAction ${channel} ${tx} ${orderer_url} ${orderer_tls_rootcert}
 		 rc=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
@@ -241,28 +211,30 @@ channelGetInfo () {
 }
 
 # Fetch all blocks for a channel
-# Usage: channelFetchAll channel org peer
+# Usage: channelFetchAll channel org peer orderer_url orderer_tls_rootcert
 channelFetchAll () {
 	local channel=$1
 	local org=$2
 	local peer=$3
+	local orderer_url=$4
+	local orderer_tls_rootcert=$5
 
 	echo "=== Fetch all block for channel $channel === "
 
 	local block_file=/tmp/${channel}_newest.block
-	channelFetch ${channel} $org $peer "newest" ${block_file}
+	channelFetch ${channel} $org $peer ${orderer_url} ${orderer_tls_rootcert} "newest" ${block_file}
 	[ $? -ne 0 ] && exit 1
 	newest_block_shasum=$(getShasum ${block_file})
 	echo "fetch newest block ${block_file} with shasum=${newest_block_shasum}"
 
 	block_file=${CHANNEL_ARTIFACTS}/${channel}_config.block
-	channelFetch ${channel} $org $peer "config" ${block_file}
+	channelFetch ${channel} $org $peer ${orderer_url} ${orderer_tls_rootcert} "config" ${block_file}
 	[ $? -ne 0 ] && exit 1
 	echo "fetch config block ${block_file}"
 
 	for i in $(seq 0 16); do  # we at most fetch 16 blocks
 		block_file=${CHANNEL_ARTIFACTS}/${channel}_${i}.block
-		channelFetch ${channel} $org $peer $i ${block_file}
+		channelFetch ${channel} $org $peer ${orderer_url} ${orderer_tls_rootcert} $i ${block_file}
 		[ $? -ne 0 ] && exit 1
 		[ -f $block_file ] || break
 		echo "fetch block $i and saved into ${block_file}"
@@ -271,13 +243,16 @@ channelFetchAll () {
 	done
 }
 
-# Fetch some block from a given channel: channel, peer, blockNum
+# Fetch some block from a given channel
+# channelFetch channel org peer orderer_url blockNum block_file
 channelFetch () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	local num=$4
-	local block_file=$5
+	local orderer_url=$4
+	local orderer_tls_rootcert=$5
+	local num=$6
+	local block_file=$7
 	echo "=== Fetch block $num of channel $channel === "
 
 	#setEnvs $org $peer
@@ -286,15 +261,15 @@ channelFetch () {
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "${CORE_PEER_TLS_ENABLED}" ] || [ "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
 		peer channel fetch $num ${block_file} \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-c ${channel}  \
 			>&log.txt
 	else
 		peer channel fetch $num ${block_file} \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-c ${channel} \
 			--tls \
-			--cafile ${ORDERER_TLS_CA}  \
+			--cafile ${orderer_tls_rootcert}  \
 			>&log.txt
 	fi
 	if [ $? -ne 0 ]; then
@@ -331,12 +306,14 @@ channelSignConfigTx () {
 }
 
 # Update a channel config
-# Usage: channelUpdate channel org peer transaction_file
+# Usage: channelUpdate channel org peer orderer_url orderer_tls_rootcert transaction_file
 channelUpdate() {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	local tx=$4
+	local orderer_url=$4
+	local orderer_tls_rootcert=$5
+	local tx=$6
 	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
 	setEnvs $org $peer
@@ -344,17 +321,17 @@ channelUpdate() {
 	[ -f ${CHANNEL_ARTIFACTS}/${tx} ] || { echo_r "${tx} not exist"; exit 1; }
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update \
-		-o ${ORDERER_URL} \
 		-c ${channel} \
+		-o ${orderer_url} \
 		-f ${CHANNEL_ARTIFACTS}/${tx} \
 		>&log.txt
 	else
 		peer channel update \
-		-o ${ORDERER_URL} \
 		-c ${channel} \
+		-o ${orderer_url} \
 		-f ${CHANNEL_ARTIFACTS}/${tx} \
 		--tls \
-		--cafile ${ORDERER_TLS_CA} \
+		--cafile ${orderer_tls_rootcert} \
 		>&log.txt
 	fi
 	rc=$?
@@ -409,9 +386,9 @@ chaincodeInstall () {
 }
 
 # Approve the chaincode definition
-# chaincodeApprove channel org peer name version
+# chaincodeApprove channel org peer peer_url peer_tls_root_cert orderer_url orderer_tls_rootcert channel name version
 chaincodeApprove () {
-	if [ "$#" -ne 7 -a "$#" -ne 9 ]; then
+	if [ "$#" -ne 9 -a "$#" -ne 11 ]; then
 		echo_r "Wrong param number for chaincode approve"
 		exit -1
 	fi
@@ -419,18 +396,20 @@ chaincodeApprove () {
 	local peer=$2
 	local peer_url=$3
 	local peer_tls_root_cert=$4
-	local channel=$5
-	local name=$6
-	local version=$7
+	local orderer_url=$5
+	local orderer_tls_rootcert=$6
+	local channel=$7
+	local name=$8
+	local version=$9
 	local collection_config=""  # collection config file path for sideDB
 	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
 
-	if [ ! -z "$8" ]; then
-		collection_config=$8
+	if [ ! -z "${10}" ]; then
+		collection_config=${10}
 	fi
 
-	if [ ! -z "$9" ]; then
-		policy=$9
+	if [ ! -z "${11}" ]; then
+		policy=${12}
 	fi
 
 	setEnvs $org $peer
@@ -445,7 +424,6 @@ chaincodeApprove () {
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer lifecycle chaincode approveformyorg \
 			--peerAddresses ${peer_url} \
-			--tlsRootCertFiles ${peer_tls_root_cert} \
 			--channelID ${channel} \
 			--name ${name} \
 			--version ${version} \
@@ -453,7 +431,8 @@ chaincodeApprove () {
             --package-id ${package_id} \
 			--sequence 1 \
 			--signature-policy "${policy}" \
-			--waitForEvent >&log.txt
+			--waitForEvent \
+            --orderer ${orderer_url} >&log.txt
 	else
 		peer lifecycle chaincode approveformyorg \
 			--peerAddresses ${peer_url} \
@@ -466,8 +445,9 @@ chaincodeApprove () {
 			--sequence 1 \
 			--signature-policy "${policy}" \
 			--waitForEvent \
+			--orderer ${orderer_url} \
 			--tls true \
-			--cafile ${ORDERER_TLS_CA} >&log.txt
+			--cafile ${orderer_tls_rootcert} >&log.txt
 	fi
 
 	rc=$?
@@ -506,27 +486,28 @@ chaincodeQueryApprove () {
 }
 
 # Anyone can commit the chaincode definition once it's approved by major
-# chaincodeCommit org peer channel orderer name version [collection-config] [endorse-policy]
+# chaincodeCommit org peer channel orderer_url orderer_tls_rootcert name version [collection-config] [endorse-policy]
 chaincodeCommit () {
-	if [ "$#" -ne 6 -a "$#" -ne 8 ]; then
+	if [ "$#" -ne 7 -a "$#" -ne 9 ]; then
 		echo_r "Wrong param number for chaincode commit"
 		exit -1
 	fi
 	local org=$1
 	local peer=$2
 	local channel=$3
-	local orderer=$4
-	local name=$5
-	local version=$6
+	local orderer_url=$4
+	local orderer_tls_rootcert=$5
+	local name=$6
+	local version=$7
 	local collection_config=""  # collection config file path for sideDB
 	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
 
-	if [ ! -z "$7" ]; then
-		collection_config=$7
+	if [ ! -z "$8" ]; then
+		collection_config=$8
 	fi
 
-	if [ ! -z "$8" ]; then
-		policy=$8 # chaincode endorsement policy
+	if [ ! -z "$9" ]; then
+		policy=$9 # chaincode endorsement policy
 	fi
 
 	setEnvs $org $peer
@@ -539,7 +520,7 @@ chaincodeCommit () {
 	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer lifecycle chaincode commit \
-			-o ${orderer} \
+			-o ${orderer_url} \
 			--channelID ${channel} \
 			--name ${name} \
 			--version ${version} \
@@ -554,7 +535,7 @@ chaincodeCommit () {
 			--signature-policy "${policy}"
 	else
 		peer lifecycle chaincode commit \
-			-o ${orderer} \
+			-o ${orderer_url} \
 			--channelID ${channel} \
 			--name ${name} \
 			--version ${version} \
@@ -568,7 +549,7 @@ chaincodeCommit () {
 			--collections-config "${collection_config}" \
 			--signature-policy "${policy}" \
 			--tls true \
-			--cafile ${ORDERER_TLS_CA}
+			--cafile ${orderer_tls_rootcert} >&log.txt
 	fi
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
@@ -605,27 +586,28 @@ chaincodeQueryCommit () {
 
 
 # Instantiate chaincode on specifized peer node
-# chaincodeInstantiate channel org peer name version args
+# chaincodeInstantiate channel org peer orderer_url name version args
 chaincodeInstantiate () {
-	if [ "$#" -gt 8 -a "$#" -lt 6 ]; then
+	if [ "$#" -gt 9 -a "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
 	local channel=$1
 	local org=$2
 	local peer=$3
-	local name=$4
-	local version=$5
-	local args=$6
+	local orderer_url=$4
+	local name=$5
+	local version=$6
+	local args=$7
 	local collection_config=""  # collection config file path for sideDB
 	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
 
-	if [ ! -z "$7" ]; then
-		collection_config=$7
+	if [ ! -z "$8" ]; then
+		collection_config=$8
 	fi
 
-	if [ ! -z "$8" ]; then
-		policy=$8
+	if [ ! -z "$9" ]; then
+		policy=$9
 	fi
 
 	setEnvs $org $peer
@@ -635,7 +617,7 @@ chaincodeInstantiate () {
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer chaincode instantiate \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-C ${channel} \
 			-n ${name} \
 			-v ${version} \
@@ -645,7 +627,7 @@ chaincodeInstantiate () {
 			>&log.txt
 	else
 		peer chaincode instantiate \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-C ${channel} \
 			-n ${name} \
 			-v ${version} \
@@ -653,7 +635,7 @@ chaincodeInstantiate () {
 			-P "${policy}" \
 			--collections-config "${collection_config}" \
 			--tls \
-			--cafile ${ORDERER_TLS_CA} \
+			--cafile ${ORDERER0_TLS_CA} \
 			>&log.txt
 	fi
 	rc=$?
@@ -704,7 +686,7 @@ chaincodeInit () {
 			--isInit \
 			-c ${args} \
 			--tls \
-			--cafile ${ORDERER_TLS_CA} \
+			--cafile ${ORDERER0_TLS_CA} \
 			>&log.txt
 	fi
 	rc=$?
@@ -715,7 +697,7 @@ chaincodeInit () {
 
 # Usage: chaincodeInvoke org peer channel orderer name args peer_url peer_org_tlsca
 chaincodeInvoke () {
-	if [ "$#" -ne 8 ]; then
+	if [ "$#" -ne 9 ]; then
 		echo_r "Wrong param number for chaincode Invoke"
 		exit -1
 	fi
@@ -724,9 +706,10 @@ chaincodeInvoke () {
 	local peer_url=$3
 	local peer_org_tlsca=$4
 	local channel=$5
-	local orderer=$6
-	local name=$7
-	local args=$8
+	local orderer_url=$6
+	local orderer_tls_rootcert=$7
+	local name=$8
+	local args=$9
 
 	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
 	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
@@ -736,7 +719,7 @@ chaincodeInvoke () {
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer chaincode invoke \
-			-o ${orderer} \
+			-o ${orderer_url} \
 			--channelID ${channel} \
 			--name ${name} \
 			--peerAddresses ${peer_url} \
@@ -745,14 +728,14 @@ chaincodeInvoke () {
 			>&log.txt
 	else
 		peer chaincode invoke \
-			-o ${orderer} \
+			-o ${orderer_url} \
 			--channelID ${channel} \
 			--name ${name} \
 			--peerAddresses ${peer_url} \
             --tlsRootCertFiles ${peer_org_tlsca} \
 			-c ${args} \
 			--tls \
-			--cafile ${ORDERER_TLS_CA} \
+			--cafile ${orderer_tls_rootcert} \
 			>&log.txt
 	fi
 	rc=$?
@@ -870,18 +853,19 @@ chaincodeStartDev () {
 	echo "=== Chaincode started in dev mode === "
 }
 
-# chaincodeUpgrade channel peer name version args
+# chaincodeUpgrade channel org peer orderer_url name version args
 chaincodeUpgrade () {
-	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
+	if [ "$#" -gt 9 -a  "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
 		exit -1
 	fi
 	local channel=$1
 	local org=$2
 	local peer=$3
-	local name=$4
-	local version=$5
-	local args=$6
+	local orderer_url=$4
+	local name=$5
+	local version=$6
+	local args=$7
 	local collection_config=""  # collection config file path for sideDB
 	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
 
@@ -893,7 +877,7 @@ chaincodeUpgrade () {
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer chaincode upgrade \
-		-o ${ORDERER_URL} \
+		-o ${orderer_url} \
 		-C ${channel} \
 		-n ${name} \
 		-v ${version} \
@@ -903,7 +887,7 @@ chaincodeUpgrade () {
 		>&log.txt
 	else
 		peer chaincode upgrade \
-		-o ${ORDERER_URL} \
+		-o ${orderer_url} \
 		-C ${channel} \
 		-n ${name} \
 		-v ${version} \
@@ -911,7 +895,7 @@ chaincodeUpgrade () {
 		-P "${policy}" \
 		--collections-config "${collection_config}" \
 		--tls \
-		--cafile ${ORDERER_TLS_CA} \
+		--cafile ${ORDERER0_TLS_CA} \
 		>&log.txt
 	fi
 	rc=$?

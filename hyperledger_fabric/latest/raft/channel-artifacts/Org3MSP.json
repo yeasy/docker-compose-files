@@ -69,21 +69,7 @@
 						{
 							"principal": {
 								"msp_identifier": "Org3MSP",
-								"role": "ADMIN"
-							},
-							"principal_classification": "ROLE"
-						},
-						{
-							"principal": {
-								"msp_identifier": "Org3MSP",
-								"role": "PEER"
-							},
-							"principal_classification": "ROLE"
-						},
-						{
-							"principal": {
-								"msp_identifier": "Org3MSP",
-								"role": "CLIENT"
+								"role": "MEMBER"
 							},
 							"principal_classification": "ROLE"
 						}
@@ -94,12 +80,6 @@
 							"rules": [
 								{
 									"signed_by": 0
-								},
-								{
-									"signed_by": 1
-								},
-								{
-									"signed_by": 2
 								}
 							]
 						}
@@ -118,14 +98,7 @@
 						{
 							"principal": {
 								"msp_identifier": "Org3MSP",
-								"role": "ADMIN"
-							},
-							"principal_classification": "ROLE"
-						},
-						{
-							"principal": {
-								"msp_identifier": "Org3MSP",
-								"role": "CLIENT"
+								"role": "MEMBER"
 							},
 							"principal_classification": "ROLE"
 						}
@@ -136,9 +109,6 @@
 							"rules": [
 								{
 									"signed_by": 0
-								},
-								{
-									"signed_by": 1
 								}
 							]
 						}

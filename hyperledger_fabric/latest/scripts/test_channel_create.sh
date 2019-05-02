@@ -14,7 +14,7 @@ echo_b "=== Creating channel ${APP_CHANNEL} with ${APP_CHANNEL_TX}... ==="
 #do
  #APP_CHANNEL="channel"$i
  #APP_CHANNEL_TX=${APP_CHANNEL}".tx"
-channelCreate "${APP_CHANNEL}" "${APP_CHANNEL_TX}" 1 0
+channelCreate "${APP_CHANNEL}" "${APP_CHANNEL_TX}" 1 0 ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT}
 #done
 
 echo_g "=== Created channel ${APP_CHANNEL} with ${APP_CHANNEL_TX} ==="

@@ -27,7 +27,7 @@ done
 echo_g "=== Install chaincode done ==="
 
 # test sideDB feature
-chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG}
+chaincodeInstantiate "${APP_CHANNEL}" 1 0 ${ORDERER0_URL} ${CC_NAME} ${CC_INIT_VERSION} ${CC_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG}
 echo_g "=== Instantiate chaincode done ==="
 sleep 2
 
@@ -57,7 +57,7 @@ done
 echo_g "Install chaincode with new collection config done"
 
 echo_b "Update chaincode with new collection on org1/peer0"
-chaincodeUpgrade ${APP_CHANNEL} 1 0 ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG_NEW}
+chaincodeUpgrade ${APP_CHANNEL} 1 0 ${ORDERER0_URL} ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_INIT_ARGS} ${CC_MARBLES_COLLECTION_CONFIG_NEW}
 echo_g "Update chaincode with new collection on org1/peer0 done"
 
 echo_b "Invoke chaincode with new key and new collection on org1/peer0"

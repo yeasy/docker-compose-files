@@ -39,23 +39,23 @@ docker run \
 sleep 1
 
 echo_b "Convert all block files into json"
-for BLOCK_FILE in *.block; do
-	[ -f ${BLOCK_FILE}.json ] || configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
+for block_file in *.block; do
+	[ -f ${block_file}.json ] || configtxlatorDecode "common.Block" ${block_file} ${block_file}.json
 	decode_result=$?
 	#echo_b "Parse payload..."
-	#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${BLOCK_FILE}.json > ${BLOCK_FILE}_payload.json
+	#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${block_file}.json > ${block_file}_payload.json
 done
 
 echo_b "Update the content of orderer genesis file"
-if [ -f ${ORDERER_GENESIS} ]; then
+if [ -f ${ORDERER0_GENESIS_BLOCK} ]; then
 	echo_b "Checking existing Orderer.BatchSize.max_message_count in the genesis json"
-	jq "$MAX_BATCH_SIZE_PATH" ${ORDERER_GENESIS_JSON}
+	jq "$MAX_BATCH_SIZE_PATH" ${ORDERER0_GENESIS}.json
 
 	echo_b "Creating new genesis json with updated Orderer.BatchSize.max_message_count"
-	jq "$MAX_BATCH_SIZE_PATH=20" ${ORDERER_GENESIS_JSON} > ${ORDERER_GENESIS_UPDATED_JSON}
+	jq "$MAX_BATCH_SIZE_PATH=20" ${ORDERER0_GENESIS}.json > ${ORDERER0_GENESIS}_update.json
 
 	echo_b "Re-Encoding the orderer genesis json to block"
-	configtxlatorEncode "common.Block" ${ORDERER_GENESIS_UPDATED_JSON} ${ORDERER_GENESIS_UPDATED_BLOCK}
+	configtxlatorEncode "common.Block" ${ORDERER0_GENESIS}_updated.json ${ORDERER0_GENESIS}_update.block
 fi
 
 echo_b "Stop configtxlator service"

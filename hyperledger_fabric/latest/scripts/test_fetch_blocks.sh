@@ -14,9 +14,9 @@ peer=0
 
 echo_b "=== Fetching blocks of channel ${APP_CHANNEL} and ${SYS_CHANNEL} ==="
 
-channelFetchAll ${APP_CHANNEL} $org $peer
+channelFetchAll ${APP_CHANNEL} $org $peer ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT}
 
-channelFetchAll ${SYS_CHANNEL} $org $peer
+channelFetchAll ${SYS_CHANNEL} $org $peer ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT}
 
 echo_g "=== Fetched Blocks from channels done! ==="
 

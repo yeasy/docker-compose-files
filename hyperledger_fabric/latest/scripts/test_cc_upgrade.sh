@@ -21,7 +21,7 @@ chaincodeInstall 2 0 "${CC_NAME}" "${CC_UPGRADE_VERSION}" "${CC_PATH}"
 chaincodeInstall 2 1 "${CC_NAME}" "${CC_UPGRADE_VERSION}" "${CC_PATH}"
 
 # Upgrade on one peer of the channel will update all
-chaincodeUpgrade ${APP_CHANNEL} 1 0 "${CC_NAME}" "${CC_UPGRADE_VERSION}" "${CC_UPGRADE_ARGS}"
+chaincodeUpgrade ${APP_CHANNEL} 1 0 ${ORDERER0_URL} "${CC_NAME}" "${CC_UPGRADE_VERSION}" "${CC_UPGRADE_ARGS}"
 
 # Query new value, should refresh through all peers in the channel
 chaincodeQuery 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${CC_NAME}" "${CC_QUERY_ARGS}" 100

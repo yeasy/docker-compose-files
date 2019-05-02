@@ -16,6 +16,8 @@ PROJECT_VERSION=2.0.0
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
+APP_CHANNEL1="businesschannel1"
+APP_CHANNEL2="businesschannel2"
 
 # Client cmd execute timeout and retry times
 TIMEOUT="90"
@@ -31,26 +33,27 @@ ORG1MSP="Org1MSP"
 ORG2MSP="Org2MSP"
 ORG3MSP="Org3MSP"
 
-# MSP related paths
-ORDERER_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp
-ORDERER_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
+# Orderer0 related paths
+ORDERER0_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp
+ORDERER0_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp
+ORDERER0_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+ORDERER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt
+
+# Org1 related path
 ORG1_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 ORG1_PEER0_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.Org1.example.com/msp
-ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
-
-# cert related path
-ORDERER_TLS_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-ORDERER_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt
 ORG1_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 ORG1_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
 ORG1_ADMIN_TLS_CLIENT_KEY=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/client.key
 ORG1_ADMIN_TLS_CLIENT_CERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/client.crt
 ORG1_ADMIN_TLS_CA_CERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@Org1.example.com/tls/ca.crt
+
+# Org2 related path
+ORG2_ADMIN_MSP=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
 ORG2_PEER0_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 ORG2_PEER1_TLS_ROOTCERT=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
 
 # Node URLS
-ORDERER_URL="orderer0.example.com:7050"
 ORDERER0_URL="orderer0.example.com:7050"
 ORDERER1_URL="orderer1.example.com:7050"
 ORDERER2_URL="orderer2.example.com:7050"
@@ -105,9 +108,12 @@ GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
 CRYPTO_CONFIG=crypto-config
-ORDERER0_GENESIS=orderer0.genesis.block
-ORDERER1_GENESIS=orderer1.genesis.block
-ORDERER_GENESIS=${ORDERER1_GENESIS}
+ORDERER0_GENESIS=orderer0.genesis
+ORDERER1_GENESIS=orderer1.genesis
+ORDERER2_GENESIS=orderer2.genesis
+ORDERER0_GENESIS_BLOCK=${ORDERER0_GENESIS}.block
+ORDERER1_GENESIS_BLOCK=${ORDERER1_GENESIS}.block
+ORDERER2_GENESIS_BLOCK=${ORDERER2_GENESIS}.block
 ORDERER_GENESIS_PROFILE=TwoOrgsOrdererGenesis
 APP_CHANNEL_PROFILE=TwoOrgsChannel
 APP_CHANNEL_TX=${APP_CHANNEL}.tx
@@ -124,10 +130,6 @@ CTL_ENCODE_URL=${CTL_BASE_URL}/protolator/encode
 CTL_DECODE_URL=${CTL_BASE_URL}/protolator/decode
 CTL_COMPARE_URL=${CTL_BASE_URL}/configtxlator/compute/update-from-configs
 
-ORDERER_GENESIS_JSON=${ORDERER_GENESIS}.json
-ORDERER_GENESIS_PAYLOAD_JSON=${ORDERER_GENESIS}_payload.json
-ORDERER_GENESIS_UPDATED_BLOCK=orderer.genesis.updated.block
-ORDERER_GENESIS_UPDATED_JSON=${ORDERER_GENESIS_UPDATED_BLOCK}.json
 PAYLOAD_PATH=".data.data[0].payload"
 PAYLOAD_CFG_PATH=".data.data[0].payload.data.config"
 MAX_BATCH_SIZE_PATH=".data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count"

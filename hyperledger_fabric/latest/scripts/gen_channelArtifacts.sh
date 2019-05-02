@@ -18,15 +18,16 @@ fi
 
 cd /tmp/${CHANNEL_ARTIFACTS}  # all generated materials will be put under /tmp/$CHANNEL_ARTIFACTS
 
-echo "Generate genesis block for system channel using configtx.yaml"
-[ ! -f ${ORDERER_GENESIS} ] && \
+echo "Generate genesis block of system channel using configtx.yaml"
+[ ! -f ${ORDERER0_GENESIS_BLOCK} ] && \
 configtxgen \
 	-configPath /tmp \
 	-channelID ${SYS_CHANNEL} \
 	-profile ${ORDERER_GENESIS_PROFILE} \
-	-outputBlock ${ORDERER_GENESIS}
-
-[ ! -f ${ORDERER_GENESIS} ] && echo "Fail to generate genesis block for system channel" && exit -1
+	-outputBlock ${ORDERER0_GENESIS_BLOCK}
+[ ! -f ${ORDERER0_GENESIS_BLOCK} ] && echo "Fail to generate genesis block ${ORDERER0_GENESIS_BLOCK}" && exit -1
+cp ${ORDERER0_GENESIS_BLOCK} ${ORDERER1_GENESIS_BLOCK}
+cp ${ORDERER0_GENESIS_BLOCK} ${ORDERER2_GENESIS_BLOCK}
 
 #for (( i=1; i<150; i++ ));
 #do
@@ -39,7 +40,6 @@ configtxgen \
 	-profile ${APP_CHANNEL_PROFILE} \
 	-channelID ${APP_CHANNEL} \
 	-outputCreateChannelTx ${APP_CHANNEL_TX}
-
 [ ! -f ${APP_CHANNEL_TX} ] && echo "Fail to generate app channel tx file" && exit -1
 #done
 
@@ -69,17 +69,13 @@ configtxgen \
 [ ! -f ${UPDATE_ANCHOR_ORG2_TX} ] && echo "Fail to generate the anchor update tx for org1" && exit -1
 
 echo "Output the json for org1, org2 and org3"
-[ ! -f ${ORG1MSP}.json ] && \
+declare -a msps=("${ORG1MSP}"
+				"${ORG2MSP}"
+				"${ORG3MSP}")
+for msp in "${msps[@]}"
+do
+[ ! -f ${msp}.json ] && \
 configtxgen \
 	-configPath /tmp \
-	-printOrg ${ORG1MSP} >${ORG1MSP}.json
-
-[ ! -f ${ORG2MSP}.json ] && \
-configtxgen \
-	-configPath /tmp \
-	-printOrg ${ORG2MSP} >${ORG2MSP}.json
-
-[ ! -f ${ORG3MSP}.json ] && \
-configtxgen \
-	-configPath /tmp/org3/ \
-	-printOrg ${ORG3MSP} >${ORG3MSP}.json
+	-printOrg ${msp} >${msp}.json
+done

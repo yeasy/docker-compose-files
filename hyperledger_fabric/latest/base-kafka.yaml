@@ -64,7 +64,7 @@ services:
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./kafka/channel-artifacts/orderer0.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     command: orderer start
 
   orderer1.example.com:  # There can be multiple orderers
@@ -83,7 +83,7 @@ services:
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./kafka/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./kafka/channel-artifacts/orderer1.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     command: orderer start
 
   cli:
