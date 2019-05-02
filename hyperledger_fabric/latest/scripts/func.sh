@@ -103,16 +103,19 @@ checkOSNAvailability() {
 channelCreateAction(){
 	local channel=$1
 	local channel_tx=$2
+	local orderer_url=$3
+	[ -z $orderer_url ] && orderer_url=${ORDERER_URL}
+
 	if [ -z "$CORE_PEER_TLS_ENABLED" ] || [ "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-c ${channel} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout "${TIMEOUT}s" \
 			>&log.txt
 	else
 		peer channel create \
-			-o ${ORDERER_URL} \
+			-o ${orderer_url} \
 			-c ${channel} \
 			-f ${CHANNEL_ARTIFACTS}/${channel_tx} \
 			--timeout "${TIMEOUT}s" \
@@ -124,12 +127,14 @@ channelCreateAction(){
 }
 
 # Use peer0/org1 to create a channel
-# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer
+# channelCreate APP_CHANNEL APP_CHANNEL.tx org peer [orderer]
 channelCreate() {
 	local channel=$1
 	local tx=$2
 	local org=$3
 	local peer=$4
+	local orderer_url=$5
+	[ -z $orderer_url ] && orderer_url=${ORDERER_URL}
 
 	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
 
@@ -138,7 +143,7 @@ channelCreate() {
 	local rc=1
 	local counter=0
 	while [ ${counter} -lt ${MAX_RETRY} -a ${rc} -ne 0 ]; do
-		 channelCreateAction "${channel}" "${tx}"
+		 channelCreateAction "${channel}" "${tx}" "${orderer_url}"
 		 rc=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`

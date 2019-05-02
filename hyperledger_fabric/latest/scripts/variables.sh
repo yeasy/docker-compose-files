@@ -18,7 +18,7 @@ SYS_CHANNEL="testchainid"
 APP_CHANNEL="businesschannel"
 
 # Client cmd execute timeout and retry times
-TIMEOUT="60"
+TIMEOUT="90"
 MAX_RETRY=10
 
 # Organization and peers
@@ -105,10 +105,14 @@ GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
 CRYPTO_CONFIG=crypto-config
-ORDERER_GENESIS=orderer.genesis.block
+ORDERER0_GENESIS=orderer0.genesis.block
+ORDERER1_GENESIS=orderer1.genesis.block
+ORDERER_GENESIS=${ORDERER1_GENESIS}
 ORDERER_GENESIS_PROFILE=TwoOrgsOrdererGenesis
 APP_CHANNEL_PROFILE=TwoOrgsChannel
 APP_CHANNEL_TX=${APP_CHANNEL}.tx
+APP_CHANNEL1_TX=${APP_CHANNEL1}.tx
+APP_CHANNEL2_TX=${APP_CHANNEL2}.tx
 UPDATE_ANCHOR_ORG1_TX=Org1MSPanchors.tx
 UPDATE_ANCHOR_ORG2_TX=Org2MSPanchors.tx
 
