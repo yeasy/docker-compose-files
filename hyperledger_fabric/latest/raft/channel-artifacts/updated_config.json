@@ -924,8 +924,7 @@
                   "tick_interval": "500ms"
                 }
               },
-              "migration_context": "0",
-              "migration_state": "MIG_STATE_NONE",
+              "state": "STATE_NORMAL",
               "type": "etcdraft"
             },
             "version": "0"

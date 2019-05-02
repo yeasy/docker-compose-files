@@ -619,8 +619,7 @@
                               "tick_interval": "500ms"
                             }
                           },
-                          "migration_context": "0",
-                          "migration_state": "MIG_STATE_NONE",
+                          "state": "STATE_NORMAL",
                           "type": "etcdraft"
                         },
                         "version": "0"
@@ -712,15 +711,15 @@
               "channel_id": "testchainid",
               "epoch": "0",
               "extension": null,
-              "timestamp": "2019-04-22T05:17:46Z",
+              "timestamp": "2019-05-02T01:30:18Z",
               "tls_cert_hash": null,
-              "tx_id": "d7921cec05f57cede225e40c40427ef50974637a60806026573552a75fd9ba28",
+              "tx_id": "cb62c9396856dd18a3dd67c3707e8a29cd0e1b9a900cf1444524dcd70fb6cffd",
               "type": 1,
               "version": 1
             },
             "signature_header": {
               "creator": null,
-              "nonce": "d/z41CXAlLI8L8edDzDuPaUiSZF/h0Pn"
+              "nonce": "Mpm6ZvDqMqxDM9Y0PqJjvOIUMqFYYVo1"
             }
           }
         },
@@ -729,7 +728,7 @@
     ]
   },
   "header": {
-    "data_hash": "KB6Mk7/+ZN/DDY9aJkD2J1tlmrj3HLeP3Ta1TaoPBKI=",
+    "data_hash": "hxmTOD0L2CZ2WgHMB0g6lNXoFQACRK1JIzE1F2miFrY=",
     "number": "0",
     "previous_hash": null
   },
