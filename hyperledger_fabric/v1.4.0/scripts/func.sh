@@ -500,6 +500,8 @@ chaincodeQuery () {
 			 -n "${name}" \
 			 -c "${args}" \
 			 >&log.txt
+             #--peerAddresses peer1.org2.example.com:7051 \
+             #--tlsRootCertFiles ${ORG2_PEER1_TLS_ROOTCERT}
 		 rc=$?
 		 if [ $# -gt 5 ]; then # need to check the result
 			 test $? -eq 0 && VALUE=$(cat log.txt | awk 'END {print $NF}')
