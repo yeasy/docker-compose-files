@@ -16,10 +16,14 @@ channelSignConfigTx ${APP_CHANNEL} "2" "0" "${CFG_DELTA_ENV_PB}"
 
 channelUpdate ${APP_CHANNEL} "1" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} ${CFG_DELTA_ENV_PB}
 
+sleep 1 # wait till the update takes effect
+
+# use org1.peer0's id to get latest block from orderer
 newest_block_file1=/tmp/${APP_CHANNEL}_newest1.block
 channelFetch ${APP_CHANNEL} "1" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "newest" ${newest_block_file1}
 [ -f ${newest_block_file1} ] || exit 1
 
+# use org3.peer0's id to get latest block from orderer
 newest_block_file2=/tmp/${APP_CHANNEL}_newest2.block
 channelFetch ${APP_CHANNEL} "3" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "newest" ${newest_block_file2}
 [ -f ${newest_block_file2} ] || exit 1
