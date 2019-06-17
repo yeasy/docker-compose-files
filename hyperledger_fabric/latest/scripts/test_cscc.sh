@@ -25,9 +25,6 @@ chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP
 echo_b "CSCC GetChannels"
 chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} cscc '{"Args":["GetChannels"]}'
 
-echo_b "CSCC GetConfigTree"
-chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} cscc '{"Args":["GetConfigTree","'${APP_CHANNEL}'"]}'
-
 echo_g "CSCC testing done!"
 
 echo

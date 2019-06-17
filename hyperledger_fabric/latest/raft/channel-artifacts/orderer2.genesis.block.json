@@ -711,15 +711,15 @@
 							"channel_id": "testchainid",
 							"epoch": "0",
 							"extension": null,
-							"timestamp": "2019-05-24T02:57:10Z",
+							"timestamp": "2019-06-17T06:49:30Z",
 							"tls_cert_hash": null,
-							"tx_id": "cdc283fa8d8cfb5ae30166f4bb298010d53ee5ba2c25476e38a0a557379bedf1",
+							"tx_id": "7171041669af9d82246551b457075d91693e646d1d3c05462bb25dbe3a6d2368",
 							"type": 1,
 							"version": 1
 						},
 						"signature_header": {
 							"creator": null,
-							"nonce": "Q77evAWTxw8h6hc+dTcuNDGtIh/pgn/s"
+							"nonce": "st97NtXEkrs2YS2FOHUgDHbz3xcVAnZv"
 						}
 					}
 				},
@@ -728,7 +728,7 @@
 		]
 	},
 	"header": {
-		"data_hash": "C+ryY+EkSnT8uSQd20YKmje9upyQ2C87eUtC2zEQDyw=",
+		"data_hash": "GrFLrIpOH+ZXAVrgs0/VePZnWAYo8bW0vamnHFuyp2k=",
 		"number": "0",
 		"previous_hash": null
 	},

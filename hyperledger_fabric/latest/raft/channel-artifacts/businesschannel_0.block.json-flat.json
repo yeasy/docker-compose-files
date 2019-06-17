@@ -355,35 +355,35 @@
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.values.Consortium.value.name=SampleConsortium
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.values.Consortium.version=0
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.version=0
-.data.data[0].payload.data.last_update.payload.data.signatures[0].signature=MEUCIQCZvRsPB6Ilpz9tm7Ti8qi60oQc32Cb3jGtw+piya3QFAIge4dvbToSHakQRJ70asmNbGsR6wqLCL9aj0IT1C+nLgg=
+.data.data[0].payload.data.last_update.payload.data.signatures[0].signature=MEUCIQCNRBX1kGIkoUGQtthYoriUM2BdOtTs1KcfX4CpF3OAjQIgFXVg1IEPOwTjO5BlOuzZZ5HUGXe4V+al3pASeUSaALE=
 .data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKzCCAdGgAwIBAgIRAKixOXktoa5d3yJ827u6nEwwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMTkwNDAxMDgxNDAwWhcNMjkwMzI5MDgxNDAw\nWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEPMA0GA1UECxMGY2xpZW50MR8wHQYDVQQDDBZBZG1pbkBv\ncmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoDsQsd/e\ngesGCg8BWqWyhKQzt9OqJHTP5A3FlqQNzyXrHyLoN4nNBcvnjHFyWrj4LnQ/+NNZ\nl85p25lq+9VqmKNNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYD\nVR0jBCQwIoAga7tLPDZWsxCrvOoeklCzGPgl/ar7aQ5NyyB/5ctC+NgwCgYIKoZI\nzj0EAwIDSAAwRQIhAJm1Dj9mLiBn0TNQByw7Beji/XxWeS5npWnoCU0m7cY5AiBF\n1j899h/sKmIEV2v4xT8Rz6cM/c55/HRLDgrpjhNtVg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.nonce=3IXrkY89kMK1wdSFV9EfwVSi5KH7W3wU
+.data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.nonce=4wUmmaAwiKb04fGnBXcbCKA72ACsVxCC
 .data.data[0].payload.data.last_update.payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.data.last_update.payload.header.channel_header.epoch=0
 .data.data[0].payload.data.last_update.payload.header.channel_header.extension=None
-.data.data[0].payload.data.last_update.payload.header.channel_header.timestamp=2019-05-24T04:26:41Z
+.data.data[0].payload.data.last_update.payload.header.channel_header.timestamp=2019-06-17T06:49:51Z
 .data.data[0].payload.data.last_update.payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.data.last_update.payload.header.channel_header.tx_id=
 .data.data[0].payload.data.last_update.payload.header.channel_header.type=2
 .data.data[0].payload.data.last_update.payload.header.channel_header.version=0
 .data.data[0].payload.data.last_update.payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKzCCAdGgAwIBAgIRAKixOXktoa5d3yJ827u6nEwwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMTkwNDAxMDgxNDAwWhcNMjkwMzI5MDgxNDAw\nWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEPMA0GA1UECxMGY2xpZW50MR8wHQYDVQQDDBZBZG1pbkBv\ncmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoDsQsd/e\ngesGCg8BWqWyhKQzt9OqJHTP5A3FlqQNzyXrHyLoN4nNBcvnjHFyWrj4LnQ/+NNZ\nl85p25lq+9VqmKNNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYD\nVR0jBCQwIoAga7tLPDZWsxCrvOoeklCzGPgl/ar7aQ5NyyB/5ctC+NgwCgYIKoZI\nzj0EAwIDSAAwRQIhAJm1Dj9mLiBn0TNQByw7Beji/XxWeS5npWnoCU0m7cY5AiBF\n1j899h/sKmIEV2v4xT8Rz6cM/c55/HRLDgrpjhNtVg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.last_update.payload.header.signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.last_update.payload.header.signature_header.nonce=hSvJrHzDSKBvxLU4YpSfzumIgac0wZ/n
-.data.data[0].payload.data.last_update.signature=MEQCIBZ9aQnyVovsL9eJxuVwYidhlHE8MbK1azzlDbHx5kprAiBwMcxaKuPSPDcBiNbgFpjbK0PYpWdriTbVJUvXw1PcwQ==
+.data.data[0].payload.data.last_update.payload.header.signature_header.nonce=sCQTIstQKNN24efDNy181lomH4jzxTJB
+.data.data[0].payload.data.last_update.signature=MEQCIEfJLH4xT59htSOoFQsGE4pUKA3Ehspt4j3OGVx395MCAiAwZUHCBsVsuqcl70jEZ1n/1/GPhFlZdEvHNcjH9MAqQg==
 .data.data[0].payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.header.channel_header.epoch=0
 .data.data[0].payload.header.channel_header.extension=None
-.data.data[0].payload.header.channel_header.timestamp=2019-05-24T04:26:41Z
+.data.data[0].payload.header.channel_header.timestamp=2019-06-17T06:49:51Z
 .data.data[0].payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.header.channel_header.tx_id=
 .data.data[0].payload.header.channel_header.type=1
 .data.data[0].payload.header.channel_header.version=0
 .data.data[0].payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICDTCCAbSgAwIBAgIRAJBFFRDLz6Un7/0wLUkJdxMwCgYIKoZIzj0EAwIwaTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFDASBgNVBAoTC2V4YW1wbGUuY29tMRcwFQYDVQQDEw5jYS5leGFt\ncGxlLmNvbTAeFw0xOTA0MDEwODE0MDBaFw0yOTAzMjkwODE0MDBaMFkxCzAJBgNV\nBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNp\nc2NvMR0wGwYDVQQDExRvcmRlcmVyMC5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEG\nCCqGSM49AwEHA0IABIBMiKxn0LWoVlLv8XxbX1D46eVL6a8rpVTcdgPecq8cDptN\n4OgsaJNjp90jKFOpCPO85WKKKBvohOo+CBoZ8pGjTTBLMA4GA1UdDwEB/wQEAwIH\ngDAMBgNVHRMBAf8EAjAAMCsGA1UdIwQkMCKAIMd63S9RvNuy2Xvt6EcYo8ukXj2U\n4W+4FrVCJC/cgnmOMAoGCCqGSM49BAMCA0cAMEQCIAsGyGJ+dE4F56q8YUe0WLK6\nN+vsXRHDlRscMCB7yxXaAiAsyJGd0rtXmae9b3PV/evJNYegRQRcPwx+XxjQDBxh\nQQ==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.header.signature_header.creator.mspid=OrdererMSP
-.data.data[0].payload.header.signature_header.nonce=dsLwS5QdByUYd6kHgxk0aR2/skNdFbGB
-.data.data[0].signature=MEQCIGEHM2zu05fxAw/wM9oucaHHYuiY2RZv1LLexwXAHmFJAiBhU+PsSjZQC1vBHp3tEnxxTIjlBmMuo0BAIPUOxWXWmA==
-.header.data_hash=V9/H4uNTrwj2CcatGoIF1sfdBSjxGW6WJRFdije9LQo=
+.data.data[0].payload.header.signature_header.nonce=3jVU5jUGrBSkbdiOAT/RX5wbqymEORw7
+.data.data[0].signature=MEUCIQC1t6A/PBvpPnstsqAhTOGq0af5omwNBUgIPBnG4s/orwIgUm1f4B39zku7xP9yTrLQxzHMH6wNv+AVZ1LlMeSknlU=
+.header.data_hash=1ApjpxPUP2H3GeoyYgvcGfjGcUdXrthRPGy7EyupV40=
 .header.number=0
 .header.previous_hash=None
 .metadata.metadata[0]=

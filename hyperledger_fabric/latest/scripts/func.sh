@@ -362,16 +362,18 @@ chaincodeInstall () {
 	echo "name=${name}, version=${version}, path=${path}"
 	setEnvs $org $peer
 	echo "packaging chaincode into tar.gz package"
+	local label=${name}
+	#local label=${name}_${version}
 	peer lifecycle chaincode package ${name}.tar.gz \
         --path ${path} \
         --lang golang \
-        --label ${name}_${version}
+        --label ${label}
 
 	echo "installing chaincode to peer${peer}/org${org}"
 	peer lifecycle chaincode install \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
-        ${name}.tar.gz >&log.txt
+        ${name}.tar.gz | tee >&log.txt
 
 	# v1.x action
 	#peer chaincode install \
@@ -382,7 +384,7 @@ chaincodeInstall () {
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
 	verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
-	echo "=== Chaincode is installed on remote peer$peer === "
+	echo "=== Chaincode is installed on org ${org}/peer $peer === "
 }
 
 # Approve the chaincode definition
@@ -416,8 +418,9 @@ chaincodeApprove () {
 	echo "querying installed chaincode and get its package id"
 	peer lifecycle chaincode queryinstalled >&query.log
 	cat query.log
+	local label=${name}
 	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
-	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log)
+	package_id=$(grep -o "${label}:[a-z0-9]*" query.log)
 	echo "Approve package id=${package_id} by Org ${org}/Peer ${peer}"
 
 	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
@@ -513,8 +516,9 @@ chaincodeCommit () {
 	setEnvs $org $peer
 	echo "querying installed chaincode and get its package id"
 	peer lifecycle chaincode queryinstalled >&query.log
+	label=${name}
 	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
-	package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log)
+	package_id=$(grep -o "${label}:[a-z0-9]*" query.log)
 
 	echo "Committing package id=${package_id} by Org ${org}/Peer ${peer}"
 	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode

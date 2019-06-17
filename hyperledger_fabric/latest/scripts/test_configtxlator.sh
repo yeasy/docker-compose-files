@@ -52,10 +52,10 @@ if [ -f ${ORDERER0_GENESIS_BLOCK} ]; then
 	jq "$MAX_BATCH_SIZE_PATH" ${ORDERER0_GENESIS_BLOCK}.json
 
 	echo_b "Creating new genesis json with updated Orderer.BatchSize.max_message_count"
-	jq "$MAX_BATCH_SIZE_PATH=20" ${ORDERER0_GENESIS_BLOCK}.json > ${ORDERER0_GENESIS_BLOCK}_update.json
+	jq "$MAX_BATCH_SIZE_PATH=100" ${ORDERER0_GENESIS_BLOCK}.json > ${ORDERER0_GENESIS_BLOCK}_updated.json
 
-	echo_b "Re-Encoding the orderer genesis json to block"
-	configtxlatorEncode "common.Block" ${ORDERER0_GENESIS_BLOCK}_updated.json ${ORDERER0_GENESIS_BLOCK}_update.block
+	echo_b "Re-Encoding the updated orderer genesis json to block"
+	configtxlatorEncode "common.Block" ${ORDERER0_GENESIS_BLOCK}_updated.json ${ORDERER0_GENESIS_BLOCK}_updated.block
 fi
 
 echo_b "Stop configtxlator service"

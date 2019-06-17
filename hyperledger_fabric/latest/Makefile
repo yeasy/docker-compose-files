@@ -127,7 +127,10 @@ test_channel_update: # send the channel update transaction
 
 ################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
+	@echo "Testing decoding and encoding with configtxlator"
 	bash scripts/test_configtxlator.sh ${HLF_MODE}
+	@echo "Flattening the json files of all blocks"
+	python3 scripts/json_flatter.py ${HLF_MODE}/channel-artifacts/
 
 test_config_update: # Test change config to add new org
 	bash scripts/test_config_update.sh ${HLF_MODE}
@@ -192,6 +195,7 @@ test_lscc: # test lscc quries
 test_fetch_blocks: # test fetching channel blocks fetch
 	@echo "Test fetching block files"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_fetch_blocks.sh"
+
 
 test_eventsclient: # test get event notification in a loop
 	@echo "Test fetching event notification"
