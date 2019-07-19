@@ -34,6 +34,7 @@ services:
       - FABRIC_LOGGING_SPEC=INFO  # default: INFO
       - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
@@ -43,7 +44,6 @@ services:
       - ORDERER_GENERAL_BATCHTIMEOUT=1s
       - ORDERER_GENERAL_MAXMESSAGECOUNT=10
       - ORDERER_GENERAL_MAXWINDOWSIZE=1000
-      - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
       - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger

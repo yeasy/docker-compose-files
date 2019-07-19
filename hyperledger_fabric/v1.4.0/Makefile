@@ -126,18 +126,11 @@ test_channel_update: # send the channel update transaction
 
 ################## Configtxlator testing operations ################
 test_configtxlator: # Test change config using configtxlator
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		bash scripts/test_configtxlator.sh kafka; \
-	else \
-		bash scripts/test_configtxlator.sh solo; \
-	fi
+	@echo "Testing decoding and encoding with configtxlator"
+	bash scripts/test_configtxlator.sh ${HLF_MODE}
 
 test_config_update: # Test change config to add new org
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		bash scripts/test_config_update.sh kafka; \
-	else \
-		bash scripts/test_config_update.sh solo; \
-	fi
+	bash scripts/test_config_update.sh ${HLF_MODE}
 
 ################## Chaincode testing operations ################
 test_cc: # test chaincode, deprecated
@@ -148,7 +141,7 @@ test_cc: # test chaincode, deprecated
 	fi
 
 test_cc_install: # Install the chaincode
-	@echo "Install chaincode on the fabric network"
+	@echo "Install chaincode to all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
 
 test_cc_instantiate: # Instantiate the chaincode
@@ -210,12 +203,13 @@ clean: # clean up containers and chaincode images
 	@-docker ps -a | awk '{ print $$1,$$2 }' | grep "hyperledger/fabric" | awk '{ print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker ps -a | awk '$$2 ~ /dev-peer/ { print $$1 }' | xargs -r -I {} docker rm -f {}
 	@-docker images | awk '$$1 ~ /dev-peer/ { print $$3 }' | xargs -r -I {} docker rmi -f {}
-	echo "May clean the config: HLF_MODE=solo make clean_config_channel"
+	echo "May clean the config: HLF_MODE=${HLF_MODE} make clean_config_channel"
 
 # Clean deeply by removing all generated files: container, artifacts, credentials
 purge: clean
 	HLF_MODE=solo make clean_config_channel
 	HLF_MODE=kafka make clean_config_channel
+	HLF_MODE=raft make clean_config_channel
 	make clean_config_crypto
 
 env_clean: # clean up Docker environment
@@ -267,21 +261,13 @@ gen_config_crypto: # generate crypto config
 	bash scripts/gen_config_crypto.sh
 
 gen_config_channel: # generate channel artifacts
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-			bash scripts/gen_config_channel.sh kafka; \
-	else \
-			bash scripts/gen_config_channel.sh solo; \
-	fi
+	bash scripts/gen_config_channel.sh ${HLF_MODE}
 
 clean_config_channel: # clean channel related artifacts
-	if [ "$(HLF_MODE)" = "kafka" ]; then \
-		rm -rf kafka/channel-artifacts/*; \
-	else \
-		rm -rf solo/channel-artifacts/*; \
-	fi
+	rm -rf ${HLF_MODE}/channel-artifacts/*
 
 clean_config_crypto: # clean config artifacts
-	echo "Warning: Cleaning credentials will affect artifacts in both solo and kafka mode"
+	echo "Warning: Cleaning credentials will affect artifacts in solo/kafka/raft mode"
 	rm -rf crypto-config/*
 	rm -rf org3/crypto-config/*
 

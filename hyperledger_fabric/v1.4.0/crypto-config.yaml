@@ -19,7 +19,7 @@ OrdererOrgs:
 #    Template:
 #        Count: 2
     # ---------------------------------------------------------------------------
-    # "Specs" - See PeerOrgs below for complete description
+    # "Specs" - See OrdererOrgs below for complete description
     # ---------------------------------------------------------------------------
     Specs:
       - Hostname: orderer0

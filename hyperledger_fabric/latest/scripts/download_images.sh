@@ -39,6 +39,7 @@ echo "=== Pulling yeasy/hyperledger-fabric-* images with tag ${FABRIC_IMG_TAG}..
 for IMG in base peer orderer ca; do
 	pull_image yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG &
 done
+
 pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG
 
 # pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
