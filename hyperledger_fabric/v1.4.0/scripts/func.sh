@@ -221,13 +221,13 @@ channelGetInfo () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	echo "=== Get channel info of ${channel} with id of org${org}/peer${peer} === "
+	echo "=== Get channel info (height, currentBlockHash, previousBlockHash) of ${channel} with id of org${org}/peer${peer} === "
 
 	setEnvs $org $peer
 
 	peer channel getinfo -c ${channel} >&log.txt
 	rc=$?
-	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
 	if [ $rc -ne 0 ]; then
 		echo "=== Fail to get channel info of ${channel} with id of org${org}/peer${peer} === "
 	else
@@ -266,6 +266,7 @@ channelFetchAll () {
 	done
 }
 
+# Fetch some block from a given channel
 # Fetch some block from a given channel: channel, peer, blockNum
 channelFetch () {
 	local channel=$1
@@ -376,10 +377,11 @@ chaincodeInstall () {
 		-v $version \
 		-p ${path} \
 		>&log.txt
+
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
-  verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
-	echo "=== Chaincode is installed on remote peer$peer === "
+	verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
+	echo "=== Chaincode is installed on org ${org}/peer $peer === "
 }
 
 # Instantiate chaincode on specifized peer node
@@ -520,9 +522,9 @@ chaincodeQuery () {
 
   # rc==0, or timeout
   if [ $rc -eq 0 ]; then
-		echo "=== Query on org $org/peer$peer in channel ${channel} is successful === "
+		echo "=== Query is done: org $org/peer$peer in channel ${channel} === "
   else
-		echo_r "=== Query on org $org/peer$peer is INVALID, run `make stop clean` to clean ==="
+		echo_r "=== Query failed: org $org/peer$peer, run `make stop clean` to clean ==="
 		exit 1
   fi
 }
@@ -573,7 +575,7 @@ chaincodeStartDev () {
 	echo "=== Chaincode started in dev mode === "
 }
 
-# chaincodeUpgrade channel peer name version args
+# chaincodeUpgrade channel org peer orderer_url name version args
 chaincodeUpgrade () {
 	if [ "$#" -gt 8 -a  "$#" -lt 6 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
