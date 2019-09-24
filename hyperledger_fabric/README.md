@@ -14,6 +14,7 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest/) | latest fabric code, unstable.
+[Fabric v1.4.3](v1.4.3/) | stable fabric 1.4.3 release.
 [Fabric v1.4.2](v1.4.2/) | stable fabric 1.4.2 release.
 [Fabric v1.4.0](v1.4.0/) | stable fabric 1.4.0 release.
 [Fabric v1.3.0](v1.3.0/) | stable fabric 1.3.0 release.
@@ -29,7 +30,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v1.4.2
+$ export RELEASE=v1.4.3
 ```
 
 ```bash

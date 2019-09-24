@@ -1,0 +1,163 @@
+# Contains the base template for all Hyperledger Fabric services
+# Never directly use services in this template, but inherent
+# All services are abstract without any names, config or port mapping
+# https://github.com/yeasy/docker-compose-files
+#
+# * ca-base: base for fabric-ca
+# * orderer-base: base for fabric-orderer
+# * peer-base: base for fabric-peer
+# * cli-base: base for fabric peer client
+# * event-listener-base: base for fabric eventhub listener
+# * kafka-base: base for kafka
+# * zookeeper-base: base for fabric-zookeeper
+# * couchdb-base: base for couchdb
+# * explorer-base: base for Hyperledger blockchain-explorer
+# * mysql-base: base for MySQL
+
+version: '2' # compose v3 still doesn't support `extends`, shame!
+
+services:
+  ca-base:
+    image: yeasy/hyperledger-fabric-ca:${FABRIC_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_TLS_ENABLED=true # change to false to disable TLS
+
+  orderer-base:
+    image: yeasy/hyperledger-fabric-orderer:${FABRIC_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    # Default config can be found at https://github.com/hyperledger/fabric/blob/master/orderer/common/localconfig/config.go
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO  # default: INFO
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
+      - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
+     #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      # Only required by raft mode
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    #volumes:
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    expose:
+      - "7050"  # gRPC
+      - "8443"  # Operation REST
+    #command: bash -c 'bash /tmp/orderer_build.sh; orderer start' # use this if to debug orderer
+    command: orderer start
+
+  peer-base: # abstract base for fabric-peer, will be used in peer.yaml
+    image: yeasy/hyperledger-fabric-peer:${FABRIC_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${NETWORK}  # uncomment this to use specific network
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false  # whether this node is the org leader, default to false
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=0.0.0.0:7051  # change to external addr for peers in other orgs
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9443  # operation RESTful API
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
+      - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+    volumes:
+      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+    # docker.sock is mapped as the default CORE_VM_ENDPOINT
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - "7051"  # gRPC
+      - "9443"  # Operation REST
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
+    command: peer node start
+
+  cli-base:
+    image: yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    environment:
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
+
+  prometheus: # prometheus will pull metrics from fabric
+    image: prom/prometheus:v2.6.0
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    volumes:
+       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  zookeeper-base:
+    image: hyperledger/fabric-zookeeper:${EXT_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    expose:
+      - '2181'
+      - '2888'
+      - '3888'
+
+  kafka-base:
+    # official repo doesn't have 1.1.0-alpha tag, however, kafka changes version recently
+    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
+    image: hyperledger/fabric-kafka:${EXT_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+    expose:
+      - '9092'
+
+  couchdb-base:
+    image: hyperledger/fabric-couchdb:${EXT_IMG_TAG}
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+
+  explorer-base:
+    image: yeasy/blockchain-explorer:0.1.0-preview # Till we have official image
+    expose:
+      - "8080"  # HTTP port
+    command: bash -c 'sleep 10; node main.js'
+
+  mysql-base: # mysql service
+    image: mysql:8.0
+    restart: always
+    network_mode: ${NETWORK}
+    expose:
+      - "3306"
+
+networks:
+  default:
+    external:
+      name: ${NETWORK}

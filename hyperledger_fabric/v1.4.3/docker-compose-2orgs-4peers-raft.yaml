@@ -1,0 +1,76 @@
+# https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
+# This compose file will start a Hyperledger Fabric 1.0 MVE, including
+# * 2 ca (not in use now)
+# * 1 orderer
+# * 4 peers in 2 orgs
+# * cli for testing
+
+version: '2.0'
+
+services:
+# ca.org1.example.com:
+#   extends:
+#     file: base-raft.yaml
+#     service: ca.org1.example.com
+
+# ca.org2.example.com:
+#   extends:
+#     file: base-raft.yaml
+#     service: ca.org2.example.com
+
+  cli:
+    extends:
+      file: base-raft.yaml
+      service: cli
+
+  orderer0.example.com:  # There can be multiple orderers
+    extends:
+      file: base-raft.yaml
+      service: orderer0.example.com
+
+  orderer1.example.com:  # There can be multiple orderers
+    extends:
+      file: base-raft.yaml
+      service: orderer1.example.com
+
+  orderer2.example.com:  # There can be multiple orderers
+    extends:
+      file: base-raft.yaml
+      service: orderer2.example.com
+
+  peer0.org1.example.com:
+    extends:
+      file: base-raft.yaml
+      service: peer0.org1.example.com
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+
+  peer1.org1.example.com:
+    extends:
+      file: base-raft.yaml
+      service: peer1.org1.example.com
+    depends_on:
+    - orderer0.example.com
+    - orderer1.example.com
+
+  peer0.org2.example.com:
+    extends:
+      file: base-raft.yaml
+      service: peer0.org2.example.com
+    depends_on:
+    - orderer0.example.com
+    - orderer1.example.com
+
+  peer1.org2.example.com:
+    extends:
+      file: base-raft.yaml
+      service: peer1.org2.example.com
+    depends_on:
+    - orderer0.example.com
+    - orderer1.example.com
+
+#networks:
+#  default:
+#    external:
+#      name: hyperledger_fabric
