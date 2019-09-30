@@ -57,7 +57,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make update_anchors
 
-	make cc_test # test_cc_install test_cc_approve test_cc_queryapprove test_cc_commit test_cc_querycommit test_cc_invoke_query
+	make cc_test # test_cc_install test_cc_approveformyorg test_cc_checkcommitreadiness test_cc_commit test_cc_querycommitted test_cc_invoke_query
 
 	# make test_lscc # test lscc operations, in v2.0, legacy lscc won't work
 	make test_qscc # test qscc operations
@@ -84,7 +84,7 @@ ready: # create/join channel, install/instantiate cc
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 # chaincode related operations
-cc_test: test_cc_install test_cc_approve test_cc_queryapprove test_cc_commit test_cc_querycommit test_cc_invoke_query
+cc_test: test_cc_install test_cc_approveformyorg test_cc_checkcommitreadiness test_cc_commit test_cc_querycommitted test_cc_invoke_query
 
 restart: stop start
 
@@ -147,21 +147,25 @@ test_cc_install: # Install the chaincode
 	@echo "Install chaincode to all peers"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_install.sh"
 
-test_cc_approve: # Approve the chaincode definition
-	@echo "Approve the chaincode by all orgs"
-	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_approve.sh"
+test_cc_queryinstalled: # Query the installed chaincodes
+	@echo "Query the installed chaincode"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_queryinstalled.sh"
 
-test_cc_queryapprove: # Query the approval status of chaincode
+test_cc_approveformyorg: # Approve the chaincode definition
+	@echo "Approve the chaincode by all orgs"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_approveformyorg.sh"
+
+test_cc_checkcommitreadiness: # Query the approval status of chaincode
 	@echo "Query the chaincode approval status by all orgs"
-	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_queryapprove.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_checkcommitreadiness.sh"
 
 test_cc_commit: # Commit the chaincode definition
 	@echo "Commit the chaincode by any org"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_commit.sh"
 
-test_cc_querycommit: # Query the commit status of the chaincode definition
+test_cc_querycommitted: # Query the commit status of the chaincode definition
 	@echo "Query the commit status of chaincode"
-	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_querycommit.sh"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_querycommitted.sh"
 
 test_cc_instantiate: # Instantiate the chaincode
 	@echo "Instantiate chaincode on the fabric network"

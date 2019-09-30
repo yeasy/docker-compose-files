@@ -68,6 +68,9 @@ setEnvs () {
 	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
 
 	#env |grep CORE
+	export FABRIC_LOGGING_SPEC="INFO"
+	#export GOCACHE=/root/.cache/go-build
+	#go get
 }
 
 # Internal func called by channelCreate
@@ -341,9 +344,8 @@ channelUpdate() {
 	sleep 2
 }
 
-# Install chaincode on the peer node
-# In v2.x it will package, install and approve
-# chaincodeInstall peer cc_name version path
+# Package and Install chaincode on the peer node
+# chaincodeInstall org peer peer_url peer_tls cc_name version path
 chaincodeInstall () {
 	if [ "$#" -ne 7 ]; then
 		echo_r "Wrong param number for chaincode install"
@@ -364,16 +366,23 @@ chaincodeInstall () {
 	echo "packaging chaincode into tar.gz package"
 	local label=${name}
 	#local label=${name}_${version}
+
+	echo "packaging chaincode ${name} with path ${path} and label ${label}"
+	set -x
 	peer lifecycle chaincode package ${name}.tar.gz \
-        --path ${path} \
-        --lang golang \
-        --label ${label}
+    --path ${path} \
+    --lang golang \
+    --label ${label}
+  set +x
+
+	rc=$?
+	[ $rc -ne 0 ] && echo "Error in packaging chaincode ${name}" && exit -1
 
 	echo "installing chaincode to peer${peer}/org${org}"
 	peer lifecycle chaincode install \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
-        ${name}.tar.gz | tee >&log.txt
+    ${name}.tar.gz | tee >&log.txt
 
 	# v1.x action
 	#peer chaincode install \
@@ -387,9 +396,34 @@ chaincodeInstall () {
 	echo "=== Chaincode is installed on org ${org}/peer $peer === "
 }
 
+# Query the installed chaincode
+# chaincodeQueryCommitted org peer peer_url peer_tls_root_cert
+chaincodeQueryInstalled () {
+	if [ "$#" -ne 4 ]; then
+		echo_r "Wrong param number for chaincode query installed"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+
+	setEnvs $org $peer
+
+	echo "Query the installed chaincode on peer $peer at $peer_url "
+	peer lifecycle chaincode queryinstalled \
+			--peerAddresses ${peer_url} \
+      --tlsRootCertFiles ${peer_tls_root_cert} \
+			--connTimeout "3s"
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
+	verifyResult $rc "ChaincodeQueryInstalled Failed: org ${org}/peer$peer"
+}
+
 # Approve the chaincode definition
-# chaincodeApprove channel org peer peer_url peer_tls_root_cert orderer_url orderer_tls_rootcert channel name version
-chaincodeApprove () {
+# chaincodeApproveForMyOrg channel org peer peer_url peer_tls_root_cert orderer_url orderer_tls_rootcert channel name version
+chaincodeApproveForMyOrg () {
 	if [ "$#" -ne 9 -a "$#" -ne 11 ]; then
 		echo_r "Wrong param number for chaincode approve"
 		exit -1
@@ -431,7 +465,7 @@ chaincodeApprove () {
 			--name ${name} \
 			--version ${version} \
 			--init-required \
-            --package-id ${package_id} \
+      --package-id ${package_id} \
 			--sequence 1 \
 			--signature-policy "${policy}" \
 			--waitForEvent \
@@ -460,8 +494,8 @@ chaincodeApprove () {
 }
 
 # Query the Approve the chaincode definition
-# chaincodeQueryApprove channel org peer name version
-chaincodeQueryApprove () {
+# chaincodeCheckCommitReadiness channel org peer name version
+chaincodeCheckCommitReadiness () {
 	if [ "$#" -ne 7 ]; then
 		echo_r "Wrong param number for chaincode queryapproval"
 		exit -1
@@ -477,7 +511,7 @@ chaincodeQueryApprove () {
 	setEnvs $org $peer
 
 	echo "Query the approval status of the  chaincode $name $version"
-	peer lifecycle chaincode queryapprovalstatus \
+	peer lifecycle chaincode checkcommitreadiness \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
 		--channelID ${channel} \
@@ -562,8 +596,8 @@ chaincodeCommit () {
 }
 
 # Query the Commit the chaincode definition
-# chaincodeQueryCommit channel org peer name version
-chaincodeQueryCommit () {
+# chaincodeQueryCommitted org peer peer_url peer_tls_root_cert channel cc_name
+chaincodeQueryCommitted () {
 	if [ "$#" -ne 6 ]; then
 		echo_r "Wrong param number for chaincode querycommit"
 		exit -1
@@ -580,7 +614,7 @@ chaincodeQueryCommit () {
 	echo "Query the committed status of chaincode $name with ${ORG1_PEER0_URL} "
 	peer lifecycle chaincode querycommitted \
 			--peerAddresses ${peer_url} \
-            --tlsRootCertFiles ${peer_tls_root_cert} \
+      --tlsRootCertFiles ${peer_tls_root_cert} \
 			--channelID ${channel} \
 			--name ${name}
 	rc=$?

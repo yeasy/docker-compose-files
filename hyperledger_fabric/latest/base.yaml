@@ -102,7 +102,7 @@ services:
       - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
       - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
 
   prometheus: # prometheus will pull metrics from fabric

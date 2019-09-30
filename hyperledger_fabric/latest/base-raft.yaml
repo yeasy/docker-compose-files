@@ -195,4 +195,5 @@ services:
         - ./crypto-config:/etc/hyperledger/fabric/crypto-config
         - ./raft/channel-artifacts:/tmp/channel-artifacts
         - ./raft/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./examples:/opt/gopath/src/examples
+        - ./examples:/go/src/examples
+       #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
