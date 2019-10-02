@@ -368,21 +368,13 @@ chaincodeInstall () {
 	#local label=${name}_${version}
 
 	echo "packaging chaincode ${name} with path ${path} and label ${label}"
-	set -x
 	peer lifecycle chaincode package ${name}.tar.gz \
     --path ${path} \
     --lang golang \
     --label ${label}
-  set +x
 
 	rc=$?
 	[ $rc -ne 0 ] && echo "Error in packaging chaincode ${name}" && exit -1
-
-	echo "installing chaincode to peer${peer}/org${org}"
-	peer lifecycle chaincode install \
-		--peerAddresses ${peer_url} \
-		--tlsRootCertFiles ${peer_tls_root_cert} \
-    ${name}.tar.gz | tee >&log.txt
 
 	# v1.x action
 	#peer chaincode install \
@@ -390,8 +382,15 @@ chaincodeInstall () {
 	#	-v $version \
 	#	-p ${path} \
 	#	>&log.txt
+
+	echo "installing chaincode to peer${peer}/org${org}"
+	peer lifecycle chaincode install \
+		--peerAddresses ${peer_url} \
+		--tlsRootCertFiles ${peer_tls_root_cert} \
+    ${name}.tar.gz | tee >&log.txt
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
+
 	verifyResult $rc "Chaincode installation on remote org ${org}/peer$peer has Failed"
 	echo "=== Chaincode is installed on org ${org}/peer $peer === "
 }

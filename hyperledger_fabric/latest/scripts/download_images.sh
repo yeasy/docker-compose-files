@@ -22,14 +22,18 @@ else
 	exit 1
 fi
 
+# pull_image image_name <true|false (default)>
 pull_image() {
 	IMG=$1
-	#if [ -z "$(docker images -q ${IMG} 2> /dev/null)" ]; then  # not exist
-	#	docker pull ${IMG}
-	#else
- 	# echo "${IMG} already exist locally"
-	#fi
-	docker pull ${IMG}
+	FORCED="false"
+	if [ "$#" -eq 2 ]; then
+    FORCED=$2
+	fi
+	if [ ! -z "$(docker images -q ${IMG} 2> /dev/null)" ] && [ "$FORCED" != "true" ]; then  # existed and not forced to update
+ 	 echo "${IMG} already exists and not forced to update "
+	else
+		docker pull ${IMG}
+	fi
 }
 
 echo "Downloading images from DockerHub... need a while"
@@ -37,7 +41,7 @@ echo "Downloading images from DockerHub... need a while"
 # TODO: we may need some checking on pulling result?
 echo "=== Pulling yeasy/hyperledger-fabric-* images with tag ${FABRIC_IMG_TAG}... ==="
 for IMG in base peer orderer ca; do
-	pull_image yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG &
+	pull_image "yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG" "true" &
 done
 
 pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG
@@ -49,6 +53,8 @@ for IMG in peer orderer ca ccenv tools baseos javaenv nodeenv; do
 done
 
 # core.yaml requires a PROJECT_VERSION tag, only need when testing latest code
+# docker hub does not have a fabric-ccenv:2.0.0 image yet, but the chaincode installation will use it.
+# Hence we need to build the image locally and tag it manually
 docker tag hyperledger/fabric-ccenv:$FABRIC_IMG_TAG hyperledger/fabric-ccenv:${PROJECT_VERSION}
 
 echo "=== Pulling base/3rd-party images with tag ${BASE_IMG_TAG} from fabric repo... ==="
