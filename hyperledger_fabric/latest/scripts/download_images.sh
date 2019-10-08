@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # peer/orderer/ca/ccenv/tools/javaenv/baseos: 1.4, 1.4.0, 1.4.1, 2.0.0, latest
-# baseimage (runtime for golang chaincode)/couchdb: 0.4.15, latest
+# baseimage (runtime for golang chaincode) and couchdb: 0.4.16, latest
 # Noted:
 # * the fabric-baseos 1.4/2.0 tags are not available at dockerhub yet, only latest/0.4.15 now
 # * the fabric-nodeenv is not available at dockerhub yet
@@ -52,22 +52,20 @@ for IMG in peer orderer ca ccenv tools baseos javaenv nodeenv; do
 	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG &
 done
 
-# core.yaml requires a PROJECT_VERSION tag, only need when testing latest code
-# docker hub does not have a fabric-ccenv:2.0.0 image yet, but the chaincode installation will use it.
-# Hence we need to build the image locally and tag it manually
-docker tag hyperledger/fabric-ccenv:$FABRIC_IMG_TAG hyperledger/fabric-ccenv:${PROJECT_VERSION}
-
 echo "=== Pulling base/3rd-party images with tag ${BASE_IMG_TAG} from fabric repo... ==="
 for IMG in baseimage couchdb kafka zookeeper; do
 	pull_image hyperledger/fabric-${IMG}:$BASE_IMG_TAG &
 done
 
+# core.yaml requires a PROJECT_VERSION tag, only need when testing latest code
+# docker hub does not have a fabric-ccenv:2.0.0 image yet, but the chaincode installation will use it.
+# Hence we need to build the image locally and tag it manually
+docker tag hyperledger/fabric-ccenv:$FABRIC_IMG_TAG hyperledger/fabric-ccenv:${PROJECT_VERSION}
+
 pull_image hyperledger/fabric-javaenv:latest # core.yaml requires a latest tag
-# core.yaml requires a latest tag, but nodeenv is not available in docker hub yet
-# pull_image hyperledger/fabric-nodeenv:latest
-pull_image hyperledger/fabric-baseos:latest # fabric-baseos does not have 1.4/2.0 tag yet, but core.yaml requires a PROJECT_VERSION tag
-docker tag hyperledger/fabric-baseos:latest hyperledger/fabric-baseos:${PROJECT_VERSION}
+
+# fabric-baseos does not have 1.4 tag yet, but core.yaml requires a PROJECT_VERSION tag for golang run time
+docker tag hyperledger/fabric-baseos:$FABRIC_IMG_TAG hyperledger/fabric-baseos:${PROJECT_VERSION}
 
 echo "Image pulling done, now can startup the network using make start..."
-
 exit 0

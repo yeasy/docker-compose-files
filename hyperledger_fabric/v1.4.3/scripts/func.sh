@@ -343,9 +343,9 @@ channelUpdate() {
 
 # Install chaincode on the peer node
 # In v2.x it will package, install and approve
-# chaincodeInstall peer cc_name version path
+# chaincodeInstall peer cc_name version path [lang]
 chaincodeInstall () {
-	if [ "$#" -ne 7 ]; then
+	if [ "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode install"
 		exit -1
 	fi
@@ -356,6 +356,10 @@ chaincodeInstall () {
 	local name=$5
 	local version=$6
 	local path=$7
+	local lang="golang"
+	if [ "$#" -eq 8 ]; then
+    local lang=$8
+  fi
 
 	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
 	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
@@ -365,6 +369,7 @@ chaincodeInstall () {
 		-n ${name} \
 		-v $version \
 		-p ${path} \
+		-l ${lang} \
 		>&log.txt
 
 	rc=$?
@@ -566,7 +571,7 @@ chaincodeQueryCommit () {
 	echo "Query the committed status of chaincode $name with ${ORG1_PEER0_URL} "
 	peer lifecycle chaincode querycommitted \
 			--peerAddresses ${peer_url} \
-            --tlsRootCertFiles ${peer_tls_root_cert} \
+      --tlsRootCertFiles ${peer_tls_root_cert} \
 			--channelID ${channel} \
 			--name ${name}
 	rc=$?

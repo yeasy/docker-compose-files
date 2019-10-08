@@ -5,7 +5,7 @@
 ARCH=amd64
 
 # for the base images, including baseimage, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.15
+BASE_IMG_TAG=0.4.16
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest

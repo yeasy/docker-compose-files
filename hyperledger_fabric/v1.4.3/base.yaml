@@ -80,8 +80,10 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      - CORE_CHIANCODE_LOGGING_LEVEL=DEBUG
-      - CORE_CHIANCODE_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_CHIANCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_IMG_TAG}
+      - CORE_CHIANCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:${FABRIC_IMG_TAG}
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     volumes:
       #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     # docker.sock is mapped as the default CORE_VM_ENDPOINT
