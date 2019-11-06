@@ -24,7 +24,6 @@ Fabric Release | Description
 [Fabric v1.0.0](v1.0.0/) | fabric v1.0.0 release.
 [Fabric v0.6.0](v0.6.0/) | fabric v0.6.0 release (too old, not recommend to use).
 
-
 ## Getting Started
 
 ### TLDR
@@ -37,7 +36,7 @@ $ export RELEASE=v1.4.3
 $ cd ${RELEASE}; make setup test
 ```
 
-More details are releaved below.
+More details are as below.
 
 ### Pick up a fabric version
 

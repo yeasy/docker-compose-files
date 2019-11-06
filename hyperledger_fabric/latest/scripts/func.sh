@@ -420,6 +420,40 @@ chaincodeQueryInstalled () {
 	verifyResult $rc "ChaincodeQueryInstalled Failed: org ${org}/peer$peer"
 }
 
+# Get the installed chaincode packages
+# chaincodeGetCommitted org peer peer_url peer_tls_root_cert cc_name
+chaincodeGetInstalled () {
+	if [ "$#" -ne 5 ]; then
+		echo_r "Wrong param number for chaincode get installed"
+		exit -1
+	fi
+	local org=$1
+	local peer=$2
+	local peer_url=$3
+	local peer_tls_root_cert=$4
+	local cc_name=$5
+
+	setEnvs $org $peer
+	echo "querying installed chaincode and get its package id"
+	peer lifecycle chaincode queryinstalled >&query.log
+	local label=${cc_name}
+	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
+	package_id=$(grep -o "${label}:[a-z0-9]*" query.log)
+
+	echo "Get the installed chaincode package with id= ${package_id} on peer $peer at $peer_url "
+	peer lifecycle chaincode getinstalledpackage \
+			--peerAddresses ${peer_url} \
+      --tlsRootCertFiles ${peer_tls_root_cert} \
+      --package-id ${package_id} \
+      --output-directory ./ \
+			--connTimeout "3s"
+	rc=$?
+	[ $rc -ne 0 ] && cat log.txt
+	cat log.txt
+	verifyResult $rc "ChaincodeGetInstalled Failed: org ${org}/peer$peer"
+}
+
+
 # Approve the chaincode definition
 # chaincodeApproveForMyOrg channel org peer peer_url peer_tls_root_cert orderer_url orderer_tls_rootcert channel name version
 chaincodeApproveForMyOrg () {
@@ -709,7 +743,7 @@ chaincodeInit () {
 			--channelID ${channel} \
 			--name ${name} \
 			--peerAddresses ${peer_url} \
-            --tlsRootCertFiles ${peer_org_tlsca} \
+      --tlsRootCertFiles ${peer_org_tlsca} \
 			--isInit \
 			-c ${args} \
 			>&log.txt
@@ -719,7 +753,7 @@ chaincodeInit () {
 			--channelID ${channel} \
 			--name ${name} \
 			--peerAddresses ${peer_url} \
-            --tlsRootCertFiles ${peer_org_tlsca} \
+      --tlsRootCertFiles ${peer_org_tlsca} \
 			--isInit \
 			-c ${args} \
 			--tls \

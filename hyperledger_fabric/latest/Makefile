@@ -84,7 +84,7 @@ ready: # create/join channel, install/instantiate cc
 channel_test: test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 # chaincode related operations
-cc_test: test_cc_install test_cc_approveformyorg test_cc_checkcommitreadiness test_cc_commit test_cc_querycommitted test_cc_invoke_query
+cc_test: test_cc_install test_cc_queryinstalled test_cc_approveformyorg test_cc_checkcommitreadiness test_cc_commit test_cc_querycommitted test_cc_invoke_query
 
 restart: stop start
 
@@ -150,6 +150,10 @@ test_cc_install: # Install the chaincode
 test_cc_queryinstalled: # Query the installed chaincodes
 	@echo "Query the installed chaincode"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_queryinstalled.sh"
+
+test_cc_getinstalled: # Get the installed chaincodes package
+	@echo "Get the installed chaincode package"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_cc_getinstalled.sh"
 
 test_cc_approveformyorg: # Approve the chaincode definition
 	@echo "Approve the chaincode by all orgs"

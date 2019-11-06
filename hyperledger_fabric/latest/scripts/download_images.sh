@@ -62,6 +62,8 @@ done
 # Hence we need to build the image locally and tag it manually
 docker tag hyperledger/fabric-ccenv:$FABRIC_IMG_TAG hyperledger/fabric-ccenv:${PROJECT_VERSION}
 
+echo "Sometimes if there's no available hyperledger/fabric-ccenv, then just retag the yeasy/hyperledger-fabric-base image to it"
+
 pull_image hyperledger/fabric-javaenv:latest # core.yaml requires a latest tag
 
 # fabric-baseos does not have 1.4 tag yet, but core.yaml requires a PROJECT_VERSION tag for golang run time
