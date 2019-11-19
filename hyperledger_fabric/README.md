@@ -2,7 +2,7 @@
 
 This project provides several useful Docker-Compose script to help quickly bootup a Hyperledger Fabric network, and do simple testing with deploy, invoke and query transactions.
 
-Currently we support Hyperledger Fabric all releases from v0.6 to latest v1.x.
+Currently we support Hyperledger Fabric all releases from v0.6.0 to latest.
 
 If you're not familiar with Docker and Blockchain, can have a look at these books (in CN):
 
@@ -14,6 +14,7 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest/) | latest fabric code, unstable.
+[Fabric v1.4.4](v1.4.4/) | stable fabric 1.4.4 release.
 [Fabric v1.4.3](v1.4.3/) | stable fabric 1.4.3 release.
 [Fabric v1.4.2](v1.4.2/) | stable fabric 1.4.2 release.
 [Fabric v1.4.0](v1.4.0/) | stable fabric 1.4.0 release.
@@ -29,7 +30,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v1.4.3
+$ export RELEASE=v1.4.4
 ```
 
 ```bash
