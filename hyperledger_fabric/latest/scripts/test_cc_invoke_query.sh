@@ -37,7 +37,7 @@ echo_b "Send invoke transaction on org2/peer1..."
 chaincodeInvoke 2 1 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER0_URL}" ${ORDERER0_TLS_ROOTCERT} ${CC_NAME} ${CC_INVOKE_ARGS}
 
 #Query on chaincode on Peer1/Org2, check if the result is 80
-echo_b "Query chaincode on org1/peer0 4peers..."
+echo_b "Query chaincode on org1/peer0..."
 chaincodeQuery 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} ${CC_NAME} ${CC_QUERY_ARGS} 80
 
 echo_g "=== Chaincode invoke/query done ==="
