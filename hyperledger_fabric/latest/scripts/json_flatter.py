@@ -20,7 +20,7 @@ def decode_if_b64(raw):
 	except binascii.Error:
 		success = False
 
-	if success:  # result_bytes = b'xxxx\xx'
+	if success and False:  # result_bytes = b'xxxx\xx'
 		print('===================Start==================================')
 		print(raw)
 		print(result)
@@ -44,7 +44,7 @@ def check_tree(tree, prefix, f_write):
 			else:  # leaf
 				result = v
 				if 'cert' in k or 'id_bytes' in k or 'value' in k and 'hash' not in k:
-					print(prefix_path)
+					# print(prefix_path)
 					success, result = decode_if_b64(v)
 					if success:
 						result = "b64({})".format(result)
@@ -59,7 +59,7 @@ def check_tree(tree, prefix, f_write):
 				if 'metadata' not in prefix_path:
 					success, result = decode_if_b64(v)
 					if success:
-						print(prefix_path)
+						# print(prefix_path)
 						result = "b64({})".format(result)
 				f_write.write("{}={}\n".format(prefix_path, result))
 	else:  # json only allow dict or list structure
