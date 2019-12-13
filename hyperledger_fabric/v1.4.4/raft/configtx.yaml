@@ -489,7 +489,7 @@ Orderer: &OrdererDefaults
         # replicated under the Orderer.Addresses key above.
         Consenters:
             - Host: orderer0.example.com
-              Port: 7050
+              Port: 7055
               ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/server.crt
               ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/server.crt
             - Host: orderer1.example.com

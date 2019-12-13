@@ -25,6 +25,7 @@ OrdererOrgs:
       - Hostname: orderer0
       - Hostname: orderer1
       - Hostname: orderer2
+      - Hostname: orderer3
 # ---------------------------------------------------------------------------
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
@@ -88,6 +89,18 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Org2
     Domain: org2.example.com
+    EnableNodeOUs: true
+    CA:
+        Country: US
+        Province: California
+        Locality: San Francisco
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Org3
+    Domain: org3.example.com
     EnableNodeOUs: true
     CA:
         Country: US
