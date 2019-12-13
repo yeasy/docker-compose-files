@@ -42,8 +42,6 @@ test:
 
 ready: # create/join channel, install/instantiate cc
 	make stop
-	@echo "Make sure the local hlf_net docker bridge exists"
-	docker network ls|grep hlf_net > /dev/null || docker network create hlf_net
 
 	# make clean_config_channel # Remove existing channel artifacts
 	make gen_config_crypto  # Will ignore if local config path exists
@@ -91,6 +89,8 @@ restart: stop start
 start: # bootup the fabric network
 	@echo "Start a fabric network with ${COMPOSE_FILE}..."
 	@make clean
+	@echo "Make sure the local hlf_net docker bridge exists"
+	docker network ls|grep hlf_net > /dev/null || docker network create hlf_net
 	@docker-compose -f ${COMPOSE_FILE} up -d  # Start a fabric network
 
 stop: # stop the fabric network
