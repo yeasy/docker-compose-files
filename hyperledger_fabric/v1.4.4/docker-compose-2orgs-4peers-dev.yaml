@@ -1,5 +1,6 @@
 # https://github.com/yeasy/docker-compose-files/tree/master/hyperledger
-# This compose file will start a Hyperledger Fabric 1.4 MVE, including
+# This compose file will start a Hyperledger Fabric 1.4 in dev mode, including
+# It will map the $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric on peer0
 # * 2 ca (not in use now)
 # * 3 orderers
 # * 4 peers in 2 orgs
@@ -42,10 +43,13 @@ services:
     extends:
       file: base-raft.yaml
       service: peer0.org1.example.com
+    volumes:
+      - $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
     depends_on:
       - orderer0.example.com
       - orderer1.example.com
       - orderer2.example.com
+    command: /go/src/github.com/hyperledger/fabric/peer/peer node start
 
   peer1.org1.example.com:
     extends:

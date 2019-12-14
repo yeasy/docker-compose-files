@@ -6,7 +6,7 @@
 # support advanced bash grammar
 SHELL:=/bin/bash
 
-# mode of the network: solo, kafka
+# mode of the network: solo, kafka, raft, dev
 HLF_MODE ?= raft
 
 # mode of db: golevel, couchdb
@@ -14,7 +14,7 @@ DB_MODE ?= golevel
 
 NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
-COMPOSE_FILE ?= "docker-compose-2orgs-4peers-solo.yaml"
+COMPOSE_FILE ?= "docker-compose-2orgs-4peers-raft.yaml"
 
 LOG_PATH ?= solo/logs
 
