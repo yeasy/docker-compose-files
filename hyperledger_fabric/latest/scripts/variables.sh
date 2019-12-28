@@ -2,10 +2,10 @@
 # Before running `make`, config this files
 # Define some global variables for usage. Will be included by func.sh.
 
-ARCH=amd64
+# ARCH=amd64
 
 # for the base images, including baseimage, couchdb, kafka, zookeeper
-BASE_IMG_TAG=0.4.16
+BASE_IMG_TAG=0.4.18
 
 # For fabric images, including peer, orderer, ca
 FABRIC_IMG_TAG=latest

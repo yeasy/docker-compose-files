@@ -62,13 +62,12 @@ services:
       - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_GENERAL_CLUSTER_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_CLUSTER_LISTENPORT=7055
+      - ORDERER_GENERAL_CLUSTER_LISTENPORT=7050
       - ORDERER_GENERAL_CLUSTER_SERVERCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_CLUSTER_SERVERPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
-    #- ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/var/hyperledger/orderer/tls1
     - ./raft/channel-artifacts/orderer0.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     command: orderer start
 
@@ -204,3 +203,4 @@ services:
         - ./raft/channel-artifacts:/tmp/channel-artifacts
         - ./raft/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./examples:/go/src/examples
+       #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric

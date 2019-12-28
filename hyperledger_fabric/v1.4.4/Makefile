@@ -63,7 +63,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make update_anchors
 
-	make cc_test # test_cc_install test_cc_approve test_cc_queryapprove test_cc_commit test_cc_querycommit test_cc_invoke_query
+	make cc_test # test_cc_install test_cc_instantiate test_cc_invoke_query
 
 	make test_lscc # test lscc operations
 	make test_qscc # test qscc operations

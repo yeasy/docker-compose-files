@@ -86,11 +86,12 @@ services:
       - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
     volumes:
      #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
-      # docker.sock is mapped as the default CORE_VM_ENDPOINT
+     # docker.sock is mapped as the default CORE_VM_ENDPOINT
       - /var/run/docker.sock:/var/run/docker.sock
     expose:
       - "7051"  # gRPC
       - "9443"  # Operation REST
+    #command: bash -c 'bash /tmp/peer_build.sh; peer node start'
     command: peer node start
 
   cli-base:

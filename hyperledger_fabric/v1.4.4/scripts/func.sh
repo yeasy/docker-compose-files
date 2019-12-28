@@ -553,8 +553,8 @@ chaincodeCommit () {
 }
 
 # Query the Commit the chaincode definition
-# chaincodeQueryCommit channel org peer name version
-chaincodeQueryCommit () {
+# chaincodeQueryCommitted org peer peer_url peer_tls_root_cert channel cc_name
+chaincodeQueryCommitted () {
 	if [ "$#" -ne 6 ]; then
 		echo_r "Wrong param number for chaincode querycommit"
 		exit -1
