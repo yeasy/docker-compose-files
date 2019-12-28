@@ -6,11 +6,14 @@
 # support advanced bash grammar
 SHELL:=/bin/bash
 
-# mode of the network: solo, kafka, raft, dev
+# mode of the network: solo, kafka, raft
 HLF_MODE ?= raft
 
 # mode of db: golevel, couchdb
 DB_MODE ?= golevel
+
+# mode of dev
+DEV_MODE ?= non-dev
 
 NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
@@ -25,10 +28,15 @@ else ifeq ($(HLF_MODE),raft)
 endif
 
 COMPOSE_FILE="docker-compose-2orgs-4peers-$(HLF_MODE).yaml"
+
 LOG_PATH=$(HLF_MODE)/logs
 
 ifeq ($(DB_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
+endif
+
+ifeq ($(DEV_MODE),dev)
+	COMPOSE_FILE="docker-compose-2orgs-4peers-dev.yaml"
 endif
 
 all: test

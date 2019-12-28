@@ -107,6 +107,10 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
+        OrdererEndpoints:
+            - "orderer0.example.com:7050"
+            - "orderer1.example.com:7050"
+            - "orderer2.example.com:7050"
 
     - &Org1
         # Name is the key by which this org will be referenced in channel
