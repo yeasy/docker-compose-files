@@ -40,7 +40,7 @@ sleep 1
 
 echo_b "Convert all block files into json"
 for block_file in *.block; do
-	[ -f ${block_file}.json ] || configtxlatorDecode "common.Block" ${block_file} ${block_file}.json
+	configtxlatorDecode "common.Block" ${block_file} ${block_file}.json
 	decode_result=$?
 	#echo_b "Parse payload..."
 	#[ ${decode_result} -eq 0 ] && jq "$PAYLOAD_PATH" ${block_file}.json > ${block_file}_payload.json
