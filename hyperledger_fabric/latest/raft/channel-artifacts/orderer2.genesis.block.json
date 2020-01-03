@@ -480,6 +480,17 @@
 													}
 												},
 												"values": {
+													"Endpoints": {
+														"mod_policy": "Admins",
+														"value": {
+															"addresses": [
+																"orderer0.example.com:7050",
+																"orderer1.example.com:7050",
+																"orderer2.example.com:7050"
+															]
+														},
+														"version": "0"
+													},
 													"MSP": {
 														"mod_policy": "Admins",
 														"value": {
@@ -715,15 +726,15 @@
 							"channel_id": "testchainid",
 							"epoch": "0",
 							"extension": null,
-							"timestamp": "2019-06-17T06:49:30Z",
+							"timestamp": "2020-01-03T18:03:42Z",
 							"tls_cert_hash": null,
-							"tx_id": "7171041669af9d82246551b457075d91693e646d1d3c05462bb25dbe3a6d2368",
+							"tx_id": "fe0497f6cb88179e586986bfa5a75b1016b7b9aaf66d993fd81ac576a13bd45f",
 							"type": 1,
 							"version": 1
 						},
 						"signature_header": {
 							"creator": null,
-							"nonce": "st97NtXEkrs2YS2FOHUgDHbz3xcVAnZv"
+							"nonce": "+Zcc3NPvAe4xtf/EbZCf9/ElkYgOJAfR"
 						}
 					}
 				},
@@ -732,12 +743,13 @@
 		]
 	},
 	"header": {
-		"data_hash": "GrFLrIpOH+ZXAVrgs0/VePZnWAYo8bW0vamnHFuyp2k=",
+		"data_hash": "ra0VsaluHYyo3zAf9ULpGjNKbbvU1gQEkth748T5snw=",
 		"number": "0",
 		"previous_hash": null
 	},
 	"metadata": {
 		"metadata": [
+			"",
 			"",
 			"",
 			"",

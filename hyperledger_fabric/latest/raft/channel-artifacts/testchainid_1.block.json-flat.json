@@ -186,6 +186,11 @@
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.policy.value.rule.n_out_of.rules[0].signed_by=0
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.policy.value.version=0
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.version=0
+.data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.mod_policy=Admins
+.data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[0]=orderer0.example.com:7050
+.data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[1]=orderer1.example.com:7050
+.data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[2]=orderer2.example.com:7050
+.data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.version=0
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.mod_policy=Admins
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.admins[0]=b64(b'-----BEGIN CERTIFICATE-----\nMIICCjCCAbCgAwIBAgIQVaz8CY8+C4fKtB+rLOMCuDAKBggqhkjOPQQDAjBpMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEUMBIGA1UEChMLZXhhbXBsZS5jb20xFzAVBgNVBAMTDmNhLmV4YW1w\nbGUuY29tMB4XDTE5MDQwMTA4MTQwMFoXDTI5MDMyOTA4MTQwMFowVjELMAkGA1UE\nBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFuY2lz\nY28xGjAYBgNVBAMMEUFkbWluQGV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZI\nzj0DAQcDQgAEYEHkInlF+yn6yVHiOkjLryK9dd9HEXW31MZzCa84SKfHNtmSU1Tn\nJg48m//QUW2WCWFOqIEGELrtmF9f0jQRk6NNMEswDgYDVR0PAQH/BAQDAgeAMAwG\nA1UdEwEB/wQCMAAwKwYDVR0jBCQwIoAgx3rdL1G827LZe+3oRxijy6RePZThb7gW\ntUIkL9yCeY4wCgYIKoZIzj0EAwIDSAAwRQIhAKjgnLR1ky2/tgPEn0I/XaneJAZa\n0n+W9gm6jI1K/ZECAiBafLWNfisjXlV8Q0rpcqF/FJu6IOAHLIaI1lIqn4Hswg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.crypto_config.identity_identifier_hash_function=SHA256
@@ -359,50 +364,50 @@
 .data.data[0].payload.data.payload.data.last_update.payload.data.config_update.write_set.values.Consortium.value.name=SampleConsortium
 .data.data[0].payload.data.payload.data.last_update.payload.data.config_update.write_set.values.Consortium.version=0
 .data.data[0].payload.data.payload.data.last_update.payload.data.config_update.write_set.version=0
-.data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature=MEUCIQCnwcRgN9iICdvoG8R+QIl1ktoFLccsGbkRROY/UcDg4AIgMbcT3Hvnyg4zno5kgvFqxHm72O0oTTuN42lcV8aMV1Y=
+.data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature=MEQCICVGpFn1Ob9bvc4v+fkHTqZ7m0tZIcIvP6fVpd1iQ2DjAiAu322aR+PEDSrDIORe+MCm/1jb7IHcKT918L8+dJDufA==
 .data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKzCCAdGgAwIBAgIRAKixOXktoa5d3yJ827u6nEwwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMTkwNDAxMDgxNDAwWhcNMjkwMzI5MDgxNDAw\nWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEPMA0GA1UECxMGY2xpZW50MR8wHQYDVQQDDBZBZG1pbkBv\ncmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoDsQsd/e\ngesGCg8BWqWyhKQzt9OqJHTP5A3FlqQNzyXrHyLoN4nNBcvnjHFyWrj4LnQ/+NNZ\nl85p25lq+9VqmKNNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYD\nVR0jBCQwIoAga7tLPDZWsxCrvOoeklCzGPgl/ar7aQ5NyyB/5ctC+NgwCgYIKoZI\nzj0EAwIDSAAwRQIhAJm1Dj9mLiBn0TNQByw7Beji/XxWeS5npWnoCU0m7cY5AiBF\n1j899h/sKmIEV2v4xT8Rz6cM/c55/HRLDgrpjhNtVg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature_header.nonce=Xnfe+RbYc0Ax73xPh4KMwopeLgEm/odb
+.data.data[0].payload.data.payload.data.last_update.payload.data.signatures[0].signature_header.nonce=TXk6tKHe4r6amlef95vrz3G26YA4JSwi
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.epoch=0
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.extension=None
-.data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.timestamp=2020-01-03T17:54:43Z
+.data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.timestamp=2020-01-03T18:04:09Z
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.tx_id=
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.type=2
 .data.data[0].payload.data.payload.data.last_update.payload.header.channel_header.version=0
 .data.data[0].payload.data.payload.data.last_update.payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKzCCAdGgAwIBAgIRAKixOXktoa5d3yJ827u6nEwwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMTkwNDAxMDgxNDAwWhcNMjkwMzI5MDgxNDAw\nWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEPMA0GA1UECxMGY2xpZW50MR8wHQYDVQQDDBZBZG1pbkBv\ncmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoDsQsd/e\ngesGCg8BWqWyhKQzt9OqJHTP5A3FlqQNzyXrHyLoN4nNBcvnjHFyWrj4LnQ/+NNZ\nl85p25lq+9VqmKNNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYD\nVR0jBCQwIoAga7tLPDZWsxCrvOoeklCzGPgl/ar7aQ5NyyB/5ctC+NgwCgYIKoZI\nzj0EAwIDSAAwRQIhAJm1Dj9mLiBn0TNQByw7Beji/XxWeS5npWnoCU0m7cY5AiBF\n1j899h/sKmIEV2v4xT8Rz6cM/c55/HRLDgrpjhNtVg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.payload.data.last_update.payload.header.signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.payload.data.last_update.payload.header.signature_header.nonce=2+B1Nba2dln3RzNEAtXSSg04V/nW/Rc+
-.data.data[0].payload.data.payload.data.last_update.signature=MEUCIQDl2LJY+sxgELrpw4xadrg26fKs01eQPVvptpU3xYXY2QIgRas6zh2Ly5W4LohHES8CgMVHkvDiEDAKPTz7E1ubT3I=
+.data.data[0].payload.data.payload.data.last_update.payload.header.signature_header.nonce=v/iCM99zb+p+DgjtO7oGqOEGkSdYm+vH
+.data.data[0].payload.data.payload.data.last_update.signature=MEQCICBLDMhvIjDbjvTsT7b5zDP5iRuJh2397/AMYkOO+7RaAiAfIYeFRa7HBHJ8yqhZM/rikjPVI6+6ZY7Es1xKYBcaUw==
 .data.data[0].payload.data.payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.data.payload.header.channel_header.epoch=0
 .data.data[0].payload.data.payload.header.channel_header.extension=None
-.data.data[0].payload.data.payload.header.channel_header.timestamp=2020-01-03T17:54:43Z
+.data.data[0].payload.data.payload.header.channel_header.timestamp=2020-01-03T18:04:09Z
 .data.data[0].payload.data.payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.data.payload.header.channel_header.tx_id=
 .data.data[0].payload.data.payload.header.channel_header.type=1
 .data.data[0].payload.data.payload.header.channel_header.version=0
 .data.data[0].payload.data.payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICDTCCAbSgAwIBAgIRAJBFFRDLz6Un7/0wLUkJdxMwCgYIKoZIzj0EAwIwaTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFDASBgNVBAoTC2V4YW1wbGUuY29tMRcwFQYDVQQDEw5jYS5leGFt\ncGxlLmNvbTAeFw0xOTA0MDEwODE0MDBaFw0yOTAzMjkwODE0MDBaMFkxCzAJBgNV\nBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNp\nc2NvMR0wGwYDVQQDExRvcmRlcmVyMC5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEG\nCCqGSM49AwEHA0IABIBMiKxn0LWoVlLv8XxbX1D46eVL6a8rpVTcdgPecq8cDptN\n4OgsaJNjp90jKFOpCPO85WKKKBvohOo+CBoZ8pGjTTBLMA4GA1UdDwEB/wQEAwIH\ngDAMBgNVHRMBAf8EAjAAMCsGA1UdIwQkMCKAIMd63S9RvNuy2Xvt6EcYo8ukXj2U\n4W+4FrVCJC/cgnmOMAoGCCqGSM49BAMCA0cAMEQCIAsGyGJ+dE4F56q8YUe0WLK6\nN+vsXRHDlRscMCB7yxXaAiAsyJGd0rtXmae9b3PV/evJNYegRQRcPwx+XxjQDBxh\nQQ==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.payload.header.signature_header.creator.mspid=OrdererMSP
-.data.data[0].payload.data.payload.header.signature_header.nonce=mjz7TgMI9Zzntwq5VLZmZd8AWytCmSbZ
-.data.data[0].payload.data.signature=MEUCIQDf6w6LdplPf8MSPc/OHP0421t7n0rxwaqdyzdKWQx+xQIgbipSPhUP2/OUf50ZvHvsPXh9KrY6v2IXX8DQi0YxZcM=
+.data.data[0].payload.data.payload.header.signature_header.nonce=LmaLYtwzKsuByTON281pRdT5OhRouA7r
+.data.data[0].payload.data.signature=MEQCIDUNmawQo/6mtPj9jZkSghoSv31qzeAF/9Oq32eW5shVAiBc0ariuoNYU5rEN9MLoGpfuYHh3uwYe4QG4xa703L0Fw==
 .data.data[0].payload.header.channel_header.channel_id=testchainid
 .data.data[0].payload.header.channel_header.epoch=0
 .data.data[0].payload.header.channel_header.extension=None
-.data.data[0].payload.header.channel_header.timestamp=2020-01-03T17:54:43Z
+.data.data[0].payload.header.channel_header.timestamp=2020-01-03T18:04:09Z
 .data.data[0].payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.header.channel_header.tx_id=
 .data.data[0].payload.header.channel_header.type=4
 .data.data[0].payload.header.channel_header.version=0
 .data.data[0].payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICDTCCAbSgAwIBAgIRAJBFFRDLz6Un7/0wLUkJdxMwCgYIKoZIzj0EAwIwaTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFDASBgNVBAoTC2V4YW1wbGUuY29tMRcwFQYDVQQDEw5jYS5leGFt\ncGxlLmNvbTAeFw0xOTA0MDEwODE0MDBaFw0yOTAzMjkwODE0MDBaMFkxCzAJBgNV\nBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNp\nc2NvMR0wGwYDVQQDExRvcmRlcmVyMC5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEG\nCCqGSM49AwEHA0IABIBMiKxn0LWoVlLv8XxbX1D46eVL6a8rpVTcdgPecq8cDptN\n4OgsaJNjp90jKFOpCPO85WKKKBvohOo+CBoZ8pGjTTBLMA4GA1UdDwEB/wQEAwIH\ngDAMBgNVHRMBAf8EAjAAMCsGA1UdIwQkMCKAIMd63S9RvNuy2Xvt6EcYo8ukXj2U\n4W+4FrVCJC/cgnmOMAoGCCqGSM49BAMCA0cAMEQCIAsGyGJ+dE4F56q8YUe0WLK6\nN+vsXRHDlRscMCB7yxXaAiAsyJGd0rtXmae9b3PV/evJNYegRQRcPwx+XxjQDBxh\nQQ==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.header.signature_header.creator.mspid=OrdererMSP
-.data.data[0].payload.header.signature_header.nonce=/mg5jXlfJW3UEuOv93keOfqMZQsunvYz
-.data.data[0].signature=MEQCIFu09jKy9U94QlWi5ES1sDgJ/VapnfbEske7/OIzaYBHAiB7BzrIbhNB11bCdRQMgbcw/FVWNRv1ryQIM6FzntzZlA==
-.header.data_hash=DKyqMyyetKLwwF1KdVvejvrF+yPCqt3S8koM5ISTSTE=
+.data.data[0].payload.header.signature_header.nonce=iEDspqfK1iDjCppna1O437Kaftyca5v8
+.data.data[0].signature=MEUCIQCcl24PxKZVQr6tRKsszAL478WS5zEuM6qKyIx5NBb5PQIgBQI04BEb6VDI/NnDZQgVSZ0SFAFhpzCbQ8j1P8zv648=
+.header.data_hash=TlYGJCznGyMA5SzemnSnRkc9iPmQHJKBdmbrRQkrmAg=
 .header.number=1
-.header.previous_hash=EMDTE0h6x8+t7HGD53nE54B1wviiPSHyV+E+6hh1AFY=
-.metadata.metadata[0]=Cg8KABILCgkKAwECAxAEGAUS/gYKsgYKlQYKCk9yZGVyZXJNU1AShgYtLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJQ0RUQ0NBYlNnQXdJQkFnSVJBSkJGRlJETHo2VW43LzB3TFVrSmR4TXdDZ1lJS29aSXpqMEVBd0l3YVRFTApNQWtHQTFVRUJoTUNWVk14RXpBUkJnTlZCQWdUQ2tOaGJHbG1iM0p1YVdFeEZqQVVCZ05WQkFjVERWTmhiaUJHCmNtRnVZMmx6WTI4eEZEQVNCZ05WQkFvVEMyVjRZVzF3YkdVdVkyOXRNUmN3RlFZRFZRUURFdzVqWVM1bGVHRnQKY0d4bExtTnZiVEFlRncweE9UQTBNREV3T0RFME1EQmFGdzB5T1RBek1qa3dPREUwTURCYU1Ga3hDekFKQmdOVgpCQVlUQWxWVE1STXdFUVlEVlFRSUV3cERZV3hwWm05eWJtbGhNUll3RkFZRFZRUUhFdzFUWVc0Z1JuSmhibU5wCmMyTnZNUjB3R3dZRFZRUURFeFJ2Y21SbGNtVnlNQzVsZUdGdGNHeGxMbU52YlRCWk1CTUdCeXFHU000OUFnRUcKQ0NxR1NNNDlBd0VIQTBJQUJJQk1pS3huMExXb1ZsTHY4WHhiWDFENDZlVkw2YThycFZUY2RnUGVjcThjRHB0Tgo0T2dzYUpOanA5MGpLRk9wQ1BPODVXS0tLQnZvaE9vK0NCb1o4cEdqVFRCTE1BNEdBMVVkRHdFQi93UUVBd0lICmdEQU1CZ05WSFJNQkFmOEVBakFBTUNzR0ExVWRJd1FrTUNLQUlNZDYzUzlSdk51eTJYdnQ2RWNZbzh1a1hqMlUKNFcrNEZyVkNKQy9jZ25tT01Bb0dDQ3FHU000OUJBTUNBMGNBTUVRQ0lBc0d5R0orZEU0RjU2cThZVWUwV0xLNgpOK3ZzWFJIRGxSc2NNQ0I3eXhYYUFpQXN5SkdkMHJ0WG1hZTliM1BWL2V2Sk5ZZWdSUVJjUHd4K1h4alFEQnhoClFRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQoSGLz9oOqhHW6uPa+V1VqVzGbMmduAj1E9IhJHMEUCIQDOw52juxh7c7yCWVhev11LamUghqbRufdsEnxQk1uHAwIgPsHsH0slqAi+G7SyF9xUvPsC4magcWyCkFfZpzuup5s=
+.header.previous_hash=i/j7eDNa4IuorCpSAv+mSy0g3bEDByEjrDMvBXsOveU=
+.metadata.metadata[0]=Cg8KABILCgkKAwECAxAEGAUS/QYKsgYKlQYKCk9yZGVyZXJNU1AShgYtLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJQ0RUQ0NBYlNnQXdJQkFnSVJBSkJGRlJETHo2VW43LzB3TFVrSmR4TXdDZ1lJS29aSXpqMEVBd0l3YVRFTApNQWtHQTFVRUJoTUNWVk14RXpBUkJnTlZCQWdUQ2tOaGJHbG1iM0p1YVdFeEZqQVVCZ05WQkFjVERWTmhiaUJHCmNtRnVZMmx6WTI4eEZEQVNCZ05WQkFvVEMyVjRZVzF3YkdVdVkyOXRNUmN3RlFZRFZRUURFdzVqWVM1bGVHRnQKY0d4bExtTnZiVEFlRncweE9UQTBNREV3T0RFME1EQmFGdzB5T1RBek1qa3dPREUwTURCYU1Ga3hDekFKQmdOVgpCQVlUQWxWVE1STXdFUVlEVlFRSUV3cERZV3hwWm05eWJtbGhNUll3RkFZRFZRUUhFdzFUWVc0Z1JuSmhibU5wCmMyTnZNUjB3R3dZRFZRUURFeFJ2Y21SbGNtVnlNQzVsZUdGdGNHeGxMbU52YlRCWk1CTUdCeXFHU000OUFnRUcKQ0NxR1NNNDlBd0VIQTBJQUJJQk1pS3huMExXb1ZsTHY4WHhiWDFENDZlVkw2YThycFZUY2RnUGVjcThjRHB0Tgo0T2dzYUpOanA5MGpLRk9wQ1BPODVXS0tLQnZvaE9vK0NCb1o4cEdqVFRCTE1BNEdBMVVkRHdFQi93UUVBd0lICmdEQU1CZ05WSFJNQkFmOEVBakFBTUNzR0ExVWRJd1FrTUNLQUlNZDYzUzlSdk51eTJYdnQ2RWNZbzh1a1hqMlUKNFcrNEZyVkNKQy9jZ25tT01Bb0dDQ3FHU000OUJBTUNBMGNBTUVRQ0lBc0d5R0orZEU0RjU2cThZVWUwV0xLNgpOK3ZzWFJIRGxSc2NNQ0I3eXhYYUFpQXN5SkdkMHJ0WG1hZTliM1BWL2V2Sk5ZZWdSUVJjUHd4K1h4alFEQnhoClFRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQoSGO94RIRDsaMgbxSfrcndno2QlIHxeerSIxJGMEQCIDEF6axJqVz1dkwG3/RtFUGGRyDxL4uTedlGhgyUbNeHAiAqyJm3LstWCDMokmlhKBedT9WxOmMxyw8vTRmkl6YC1g==
 .metadata.metadata[1]=
 .metadata.metadata[2]=
 .metadata.metadata[3]=

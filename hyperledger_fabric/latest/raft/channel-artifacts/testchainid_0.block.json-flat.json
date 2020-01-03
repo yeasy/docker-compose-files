@@ -150,6 +150,11 @@
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.policy.value.rule.n_out_of.rules[0].signed_by=0
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.policy.value.version=0
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies.Writers.version=0
+.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.mod_policy=Admins
+.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[0]=orderer0.example.com:7050
+.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[1]=orderer1.example.com:7050
+.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses[2]=orderer2.example.com:7050
+.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.version=0
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.mod_policy=Admins
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.admins[0]=b64(b'-----BEGIN CERTIFICATE-----\nMIICCjCCAbCgAwIBAgIQVaz8CY8+C4fKtB+rLOMCuDAKBggqhkjOPQQDAjBpMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEUMBIGA1UEChMLZXhhbXBsZS5jb20xFzAVBgNVBAMTDmNhLmV4YW1w\nbGUuY29tMB4XDTE5MDQwMTA4MTQwMFoXDTI5MDMyOTA4MTQwMFowVjELMAkGA1UE\nBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFuY2lz\nY28xGjAYBgNVBAMMEUFkbWluQGV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZI\nzj0DAQcDQgAEYEHkInlF+yn6yVHiOkjLryK9dd9HEXW31MZzCa84SKfHNtmSU1Tn\nJg48m//QUW2WCWFOqIEGELrtmF9f0jQRk6NNMEswDgYDVR0PAQH/BAQDAgeAMAwG\nA1UdEwEB/wQCMAAwKwYDVR0jBCQwIoAgx3rdL1G827LZe+3oRxijy6RePZThb7gW\ntUIkL9yCeY4wCgYIKoZIzj0EAwIDSAAwRQIhAKjgnLR1ky2/tgPEn0I/XaneJAZa\n0n+W9gm6jI1K/ZECAiBafLWNfisjXlV8Q0rpcqF/FJu6IOAHLIaI1lIqn4Hswg==\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.crypto_config.identity_identifier_hash_function=SHA256
@@ -253,18 +258,19 @@
 .data.data[0].payload.header.channel_header.channel_id=testchainid
 .data.data[0].payload.header.channel_header.epoch=0
 .data.data[0].payload.header.channel_header.extension=None
-.data.data[0].payload.header.channel_header.timestamp=2019-06-17T06:49:30Z
+.data.data[0].payload.header.channel_header.timestamp=2020-01-03T18:03:42Z
 .data.data[0].payload.header.channel_header.tls_cert_hash=None
-.data.data[0].payload.header.channel_header.tx_id=7171041669af9d82246551b457075d91693e646d1d3c05462bb25dbe3a6d2368
+.data.data[0].payload.header.channel_header.tx_id=fe0497f6cb88179e586986bfa5a75b1016b7b9aaf66d993fd81ac576a13bd45f
 .data.data[0].payload.header.channel_header.type=1
 .data.data[0].payload.header.channel_header.version=1
 .data.data[0].payload.header.signature_header.creator=None
-.data.data[0].payload.header.signature_header.nonce=st97NtXEkrs2YS2FOHUgDHbz3xcVAnZv
+.data.data[0].payload.header.signature_header.nonce=+Zcc3NPvAe4xtf/EbZCf9/ElkYgOJAfR
 .data.data[0].signature=None
-.header.data_hash=GrFLrIpOH+ZXAVrgs0/VePZnWAYo8bW0vamnHFuyp2k=
+.header.data_hash=ra0VsaluHYyo3zAf9ULpGjNKbbvU1gQEkth748T5snw=
 .header.number=0
 .header.previous_hash=None
 .metadata.metadata[0]=
 .metadata.metadata[1]=
 .metadata.metadata[2]=
 .metadata.metadata[3]=
+.metadata.metadata[4]=

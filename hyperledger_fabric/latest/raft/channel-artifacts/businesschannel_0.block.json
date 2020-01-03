@@ -573,6 +573,17 @@
 													}
 												},
 												"values": {
+													"Endpoints": {
+														"mod_policy": "Admins",
+														"value": {
+															"addresses": [
+																"orderer0.example.com:7050",
+																"orderer1.example.com:7050",
+																"orderer2.example.com:7050"
+															]
+														},
+														"version": "0"
+													},
 													"MSP": {
 														"mod_policy": "Admins",
 														"value": {
@@ -1022,13 +1033,13 @@
 									},
 									"signatures": [
 										{
-											"signature": "MEUCIQCnwcRgN9iICdvoG8R+QIl1ktoFLccsGbkRROY/UcDg4AIgMbcT3Hvnyg4zno5kgvFqxHm72O0oTTuN42lcV8aMV1Y=",
+											"signature": "MEQCICVGpFn1Ob9bvc4v+fkHTqZ7m0tZIcIvP6fVpd1iQ2DjAiAu322aR+PEDSrDIORe+MCm/1jb7IHcKT918L8+dJDufA==",
 											"signature_header": {
 												"creator": {
 													"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNLekNDQWRHZ0F3SUJBZ0lSQUtpeE9Ya3RvYTVkM3lKODI3dTZuRXd3Q2dZSUtvWkl6ajBFQXdJd2N6RUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhHVEFYQmdOVkJBb1RFRzl5WnpFdVpYaGhiWEJzWlM1amIyMHhIREFhQmdOVkJBTVRFMk5oCkxtOXlaekV1WlhoaGJYQnNaUzVqYjIwd0hoY05NVGt3TkRBeE1EZ3hOREF3V2hjTk1qa3dNekk1TURneE5EQXcKV2pCc01Rc3dDUVlEVlFRR0V3SlZVekVUTUJFR0ExVUVDQk1LUTJGc2FXWnZjbTVwWVRFV01CUUdBMVVFQnhNTgpVMkZ1SUVaeVlXNWphWE5qYnpFUE1BMEdBMVVFQ3hNR1kyeHBaVzUwTVI4d0hRWURWUVFEREJaQlpHMXBia0J2CmNtY3hMbVY0WVcxd2JHVXVZMjl0TUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFb0RzUXNkL2UKZ2VzR0NnOEJXcVd5aEtRenQ5T3FKSFRQNUEzRmxxUU56eVhySHlMb040bk5CY3ZuakhGeVdyajRMblEvK05OWgpsODVwMjVscSs5VnFtS05OTUVzd0RnWURWUjBQQVFIL0JBUURBZ2VBTUF3R0ExVWRFd0VCL3dRQ01BQXdLd1lEClZSMGpCQ1F3SW9BZ2E3dExQRFpXc3hDcnZPb2VrbEN6R1BnbC9hcjdhUTVOeXlCLzVjdEMrTmd3Q2dZSUtvWkkKemowRUF3SURTQUF3UlFJaEFKbTFEajltTGlCbjBUTlFCeXc3QmVqaS9YeFdlUzVucFdub0NVMG03Y1k1QWlCRgoxajg5OWgvc0ttSUVWMnY0eFQ4Uno2Y00vYzU1L0hSTERncnBqaE50Vmc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
 													"mspid": "Org1MSP"
 												},
-												"nonce": "Xnfe+RbYc0Ax73xPh4KMwopeLgEm/odb"
+												"nonce": "TXk6tKHe4r6amlef95vrz3G26YA4JSwi"
 											}
 										}
 									]
@@ -1038,7 +1049,7 @@
 										"channel_id": "businesschannel",
 										"epoch": "0",
 										"extension": null,
-										"timestamp": "2020-01-03T17:54:43Z",
+										"timestamp": "2020-01-03T18:04:09Z",
 										"tls_cert_hash": null,
 										"tx_id": "",
 										"type": 2,
@@ -1049,11 +1060,11 @@
 											"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNLekNDQWRHZ0F3SUJBZ0lSQUtpeE9Ya3RvYTVkM3lKODI3dTZuRXd3Q2dZSUtvWkl6ajBFQXdJd2N6RUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhHVEFYQmdOVkJBb1RFRzl5WnpFdVpYaGhiWEJzWlM1amIyMHhIREFhQmdOVkJBTVRFMk5oCkxtOXlaekV1WlhoaGJYQnNaUzVqYjIwd0hoY05NVGt3TkRBeE1EZ3hOREF3V2hjTk1qa3dNekk1TURneE5EQXcKV2pCc01Rc3dDUVlEVlFRR0V3SlZVekVUTUJFR0ExVUVDQk1LUTJGc2FXWnZjbTVwWVRFV01CUUdBMVVFQnhNTgpVMkZ1SUVaeVlXNWphWE5qYnpFUE1BMEdBMVVFQ3hNR1kyeHBaVzUwTVI4d0hRWURWUVFEREJaQlpHMXBia0J2CmNtY3hMbVY0WVcxd2JHVXVZMjl0TUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFb0RzUXNkL2UKZ2VzR0NnOEJXcVd5aEtRenQ5T3FKSFRQNUEzRmxxUU56eVhySHlMb040bk5CY3ZuakhGeVdyajRMblEvK05OWgpsODVwMjVscSs5VnFtS05OTUVzd0RnWURWUjBQQVFIL0JBUURBZ2VBTUF3R0ExVWRFd0VCL3dRQ01BQXdLd1lEClZSMGpCQ1F3SW9BZ2E3dExQRFpXc3hDcnZPb2VrbEN6R1BnbC9hcjdhUTVOeXlCLzVjdEMrTmd3Q2dZSUtvWkkKemowRUF3SURTQUF3UlFJaEFKbTFEajltTGlCbjBUTlFCeXc3QmVqaS9YeFdlUzVucFdub0NVMG03Y1k1QWlCRgoxajg5OWgvc0ttSUVWMnY0eFQ4Uno2Y00vYzU1L0hSTERncnBqaE50Vmc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
 											"mspid": "Org1MSP"
 										},
-										"nonce": "2+B1Nba2dln3RzNEAtXSSg04V/nW/Rc+"
+										"nonce": "v/iCM99zb+p+DgjtO7oGqOEGkSdYm+vH"
 									}
 								}
 							},
-							"signature": "MEUCIQDl2LJY+sxgELrpw4xadrg26fKs01eQPVvptpU3xYXY2QIgRas6zh2Ly5W4LohHES8CgMVHkvDiEDAKPTz7E1ubT3I="
+							"signature": "MEQCICBLDMhvIjDbjvTsT7b5zDP5iRuJh2397/AMYkOO+7RaAiAfIYeFRa7HBHJ8yqhZM/rikjPVI6+6ZY7Es1xKYBcaUw=="
 						}
 					},
 					"header": {
@@ -1061,7 +1072,7 @@
 							"channel_id": "businesschannel",
 							"epoch": "0",
 							"extension": null,
-							"timestamp": "2020-01-03T17:54:43Z",
+							"timestamp": "2020-01-03T18:04:09Z",
 							"tls_cert_hash": null,
 							"tx_id": "",
 							"type": 1,
@@ -1072,16 +1083,16 @@
 								"id_bytes": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNEVENDQWJTZ0F3SUJBZ0lSQUpCRkZSREx6NlVuNy8wd0xVa0pkeE13Q2dZSUtvWkl6ajBFQXdJd2FURUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhGREFTQmdOVkJBb1RDMlY0WVcxd2JHVXVZMjl0TVJjd0ZRWURWUVFERXc1allTNWxlR0Z0CmNHeGxMbU52YlRBZUZ3MHhPVEEwTURFd09ERTBNREJhRncweU9UQXpNamt3T0RFME1EQmFNRmt4Q3pBSkJnTlYKQkFZVEFsVlRNUk13RVFZRFZRUUlFd3BEWVd4cFptOXlibWxoTVJZd0ZBWURWUVFIRXcxVFlXNGdSbkpoYm1OcApjMk52TVIwd0d3WURWUVFERXhSdmNtUmxjbVZ5TUM1bGVHRnRjR3hsTG1OdmJUQlpNQk1HQnlxR1NNNDlBZ0VHCkNDcUdTTTQ5QXdFSEEwSUFCSUJNaUt4bjBMV29WbEx2OFh4YlgxRDQ2ZVZMNmE4cnBWVGNkZ1BlY3E4Y0RwdE4KNE9nc2FKTmpwOTBqS0ZPcENQTzg1V0tLS0J2b2hPbytDQm9aOHBHalRUQkxNQTRHQTFVZER3RUIvd1FFQXdJSApnREFNQmdOVkhSTUJBZjhFQWpBQU1Dc0dBMVVkSXdRa01DS0FJTWQ2M1M5UnZOdXkyWHZ0NkVjWW84dWtYajJVCjRXKzRGclZDSkMvY2dubU9NQW9HQ0NxR1NNNDlCQU1DQTBjQU1FUUNJQXNHeUdKK2RFNEY1NnE4WVVlMFdMSzYKTit2c1hSSERsUnNjTUNCN3l4WGFBaUFzeUpHZDBydFhtYWU5YjNQVi9ldkpOWWVnUlFSY1B3eCtYeGpRREJ4aApRUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K",
 								"mspid": "OrdererMSP"
 							},
-							"nonce": "mjz7TgMI9Zzntwq5VLZmZd8AWytCmSbZ"
+							"nonce": "LmaLYtwzKsuByTON281pRdT5OhRouA7r"
 						}
 					}
 				},
-				"signature": "MEUCIQDf6w6LdplPf8MSPc/OHP0421t7n0rxwaqdyzdKWQx+xQIgbipSPhUP2/OUf50ZvHvsPXh9KrY6v2IXX8DQi0YxZcM="
+				"signature": "MEQCIDUNmawQo/6mtPj9jZkSghoSv31qzeAF/9Oq32eW5shVAiBc0ariuoNYU5rEN9MLoGpfuYHh3uwYe4QG4xa703L0Fw=="
 			}
 		]
 	},
 	"header": {
-		"data_hash": "SOoyk7KCw3PkjLytZnH14IoVJ85wdWhtuY9ckbArZso=",
+		"data_hash": "vZs99ryRMhj8uMdDwTfOL6ywYG2Ae9qstUUlpjQ0FP0=",
 		"number": "0",
 		"previous_hash": null
 	},
