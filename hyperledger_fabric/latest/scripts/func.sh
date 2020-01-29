@@ -414,6 +414,7 @@ chaincodeQueryInstalled () {
 	peer lifecycle chaincode queryinstalled \
 			--peerAddresses ${peer_url} \
       --tlsRootCertFiles ${peer_tls_root_cert} \
+      --output json \
 			--connTimeout "3s"
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
@@ -447,6 +448,7 @@ chaincodeGetInstalled () {
       --tlsRootCertFiles ${peer_tls_root_cert} \
       --package-id ${package_id} \
       --output-directory ./ \
+      --output json \
 			--connTimeout "3s"
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
@@ -544,13 +546,15 @@ chaincodeCheckCommitReadiness () {
 
 	setEnvs $org $peer
 
-	echo "Query the approval status of the  chaincode $name $version"
+	echo "checkcommitreadiness with chaincode $name $version"
 	peer lifecycle chaincode checkcommitreadiness \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
 		--channelID ${channel} \
 		--name ${name} \
+		--output json \
 		--version ${version}
+
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
 	verifyResult $rc "ChaincodeQueryApproval Failed: org ${org}/peer$peer"
@@ -587,6 +591,7 @@ chaincodeCommit () {
 	label=${name}
 	#package_id=$(grep -o "${name}_${version}:[a-z0-9]*" query.log|cut -d ":" -f 2)
 	package_id=$(grep -o "${label}:[a-z0-9]*" query.log)
+	echo "package_id=${package_id}"
 
 	echo "Committing package id=${package_id} by Org ${org}/Peer ${peer}"
 	# use the --init-required flag to request the ``Init`` function be invoked to initialize the chaincode
@@ -599,9 +604,9 @@ chaincodeCommit () {
 			--init-required \
 			--sequence 1 \
 			--peerAddresses ${ORG1_PEER0_URL} \
-            --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
-            --peerAddresses ${ORG2_PEER0_URL} \
-            --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
+      --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
+      --peerAddresses ${ORG2_PEER0_URL} \
+      --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
 			--waitForEvent \
 			--collections-config "${collection_config}" \
 			--signature-policy "${policy}"
@@ -614,9 +619,9 @@ chaincodeCommit () {
 			--init-required \
 			--sequence 1 \
 			--peerAddresses ${ORG1_PEER0_URL} \
-            --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
-            --peerAddresses ${ORG2_PEER0_URL} \
-            --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
+      --tlsRootCertFiles ${ORG1_PEER0_TLS_ROOTCERT} \
+      --peerAddresses ${ORG2_PEER0_URL} \
+      --tlsRootCertFiles ${ORG2_PEER0_TLS_ROOTCERT} \
 			--waitForEvent \
 			--collections-config "${collection_config}" \
 			--signature-policy "${policy}" \
@@ -650,12 +655,13 @@ chaincodeQueryCommitted () {
 			--peerAddresses ${peer_url} \
       --tlsRootCertFiles ${peer_tls_root_cert} \
 			--channelID ${channel} \
+			--output json \
 			--name ${name}
+
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
 	verifyResult $rc "ChaincodeQueryCommit Failed: org ${org}/peer$peer"
 }
-
 
 # Instantiate chaincode on specifized peer node
 # chaincodeInstantiate channel org peer orderer_url name version args

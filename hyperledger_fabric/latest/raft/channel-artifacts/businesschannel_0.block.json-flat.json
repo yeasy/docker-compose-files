@@ -373,35 +373,35 @@
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.values.Consortium.value.name=SampleConsortium
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.values.Consortium.version=0
 .data.data[0].payload.data.last_update.payload.data.config_update.write_set.version=0
-.data.data[0].payload.data.last_update.payload.data.signatures[0].signature=MEUCIQDBU6vl5kmpjzyqxTGK8WYOKSB3DO0j73rUJcGtCmInuAIgWWtjNPVYiRobMXiYUFVhdlS6sr7VaLW3oISkpOTx4Mc=
+.data.data[0].payload.data.last_update.payload.data.signatures[0].signature=MEQCIGZWqwjhClTm7Z8X2noBa5/wpXDc/FsfS2fKioQcPAxuAiBTbTP0WvgybuQ1tggcYlFYV1Ik2+uv7pBiNEulBb8kaA==
 .data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKjCCAdCgAwIBAgIRANIgOANX3qiyhqY292b4RdgwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMjAwMTEzMDYyMjAwWhcNMzAwMTEwMDYyMjAw\nWjBrMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEOMAwGA1UECxMFYWRtaW4xHzAdBgNVBAMMFkFkbWluQG9y\nZzEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATRFcykVQ9c\na7Eeh0VAQDT3CAlK3NgJAeJ/ZmwQMcvoS+X6VjhWnRLJ0i1p01jX45gbCkHTDcAn\nr7cIS26g0XtOo00wSzAOBgNVHQ8BAf8EBAMCB4AwDAYDVR0TAQH/BAIwADArBgNV\nHSMEJDAigCBSGNVQ1H+Hnjwc5P6oNWcJH3C1oefvLvq9dCvCTJAjljAKBggqhkjO\nPQQDAgNIADBFAiEArAyq5S7tBaMp1pB4XAGMSpwxYKLOfmMAtmhTg5K5B2ACIGFX\nksr0y8J9ecOiuAh8JlwXYV8jvShYvazBSH4K7Yyt\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.nonce=TnQ69yP6+kuYtxhXkiggdM+tm9VwAJk5
+.data.data[0].payload.data.last_update.payload.data.signatures[0].signature_header.nonce=ke5C5z4qLj/tIt+RzlxKMbG9Zp4mLHHG
 .data.data[0].payload.data.last_update.payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.data.last_update.payload.header.channel_header.epoch=0
 .data.data[0].payload.data.last_update.payload.header.channel_header.extension=None
-.data.data[0].payload.data.last_update.payload.header.channel_header.timestamp=2020-01-13T06:27:52Z
+.data.data[0].payload.data.last_update.payload.header.channel_header.timestamp=2020-01-29T18:58:03Z
 .data.data[0].payload.data.last_update.payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.data.last_update.payload.header.channel_header.tx_id=
 .data.data[0].payload.data.last_update.payload.header.channel_header.type=2
 .data.data[0].payload.data.last_update.payload.header.channel_header.version=0
 .data.data[0].payload.data.last_update.payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICKjCCAdCgAwIBAgIRANIgOANX3qiyhqY292b4RdgwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMjAwMTEzMDYyMjAwWhcNMzAwMTEwMDYyMjAw\nWjBrMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEOMAwGA1UECxMFYWRtaW4xHzAdBgNVBAMMFkFkbWluQG9y\nZzEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATRFcykVQ9c\na7Eeh0VAQDT3CAlK3NgJAeJ/ZmwQMcvoS+X6VjhWnRLJ0i1p01jX45gbCkHTDcAn\nr7cIS26g0XtOo00wSzAOBgNVHQ8BAf8EBAMCB4AwDAYDVR0TAQH/BAIwADArBgNV\nHSMEJDAigCBSGNVQ1H+Hnjwc5P6oNWcJH3C1oefvLvq9dCvCTJAjljAKBggqhkjO\nPQQDAgNIADBFAiEArAyq5S7tBaMp1pB4XAGMSpwxYKLOfmMAtmhTg5K5B2ACIGFX\nksr0y8J9ecOiuAh8JlwXYV8jvShYvazBSH4K7Yyt\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.data.last_update.payload.header.signature_header.creator.mspid=Org1MSP
-.data.data[0].payload.data.last_update.payload.header.signature_header.nonce=McIWZehW5SWwRR7lWUxy5Q4RNX0aV042
-.data.data[0].payload.data.last_update.signature=MEUCIQChM48Qchr9TgVES6n7oMcbPrVjR/E0DavlyFC3xmuf8gIgRyfzl9bprvkc2JLYsTyyr30Bdj4iBB264TEbB+agOGI=
+.data.data[0].payload.data.last_update.payload.header.signature_header.nonce=iHQLqiemJ1BoWgfyTXDfhaHLFQcj0eE4
+.data.data[0].payload.data.last_update.signature=MEUCIQDFR31C3yEhuwghbSI+fpY46La/Fd59ILduJ8La5sjC1wIgNo3DYDX1JbkCa+aRGdK2yZYmFzCceHD0IqwyGgQVaAw=
 .data.data[0].payload.header.channel_header.channel_id=businesschannel
 .data.data[0].payload.header.channel_header.epoch=0
 .data.data[0].payload.header.channel_header.extension=None
-.data.data[0].payload.header.channel_header.timestamp=2020-01-13T06:27:52Z
+.data.data[0].payload.header.channel_header.timestamp=2020-01-29T18:58:03Z
 .data.data[0].payload.header.channel_header.tls_cert_hash=None
 .data.data[0].payload.header.channel_header.tx_id=
 .data.data[0].payload.header.channel_header.type=1
 .data.data[0].payload.header.channel_header.version=0
 .data.data[0].payload.header.signature_header.creator.id_bytes=b64(b'-----BEGIN CERTIFICATE-----\nMIICHjCCAcWgAwIBAgIQflUJcyP4ws3Eh+Fw3vC5gTAKBggqhkjOPQQDAjBpMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEUMBIGA1UEChMLZXhhbXBsZS5jb20xFzAVBgNVBAMTDmNhLmV4YW1w\nbGUuY29tMB4XDTIwMDExMzA2MjIwMFoXDTMwMDExMDA2MjIwMFowazELMAkGA1UE\nBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFuY2lz\nY28xEDAOBgNVBAsTB29yZGVyZXIxHTAbBgNVBAMTFG9yZGVyZXIwLmV4YW1wbGUu\nY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEj4aYievK/0GEAIrNhMPSTf6T\nwXqnCuW6iSUy0fxj5Y/3HPTWb7t2WaRt//xrBt6KPqLXXHI8pLznk/ckLh54OaNN\nMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYDVR0jBCQwIoAgPPLk\niGSd9rW9ghCnC5/AFZYGkC2VphSmZFK71vPYzzQwCgYIKoZIzj0EAwIDRwAwRAIg\nfrvJk/ktdOryh+8NdUQUEhaU/qlxQOzfVkem8Nw8ny4CIGZ9M16ynGSi+LeDGEDI\nnTQXAeF5kbeqYwAaOOCSnW/s\n-----END CERTIFICATE-----\n')
 .data.data[0].payload.header.signature_header.creator.mspid=OrdererMSP
-.data.data[0].payload.header.signature_header.nonce=NRcdvxPZrIMBIwl5IvqnIORNJ/tC0o7c
-.data.data[0].signature=MEUCIQDJfPUs2rqpp6kUkgiJx1FAQ4wGa8oy66smEf46Fa28cQIgJe/PCUsZ5QSrwMo7Hf5jtX922Af57EzMh9EnLu+6EPA=
-.header.data_hash=J3bHDQYG6Ltygzt+viL/8HBPERvz/lF8XTjZRfNPVIc=
+.data.data[0].payload.header.signature_header.nonce=WiZbhlT2bVXKcly4/vYnaej1iGb2hozl
+.data.data[0].signature=MEUCIQC8H5XhrzZjcXWNNSmJQcG32TOem4u/lJtY2KoJMIa43gIgN6Du8EH5f1wx5aeBPQ/QsgtSNz5sMuFSUKwhO4aoKJQ=
+.header.data_hash=rJgdxKCAIAsHv+u4Fo774MTmHtFURRhZyyKd74G7qZw=
 .header.number=0
 .header.previous_hash=None
 .metadata.metadata[0]=
