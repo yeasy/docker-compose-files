@@ -1,19 +1,47 @@
 # The minimal kafka service
 # github.com/yeasy/docker-compose-files
 
-# * zk: zk node for kafka
+# * zk: zk node for kafka, 0, 1, 2
 # * kafka: kafka service, will default to connect to zookeeper
 # * cli: client to test kafka service
 
 version: '2'
 
 services:
-  zookeeper:
+  zookeeper1:
     image: yeasy/kafka:latest
-    container_name: zookeeper
-    hostname: zookeeper
+    container_name: zookeeper1
+    hostname: zookeeper1
+    ports:
+      - "2182:2181"  # zk connection port
+    environment:
+      - ZK_ID=1 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    volumes:
+      - ${PWD}/zookeeper1:/tmp/zookeeper
+    command: bash -c 'bash /tmp/start_zk.sh'
+
+  zookeeper2:
+    image: yeasy/kafka:latest
+    container_name: zookeeper2
+    hostname: zookeeper2
+    ports:
+      - "2183:2181"  # zk connection port
+    environment:
+      - ZK_ID=2 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    volumes:
+      - ${PWD}/zookeeper2:/tmp/zookeeper
+    command: bash -c 'bash /tmp/start_zk.sh'
+
+  zookeeper3:
+    image: yeasy/kafka:latest
+    container_name: zookeeper3
+    hostname: zookeeper3
     ports:
       - "2181:2181"  # zk connection port
+    environment:
+      - ZK_ID=3 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    volumes:
+      - ${PWD}/zookeeper3:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
 
   kafka0: # kafka service
@@ -25,8 +53,10 @@ services:
     environment:
       - KAFKA_BROKER_ID=0 # when bootup, will read this and update the server.properties
     depends_on:
-      - zookeeper
-    command: bash -c 'bash /tmp/start_kafka.sh'
+      - zookeeper3
+      - zookeeper1
+      - zookeeper2
+    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
 
   kafka1: # kafka service
     image: yeasy/kafka:latest
@@ -37,8 +67,10 @@ services:
     environment:
       - KAFKA_BROKER_ID=1 # when bootup, will read this and update the server.properties
     depends_on:
-      - zookeeper
-    command: bash -c 'bash /tmp/start_kafka.sh'
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
 
   kafka2: # kafka service
     image: yeasy/kafka:latest
@@ -49,14 +81,16 @@ services:
     environment:
       - KAFKA_BROKER_ID=2 # when bootup, will read this and update the server.properties
     depends_on:
-      - zookeeper
-    command: bash -c 'bash /tmp/start_kafka.sh'
+      - zookeeper3
+      - zookeeper1
+      - zookeeper2
+    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
 
   cli:  # used for testing kafka cmds, see /tmp/*.sh
     image: yeasy/kafka:latest
     container_name: cli
     hostname: cli
     environment:
-      - ZK_HOST=zookeeper # zk host to connect to
-      - KAFKA_HOST=kafka1 # customized the kafka broker to send
+      - ZK_HOST=zookeeper1 # zk host to connect to
+      - KAFKA_HOST=kafka0 # customized the kafka broker to send
     command: bash -c 'while true; do sleep 20200116; done'
