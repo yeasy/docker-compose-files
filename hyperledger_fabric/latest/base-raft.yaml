@@ -61,8 +61,9 @@ services:
       - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      # below 4 must be defined/undefined together, for using separate network for raft
       #- ORDERER_GENERAL_CLUSTER_LISTENADDRESS=0.0.0.0
-      #- ORDERER_GENERAL_CLUSTER_LISTENPORT=7050
+      #- ORDERER_GENERAL_CLUSTER_LISTENPORT=7050  # this must be the same with channel config
       #- ORDERER_GENERAL_CLUSTER_SERVERCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       #- ORDERER_GENERAL_CLUSTER_SERVERPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
     volumes:
