@@ -5,7 +5,7 @@
 # * kafka: kafka service, will default to connect to zookeeper
 # * cli: client to test kafka service
 
-version: '2'
+version: '3'
 
 services:
   zookeeper1:
@@ -16,8 +16,8 @@ services:
       - "2182:2181"  # zk connection port
     environment:
       - ZK_ID=1 # when bootup, will read this and update the /tmp/zookeeper/myid file
-    volumes:
-      - ${PWD}/zookeeper1:/tmp/zookeeper
+    #volumes:
+      #- ${PWD}/zookeeper1:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
 
   zookeeper2:
@@ -28,8 +28,8 @@ services:
       - "2183:2181"  # zk connection port
     environment:
       - ZK_ID=2 # when bootup, will read this and update the /tmp/zookeeper/myid file
-    volumes:
-      - ${PWD}/zookeeper2:/tmp/zookeeper
+    #volumes:
+    #  - ${PWD}/zookeeper2:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
 
   zookeeper3:
@@ -40,8 +40,8 @@ services:
       - "2181:2181"  # zk connection port
     environment:
       - ZK_ID=3 # when bootup, will read this and update the /tmp/zookeeper/myid file
-    volumes:
-      - ${PWD}/zookeeper3:/tmp/zookeeper
+    #volumes:
+    #  - ${PWD}/zookeeper3:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
 
   kafka0: # kafka service
