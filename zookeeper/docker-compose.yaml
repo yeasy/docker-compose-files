@@ -1,0 +1,56 @@
+# The minimal kafka service
+# github.com/yeasy/docker-compose-files
+
+# * zk: zk node for kafka, 0, 1, 2
+# * kafka: kafka service, will default to connect to zookeeper
+# * cli: client to test kafka service
+
+version: '3'
+
+services:
+  zookeeper1:
+    image: yeasy/kafka:latest
+    container_name: zookeeper1
+    hostname: zookeeper1
+    ports:
+      - "2182:2181"  # zk connection port
+    environment:
+      - ZK_ID=1 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    healthcheck:
+      disable: true
+    command: bash -c 'bash /tmp/start_zk.sh'
+
+  zookeeper2:
+    image: yeasy/kafka:latest
+    container_name: zookeeper2
+    hostname: zookeeper2
+    ports:
+      - "2183:2181"  # zk connection port
+    environment:
+      - ZK_ID=2 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    healthcheck:
+      disable: true
+    command: bash -c 'bash /tmp/start_zk.sh'
+
+  zookeeper3:
+    image: yeasy/kafka:latest
+    container_name: zookeeper3
+    hostname: zookeeper3
+    ports:
+      - "2181:2181"  # zk connection port
+    environment:
+      - ZK_ID=3 # when bootup, will read this and update the /tmp/zookeeper/myid file
+    healthcheck:
+      disable: true
+    command: bash -c 'bash /tmp/start_zk.sh'
+
+  cli:  # used for testing kafka cmds, see /tmp/*.sh
+    image: yeasy/kafka:latest
+    container_name: cli
+    hostname: cli
+    environment:
+      - ZK_HOST=zookeeper1 # zk host to connect to
+    # bash /opt/zookeeper/bin/zkCli.sh -server ${ZK_HOST}:2181
+    healthcheck:
+      disable: true
+    command: bash -c 'while true; do sleep 20200116; done'
