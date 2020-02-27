@@ -15,6 +15,7 @@ Fabric Release | Description
 --- | ---
 [Fabric Latest](latest/) | latest fabric code, unstable.
 [Fabric v2.0.0](v2.0.0/) | stable fabric 2.0.0 release.
+[Fabric v1.4.6](v1.4.6/) | stable fabric 1.4.6 LTS release.
 [Fabric v1.4.5](v1.4.5/) | stable fabric 1.4.5 LTS release.
 [Fabric v1.4.4](v1.4.4/) | stable fabric 1.4.4 LTS release.
 [Fabric v1.4.3](v1.4.3/) | stable fabric 1.4.3 release.
@@ -32,7 +33,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v1.4.5
+$ export RELEASE=v1.4.6
 ```
 
 ```bash

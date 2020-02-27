@@ -1,0 +1,95 @@
+---
+version: '2.0'
+services:
+  orderer.example.com: # orderer in solo mode
+    extends:
+      file: base.yaml
+      service: orderer-base
+    container_name: orderer.example.com
+    hostname: orderer.example.com
+    expose:
+    - '7050'
+    volumes:
+    - ./solo/channel-artifacts/orderer.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+    - ./solo/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/var/hyperledger/orderer/tls
+  peer0.org1.example.com: # peer node
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer0.org1.example.com # will generated automatically
+    hostname: peer0.org1.example.com # will generated automatically
+    environment:
+    - CORE_PEER_ID=peer0.org1.example.com
+    - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+    - CORE_PEER_LOCALMSPID=Org1MSP
+    - CORE_PEER_TLS_ENABLED=true
+    volumes:
+    - ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    expose:
+    - 7051
+    - 7052
+    - 7053
+  peer1.org1.example.com: # peer node
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer1.org1.example.com # will generated automatically
+    hostname: peer1.org1.example.com # will generated automatically
+    environment:
+    - CORE_PEER_ID=peer1.org1.example.com
+    - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org1.example.com:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
+    - CORE_PEER_LOCALMSPID=Org1MSP
+    - CORE_PEER_TLS_ENABLED=true
+    volumes:
+    - ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./solo/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    expose:
+    - 7051
+    - 7052
+    - 7053
+  peer0.org2.example.com: # peer node
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer0.org2.example.com # will generated automatically
+    hostname: peer0.org2.example.com # will generated automatically
+    environment:
+    - CORE_PEER_ID=peer0.org2.example.com
+    - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org2.example.com:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051
+    - CORE_PEER_LOCALMSPID=Org2MSP
+    - CORE_PEER_TLS_ENABLED=true
+    volumes:
+    - ./solo/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./solo/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    expose:
+    - 7051
+    - 7052
+    - 7053
+  peer1.org2.example.com: # peer node
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer1.org2.example.com # will generated automatically
+    hostname: peer1.org2.example.com # will generated automatically
+    environment:
+    - CORE_PEER_ID=peer1.org2.example.com
+    - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org2.example.com:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.example.com:7051
+    - CORE_PEER_LOCALMSPID=Org2MSP
+    - CORE_PEER_TLS_ENABLED=true
+    volumes:
+    - ./solo/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./solo/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    expose:
+    - 7051
+    - 7052
+    - 7053
