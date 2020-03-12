@@ -9,7 +9,7 @@ version: '3'
 
 services:
   zookeeper1:
-    image: yeasy/kafka:latest
+    image: yeasy/zookeeper:latest
     container_name: zookeeper1
     hostname: zookeeper1
     ports:
@@ -21,7 +21,7 @@ services:
     command: bash -c 'bash /tmp/start_zk.sh'
 
   zookeeper2:
-    image: yeasy/kafka:latest
+    image: yeasy/zookeeper:latest
     container_name: zookeeper2
     hostname: zookeeper2
     ports:
@@ -33,7 +33,7 @@ services:
     command: bash -c 'bash /tmp/start_zk.sh'
 
   zookeeper3:
-    image: yeasy/kafka:latest
+    image: yeasy/zookeeper:latest
     container_name: zookeeper3
     hostname: zookeeper3
     ports:
