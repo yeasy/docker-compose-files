@@ -21,14 +21,6 @@ Organizations:
         # Name can include alphanumeric characters as well as dots and dashes.
         Name: SampleOrg
 
-        # SkipAsForeign can be set to true for org definitions which are to be
-        # inherited from the orderer system channel during channel creation.  This
-        # is especially useful when an admin of a single org without access to the
-        # MSP directories of the other orgs wishes to create a channel.  Note
-        # this property must always be set to false for orgs included in block
-        # creation.
-        SkipAsForeign: false
-
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
         ID: SampleOrg
@@ -74,14 +66,6 @@ Organizations:
         # Name can include alphanumeric characters as well as dots and dashes.
         Name: OrdererOrg
 
-        # SkipAsForeign can be set to true for org definitions which are to be
-        # inherited from the orderer system channel during channel creation.  This
-        # is especially useful when an admin of a single org without access to the
-        # MSP directories of the other orgs wishes to create a channel.  Note
-        # this property must always be set to false for orgs included in block
-        # creation.
-        SkipAsForeign: false
-
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
         ID: OrdererMSP
@@ -112,14 +96,6 @@ Organizations:
         # configuration transactions.
         # Name can include alphanumeric characters as well as dots and dashes.
         Name: Org1MSP
-
-        # SkipAsForeign can be set to true for org definitions which are to be
-        # inherited from the orderer system channel during channel creation.  This
-        # is especially useful when an admin of a single org without access to the
-        # MSP directories of the other orgs wishes to create a channel.  Note
-        # this property must always be set to false for orgs included in block
-        # creation.
-        SkipAsForeign: false
 
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
@@ -164,14 +140,6 @@ Organizations:
         # configuration transactions.
         # Name can include alphanumeric characters as well as dots and dashes.
         Name: Org2MSP
-
-        # SkipAsForeign can be set to true for org definitions which are to be
-        # inherited from the orderer system channel during channel creation.  This
-        # is especially useful when an admin of a single org without access to the
-        # MSP directories of the other orgs wishes to create a channel.  Note
-        # this property must always be set to false for orgs included in block
-        # creation.
-        SkipAsForeign: false
 
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
@@ -241,7 +209,7 @@ Capabilities:
         # prior releases.
         # Prior to enabling V1.3 channel capabilities, ensure that all
         # orderers and peers on a channel are at v1.3.0 or later.
-        V2_0: true
+        V1_4_2: true
         V1_3: false
 
     # Orderer capabilities apply only to the orderers, and may be safely
@@ -253,7 +221,7 @@ Capabilities:
         # level, but which would be incompatible with orderers from prior releases.
         # Prior to enabling V1.1 orderer capabilities, ensure that all
         # orderers on a channel are at v1.1.0 or later.
-        V2_0: true
+        V1_4_2: true
         V1_1: false
 
     # Application capabilities apply only to the peer network, and may be safely
@@ -262,7 +230,7 @@ Capabilities:
     Application: &ApplicationCapabilities
         # V1.3 for Application enables the new non-backwards compatible
         # features and fixes of fabric v1.3.
-        V2_0: true
+        V1_4_2: true
         V1_3: false
         # V1.2 for Application enables the new non-backwards compatible
         # features and fixes of fabric v1.2 (note, this need not be set if

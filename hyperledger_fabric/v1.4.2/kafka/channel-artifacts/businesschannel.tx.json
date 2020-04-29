@@ -178,7 +178,7 @@
 									"mod_policy": "Admins",
 									"value": {
 										"capabilities": {
-											"V2_0": {}
+											"V1_4_2": {}
 										}
 									},
 									"version": "0"
@@ -208,7 +208,7 @@
 				"channel_id": "businesschannel",
 				"epoch": "0",
 				"extension": null,
-				"timestamp": "2019-04-22T06:25:04Z",
+				"timestamp": "2020-04-29T02:56:06Z",
 				"tls_cert_hash": null,
 				"tx_id": "",
 				"type": 2,
