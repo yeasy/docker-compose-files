@@ -1,6 +1,5 @@
-[34m2019-04-22 06:25:19.571 UTC [localconfig] completeInitialization -> INFO 001[0m Kafka.Version unset, setting to 0.10.2.0
-"[34m2019-04-22 06:25:19.950 UTC [orderer.common.server] prettyPrintStruct -> INFO 002[0m Orderer config values:
-	General.LedgerType = "file"
+[34m2020-05-02 06:03:43.598 UTC [localconfig] completeInitialization -> INFO 001[0m Kafka.Version unset, setting to 0.10.2.0
+"[34m2020-05-02 06:03:43.602 UTC [orderer.common.server] prettyPrintStruct -> INFO 002[0m Orderer config values:
 	General.ListenAddress = "0.0.0.0"
 	General.ListenPort = 7050
 	General.TLS.Enabled = true
@@ -15,7 +14,7 @@
 	General.Cluster.ServerPrivateKey = ""
 	General.Cluster.ClientCertificate = "/var/hyperledger/orderer/tls/server.crt"
 	General.Cluster.ClientPrivateKey = "/var/hyperledger/orderer/tls/server.key"
-	General.Cluster.RootCAs = []
+	General.Cluster.RootCAs = [/var/hyperledger/orderer/tls/ca.crt]
 	General.Cluster.DialTimeout = 5s
 	General.Cluster.RPCTimeout = 7s
 	General.Cluster.ReplicationBufferSize = 20971520
@@ -25,13 +24,15 @@
 	General.Cluster.ReplicationMaxRetries = 12
 	General.Cluster.SendBufferSize = 10
 	General.Cluster.CertExpirationWarningThreshold = 168h0m0s
+	General.Cluster.TLSHandshakeTimeShift = 0s
 	General.Keepalive.ServerMinInterval = 1m0s
 	General.Keepalive.ServerInterval = 2h0m0s
 	General.Keepalive.ServerTimeout = 20s
+	General.ConnectionTimeout = 0s
 	General.GenesisMethod = "file"
-	General.GenesisProfile = "SampleInsecureSolo"
-	General.SystemChannel = "test-system-channel-name"
-	General.GenesisFile = "/var/hyperledger/orderer/orderer.genesis.block"
+	General.GenesisFile = ""
+	General.BootstrapMethod = "file"
+	General.BootstrapFile = "/var/hyperledger/orderer/orderer.genesis.block"
 	General.Profile.Enabled = false
 	General.Profile.Address = "0.0.0.0:6060"
 	General.LocalMSPDir = "/var/hyperledger/orderer/msp"
@@ -39,15 +40,14 @@
 	General.BCCSP.ProviderName = "SW"
 	General.BCCSP.SwOpts.SecLevel = 256
 	General.BCCSP.SwOpts.HashFamily = "SHA2"
-	General.BCCSP.SwOpts.Ephemeral = false
-	General.BCCSP.SwOpts.FileKeystore.KeyStorePath = "/var/hyperledger/orderer/msp/keystore"
+	General.BCCSP.SwOpts.Ephemeral = true
+	General.BCCSP.SwOpts.FileKeystore.KeyStorePath = ""
 	General.BCCSP.SwOpts.DummyKeystore =
 	General.BCCSP.SwOpts.InmemKeystore =
-	General.BCCSP.PluginOpts =
 	General.Authentication.TimeWindow = 15m0s
+	General.Authentication.NoExpirationChecks = false
 	FileLedger.Location = "/var/hyperledger/production/orderer"
 	FileLedger.Prefix = "hyperledger-fabric-ordererledger"
-	RAMLedger.HistorySize = 1000
 	Kafka.Retry.ShortInterval = 1s
 	Kafka.Retry.ShortTotal = 30s
 	Kafka.Retry.LongInterval = 5m0s
@@ -87,143 +87,379 @@
 	Metrics.Statsd.Address = "127.0.0.1:8125"
 	Metrics.Statsd.WriteInterval = 30s
 	Metrics.Statsd.Prefix = """
-"[34m2019-04-22 06:25:20.432 UTC [orderer.common.server] initializeServerConfig -> INFO 003[0m Starting orderer with TLS enabled"
-"[34m2019-04-22 06:25:20.438 UTC [fsblkstorage] newBlockfileMgr -> INFO 004[0m Getting block information from block storage"
-"[34m2019-04-22 06:25:20.706 UTC [orderer.consensus.kafka] newChain -> INFO 005[0m [channel: testchainid] Starting chain with last persisted offset -3 and last recorded block [0]"
-"[34m2019-04-22 06:25:20.750 UTC [orderer.commmon.multichannel] Initialize -> INFO 006[0m Starting system channel 'testchainid' with genesis block hash dd5aa6427ca850b434f6282d0e77c79064ae4338f53100204d4710281eb72b16 and orderer type kafka"
-"[34m2019-04-22 06:25:20.757 UTC [orderer.consensus.kafka] setupTopicForChannel -> INFO 007[0m [channel: testchainid] Setting up the topic for this channel..."
-"[34m2019-04-22 06:25:20.761 UTC [orderer.common.server] Start -> INFO 008[0m Starting orderer:
- Version: 2.0.0
+"[34m2020-05-02 06:03:43.817 UTC [orderer.common.server] initializeServerConfig -> INFO 003[0m Starting orderer with TLS enabled"
+"[34m2020-05-02 06:03:43.854 UTC [fsblkstorage] NewProvider -> INFO 004[0m Creating new file ledger directory at /var/hyperledger/production/orderer/chains"
+"[34m2020-05-02 06:03:43.862 UTC [orderer.common.server] extractSysChanLastConfig -> INFO 005[0m Bootstrapping because no existing channels"
+"[34m2020-05-02 06:03:43.940 UTC [fsblkstorage] newBlockfileMgr -> INFO 006[0m Getting block information from block storage"
+"[34m2020-05-02 06:03:44.061 UTC [orderer.consensus.kafka] newChain -> INFO 007[0m [channel: testchainid] Starting chain with last persisted offset -3 and last recorded block [0]"
+"[34m2020-05-02 06:03:44.100 UTC [orderer.commmon.multichannel] Initialize -> INFO 008[0m Starting system channel 'testchainid' with genesis block hash 78e4f382e9b947e013369b98d4324f154196f5a7ae005c7aea48f5f8c4340dc6 and orderer type kafka"
+"[34m2020-05-02 06:03:44.103 UTC [orderer.consensus.kafka] setupTopicForChannel -> INFO 009[0m [channel: testchainid] Setting up the topic for this channel..."
+"[36m2020-05-02 06:03:44.103 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 00a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:44.109 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 00b[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:44.110 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 00c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:44.120 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 00d[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:44.120 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 00e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:44.128 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 00f[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:44.129 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 010[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[34m2020-05-02 06:03:44.143 UTC [orderer.common.server] Main -> INFO 011[0m Starting orderer:
+ Version: 2.1.0
  Commit SHA: development build
- Go version: go1.11.5
+ Go version: go1.14.2
  OS/Arch: linux/amd64"
-"[34m2019-04-22 06:25:20.761 UTC [orderer.common.server] Start -> INFO 009[0m Beginning to serve requests"
-"[34m2019-04-22 06:25:50.242 UTC [orderer.consensus.kafka] setupProducerForChannel -> INFO 00a[0m [channel: testchainid] Setting up the producer for this channel..."
-"[34m2019-04-22 06:25:50.547 UTC [orderer.consensus.kafka] startThread -> INFO 00b[0m [channel: testchainid] Producer set up successfully"
-"[34m2019-04-22 06:25:50.548 UTC [orderer.consensus.kafka] sendConnectMessage -> INFO 00c[0m [channel: testchainid] About to post the CONNECT message..."
-"[34m2019-04-22 06:25:52.951 UTC [orderer.consensus.kafka] startThread -> INFO 00d[0m [channel: testchainid] CONNECT message posted successfully"
-"[34m2019-04-22 06:25:52.952 UTC [orderer.consensus.kafka] setupParentConsumerForChannel -> INFO 00e[0m [channel: testchainid] Setting up the parent consumer for this channel..."
-"[34m2019-04-22 06:25:52.966 UTC [orderer.consensus.kafka] startThread -> INFO 00f[0m [channel: testchainid] Parent consumer set up successfully"
-"[34m2019-04-22 06:25:52.966 UTC [orderer.consensus.kafka] setupChannelConsumerForChannel -> INFO 010[0m [channel: testchainid] Setting up the channel consumer for this channel (start offset: -2)..."
-"[34m2019-04-22 06:25:53.072 UTC [orderer.consensus.kafka] startThread -> INFO 011[0m [channel: testchainid] Channel consumer set up successfully"
-"[34m2019-04-22 06:25:53.175 UTC [orderer.consensus.kafka] startThread -> INFO 012[0m [channel: testchainid] Start phase completed successfully"
-"[34m2019-04-22 06:25:55.129 UTC [comm.grpc.server] 1 -> INFO 013[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55752 grpc.code=OK grpc.call_duration=131.3442ms
-"[34m2019-04-22 06:25:55.143 UTC [fsblkstorage] newBlockfileMgr -> INFO 014[0m Getting block information from block storage"
-"[34m2019-04-22 06:25:55.166 UTC [orderer.consensus.kafka] newChain -> INFO 015[0m [channel: businesschannel] Starting chain with last persisted offset -3 and last recorded block [0]"
-"[34m2019-04-22 06:25:55.166 UTC [orderer.commmon.multichannel] newChain -> INFO 016[0m Created and starting new chain businesschannel"
-"[34m2019-04-22 06:25:55.166 UTC [orderer.consensus.kafka] setupTopicForChannel -> INFO 017[0m [channel: businesschannel] Setting up the topic for this channel..."
-"[33m2019-04-22 06:25:55.172 UTC [common.deliver] deliverBlocks -> WARN 018[0m [channel: businesschannel] Rejecting deliver request for 192.168.224.5:55750 because of consenter error"
-"[34m2019-04-22 06:25:55.174 UTC [comm.grpc.server] 1 -> INFO 019[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55750 grpc.code=OK grpc.call_duration=193.4332ms
-"[34m2019-04-22 06:25:55.319 UTC [orderer.consensus.kafka] setupProducerForChannel -> INFO 01a[0m [channel: businesschannel] Setting up the producer for this channel..."
-"[34m2019-04-22 06:25:55.368 UTC [orderer.consensus.kafka] startThread -> INFO 01b[0m [channel: businesschannel] Producer set up successfully"
-"[34m2019-04-22 06:25:55.368 UTC [orderer.consensus.kafka] sendConnectMessage -> INFO 01c[0m [channel: businesschannel] About to post the CONNECT message..."
-"[33m2019-04-22 06:25:55.400 UTC [common.deliver] deliverBlocks -> WARN 01d[0m [channel: businesschannel] Rejecting deliver request for 192.168.224.5:55758 because of consenter error"
-"[34m2019-04-22 06:25:55.403 UTC [comm.grpc.server] 1 -> INFO 01e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55758 grpc.code=OK grpc.call_duration=203.4762ms
-"[33m2019-04-22 06:25:55.628 UTC [common.deliver] deliverBlocks -> WARN 01f[0m [channel: businesschannel] Rejecting deliver request for 192.168.224.5:55764 because of consenter error"
-"[34m2019-04-22 06:25:55.628 UTC [comm.grpc.server] 1 -> INFO 020[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55764 grpc.code=OK grpc.call_duration=202.677ms
-"[33m2019-04-22 06:25:55.853 UTC [common.deliver] deliverBlocks -> WARN 021[0m [channel: businesschannel] Rejecting deliver request for 192.168.224.5:55766 because of consenter error"
-"[34m2019-04-22 06:25:55.853 UTC [comm.grpc.server] 1 -> INFO 022[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55766 grpc.code=OK grpc.call_duration=201.2625ms
-"[33m2019-04-22 06:25:56.080 UTC [common.deliver] deliverBlocks -> WARN 023[0m [channel: businesschannel] Rejecting deliver request for 192.168.224.5:55770 because of consenter error"
-"[34m2019-04-22 06:25:56.080 UTC [comm.grpc.server] 1 -> INFO 024[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55770 grpc.code=OK grpc.call_duration=200.733ms
-"[34m2019-04-22 06:25:56.130 UTC [orderer.consensus.kafka] startThread -> INFO 025[0m [channel: businesschannel] CONNECT message posted successfully"
-"[34m2019-04-22 06:25:56.131 UTC [orderer.consensus.kafka] setupParentConsumerForChannel -> INFO 026[0m [channel: businesschannel] Setting up the parent consumer for this channel..."
-"[34m2019-04-22 06:25:56.140 UTC [orderer.consensus.kafka] startThread -> INFO 027[0m [channel: businesschannel] Parent consumer set up successfully"
-"[34m2019-04-22 06:25:56.140 UTC [orderer.consensus.kafka] setupChannelConsumerForChannel -> INFO 028[0m [channel: businesschannel] Setting up the channel consumer for this channel (start offset: -2)..."
-"[34m2019-04-22 06:25:56.152 UTC [orderer.consensus.kafka] startThread -> INFO 029[0m [channel: businesschannel] Channel consumer set up successfully"
-"[34m2019-04-22 06:25:56.165 UTC [orderer.consensus.kafka] startThread -> INFO 02a[0m [channel: businesschannel] Start phase completed successfully"
-"[33m2019-04-22 06:25:56.324 UTC [common.deliver] Handle -> WARN 02b[0m Error reading from 192.168.224.5:55780: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:25:56.325 UTC [comm.grpc.server] 1 -> INFO 02c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55780 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=231.0232ms
-"[33m2019-04-22 06:26:01.418 UTC [common.deliver] Handle -> WARN 02d[0m Error reading from 192.168.224.5:55814: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:01.420 UTC [comm.grpc.server] 1 -> INFO 02e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55814 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=128.1389ms
-"[33m2019-04-22 06:26:01.420 UTC [orderer.common.broadcast] Handle -> WARN 02f[0m Error reading from 192.168.224.5:55816: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:01.421 UTC [comm.grpc.server] 1 -> INFO 030[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55816 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=103.2691ms
-"[33m2019-04-22 06:26:03.724 UTC [common.deliver] Handle -> WARN 031[0m Error reading from 192.168.224.5:55822: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:03.725 UTC [comm.grpc.server] 1 -> INFO 032[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55822 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=96.5035ms
-"[33m2019-04-22 06:26:03.726 UTC [orderer.common.broadcast] Handle -> WARN 033[0m Error reading from 192.168.224.5:55824: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:03.727 UTC [comm.grpc.server] 1 -> INFO 034[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55824 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=83.929ms
-"[33m2019-04-22 06:26:14.324 UTC [orderer.common.broadcast] Handle -> WARN 035[0m Error reading from 192.168.224.5:55888: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:14.324 UTC [comm.grpc.server] 1 -> INFO 036[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55888 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=2.1871471s
-"[33m2019-04-22 06:26:17.075 UTC [orderer.common.broadcast] Handle -> WARN 037[0m Error reading from 192.168.224.5:55900: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:17.075 UTC [comm.grpc.server] 1 -> INFO 038[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55900 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=2.1768334s
-"[33m2019-04-22 06:26:20.996 UTC [orderer.common.broadcast] Handle -> WARN 039[0m Error reading from 192.168.224.5:55922: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:26:20.997 UTC [comm.grpc.server] 1 -> INFO 03a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55922 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=2.2159801s
-"[33m2019-04-22 06:27:05.498 UTC [orderer.common.broadcast] Handle -> WARN 03b[0m Error reading from 192.168.224.5:55936: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:05.504 UTC [comm.grpc.server] 1 -> INFO 03c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55936 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=43.1933324s
-"[33m2019-04-22 06:27:10.989 UTC [orderer.common.broadcast] Handle -> WARN 03d[0m Error reading from 192.168.224.5:55948: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:10.989 UTC [comm.grpc.server] 1 -> INFO 03e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55948 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=34.9912ms
-"[33m2019-04-22 06:27:13.668 UTC [orderer.common.broadcast] Handle -> WARN 03f[0m Error reading from 192.168.224.5:55962: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:13.669 UTC [comm.grpc.server] 1 -> INFO 040[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:55962 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=40.9001ms
-"[33m2019-04-22 06:27:18.593 UTC [common.deliver] Handle -> WARN 041[0m Error reading from 192.168.224.5:55992: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:18.593 UTC [comm.grpc.server] 1 -> INFO 042[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55992 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=19.8334ms
-"[33m2019-04-22 06:27:18.990 UTC [common.deliver] Handle -> WARN 043[0m Error reading from 192.168.224.5:55994: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:18.990 UTC [comm.grpc.server] 1 -> INFO 044[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55994 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=26.54ms
-"[33m2019-04-22 06:27:19.199 UTC [common.deliver] Handle -> WARN 045[0m Error reading from 192.168.224.5:55996: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:19.199 UTC [comm.grpc.server] 1 -> INFO 046[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55996 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.8085ms
-"[33m2019-04-22 06:27:19.548 UTC [common.deliver] Handle -> WARN 047[0m Error reading from 192.168.224.5:55998: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:19.548 UTC [comm.grpc.server] 1 -> INFO 048[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:55998 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.2487ms
-"[33m2019-04-22 06:27:19.958 UTC [common.deliver] Handle -> WARN 049[0m Error reading from 192.168.224.5:56000: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:19.960 UTC [comm.grpc.server] 1 -> INFO 04a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56000 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=18.0664ms
-"[33m2019-04-22 06:27:20.201 UTC [common.deliver] Handle -> WARN 04b[0m Error reading from 192.168.224.5:56002: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:20.201 UTC [comm.grpc.server] 1 -> INFO 04c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56002 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.3511ms
-"[33m2019-04-22 06:27:20.417 UTC [common.deliver] Handle -> WARN 04d[0m Error reading from 192.168.224.5:56004: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:20.417 UTC [comm.grpc.server] 1 -> INFO 04e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56004 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.9123ms
-"[33m2019-04-22 06:27:20.707 UTC [common.deliver] Handle -> WARN 04f[0m Error reading from 192.168.224.5:56006: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:20.707 UTC [comm.grpc.server] 1 -> INFO 050[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56006 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.579ms
-"[33m2019-04-22 06:27:21.216 UTC [common.deliver] Handle -> WARN 051[0m Error reading from 192.168.224.5:56008: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:21.217 UTC [comm.grpc.server] 1 -> INFO 052[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56008 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=37.1645ms
-"[33m2019-04-22 06:27:21.496 UTC [common.deliver] Handle -> WARN 053[0m Error reading from 192.168.224.5:56010: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:21.496 UTC [comm.grpc.server] 1 -> INFO 054[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56010 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.6158ms
-"[33m2019-04-22 06:27:21.722 UTC [common.deliver] Handle -> WARN 055[0m Error reading from 192.168.224.5:56012: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:21.723 UTC [comm.grpc.server] 1 -> INFO 056[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56012 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=27.3642ms
-"[33m2019-04-22 06:27:22.187 UTC [common.deliver] Handle -> WARN 057[0m Error reading from 192.168.224.5:56014: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:22.188 UTC [comm.grpc.server] 1 -> INFO 058[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56014 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=14.6495ms
-"[33m2019-04-22 06:27:22.663 UTC [common.deliver] Handle -> WARN 059[0m Error reading from 192.168.224.5:56016: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:22.663 UTC [comm.grpc.server] 1 -> INFO 05a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56016 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.8107ms
-"[33m2019-04-22 06:27:22.994 UTC [common.deliver] Handle -> WARN 05b[0m Error reading from 192.168.224.5:56018: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:22.994 UTC [comm.grpc.server] 1 -> INFO 05c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56018 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=39.2059ms
-"[33m2019-04-22 06:27:23.368 UTC [common.deliver] Handle -> WARN 05d[0m Error reading from 192.168.224.5:56020: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:23.368 UTC [comm.grpc.server] 1 -> INFO 05e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56020 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.7461ms
-"[33m2019-04-22 06:27:37.382 UTC [cauthdsl] deduplicate -> WARN 05f[0m De-duplicating identity [Org1MSP832bfd52ec81dfd43638ec66a3242d2be2cfa0cdcb08ffea79b2cbab0a56a9ec] at index 2 in signature set"
-"[33m2019-04-22 06:27:37.383 UTC [cauthdsl] deduplicate -> WARN 060[0m De-duplicating identity [Org1MSP832bfd52ec81dfd43638ec66a3242d2be2cfa0cdcb08ffea79b2cbab0a56a9ec] at index 2 in signature set"
-"[33m2019-04-22 06:27:37.431 UTC [cauthdsl] deduplicate -> WARN 061[0m De-duplicating identity [Org1MSP832bfd52ec81dfd43638ec66a3242d2be2cfa0cdcb08ffea79b2cbab0a56a9ec] at index 2 in signature set"
-"[33m2019-04-22 06:27:37.440 UTC [cauthdsl] deduplicate -> WARN 062[0m De-duplicating identity [Org1MSP832bfd52ec81dfd43638ec66a3242d2be2cfa0cdcb08ffea79b2cbab0a56a9ec] at index 2 in signature set"
-"[33m2019-04-22 06:27:37.460 UTC [orderer.common.broadcast] Handle -> WARN 063[0m Error reading from 192.168.224.5:56024: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:37.461 UTC [comm.grpc.server] 1 -> INFO 064[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=192.168.224.5:56024 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=85.6848ms
-"[33m2019-04-22 06:27:37.466 UTC [common.deliver] Handle -> WARN 065[0m Error reading from 192.168.224.5:56022: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:37.467 UTC [comm.grpc.server] 1 -> INFO 066[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56022 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=110.595ms
-"[33m2019-04-22 06:27:39.802 UTC [common.deliver] Handle -> WARN 067[0m Error reading from 192.168.224.5:56050: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:39.802 UTC [comm.grpc.server] 1 -> INFO 068[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56050 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=45.9753ms
-"[33m2019-04-22 06:27:40.300 UTC [common.deliver] Handle -> WARN 069[0m Error reading from 192.168.224.5:56052: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:40.300 UTC [comm.grpc.server] 1 -> INFO 06a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56052 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.017ms
-"[33m2019-04-22 06:27:41.503 UTC [common.deliver] Handle -> WARN 06b[0m Error reading from 192.168.224.5:56054: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:41.504 UTC [comm.grpc.server] 1 -> INFO 06c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56054 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.8646ms
-"[33m2019-04-22 06:27:41.881 UTC [common.deliver] Handle -> WARN 06d[0m Error reading from 192.168.224.5:56056: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:41.882 UTC [comm.grpc.server] 1 -> INFO 06e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56056 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=100.3519ms
-"[33m2019-04-22 06:27:42.195 UTC [common.deliver] Handle -> WARN 06f[0m Error reading from 192.168.224.5:56058: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:42.195 UTC [comm.grpc.server] 1 -> INFO 070[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56058 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.9844ms
-"[33m2019-04-22 06:27:42.588 UTC [common.deliver] Handle -> WARN 071[0m Error reading from 192.168.224.5:56060: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:42.590 UTC [comm.grpc.server] 1 -> INFO 072[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56060 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=28.8188ms
-"[33m2019-04-22 06:27:42.986 UTC [common.deliver] Handle -> WARN 073[0m Error reading from 192.168.224.5:56062: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:42.993 UTC [comm.grpc.server] 1 -> INFO 074[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56062 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=27.1588ms
-"[33m2019-04-22 06:27:43.407 UTC [common.deliver] Handle -> WARN 075[0m Error reading from 192.168.224.5:56064: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:43.407 UTC [comm.grpc.server] 1 -> INFO 076[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56064 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.6195ms
-"[33m2019-04-22 06:27:43.909 UTC [common.deliver] Handle -> WARN 077[0m Error reading from 192.168.224.5:56066: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:43.911 UTC [comm.grpc.server] 1 -> INFO 078[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56066 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=45.3998ms
-"[33m2019-04-22 06:27:45.369 UTC [common.deliver] Handle -> WARN 079[0m Error reading from 192.168.224.5:56068: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:45.369 UTC [comm.grpc.server] 1 -> INFO 07a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56068 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=40.3442ms
-"[33m2019-04-22 06:27:45.764 UTC [common.deliver] Handle -> WARN 07b[0m Error reading from 192.168.224.5:56070: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:45.766 UTC [comm.grpc.server] 1 -> INFO 07c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56070 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=37.2845ms
-"[33m2019-04-22 06:27:46.147 UTC [common.deliver] Handle -> WARN 07d[0m Error reading from 192.168.224.5:56072: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:46.147 UTC [comm.grpc.server] 1 -> INFO 07e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56072 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=18.7551ms
-"[33m2019-04-22 06:27:46.449 UTC [common.deliver] Handle -> WARN 07f[0m Error reading from 192.168.224.5:56074: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:46.450 UTC [comm.grpc.server] 1 -> INFO 080[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56074 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.5173ms
-"[33m2019-04-22 06:27:46.799 UTC [common.deliver] Handle -> WARN 081[0m Error reading from 192.168.224.5:56076: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:46.799 UTC [comm.grpc.server] 1 -> INFO 082[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56076 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.8702ms
-"[33m2019-04-22 06:27:47.370 UTC [common.deliver] Handle -> WARN 083[0m Error reading from 192.168.224.5:56078: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:47.371 UTC [comm.grpc.server] 1 -> INFO 084[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56078 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=22.9332ms
-"[33m2019-04-22 06:27:48.953 UTC [common.deliver] Handle -> WARN 085[0m Error reading from 192.168.224.5:56080: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:48.954 UTC [comm.grpc.server] 1 -> INFO 086[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56080 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=51.1715ms
-"[33m2019-04-22 06:27:49.454 UTC [common.deliver] Handle -> WARN 087[0m Error reading from 192.168.224.5:56082: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:49.455 UTC [comm.grpc.server] 1 -> INFO 088[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56082 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=38.9958ms
-"[33m2019-04-22 06:27:49.987 UTC [common.deliver] Handle -> WARN 089[0m Error reading from 192.168.224.5:56084: rpc error: code = Canceled desc = context canceled"
-"[34m2019-04-22 06:27:49.987 UTC [comm.grpc.server] 1 -> INFO 08a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=192.168.224.5:56084 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=20.5545ms
+"[34m2020-05-02 06:03:44.143 UTC [orderer.common.server] Main -> INFO 012[0m Beginning to serve requests"
+"[36m2020-05-02 06:03:44.155 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 013[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:45.157 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 014[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:45.161 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 015[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:45.161 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 016[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:45.178 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 017[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:45.178 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 018[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:45.200 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 019[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:45.200 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 01a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:45.209 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 01b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:46.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 01c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:46.159 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 01d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:46.159 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 01e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:46.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 01f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:46.162 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 020[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:46.165 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 021[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:46.165 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 022[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:46.174 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 023[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:47.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 024[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:47.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 025[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:47.162 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 026[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:47.167 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 027[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:47.167 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 028[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:47.171 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 029[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:47.172 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 02a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:47.174 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 02b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:48.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 02c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:48.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 02d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:48.160 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 02e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:48.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 02f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:48.162 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 030[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:48.165 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 031[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:48.166 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 032[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:48.169 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 033[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:49.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 034[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:49.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 035[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:49.158 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 036[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:49.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 037[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:49.160 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 038[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:49.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 039[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:49.163 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 03a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:49.166 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 03b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:50.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 03c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:50.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 03d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:50.160 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 03e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:50.164 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 03f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:50.164 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 040[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:50.168 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 041[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:50.169 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 042[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:50.170 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 043[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:51.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 044[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:51.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 045[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:51.158 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 046[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:51.161 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 047[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:51.161 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 048[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:51.164 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 049[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:51.164 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 04a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:51.166 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 04b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:52.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 04c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:52.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 04d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:52.163 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 04e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:52.171 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 04f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:52.172 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 050[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:52.175 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 051[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:52.176 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 052[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:52.177 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 053[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:53.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 054[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:53.157 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 055[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:53.158 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 056[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:53.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 057[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:53.161 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 058[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:53.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 059[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:53.162 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 05a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:53.166 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 05b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:54.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 05c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:54.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 05d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:54.158 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 05e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:54.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 05f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:54.160 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 060[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:54.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 061[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:54.163 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 062[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:54.164 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 063[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:55.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 064[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:55.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 065[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:55.158 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 066[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:55.160 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 067[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:55.161 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 068[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:55.162 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 069[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:55.162 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 06a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:55.165 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 06b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:56.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 06c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:56.167 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 06d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:56.169 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 06e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:56.171 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 06f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:56.173 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 070[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:56.201 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 071[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:56.212 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 072[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:56.219 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 073[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:57.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 074[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:57.163 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 075[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:57.163 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 076[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:57.167 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 077[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:57.167 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 078[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:57.172 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 079[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:57.173 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 07a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:57.175 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 07b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:58.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 07c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:58.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 07d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:58.159 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 07e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:58.161 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 07f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:58.161 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 080[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:58.165 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 081[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:58.165 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 082[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:58.168 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 083[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:03:59.172 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 084[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:59.229 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 085[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:03:59.229 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 086[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:59.244 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 087[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:03:59.251 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 088[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:59.255 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 089[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:03:59.258 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 08a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:03:59.266 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 08b[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:04:00.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 08c[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:00.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 08d[0m Failed to connect to broker kafka0:9092: dial tcp 172.18.0.6:9092: connect: connection refused"
+"[36m2020-05-02 06:04:00.159 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 08e[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:00.163 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 08f[0m Failed to connect to broker kafka1:9092: dial tcp 172.18.0.8:9092: connect: connection refused"
+"[36m2020-05-02 06:04:00.163 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 090[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:00.165 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 091[0m Failed to connect to broker kafka2:9092: dial tcp 172.18.0.9:9092: connect: connection refused"
+"[36m2020-05-02 06:04:00.168 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 092[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:00.171 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 093[0m Failed to connect to broker kafka3:9092: dial tcp 172.18.0.7:9092: connect: connection refused"
+"[36m2020-05-02 06:04:01.156 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 094[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:01.158 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 095[0m Connected to broker at kafka0:9092 (unregistered)"
+"[36m2020-05-02 06:04:03.809 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 096[0m Closed connection to broker kafka0:9092"
+"[34m2020-05-02 06:04:03.809 UTC [orderer.consensus.kafka] setupProducerForChannel -> INFO 097[0m [channel: testchainid] Setting up the producer for this channel..."
+"[36m2020-05-02 06:04:03.810 UTC [orderer.consensus.kafka.sarama] NewAsyncProducer -> DEBU 098[0m Initializing new client"
+"[36m2020-05-02 06:04:03.810 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 099[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:03.811 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 09a[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:03.811 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 09b[0m client/metadata fetching metadata for all topics from broker kafka1:9092"
+"[36m2020-05-02 06:04:03.812 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 09c[0m Connected to broker at kafka1:9092 (unregistered)"
+"[36m2020-05-02 06:04:03.916 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 09d[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:03.917 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 09e[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:03.917 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 09f[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:03.917 UTC [orderer.consensus.kafka.sarama] NewAsyncProducer -> DEBU 0a0[0m Successfully initialized new client"
+"[34m2020-05-02 06:04:03.917 UTC [orderer.consensus.kafka] startThread -> INFO 0a1[0m [channel: testchainid] Producer set up successfully"
+"[34m2020-05-02 06:04:03.918 UTC [orderer.consensus.kafka] sendConnectMessage -> INFO 0a2[0m [channel: testchainid] About to post the CONNECT message..."
+"[36m2020-05-02 06:04:03.919 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0a3[0m client/metadata fetching metadata for [testchainid] from broker kafka1:9092"
+"[36m2020-05-02 06:04:04.231 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0a4[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:04.232 UTC [orderer.consensus.kafka.sarama] tryRefreshMetadata -> DEBU 0a5[0m client/metadata retrying after 250ms... (3 attempts remaining)"
+"[36m2020-05-02 06:04:04.483 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0a6[0m client/metadata fetching metadata for [testchainid] from broker kafka1:9092"
+"[36m2020-05-02 06:04:04.799 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0a7[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:04.800 UTC [orderer.consensus.kafka.sarama] tryRefreshMetadata -> DEBU 0a8[0m client/metadata retrying after 250ms... (2 attempts remaining)"
+"[36m2020-05-02 06:04:05.050 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0a9[0m client/metadata fetching metadata for [testchainid] from broker kafka1:9092"
+"[36m2020-05-02 06:04:05.144 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0aa[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:05.144 UTC [orderer.consensus.kafka.sarama] tryRefreshMetadata -> DEBU 0ab[0m client/metadata retrying after 250ms... (1 attempts remaining)"
+"[36m2020-05-02 06:04:05.396 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0ac[0m client/metadata fetching metadata for [testchainid] from broker kafka1:9092"
+"[36m2020-05-02 06:04:05.535 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0ad[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:05.536 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0ae[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:06.537 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0af[0m client/metadata fetching metadata for [testchainid] from broker kafka1:9092"
+"[36m2020-05-02 06:04:06.555 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0b0[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.556 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0b1[0m producer/broker/2 starting up"
+"[36m2020-05-02 06:04:06.557 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0b2[0m producer/broker/2 state change to [open] on testchainid/0"
+"[36m2020-05-02 06:04:06.581 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0b3[0m Connected to broker at kafka2:9092 (registered as #2)"
+"[34m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka] startThread -> INFO 0b4[0m [channel: testchainid] CONNECT message posted successfully"
+"[34m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka] setupParentConsumerForChannel -> INFO 0b5[0m [channel: testchainid] Setting up the parent consumer for this channel..."
+"[36m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka.sarama] NewConsumer -> DEBU 0b6[0m Initializing new client"
+"[36m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 0b7[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0b8[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.745 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0b9[0m client/metadata fetching metadata for all topics from broker kafka0:9092"
+"[36m2020-05-02 06:04:06.747 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0ba[0m Connected to broker at kafka0:9092 (unregistered)"
+"[36m2020-05-02 06:04:06.782 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0bb[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:06.782 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0bc[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:06.782 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0bd[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:06.783 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0be[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:06.783 UTC [orderer.consensus.kafka.sarama] NewConsumer -> DEBU 0bf[0m Successfully initialized new client"
+"[34m2020-05-02 06:04:06.783 UTC [orderer.consensus.kafka] startThread -> INFO 0c0[0m [channel: testchainid] Parent consumer set up successfully"
+"[34m2020-05-02 06:04:06.783 UTC [orderer.consensus.kafka] setupChannelConsumerForChannel -> INFO 0c1[0m [channel: testchainid] Setting up the channel consumer for this channel (start offset: -2)..."
+"[36m2020-05-02 06:04:06.784 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0c2[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.785 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0c3[0m Connected to broker at kafka2:9092 (registered as #2)"
+"[36m2020-05-02 06:04:06.840 UTC [orderer.consensus.kafka.sarama] subscriptionConsumer -> DEBU 0c4[0m consumer/broker/2 added subscription to testchainid/0"
+"[34m2020-05-02 06:04:06.840 UTC [orderer.consensus.kafka] startThread -> INFO 0c5[0m [channel: testchainid] Channel consumer set up successfully"
+"[36m2020-05-02 06:04:06.840 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0c6[0m Initializing new client"
+"[36m2020-05-02 06:04:06.841 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 0c7[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.841 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0c8[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:06.841 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0c9[0m client/metadata fetching metadata for all topics from broker kafka3:9092"
+"[36m2020-05-02 06:04:06.853 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0ca[0m Connected to broker at kafka3:9092 (unregistered)"
+"[36m2020-05-02 06:04:06.885 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0cb[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:06.886 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0cc[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:06.886 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0cd[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:06.886 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0ce[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:06.886 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0cf[0m Successfully initialized new client"
+"[36m2020-05-02 06:04:06.887 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0d0[0m Closing Client"
+"[34m2020-05-02 06:04:06.887 UTC [orderer.consensus.kafka] startThread -> INFO 0d1[0m [channel: testchainid] Start phase completed successfully"
+"[36m2020-05-02 06:04:06.887 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0d2[0m Closed connection to broker kafka3:9092"
+"[34m2020-05-02 06:04:18.848 UTC [comm.grpc.server] 1 -> INFO 0d3[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43088 grpc.code=OK grpc.call_duration=189.2017ms
+"[34m2020-05-02 06:04:18.856 UTC [fsblkstorage] newBlockfileMgr -> INFO 0d4[0m Getting block information from block storage"
+"[34m2020-05-02 06:04:18.864 UTC [orderer.consensus.kafka] newChain -> INFO 0d5[0m [channel: businesschannel] Starting chain with last persisted offset -3 and last recorded block [0]"
+"[34m2020-05-02 06:04:18.865 UTC [orderer.commmon.multichannel] newChain -> INFO 0d6[0m Created and starting new channel businesschannel"
+"[34m2020-05-02 06:04:18.865 UTC [orderer.consensus.kafka] setupTopicForChannel -> INFO 0d7[0m [channel: businesschannel] Setting up the topic for this channel..."
+"[36m2020-05-02 06:04:18.865 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0d8[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[33m2020-05-02 06:04:18.867 UTC [common.deliver] deliverBlocks -> WARN 0d9[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43086 because of consenter error"
+"[34m2020-05-02 06:04:18.868 UTC [comm.grpc.server] 1 -> INFO 0da[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43086 grpc.code=OK grpc.call_duration=221.9964ms
+"[36m2020-05-02 06:04:18.877 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0db[0m Connected to broker at kafka0:9092 (unregistered)"
+"[36m2020-05-02 06:04:19.062 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0dc[0m Closed connection to broker kafka0:9092"
+"[34m2020-05-02 06:04:19.062 UTC [orderer.consensus.kafka] setupProducerForChannel -> INFO 0dd[0m [channel: businesschannel] Setting up the producer for this channel..."
+"[36m2020-05-02 06:04:19.063 UTC [orderer.consensus.kafka.sarama] NewAsyncProducer -> DEBU 0de[0m Initializing new client"
+"[36m2020-05-02 06:04:19.063 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 0df[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:19.063 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0e0[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:19.063 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0e1[0m client/metadata fetching metadata for all topics from broker kafka2:9092"
+"[36m2020-05-02 06:04:19.068 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0e2[0m Connected to broker at kafka2:9092 (unregistered)"
+"[36m2020-05-02 06:04:19.077 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0e3[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:19.077 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0e4[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:19.077 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0e5[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:19.078 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 0e6[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:19.078 UTC [orderer.consensus.kafka.sarama] NewAsyncProducer -> DEBU 0e7[0m Successfully initialized new client"
+"[34m2020-05-02 06:04:19.078 UTC [orderer.consensus.kafka] startThread -> INFO 0e8[0m [channel: businesschannel] Producer set up successfully"
+"[34m2020-05-02 06:04:19.078 UTC [orderer.consensus.kafka] sendConnectMessage -> INFO 0e9[0m [channel: businesschannel] About to post the CONNECT message..."
+"[36m2020-05-02 06:04:19.078 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0ea[0m client/metadata fetching metadata for [businesschannel] from broker kafka2:9092"
+"[33m2020-05-02 06:04:19.121 UTC [common.deliver] deliverBlocks -> WARN 0eb[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43092 because of consenter error"
+"[34m2020-05-02 06:04:19.121 UTC [comm.grpc.server] 1 -> INFO 0ec[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43092 grpc.code=OK grpc.call_duration=201.5472ms
+"[36m2020-05-02 06:04:19.205 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 0ed[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:19.205 UTC [orderer.consensus.kafka.sarama] tryRefreshMetadata -> DEBU 0ee[0m client/metadata retrying after 250ms... (3 attempts remaining)"
+"[33m2020-05-02 06:04:19.354 UTC [common.deliver] deliverBlocks -> WARN 0ef[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43100 because of consenter error"
+"[34m2020-05-02 06:04:19.355 UTC [comm.grpc.server] 1 -> INFO 0f0[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43100 grpc.code=OK grpc.call_duration=201.1455ms
+"[36m2020-05-02 06:04:19.456 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0f1[0m client/metadata fetching metadata for [businesschannel] from broker kafka2:9092"
+"[36m2020-05-02 06:04:19.523 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0f2[0m client/metadata found some partitions to be leaderless"
+"[36m2020-05-02 06:04:19.524 UTC [orderer.consensus.kafka.sarama] tryRefreshMetadata -> DEBU 0f3[0m client/metadata retrying after 250ms... (2 attempts remaining)"
+"[33m2020-05-02 06:04:19.584 UTC [common.deliver] deliverBlocks -> WARN 0f4[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43102 because of consenter error"
+"[34m2020-05-02 06:04:19.585 UTC [comm.grpc.server] 1 -> INFO 0f5[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43102 grpc.code=OK grpc.call_duration=199.5096ms
+"[36m2020-05-02 06:04:19.775 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 0f6[0m client/metadata fetching metadata for [businesschannel] from broker kafka2:9092"
+"[36m2020-05-02 06:04:19.783 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 0f7[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:19.785 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0f8[0m producer/broker/2 starting up"
+"[36m2020-05-02 06:04:19.785 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0f9[0m producer/broker/2 state change to [open] on businesschannel/0"
+"[36m2020-05-02 06:04:19.788 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 0fa[0m Connected to broker at kafka2:9092 (registered as #2)"
+"[33m2020-05-02 06:04:19.811 UTC [common.deliver] deliverBlocks -> WARN 0fb[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43104 because of consenter error"
+"[34m2020-05-02 06:04:19.812 UTC [comm.grpc.server] 1 -> INFO 0fc[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43104 grpc.code=OK grpc.call_duration=202.7882ms
+"[33m2020-05-02 06:04:20.035 UTC [common.deliver] deliverBlocks -> WARN 0fd[0m [channel: businesschannel] Rejecting deliver request for 172.18.0.5:43108 because of consenter error"
+"[34m2020-05-02 06:04:20.036 UTC [comm.grpc.server] 1 -> INFO 0fe[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43108 grpc.code=OK grpc.call_duration=200.9836ms
+"[34m2020-05-02 06:04:20.189 UTC [orderer.consensus.kafka] startThread -> INFO 0ff[0m [channel: businesschannel] CONNECT message posted successfully"
+"[34m2020-05-02 06:04:20.189 UTC [orderer.consensus.kafka] setupParentConsumerForChannel -> INFO 100[0m [channel: businesschannel] Setting up the parent consumer for this channel..."
+"[36m2020-05-02 06:04:20.190 UTC [orderer.consensus.kafka.sarama] NewConsumer -> DEBU 101[0m Initializing new client"
+"[36m2020-05-02 06:04:20.190 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 102[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:20.190 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 103[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:20.190 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 104[0m client/metadata fetching metadata for all topics from broker kafka3:9092"
+"[36m2020-05-02 06:04:20.193 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 105[0m Connected to broker at kafka3:9092 (unregistered)"
+"[36m2020-05-02 06:04:20.202 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 106[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 107[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 108[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 109[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka.sarama] NewConsumer -> DEBU 10a[0m Successfully initialized new client"
+"[34m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka] startThread -> INFO 10b[0m [channel: businesschannel] Parent consumer set up successfully"
+"[34m2020-05-02 06:04:20.203 UTC [orderer.consensus.kafka] setupChannelConsumerForChannel -> INFO 10c[0m [channel: businesschannel] Setting up the channel consumer for this channel (start offset: -2)..."
+"[36m2020-05-02 06:04:20.204 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 10d[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:20.206 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 10e[0m Connected to broker at kafka2:9092 (registered as #2)"
+"[36m2020-05-02 06:04:20.219 UTC [orderer.consensus.kafka.sarama] subscriptionConsumer -> DEBU 10f[0m consumer/broker/2 added subscription to businesschannel/0"
+"[34m2020-05-02 06:04:20.219 UTC [orderer.consensus.kafka] startThread -> INFO 110[0m [channel: businesschannel] Channel consumer set up successfully"
+"[36m2020-05-02 06:04:20.219 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 111[0m Initializing new client"
+"[36m2020-05-02 06:04:20.219 UTC [orderer.consensus.kafka.sarama] NewClient -> DEBU 112[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:20.219 UTC [orderer.consensus.kafka.sarama] Open -> DEBU 113[0m ClientID is the default of 'sarama', you should consider setting it to something application-specific."
+"[36m2020-05-02 06:04:20.220 UTC [orderer.consensus.kafka.sarama] RefreshMetadata -> DEBU 114[0m client/metadata fetching metadata for all topics from broker kafka2:9092"
+"[36m2020-05-02 06:04:20.223 UTC [orderer.consensus.kafka.sarama] withRecover -> DEBU 115[0m Connected to broker at kafka2:9092 (unregistered)"
+"[36m2020-05-02 06:04:20.231 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 116[0m client/brokers registered new broker #2 at kafka2:9092"
+"[36m2020-05-02 06:04:20.231 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 117[0m client/brokers registered new broker #1 at kafka1:9092"
+"[36m2020-05-02 06:04:20.231 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 118[0m client/brokers registered new broker #3 at kafka3:9092"
+"[36m2020-05-02 06:04:20.231 UTC [orderer.consensus.kafka.sarama] updateMetadata -> DEBU 119[0m client/brokers registered new broker #0 at kafka0:9092"
+"[36m2020-05-02 06:04:20.231 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 11a[0m Successfully initialized new client"
+"[36m2020-05-02 06:04:20.232 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 11b[0m Closing Client"
+"[34m2020-05-02 06:04:20.232 UTC [orderer.consensus.kafka] startThread -> INFO 11c[0m [channel: businesschannel] Start phase completed successfully"
+"[36m2020-05-02 06:04:20.232 UTC [orderer.consensus.kafka.sarama] func1 -> DEBU 11d[0m Closed connection to broker kafka2:9092"
+"[34m2020-05-02 06:04:20.264 UTC [comm.grpc.server] 1 -> INFO 11e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43112 grpc.code=OK grpc.call_duration=207.183ms
+"[34m2020-05-02 06:04:27.655 UTC [comm.grpc.server] 1 -> INFO 11f[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43154 grpc.code=OK grpc.call_duration=144.0367ms
+"[33m2020-05-02 06:04:30.008 UTC [orderer.common.broadcast] Handle -> WARN 120[0m Error reading from 172.18.0.5:43170: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:04:30.009 UTC [comm.grpc.server] 1 -> INFO 121[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43170 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=133.5113ms
+"[34m2020-05-02 06:04:33.871 UTC [comm.grpc.server] 1 -> INFO 122[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.12:34518 error="context finished before block retrieved: context canceled" grpc.code=Unknown grpc.call_duration=5.0186046s
+"[33m2020-05-02 06:07:14.329 UTC [orderer.common.broadcast] Handle -> WARN 123[0m Error reading from 172.18.0.5:43222: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:14.329 UTC [comm.grpc.server] 1 -> INFO 124[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43222 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=2.5940702s
+"[33m2020-05-02 06:07:17.494 UTC [orderer.common.broadcast] Handle -> WARN 125[0m Error reading from 172.18.0.5:43232: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:17.495 UTC [comm.grpc.server] 1 -> INFO 126[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43232 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=2.4856669s
+"[33m2020-05-02 06:07:23.164 UTC [orderer.common.broadcast] Handle -> WARN 127[0m Error reading from 172.18.0.5:43254: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:23.164 UTC [comm.grpc.server] 1 -> INFO 128[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43254 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=3.6371858s
+"[33m2020-05-02 06:07:25.701 UTC [orderer.common.broadcast] Handle -> WARN 129[0m Error reading from 172.18.0.5:43276: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:25.701 UTC [comm.grpc.server] 1 -> INFO 12a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43276 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=52.9344ms
+"[33m2020-05-02 06:07:31.385 UTC [orderer.common.broadcast] Handle -> WARN 12b[0m Error reading from 172.18.0.5:43286: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:31.385 UTC [comm.grpc.server] 1 -> INFO 12c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43286 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=55.0235ms
+"[33m2020-05-02 06:07:34.551 UTC [orderer.common.broadcast] Handle -> WARN 12d[0m Error reading from 172.18.0.5:43300: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:34.552 UTC [comm.grpc.server] 1 -> INFO 12e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43300 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=80.4275ms
+"[33m2020-05-02 06:07:42.504 UTC [common.deliver] Handle -> WARN 12f[0m Error reading from 172.18.0.5:43326: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:42.504 UTC [comm.grpc.server] 1 -> INFO 130[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43326 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.1458ms
+"[33m2020-05-02 06:07:43.388 UTC [common.deliver] Handle -> WARN 131[0m Error reading from 172.18.0.5:43328: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:43.388 UTC [comm.grpc.server] 1 -> INFO 132[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43328 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=19.7706ms
+"[33m2020-05-02 06:07:43.587 UTC [common.deliver] Handle -> WARN 133[0m Error reading from 172.18.0.5:43330: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:43.588 UTC [comm.grpc.server] 1 -> INFO 134[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43330 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=14.8317ms
+"[33m2020-05-02 06:07:43.877 UTC [common.deliver] Handle -> WARN 135[0m Error reading from 172.18.0.5:43332: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:43.878 UTC [comm.grpc.server] 1 -> INFO 136[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43332 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=18.8369ms
+"[33m2020-05-02 06:07:44.078 UTC [common.deliver] Handle -> WARN 137[0m Error reading from 172.18.0.5:43334: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:44.079 UTC [comm.grpc.server] 1 -> INFO 138[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43334 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.2782ms
+"[33m2020-05-02 06:07:44.354 UTC [common.deliver] Handle -> WARN 139[0m Error reading from 172.18.0.5:43336: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:44.354 UTC [comm.grpc.server] 1 -> INFO 13a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43336 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=20.7316ms
+"[33m2020-05-02 06:07:44.562 UTC [common.deliver] Handle -> WARN 13b[0m Error reading from 172.18.0.5:43338: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:44.562 UTC [comm.grpc.server] 1 -> INFO 13c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43338 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=19.3874ms
+"[33m2020-05-02 06:07:44.799 UTC [common.deliver] Handle -> WARN 13d[0m Error reading from 172.18.0.5:43340: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:44.799 UTC [comm.grpc.server] 1 -> INFO 13e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43340 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.4469ms
+"[33m2020-05-02 06:07:44.993 UTC [common.deliver] Handle -> WARN 13f[0m Error reading from 172.18.0.5:43342: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:44.995 UTC [comm.grpc.server] 1 -> INFO 140[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43342 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.0383ms
+"[33m2020-05-02 06:07:45.212 UTC [common.deliver] Handle -> WARN 141[0m Error reading from 172.18.0.5:43344: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:45.212 UTC [comm.grpc.server] 1 -> INFO 142[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43344 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.5963ms
+"[33m2020-05-02 06:07:45.404 UTC [common.deliver] Handle -> WARN 143[0m Error reading from 172.18.0.5:43346: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:45.405 UTC [comm.grpc.server] 1 -> INFO 144[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43346 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.2107ms
+"[33m2020-05-02 06:07:45.602 UTC [common.deliver] Handle -> WARN 145[0m Error reading from 172.18.0.5:43348: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:45.602 UTC [comm.grpc.server] 1 -> INFO 146[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43348 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.412ms
+"[33m2020-05-02 06:07:45.888 UTC [common.deliver] Handle -> WARN 147[0m Error reading from 172.18.0.5:43350: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:45.888 UTC [comm.grpc.server] 1 -> INFO 148[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43350 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=20.0782ms
+"[33m2020-05-02 06:07:46.057 UTC [common.deliver] Handle -> WARN 149[0m Error reading from 172.18.0.5:43352: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:46.057 UTC [comm.grpc.server] 1 -> INFO 14a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43352 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.4048ms
+"[33m2020-05-02 06:07:46.227 UTC [common.deliver] Handle -> WARN 14b[0m Error reading from 172.18.0.5:43354: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:07:46.227 UTC [comm.grpc.server] 1 -> INFO 14c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43354 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.8511ms
+"[33m2020-05-02 06:08:00.683 UTC [policies] SignatureSetToValidIdentities -> WARN 14d[0m De-duplicating identity [Org1MSP98c765a96cd7311dd497a5f61675aa0537de86d656bc017d234df342e5ca7e67] at index 2 in signature set"
+"[33m2020-05-02 06:08:00.685 UTC [policies] SignatureSetToValidIdentities -> WARN 14e[0m De-duplicating identity [Org1MSP98c765a96cd7311dd497a5f61675aa0537de86d656bc017d234df342e5ca7e67] at index 2 in signature set"
+"[33m2020-05-02 06:08:00.809 UTC [orderer.common.broadcast] Handle -> WARN 14f[0m Error reading from 172.18.0.5:43356: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:00.816 UTC [comm.grpc.server] 1 -> INFO 150[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Broadcast grpc.peer_address=172.18.0.5:43356 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=137.5873ms
+"[33m2020-05-02 06:08:00.819 UTC [policies] SignatureSetToValidIdentities -> WARN 151[0m De-duplicating identity [Org1MSP98c765a96cd7311dd497a5f61675aa0537de86d656bc017d234df342e5ca7e67] at index 2 in signature set"
+"[33m2020-05-02 06:08:00.826 UTC [policies] SignatureSetToValidIdentities -> WARN 152[0m De-duplicating identity [Org1MSP98c765a96cd7311dd497a5f61675aa0537de86d656bc017d234df342e5ca7e67] at index 2 in signature set"
+"[33m2020-05-02 06:08:04.024 UTC [common.deliver] Handle -> WARN 153[0m Error reading from 172.18.0.5:43370: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:04.025 UTC [comm.grpc.server] 1 -> INFO 154[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43370 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.2224ms
+"[33m2020-05-02 06:08:04.279 UTC [common.deliver] Handle -> WARN 155[0m Error reading from 172.18.0.5:43372: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:04.279 UTC [comm.grpc.server] 1 -> INFO 156[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43372 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=49.1005ms
+"[33m2020-05-02 06:08:05.002 UTC [common.deliver] Handle -> WARN 157[0m Error reading from 172.18.0.5:43374: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:05.002 UTC [comm.grpc.server] 1 -> INFO 158[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43374 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.5308ms
+"[33m2020-05-02 06:08:05.285 UTC [common.deliver] Handle -> WARN 159[0m Error reading from 172.18.0.5:43376: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:05.285 UTC [comm.grpc.server] 1 -> INFO 15a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43376 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=17.6643ms
+"[33m2020-05-02 06:08:05.449 UTC [common.deliver] Handle -> WARN 15b[0m Error reading from 172.18.0.5:43378: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:05.449 UTC [comm.grpc.server] 1 -> INFO 15c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43378 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=8.7272ms
+"[33m2020-05-02 06:08:05.624 UTC [common.deliver] Handle -> WARN 15d[0m Error reading from 172.18.0.5:43380: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:05.625 UTC [comm.grpc.server] 1 -> INFO 15e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43380 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=17.8331ms
+"[33m2020-05-02 06:08:05.818 UTC [common.deliver] Handle -> WARN 15f[0m Error reading from 172.18.0.5:43382: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:05.818 UTC [comm.grpc.server] 1 -> INFO 160[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43382 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=29.7026ms
+"[33m2020-05-02 06:08:06.037 UTC [common.deliver] Handle -> WARN 161[0m Error reading from 172.18.0.5:43384: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:06.037 UTC [comm.grpc.server] 1 -> INFO 162[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43384 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.456ms
+"[33m2020-05-02 06:08:06.231 UTC [common.deliver] Handle -> WARN 163[0m Error reading from 172.18.0.5:43386: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:06.252 UTC [comm.grpc.server] 1 -> INFO 164[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43386 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=32.6009ms
+"[33m2020-05-02 06:08:06.461 UTC [common.deliver] Handle -> WARN 165[0m Error reading from 172.18.0.5:43388: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:06.461 UTC [comm.grpc.server] 1 -> INFO 166[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43388 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.4793ms
+"[33m2020-05-02 06:08:06.712 UTC [common.deliver] Handle -> WARN 167[0m Error reading from 172.18.0.5:43390: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:06.712 UTC [comm.grpc.server] 1 -> INFO 168[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43390 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=21.1549ms
+"[33m2020-05-02 06:08:06.921 UTC [common.deliver] Handle -> WARN 169[0m Error reading from 172.18.0.5:43392: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:06.921 UTC [comm.grpc.server] 1 -> INFO 16a[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43392 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=12.2094ms
+"[33m2020-05-02 06:08:07.095 UTC [common.deliver] Handle -> WARN 16b[0m Error reading from 172.18.0.5:43394: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:07.095 UTC [comm.grpc.server] 1 -> INFO 16c[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43394 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=11.401ms
+"[33m2020-05-02 06:08:07.304 UTC [common.deliver] Handle -> WARN 16d[0m Error reading from 172.18.0.5:43396: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:07.304 UTC [comm.grpc.server] 1 -> INFO 16e[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43396 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=9.8893ms
+"[33m2020-05-02 06:08:07.512 UTC [common.deliver] Handle -> WARN 16f[0m Error reading from 172.18.0.5:43398: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:07.513 UTC [comm.grpc.server] 1 -> INFO 170[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43398 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=7.1219ms
+"[33m2020-05-02 06:08:07.684 UTC [common.deliver] Handle -> WARN 171[0m Error reading from 172.18.0.5:43400: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:07.684 UTC [comm.grpc.server] 1 -> INFO 172[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43400 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=16.8577ms
+"[33m2020-05-02 06:08:07.900 UTC [common.deliver] Handle -> WARN 173[0m Error reading from 172.18.0.5:43402: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:07.900 UTC [comm.grpc.server] 1 -> INFO 174[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43402 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=13.8019ms
+"[33m2020-05-02 06:08:08.309 UTC [common.deliver] Handle -> WARN 175[0m Error reading from 172.18.0.5:43404: rpc error: code = Canceled desc = context canceled"
+"[34m2020-05-02 06:08:08.309 UTC [comm.grpc.server] 1 -> INFO 176[0m streaming call completed" grpc.service=orderer.AtomicBroadcast grpc.method=Deliver grpc.peer_address=172.18.0.5:43404 error="rpc error: code = Canceled desc = context canceled" grpc.code=Canceled grpc.call_duration=10.9621ms

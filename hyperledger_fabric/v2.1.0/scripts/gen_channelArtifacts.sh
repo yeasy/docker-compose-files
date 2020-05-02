@@ -70,8 +70,7 @@ configtxgen \
 
 echo "Output the json for org1, org2 and org3"
 declare -a msps=("${ORG1MSP}"
-				"${ORG2MSP}"
-				"${ORG3MSP}")
+				"${ORG2MSP}" )
 for msp in "${msps[@]}"
 do
 [ ! -f ${msp}.json ] && \
@@ -79,3 +78,13 @@ configtxgen \
 	-configPath /tmp \
 	-printOrg ${msp} >${msp}.json
 done
+
+declare -a msps=( "${ORG3MSP}")
+for msp in "${msps[@]}"
+do
+[ ! -f ${msp}.json ] && \
+configtxgen \
+	-configPath /tmp/org3 \
+	-printOrg ${msp} >${msp}.json
+done
+
