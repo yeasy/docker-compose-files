@@ -79,6 +79,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_channel_list
 	make test_channel_getinfo
+	make test_discover
 
 	make logs_save
 
@@ -211,6 +212,10 @@ test_eventsclient: # test get event notification in a loop
 test_sidedb: # test sideDB/private data feature
 	@echo "Test sideDB"
 	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_sideDB.sh"
+
+test_discover: # test discover
+	@echo "Test discover"
+	@docker exec -it fabric-cli bash -c "cd /tmp; bash scripts/test_discover.sh"
 
 temp: # test temp instructions, used for experiment
 	@echo "Test experimental instructions"
