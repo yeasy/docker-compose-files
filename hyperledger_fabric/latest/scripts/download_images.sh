@@ -54,11 +54,6 @@ for IMG in ccenv baseos javaenv nodeenv; do
 	pull_image hyperledger/fabric-${IMG}:${TWO_DIGIT_VERSION} & # e.g., v2.0
 done
 
-echo "=== Pulling base/3rd-party images with tag ${BASE_IMG_TAG} from fabric repo... ==="
-for IMG in baseimage couchdb kafka zookeeper; do
-	pull_image hyperledger/fabric-${IMG}:$BASE_IMG_TAG &
-done
-
 # TODO: dockerhub fabric-ccenv:2.0 image is too old
 # Hence we need to build the image locally and tag it manually
 docker tag yeasy/hyperledger-fabric-base hyperledger/fabric-ccenv:${TWO_DIGIT_VERSION}

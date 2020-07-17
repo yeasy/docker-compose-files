@@ -6,7 +6,7 @@
 # support advanced bash grammar
 SHELL:=/bin/bash
 
-# mode of the network: solo, kafka, raft
+# mode of the network: raft only for 2.x
 HLF_MODE ?= raft
 
 # mode of db: golevel, couchdb
@@ -19,17 +19,15 @@ NETWORK_INIT_WAIT ?= 2 # time to wait the fabric network finish initialization
 
 COMPOSE_FILE ?= "docker-compose-2orgs-4peers-raft.yaml"
 
-LOG_PATH ?= solo/logs
-
-ifeq ($(HLF_MODE),kafka)
-	NETWORK_INIT_WAIT=30
-else ifeq ($(HLF_MODE),raft)
+ifeq ($(HLF_MODE),raft)
 	NETWORK_INIT_WAIT=5
+else
+	NETWORK_INIT_WAIT=30
 endif
 
 COMPOSE_FILE="docker-compose-2orgs-4peers-$(HLF_MODE).yaml"
 
-LOG_PATH=$(HLF_MODE)/logs
+LOG_PATH ?= $(HLF_MODE)/logs
 
 ifeq ($(DB_MODE),couchdb)
 	COMPOSE_FILE="docker-compose-2orgs-4peers-couchdb.yaml"
@@ -242,8 +240,6 @@ clean: # clean up containers and chaincode images
 
 # Clean deeply by removing all generated files: container, artifacts, credentials
 purge: clean
-	HLF_MODE=solo make clean_config_channel
-	HLF_MODE=kafka make clean_config_channel
 	HLF_MODE=raft make clean_config_channel
 	make clean_config_crypto
 
@@ -302,7 +298,7 @@ clean_config_channel: # clean channel related artifacts
 	rm -rf ${HLF_MODE}/channel-artifacts/*
 
 clean_config_crypto: # clean config artifacts
-	echo "Warning: Cleaning credentials will affect artifacts in solo/kafka/raft mode"
+	echo "Warning: Cleaning credentials will affect artifacts in raft mode"
 	rm -rf crypto-config/*
 	rm -rf org3/crypto-config/*
 

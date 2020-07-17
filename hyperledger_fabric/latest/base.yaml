@@ -115,37 +115,6 @@ services:
     volumes:
        - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
-  zookeeper-base:
-    image: hyperledger/fabric-zookeeper:${EXT_IMG_TAG}
-    restart: always
-    network_mode: ${NETWORK}
-    tty: true
-    expose:
-      - '2181'
-      - '2888'
-      - '3888'
-
-  kafka-base:
-    # official repo doesn't have 1.1.0-alpha tag, however, kafka changes version recently
-    #image: yeasy/hyperledger-fabric-kafka:0.10.2.0
-    image: hyperledger/fabric-kafka:${EXT_IMG_TAG}
-    restart: always
-    network_mode: ${NETWORK}
-    tty: true
-    environment:
-      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
-      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
-      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_LOG_RETENTION_MS=-1
-    expose:
-      - '9092'
-
-  couchdb-base:
-    image: hyperledger/fabric-couchdb:${EXT_IMG_TAG}
-    restart: always
-    network_mode: ${NETWORK}
-    tty: true
-
   explorer-base:
     image: yeasy/blockchain-explorer:0.1.0-preview # Till we have official image
     expose:

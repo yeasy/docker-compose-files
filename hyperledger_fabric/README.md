@@ -14,6 +14,7 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest/) | latest fabric code, unstable.
+[Fabric v2.2.0](v2.0.0/) | stable fabric 2.2.0 release.
 [Fabric v2.1.0](v2.0.0/) | stable fabric 2.1.0 release.
 [Fabric v2.0.0](v2.0.0/) | stable fabric 2.0.0 release.
 [Fabric v1.4.7](v1.4.7/) | stable fabric 1.4.7 LTS release.
@@ -35,7 +36,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v2.1.0
+$ export RELEASE=v2.2.0
 ```
 
 ```bash
@@ -58,12 +59,16 @@ $ make setup download # Install docker/compose, and pull required images
 The following command will run the entire process (start a fabric network, create channel, test chaincode and stop it.) pass-through.
 
 ```bash
-$ make test  # Test with default fabric solo mode
+$ make test  # Test with default fabric RAFT mode
 ```
 
 [Prometheus](https://prometheus.io) dashboard listens at [http://localhost:9090](http://localhost:9090) to track the network statistics.
 
 ### Test with more modes
+
+In v2.x, only raft is supported.
+
+In v1.4.x, solo and kafka are also supported.
 
 ```bash
 $ HLF_MODE=solo make test # Bootup a fabric network with solo mode

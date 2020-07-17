@@ -120,7 +120,7 @@ channelCreate() {
 		 rc=$?
 		 let counter=${counter}+1
 		 #COUNTER=` expr $COUNTER + 1`
-		 [ $rc -ne 0 ] && echo "Failed to create channel $channel, retry after 3s" && sleep 3
+		 [ $rc -ne 0 ] && echo "Failed to create channel $channel, retry after 5s" && sleep 5
 	done
 	[ $rc -ne 0 ] && cat log.txt
 	verifyResult ${rc} "Channel ${channel} creation failed"
@@ -530,9 +530,9 @@ chaincodeApproveForMyOrg () {
 }
 
 # Query the Approve the chaincode definition
-# chaincodeCheckCommitReadiness channel org peer name version
+# chaincodeCheckCommitReadiness channel org peer name version sequence
 chaincodeCheckCommitReadiness () {
-	if [ "$#" -ne 7 ]; then
+	if [ "$#" -ne 8 ]; then
 		echo_r "Wrong param number for chaincode queryapproval"
 		exit -1
 	fi
@@ -543,17 +543,19 @@ chaincodeCheckCommitReadiness () {
 	local channel=$5
 	local name=$6
 	local version=$7
+	local sequence=$8
 
 	setEnvs $org $peer
 
-	echo "checkcommitreadiness with chaincode $name $version"
+	echo "checkcommitreadiness with chaincode $name $version $sequence"
 	peer lifecycle chaincode checkcommitreadiness \
 		--peerAddresses ${peer_url} \
 		--tlsRootCertFiles ${peer_tls_root_cert} \
 		--channelID ${channel} \
 		--name ${name} \
 		--output json \
-		--version ${version}
+		--version ${version} \
+		--sequence ${sequence}
 
 	rc=$?
 	[ $rc -ne 0 ] && cat log.txt
