@@ -78,7 +78,7 @@ ready: # create/join channel, install/instantiate cc
 	make test_channel_list
 	make test_channel_getinfo
 
-	make logs_save
+	# make logs_save
 
 	@echo "Now the fabric network is ready to play"
 	@echo "* run 'make cli' to enter into the fabric-cli container."
