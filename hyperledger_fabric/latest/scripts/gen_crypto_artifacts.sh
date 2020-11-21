@@ -31,8 +31,8 @@ docker run \
 	-v $PWD/${CRYPTO_CONFIG}:/tmp/${CRYPTO_CONFIG} \
 	-v $PWD/crypto-config.yaml:/tmp/crypto-config.yaml \
 	-v $PWD/org3:/tmp/org3 \
-	-v $PWD/scripts/gen_cryptoArtifacts.sh:/scripts/gen_cryptoArtifacts.sh \
-	${GEN_IMG} sh -c 'sleep 1; bash /scripts/gen_cryptoArtifacts.sh'
+	-v $PWD/scripts/cryptogen_cryptoArtifacts.sh:/scripts/cryptogen_cryptoArtifacts.sh \
+	${GEN_IMG} sh -c 'sleep 1; bash /scripts/cryptogen_cryptoArtifacts.sh'
 [ $? -ne 0 ] && exit 1
 
 echo_b "Copy org3's crypto config outside"

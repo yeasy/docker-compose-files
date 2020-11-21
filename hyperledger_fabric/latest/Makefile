@@ -69,7 +69,7 @@ ready: # create/join channel, install/instantiate cc
 
 	make test_fetch_blocks # fetch block files
 
-	make test_config_update
+	make test_gen_add_org3_tx
 	make test_channel_update
 
 	make test_fetch_blocks # fetch block files again
@@ -138,8 +138,8 @@ test_configtxlator: # Test change config using configtxlator
 	@echo "Flattening the json files of all blocks"
 	python3 scripts/json_flatter.py ${HLF_MODE}/channel-artifacts/
 
-test_config_update: # Test change config to add new org
-	bash scripts/test_config_update.sh ${HLF_MODE}
+test_gen_add_org3_tx: # Test change config to add new org
+	bash scripts/test_gen_add_org3_tx.sh ${HLF_MODE}
 
 ################## Chaincode testing operations ################
 test_cc: # test chaincode, deprecated
@@ -289,10 +289,10 @@ elk: # insert logs into elk
 	nc localhost 5000 < $(LOG_PATH)/dev_all.log
 
 gen_config_crypto: # generate crypto config
-	bash scripts/gen_config_crypto.sh
+	bash scripts/gen_crypto_artifacts.sh
 
 gen_config_channel: # generate channel artifacts
-	bash scripts/gen_config_channel.sh ${HLF_MODE}
+	bash scripts/gen_channel_artifacts.sh ${HLF_MODE}
 
 clean_config_channel: # clean channel related artifacts
 	rm -rf ${HLF_MODE}/channel-artifacts/*

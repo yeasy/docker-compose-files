@@ -44,10 +44,10 @@ done
 pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG "true"
 
 # pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
-echo "=== Pulling fabric core images ${FABRIC_IMG_TAG} from fabric repo... ==="
-for IMG in peer orderer ca tools; do
-	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG & # e.g., v2.0.0
-done
+#echo "=== Pulling fabric core images ${FABRIC_IMG_TAG} from fabric repo... ==="
+#for IMG in peer orderer ca tools; do
+#	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG & # e.g., v2.0.0
+#done
 
 echo "=== Pulling fabric chaincode images ${TWO_DIGIT_VERSION} from fabric repo... ==="
 for IMG in ccenv baseos javaenv nodeenv; do

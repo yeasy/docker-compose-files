@@ -167,7 +167,7 @@ channelJoin () {
 	echo "=== org $org/peer $peer joined into channel ${channel} === "
 }
 
-getShasum () {
+getShaSum () {
 	[ ! $# -eq 1 ] && exit 1
 	shasum ${1} | awk '{print $1}'
 }
@@ -227,7 +227,7 @@ channelFetchAll () {
 	local block_file=/tmp/${channel}_newest.block
 	channelFetch ${channel} $org $peer ${orderer_url} ${orderer_tls_rootcert} "newest" ${block_file}
 	[ $? -ne 0 ] && exit 1
-	newest_block_shasum=$(getShasum ${block_file})
+	newest_block_shasum=$(getShaSum ${block_file})
 	echo "fetch newest block ${block_file} with shasum=${newest_block_shasum}"
 
 	block_file=${CHANNEL_ARTIFACTS}/${channel}_config.block
@@ -241,7 +241,7 @@ channelFetchAll () {
 		[ $? -ne 0 ] && exit 1
 		[ -f $block_file ] || break
 		echo "fetch block $i and saved into ${block_file}"
-		block_shasum=$(getShasum ${block_file})
+		block_shasum=$(getShaSum ${block_file})
 		[ ${block_shasum} = ${newest_block_shasum} ] && { echo "Block $i is the last one for channel $channel"; break; }
 	done
 }
