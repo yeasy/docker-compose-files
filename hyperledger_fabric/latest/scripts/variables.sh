@@ -6,10 +6,10 @@
 FABRIC_IMG_TAG=latest
 
 # Keep the same as in core.yaml, will tag ccenv with this value
-PROJECT_VERSION=2.2.0
+PROJECT_VERSION=2.3.0
 
 # for ccenv, baseos, javaenv, nodeenv
-TWO_DIGIT_VERSION=2.2
+TWO_DIGIT_VERSION=2.3
 
 # Name of app channel, need to align with the gen_artifacts.sh
 SYS_CHANNEL="testchainid"
