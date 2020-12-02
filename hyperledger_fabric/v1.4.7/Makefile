@@ -59,7 +59,7 @@ ready: # create/join channel, install/instantiate cc
 
 	sleep ${NETWORK_INIT_WAIT}
 
-	make channel_test
+	make channel_test # test_channel_create test_channel_join test_channel_list test_channel_getinfo
 
 	make update_anchors
 
