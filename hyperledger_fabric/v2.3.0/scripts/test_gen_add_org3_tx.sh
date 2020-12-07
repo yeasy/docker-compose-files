@@ -25,7 +25,7 @@ pushd $MODE/${CHANNEL_ARTIFACTS}
 echo_b "Clean potential existing container $CTL_CONTAINER"
 [ "$(docker ps -a | grep $CTL_CONTAINER)" ] && docker rm -f $CTL_CONTAINER
 
-echo_b "Start configtxlator service in background (listen on port 7059)"
+echo_b "Start configtxlator container in background (listen on port 7059)"
 docker run \
 	-d -it \
 	--name ${CTL_CONTAINER} \
@@ -39,7 +39,7 @@ sleep 1
 
 # clean env and exit
 clean_exit() {
-	echo_b "Stop configtxlator service"
+	echo_b "Stop configtxlator container"
 	docker rm -f $CTL_CONTAINER
 	exit 0
 }
@@ -55,13 +55,13 @@ configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
 [ $? -ne 0 ] && { echo_r "Decode ${BLOCK_FILE} failed"; clean_exit; }
 
 echo_b "Parse config data from block payload and encode into pb..."
-[ -f ${ORIGINAL_CFG_JSON} ] || jq "$PAYLOAD_CFG_PATH" ${BLOCK_FILE}.json > ${ORIGINAL_CFG_JSON}
+jq "$PAYLOAD_CFG_PATH" ${BLOCK_FILE}.json > ${ORIGINAL_CFG_JSON}
 jq . ${ORIGINAL_CFG_JSON} > /dev/null
 [ $? -ne 0 ] && { echo_r "${ORIGINAL_CFG_JSON} is invalid"; clean_exit; }
 configtxlatorEncode "common.Config" ${ORIGINAL_CFG_JSON} ${ORIGINAL_CFG_PB}
 
 echo_b "Update the config with new org, and encode into pb"
-[ -f ${UPDATED_CFG_JSON} ] || jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"Org3MSP":.[1]}}}}}' ${ORIGINAL_CFG_JSON} ./Org3MSP.json >& ${UPDATED_CFG_JSON}
+jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"Org3MSP":.[1]}}}}}' ${ORIGINAL_CFG_JSON} ./Org3MSP.json >& ${UPDATED_CFG_JSON}
 jq . ${UPDATED_CFG_JSON} > /dev/null
 [ $? -ne 0 ] && { echo_r "${UPDATED_CFG_JSON} is invalid"; clean_exit; }
 configtxlatorEncode "common.Config" ${UPDATED_CFG_JSON} ${UPDATED_CFG_PB}
@@ -70,12 +70,12 @@ echo_b "Calculate the config delta between pb files"
 configtxlatorCompare ${APP_CHANNEL} ${ORIGINAL_CFG_PB} ${UPDATED_CFG_PB} ${CFG_DELTA_PB}
 
 echo_b "Decode the config delta pb into json"
-[ -f ${CFG_DELTA_JSON} ] || configtxlatorDecode "common.ConfigUpdate" ${CFG_DELTA_PB} ${CFG_DELTA_JSON}
+configtxlatorDecode "common.ConfigUpdate" ${CFG_DELTA_PB} ${CFG_DELTA_JSON}
 jq . ${CFG_DELTA_JSON} > /dev/null
 [ $? -ne 0 ] && { echo_r "${CFG_DELTA_JSON} is invalid"; clean_exit; }
 
 echo_b "Wrap the config update as envelope"
-[ -f ${CFG_DELTA_ENV_JSON} ] || echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$APP_CHANNEL"'", "type":2}},"data":{"config_update":'$(cat ${CFG_DELTA_JSON})'}}}' | jq . > ${CFG_DELTA_ENV_JSON}
+echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$APP_CHANNEL"'", "type":2}},"data":{"config_update":'$(cat ${CFG_DELTA_JSON})'}}}' | jq . > ${CFG_DELTA_ENV_JSON}
 
 echo_b "Encode the config update envelope into pb"
 configtxlatorEncode "common.Envelope" ${CFG_DELTA_ENV_JSON} ${CFG_DELTA_ENV_PB}

@@ -118,7 +118,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
-      - FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=DEBUG # info:core.chaincode=debug
     volumes:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
@@ -203,5 +203,5 @@ services:
         - ./crypto-config:/etc/hyperledger/fabric/crypto-config
         - ./raft/channel-artifacts:/tmp/channel-artifacts
         - ./raft/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./examples:/go/src/examples
+        - ./chaincodes:/go/src/chaincodes
        #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric

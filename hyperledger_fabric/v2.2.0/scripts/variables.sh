@@ -62,7 +62,7 @@ ORG2_PEER1_URL="peer1.org2.example.com:7051"
 
 # Chaincode exp02 related
 CC_02_NAME="exp02"
-CC_02_PATH="examples/chaincode/go/chaincode_example02"
+CC_02_PATH="chaincodes/go/chaincode_example02"
 CC_02_INIT_ARGS='{"Args":["init","a","100","b","200"]}'
 CC_02_UPGRADE_ARGS='{"Args":["upgrade","a","100","b","200"]}'
 CC_02_INVOKE_ARGS='{"Args":["invoke","a","b","10"]}'
@@ -78,7 +78,7 @@ CC_MAP_QUERY_ARGS='{"Args":["get","key"]}'
 
 # Chaincode marbles related
 CC_MARBLES_NAME="marblesp"
-CC_MARBLES_PATH="examples/chaincode/go/marbles02_private/go"
+CC_MARBLES_PATH="chaincodes/go/marbles02_private/go"
 CC_MARBLES_INIT_ARGS='{"Args":["init"]}'
 CC_MARBLES_UPGRADE_ARGS='{"Args":["upgrade",""]}'
 CC_MARBLES_INVOKE_INIT_ARGS='{"Args":["initMarble","marble1","blue","10","tom","100"]}' # price is in collectionMarblePrivateDetails
@@ -87,8 +87,8 @@ CC_MARBLES_INVOKE_TRANSFER_ARGS='{"Args":["transferMarble","marble1","jerry"]}' 
 CC_MARBLES_QUERY_READ_ARGS='{"Args":["readMarble","marble1"]}' # this requires 'collectionMarbles' collection
 CC_MARBLES_QUERY_READPVTDETAILS_ARGS='{"Args":["readMarblePrivateDetails","marble1"]}' # this requires 'collectionMarblePrivateDetails' collection
 CC_MARBLES_QUERY_READPVTDETAILS_ARGS_2='{"Args":["readMarblePrivateDetails","marble2"]}' # this requires 'collectionMarblePrivateDetails' collection
-CC_MARBLES_COLLECTION_CONFIG="/go/src/examples/chaincode/go/marbles02_private/collections_config.json"
-CC_MARBLES_COLLECTION_CONFIG_NEW="/go/src/examples/chaincode/go/marbles02_private/collections_config_new.json"
+CC_MARBLES_COLLECTION_CONFIG="/go/src/chaincodes/go/marbles02_private/collections_config.json"
+CC_MARBLES_COLLECTION_CONFIG_NEW="/go/src/chaincodes/go/marbles02_private/collections_config_new.json"
 
 # unique chaincode params
 CC_NAME=${CC_02_NAME}

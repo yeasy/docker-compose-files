@@ -346,7 +346,7 @@ channelUpdate() {
 
 # Install chaincode on the peer node
 # In v2.x it will package, install and approve
-# chaincodeInstall peer cc_name version path [lang]
+# chaincodeInstall peer cc_name version cc_path [lang]
 chaincodeInstall () {
 	if [ "$#" -ne 7 ]; then
 		echo_r "Wrong param number for chaincode install"
@@ -358,19 +358,19 @@ chaincodeInstall () {
 	local peer_tls_root_cert=$4
 	local name=$5
 	local version=$6
-	local path=$7
+	local cc_path=$7
 
-	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
+	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $cc_path ] &&  echo_r "input param invalid" && exit -1
 	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
-	echo "name=${name}, version=${version}, path=${path}"
+	echo "name=${name}, version=${version}, path=${cc_path}"
 	setEnvs $org $peer
 	echo "packaging chaincode into tar.gz package"
 	local label=${name}
 	#local label=${name}_${version}
 
-	echo "packaging chaincode ${name} with path ${path} and label ${label}"
+	echo "packaging chaincode ${name} with path ${cc_path} and label ${label}"
 	peer lifecycle chaincode package ${name}.tar.gz \
-    --path ${path} \
+    --path ${cc_path} \
     --lang golang \
     --label ${label}
 
@@ -381,7 +381,7 @@ chaincodeInstall () {
 	#peer chaincode install \
 	#	-n ${name} \
 	#	-v $version \
-	#	-p ${path} \
+	#	-p ${cc_path} \
 	#	>&log.txt
 
 	echo "installing chaincode to peer${peer}/org${org}"

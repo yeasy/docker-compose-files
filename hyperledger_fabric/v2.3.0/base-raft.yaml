@@ -58,18 +58,18 @@ services:
       - "7050:7050"
     environment:
       - FABRIC_LOGGING_SPEC=DEBUG
-      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
-      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
       # below 4 must be defined/undefined together, for using separate network for raft
       #- ORDERER_GENERAL_CLUSTER_LISTENADDRESS=0.0.0.0
       #- ORDERER_GENERAL_CLUSTER_LISTENPORT=7050  # this must be the same with channel config
-      #- ORDERER_GENERAL_CLUSTER_SERVERCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
-      #- ORDERER_GENERAL_CLUSTER_SERVERPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      #- ORDERER_GENERAL_CLUSTER_SERVERCERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      #- ORDERER_GENERAL_CLUSTER_SERVERPRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
     volumes:
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./raft/channel-artifacts/orderer0.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/etc/hyperledger/fabric/tls
+    - ./raft/channel-artifacts/orderer0.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
     command: orderer start
 
   orderer1.example.com:  # There can be multiple orderers
@@ -83,9 +83,9 @@ services:
     environment:
       - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=10
     volumes:
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/orderer/msp
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./raft/channel-artifacts/orderer1.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/etc/hyperledger/fabric/tls
+    - ./raft/channel-artifacts/orderer1.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
     command: orderer start
 
   orderer2.example.com:  # There can be multiple orderers
@@ -99,9 +99,9 @@ services:
     environment:
       - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=10
     volumes:
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/orderer/msp
-    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/var/hyperledger/orderer/tls
-    - ./raft/channel-artifacts/orderer2.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/etc/hyperledger/fabric/tls
+    - ./raft/channel-artifacts/orderer2.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
     command: orderer start
 
 ## following are peer nodes ##
@@ -118,7 +118,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
-      - FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=DEBUG # info:core.chaincode=debug
     volumes:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
@@ -203,5 +203,5 @@ services:
         - ./crypto-config:/etc/hyperledger/fabric/crypto-config
         - ./raft/channel-artifacts:/tmp/channel-artifacts
         - ./raft/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./examples:/go/src/examples
+        - ./chaincodes:/go/src/chaincodes
        #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric

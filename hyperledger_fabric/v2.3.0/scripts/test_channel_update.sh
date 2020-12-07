@@ -8,7 +8,7 @@ elif [ -f scripts/func.sh ]; then
 fi
 
 ## Join all the peers to the channel
-echo_b "=== Updating config of channel ${APP_CHANNEL}... ==="
+echo_b "=== Updating config of channel ${APP_CHANNEL} by sending the tx... ==="
 
 echo_b "Sign the channel update tx by Org1/Peer0 and Org2/Peer0"
 channelSignConfigTx ${APP_CHANNEL} "1" "0" "${CFG_DELTA_ENV_PB}"
@@ -28,7 +28,7 @@ newest_block_file2=/tmp/${APP_CHANNEL}_newest2.block
 channelFetch ${APP_CHANNEL} "3" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "newest" ${newest_block_file2}
 [ -f ${newest_block_file2} ] || exit 1
 
-if [ $(getShasum ${newest_block_file1}) = $(getShasum ${newest_block_file2}) ]; then
+if [ $(getShaSum ${newest_block_file1}) = $(getShaSum ${newest_block_file2}) ]; then
 	echo_g "Block matched, new org joined channel successfully"
 else
 	echo_r "Block not matched, new org joined channel failed"

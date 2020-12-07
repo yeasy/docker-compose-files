@@ -37,8 +37,8 @@ docker run \
 	-v $PWD/${MODE}/${CHANNEL_ARTIFACTS}:/tmp/${CHANNEL_ARTIFACTS} \
 	-v $PWD/org3:/tmp/org3 \
 	-v $PWD/scripts/variables.sh:/scripts/variables.sh \
-	-v $PWD/scripts/gen_channelArtifacts.sh:/scripts/gen_channelArtifacts.sh \
-	${GEN_IMG} sh -c 'sleep 1; bash /scripts/gen_channelArtifacts.sh'
+	-v $PWD/scripts/configtxgen_channelArtifacts.sh:/scripts/configtxgen_channelArtifacts.sh \
+	${GEN_IMG} sh -c 'sleep 1; bash /scripts/configtxgen_channelArtifacts.sh'
 [ $? -ne 0 ] && exit 1
 
 echo_g "Generate channel artifacts with $0 done"

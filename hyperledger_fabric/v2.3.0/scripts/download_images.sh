@@ -36,7 +36,7 @@ pull_image() {
 echo "Downloading images from DockerHub... need a while"
 
 # TODO: we may need some checking on pulling result?
-echo "=== Pulling yeasy/hyperledger-fabric-* images with tag ${FABRIC_IMG_TAG}... ==="
+echo "=== Pulling yeasy/hyperledger-fabric-*:${FABRIC_IMG_TAG} images... ==="
 for IMG in base peer orderer ca; do
 	pull_image "yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG" "true" &
 done
@@ -46,12 +46,12 @@ pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG "true"
 # pull_image yeasy/blockchain-explorer:0.1.0-preview  # TODO: wait for official images
 echo "=== Pulling fabric core images ${FABRIC_IMG_TAG} from fabric repo... ==="
 for IMG in peer orderer ca tools; do
-	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG & # e.g., v2.0.0
+	pull_image hyperledger/fabric-${IMG}:$FABRIC_IMG_TAG & # e.g., v2.3.0
 done
 
 echo "=== Pulling fabric chaincode images ${TWO_DIGIT_VERSION} from fabric repo... ==="
 for IMG in ccenv baseos javaenv nodeenv; do
-	pull_image hyperledger/fabric-${IMG}:${TWO_DIGIT_VERSION} & # e.g., v2.0
+	pull_image hyperledger/fabric-${IMG}:${TWO_DIGIT_VERSION} & # e.g., v2.3
 done
 
 # TODO: dockerhub fabric-ccenv:2.0 image is too old

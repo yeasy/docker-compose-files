@@ -35,7 +35,7 @@ pull_image() {
 echo "Downloading images from DockerHub... need a while"
 
 # TODO: we may need some checking on pulling result?
-echo "=== Pulling yeasy/hyperledger-fabric-* images with tag ${FABRIC_IMG_TAG}... ==="
+echo "=== Pulling yeasy/hyperledger-fabric-*:${FABRIC_IMG_TAG} images... ==="
 for IMG in base peer orderer ca; do
 	pull_image yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG &
 done

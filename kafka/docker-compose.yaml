@@ -16,6 +16,9 @@ services:
       - "2182:2181"  # zk connection port
     environment:
       - ZK_ID=1 # when bootup, will read this and update the /tmp/zookeeper/myid file
+      - ZK_HOST1=zookeeper1
+      - ZK_HOST2=zookeeper2
+      - ZK_HOST3=zookeeper3
     #volumes:
       #- ${PWD}/zookeeper1:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
@@ -28,6 +31,9 @@ services:
       - "2183:2181"  # zk connection port
     environment:
       - ZK_ID=2 # when bootup, will read this and update the /tmp/zookeeper/myid file
+      - ZK_HOST1=zookeeper1
+      - ZK_HOST2=zookeeper2
+      - ZK_HOST3=zookeeper3
     #volumes:
     #  - ${PWD}/zookeeper2:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
@@ -40,6 +46,9 @@ services:
       - "2181:2181"  # zk connection port
     environment:
       - ZK_ID=3 # when bootup, will read this and update the /tmp/zookeeper/myid file
+      - ZK_HOST1=zookeeper1
+      - ZK_HOST2=zookeeper2
+      - ZK_HOST3=zookeeper3
     #volumes:
     #  - ${PWD}/zookeeper3:/tmp/zookeeper
     command: bash -c 'bash /tmp/start_zk.sh'
@@ -52,11 +61,12 @@ services:
       - "9092:9092"
     environment:
       - KAFKA_BROKER_ID=0 # when bootup, will read this and update the server.properties
+      - ZK_URL=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181 # when bootup, will read this and update the server.properties
     depends_on:
       - zookeeper3
       - zookeeper1
       - zookeeper2
-    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
+    command: bash -c 'sleep 5; bash /tmp/start_kafka.sh'
 
   kafka1: # kafka service
     image: yeasy/kafka:latest
@@ -66,11 +76,12 @@ services:
       - "9093:9092"
     environment:
       - KAFKA_BROKER_ID=1 # when bootup, will read this and update the server.properties
+      - ZK_URL=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181 # when bootup, will read this and update the server.properties
     depends_on:
       - zookeeper1
       - zookeeper2
       - zookeeper3
-    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
+    command: bash -c 'sleep 5; bash /tmp/start_kafka.sh'
 
   kafka2: # kafka service
     image: yeasy/kafka:latest
@@ -80,11 +91,12 @@ services:
       - "9094:9092"
     environment:
       - KAFKA_BROKER_ID=2 # when bootup, will read this and update the server.properties
+      - ZK_URL=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181 # when bootup, will read this and update the server.properties
     depends_on:
       - zookeeper3
       - zookeeper1
       - zookeeper2
-    command: bash -c 'sleep 2; bash /tmp/start_kafka.sh'
+    command: bash -c 'sleep 5; bash /tmp/start_kafka.sh'
 
   cli:  # used for testing kafka cmds, see /tmp/*.sh
     image: yeasy/kafka:latest

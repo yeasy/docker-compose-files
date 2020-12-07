@@ -10,14 +10,14 @@
 						"mod_policy": "",
 						"policies": {},
 						"values": {},
-						"version": "1"
+						"version": "0"
 					},
 					"Org2MSP": {
 						"groups": {},
 						"mod_policy": "",
 						"policies": {},
 						"values": {},
-						"version": "1"
+						"version": "0"
 					}
 				},
 				"mod_policy": "",
@@ -77,14 +77,14 @@
 						"mod_policy": "",
 						"policies": {},
 						"values": {},
-						"version": "1"
+						"version": "0"
 					},
 					"Org2MSP": {
 						"groups": {},
 						"mod_policy": "",
 						"policies": {},
 						"values": {},
-						"version": "1"
+						"version": "0"
 					},
 					"Org3MSP": {
 						"groups": {},
