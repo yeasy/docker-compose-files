@@ -19,14 +19,14 @@
                   "mod_policy": "",
                   "policies": {},
                   "values": {},
-                  "version": "0"
+                  "version": "1"
                 },
                 "Org2MSP": {
                   "groups": {},
                   "mod_policy": "",
                   "policies": {},
                   "values": {},
-                  "version": "0"
+                  "version": "1"
                 }
               },
               "mod_policy": "",
@@ -86,14 +86,14 @@
                   "mod_policy": "",
                   "policies": {},
                   "values": {},
-                  "version": "0"
+                  "version": "1"
                 },
                 "Org2MSP": {
                   "groups": {},
                   "mod_policy": "",
                   "policies": {},
                   "values": {},
-                  "version": "0"
+                  "version": "1"
                 },
                 "Org3MSP": {
                   "groups": {},
