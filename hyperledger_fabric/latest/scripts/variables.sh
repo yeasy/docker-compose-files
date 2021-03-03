@@ -22,8 +22,8 @@ TIMEOUT="90"
 MAX_RETRY=10
 
 # Organization and peers
-ORGS=( 1 2 )
-PEERS=( 0 1 )
+ORGS=(1 2)
+PEERS=(0 1)
 #: "${ORGS:=( 1 2 )}"
 #: "${PEERS:=( 0 1 )}"
 
@@ -81,12 +81,12 @@ CC_MARBLES_NAME="marblesp"
 CC_MARBLES_PATH="chaincodes/go/marbles02_private/go"
 CC_MARBLES_INIT_ARGS='{"Args":["init"]}'
 CC_MARBLES_UPGRADE_ARGS='{"Args":["upgrade",""]}'
-CC_MARBLES_INVOKE_INIT_ARGS='{"Args":["initMarble","marble1","blue","10","tom","100"]}' # price is in collectionMarblePrivateDetails
+CC_MARBLES_INVOKE_INIT_ARGS='{"Args":["initMarble","marble1","blue","10","tom","100"]}'   # price is in collectionMarblePrivateDetails
 CC_MARBLES_INVOKE_INIT_ARGS_2='{"Args":["initMarble","marble2","blue","10","tom","100"]}' # price is in collectionMarblePrivateDetails
-CC_MARBLES_INVOKE_TRANSFER_ARGS='{"Args":["transferMarble","marble1","jerry"]}' # price is in collectionMarblePrivateDetails
-CC_MARBLES_QUERY_READ_ARGS='{"Args":["readMarble","marble1"]}' # this requires 'collectionMarbles' collection
-CC_MARBLES_QUERY_READPVTDETAILS_ARGS='{"Args":["readMarblePrivateDetails","marble1"]}' # this requires 'collectionMarblePrivateDetails' collection
-CC_MARBLES_QUERY_READPVTDETAILS_ARGS_2='{"Args":["readMarblePrivateDetails","marble2"]}' # this requires 'collectionMarblePrivateDetails' collection
+CC_MARBLES_INVOKE_TRANSFER_ARGS='{"Args":["transferMarble","marble1","jerry"]}'           # price is in collectionMarblePrivateDetails
+CC_MARBLES_QUERY_READ_ARGS='{"Args":["readMarble","marble1"]}'                            # this requires 'collectionMarbles' collection
+CC_MARBLES_QUERY_READPVTDETAILS_ARGS='{"Args":["readMarblePrivateDetails","marble1"]}'    # this requires 'collectionMarblePrivateDetails' collection
+CC_MARBLES_QUERY_READPVTDETAILS_ARGS_2='{"Args":["readMarblePrivateDetails","marble2"]}'  # this requires 'collectionMarblePrivateDetails' collection
 CC_MARBLES_COLLECTION_CONFIG="/go/src/chaincodes/go/marbles02_private/collections_config.json"
 CC_MARBLES_COLLECTION_CONFIG_NEW="/go/src/chaincodes/go/marbles02_private/collections_config_new.json"
 
@@ -101,7 +101,7 @@ CC_INVOKE_ARGS=${CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_02_QUERY_ARGS}
 
 # Generate configs
-GEN_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG}  # working dir is `/go/src/github.com/hyperledger/fabric`
+GEN_IMG=yeasy/hyperledger-fabric:${FABRIC_IMG_TAG} # working dir is `/go/src/github.com/hyperledger/fabric`
 GEN_CONTAINER=generator
 FABRIC_CFG_PATH=/etc/hyperledger/fabric
 CHANNEL_ARTIFACTS=channel-artifacts
