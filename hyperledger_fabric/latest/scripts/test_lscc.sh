@@ -4,9 +4,9 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 echo_b "LSCC testing"
@@ -15,9 +15,9 @@ org=1
 peer=0
 
 # invoke required following params
-	#-o orderer.example.com:7050 \
-	#--tls "true" \
-	#--cafile ${ORDERER_TLS_CA} \
+#-o orderer.example.com:7050 \
+#--tls "true" \
+#--cafile ${ORDERER_TLS_CA} \
 
 CC_NAME=${CC_02_NAME}
 
@@ -35,7 +35,6 @@ chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" "${AP
 
 echo_b "LSCC Get all chaincodes instantiated on the channel"
 chaincodeQuery $org $peer "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" "${APP_CHANNEL}" lscc '{"Args":["getchaincodes"]}'
-
 
 #peer chaincode query \
 #	-C "${APP_CHANNEL}" \

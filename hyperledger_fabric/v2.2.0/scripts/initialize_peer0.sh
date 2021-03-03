@@ -2,9 +2,9 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 echo_b " ========== Network initialization start ========== "
@@ -21,7 +21,7 @@ channelJoin ${APP_CHANNEL} 0
 
 ## Set the anchor peers for each org in the channel
 echo_b "Updating anchor peers for peer0/org1... no use for only single channel"
-channelUpdate ${APP_CHANNEL} 1 0 ${ORDERER0_URL}  ${ORDERER0_TLS_ROOTCERT} Org1MSPanchors.tx
+channelUpdate ${APP_CHANNEL} 1 0 ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} Org1MSPanchors.tx
 
 ## Install chaincode on all peers
 CC_NAME=${CC_02_NAME}

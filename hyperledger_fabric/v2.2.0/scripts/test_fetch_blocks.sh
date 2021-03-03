@@ -4,9 +4,9 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 org=1

@@ -3,9 +3,9 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 ## Install chaincode on all peers
@@ -16,12 +16,10 @@ CC_INIT_ARGS=${CC_MARBLES_INIT_ARGS}
 echo_b "=== Testing the private data feature ==="
 
 echo_b "=== Installing chaincode ${CC_NAME} on all 4 peers... ==="
-for org in "${ORGS[@]}"
-do
-	for peer in "${PEERS[@]}"
-	do
-		chaincodeInstall $org $peer ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
-	done
+for org in "${ORGS[@]}"; do
+  for peer in "${PEERS[@]}"; do
+    chaincodeInstall $org $peer ${CC_NAME} ${CC_INIT_VERSION} ${CC_PATH}
+  done
 done
 
 echo_g "=== Install chaincode done ==="
@@ -47,12 +45,10 @@ chaincodeQuery 1 1 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNE
 echo_g "=== Query read details chaincode done ==="
 
 echo_b "Install chaincode with new collection config"
-for org in "${ORGS[@]}"
-do
-	for peer in "${PEERS[@]}"
-	do
-		chaincodeInstall $org $peer ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
-	done
+for org in "${ORGS[@]}"; do
+  for peer in "${PEERS[@]}"; do
+    chaincodeInstall $org $peer ${CC_NAME} ${CC_UPGRADE_VERSION} ${CC_PATH}
+  done
 done
 echo_g "Install chaincode with new collection config done"
 
@@ -61,7 +57,7 @@ chaincodeUpgrade ${APP_CHANNEL} 1 0 ${ORDERER0_URL} ${CC_NAME} ${CC_UPGRADE_VERS
 echo_g "Update chaincode with new collection on org1/peer0 done"
 
 echo_b "Invoke chaincode with new key and new collection on org1/peer0"
-chaincodeInvoke 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}"  ${APP_CHANNEL} "${ORDERER_URL}" ${CC_MARBLES_NAME} ${CC_MARBLES_INVOKE_INIT_ARGS_2}
+chaincodeInvoke 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} "${ORDERER_URL}" ${CC_MARBLES_NAME} ${CC_MARBLES_INVOKE_INIT_ARGS_2}
 echo_g "=== Invoke chaincode done ==="
 
 # now both org1 and org2 should be able to readpvtdetails of new data, noticed the read of old data is available since v1.3.0

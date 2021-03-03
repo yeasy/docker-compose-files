@@ -3,12 +3,12 @@
 # This script will build and start and test chaincode in DEV mode
 
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 else
-	echo "Cannot find the func.sh files, pls check"
-	exit 1
+  echo "Cannot find the func.sh files, pls check"
+  exit 1
 fi
 
 echo

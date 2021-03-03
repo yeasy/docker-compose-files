@@ -2,9 +2,9 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 ## Join all the peers to the channel
@@ -29,10 +29,10 @@ channelFetch ${APP_CHANNEL} "3" "0" ${ORDERER0_URL} ${ORDERER0_TLS_ROOTCERT} "ne
 [ -f ${newest_block_file2} ] || exit 1
 
 if [ $(getShaSum ${newest_block_file1}) = $(getShaSum ${newest_block_file2}) ]; then
-	echo_g "Block matched, new org joined channel successfully"
+  echo_g "Block matched, new org joined channel successfully"
 else
-	echo_r "Block not matched, new org joined channel failed"
-	exit 1
+  echo_r "Block not matched, new org joined channel failed"
+  exit 1
 fi
 
 # Now new org is valid to join the channel

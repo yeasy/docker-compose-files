@@ -2,15 +2,14 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ./func.sh
+  source ./func.sh
 elif [ -f scripts/func.sh ]; then
- source scripts/func.sh
+  source scripts/func.sh
 fi
 
 CC_NAME=${CC_NAME:-$CC_02_NAME}
 CC_INVOKE_ARGS=${CC_INVOKE_ARGS:-$CC_02_INVOKE_ARGS}
 CC_QUERY_ARGS=${CC_QUERY_ARGS:-$CC_02_QUERY_ARGS}
-
 
 # test sideDB feature
 
@@ -26,6 +25,5 @@ CC_QUERY_ARGS=${CC_QUERY_ARGS:-$CC_02_QUERY_ARGS}
 #chaincodeQuery 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} ${CC_MARBLES_NAME} ${CC_MARBLES_QUERY_READPVTDETAILS_ARGS_2}
 
 chaincodeQuery 1 0 "${ORG1_PEER0_URL}" "${ORG1_PEER0_TLS_ROOTCERT}" ${APP_CHANNEL} ${CC_NAME} ${CC_QUERY_ARGS} 80
-
 
 exit

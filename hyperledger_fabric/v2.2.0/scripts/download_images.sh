@@ -11,26 +11,26 @@
 
 # Define those global variables
 if [ -f ./variables.sh ]; then
- source ./variables.sh
+  source ./variables.sh
 elif [ -f scripts/variables.sh ]; then
- source scripts/variables.sh
+  source scripts/variables.sh
 else
-	echo_r "Cannot find the variables.sh files, pls check"
-	exit 1
+  echo_r "Cannot find the variables.sh files, pls check"
+  exit 1
 fi
 
 # pull_image image_name <true|false (default)>
 pull_image() {
-	IMG=$1
-	FORCED="false"
-	if [ "$#" -eq 2 ]; then
+  IMG=$1
+  FORCED="false"
+  if [ "$#" -eq 2 ]; then
     FORCED=$2
-	fi
-	if [ ! -z "$(docker images -q ${IMG} 2> /dev/null)" ] && [ "$FORCED" != "true" ]; then  # existed and not forced to update
- 	 echo "${IMG} already exists and not forced to update "
-	else
-		docker pull ${IMG}
-	fi
+  fi
+  if [ ! -z "$(docker images -q ${IMG} 2>/dev/null)" ] && [ "$FORCED" != "true" ]; then # existed and not forced to update
+    echo "${IMG} already exists and not forced to update "
+  else
+    docker pull ${IMG}
+  fi
 }
 
 echo "Downloading images from DockerHub... need a while"
@@ -38,7 +38,7 @@ echo "Downloading images from DockerHub... need a while"
 # TODO: we may need some checking on pulling result?
 echo "=== Pulling yeasy/hyperledger-fabric-*:${FABRIC_IMG_TAG} images... ==="
 for IMG in base peer orderer ca; do
-	pull_image "yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG" "true" &
+  pull_image "yeasy/hyperledger-fabric-${IMG}:$FABRIC_IMG_TAG" "true" &
 done
 
 pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG "true"
@@ -51,7 +51,7 @@ pull_image yeasy/hyperledger-fabric:$FABRIC_IMG_TAG "true"
 
 echo "=== Pulling fabric chaincode images ${TWO_DIGIT_VERSION} from fabric repo... ==="
 for IMG in ccenv baseos javaenv nodeenv; do
-	pull_image hyperledger/fabric-${IMG}:${TWO_DIGIT_VERSION} & # e.g., v2.2
+  pull_image hyperledger/fabric-${IMG}:${TWO_DIGIT_VERSION} & # e.g., v2.2
 done
 
 # TODO: dockerhub fabric-ccenv:2.0 image is too old
