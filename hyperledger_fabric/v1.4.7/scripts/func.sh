@@ -58,14 +58,14 @@ setOrdererEnvs () {
 setEnvs () {
 	local org=$1  # 1 or 2
 	local peer=$2  # 0 or 1
-	[ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	[ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit 1
 
 	local t=""
 	export CORE_PEER_LOCALMSPID="Org${org}MSP"
 	#CORE_PEER_MSPCONFIGPATH=\$${ORG${org}_ADMIN_MSP}
-	t="\${ORG${org}_PEER${peer}_URL}" && export CORE_PEER_ADDRESS=`eval echo $t`
-	t="\${ORG${org}_ADMIN_MSP}" && export CORE_PEER_MSPCONFIGPATH=`eval echo $t`
-	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=`eval echo $t`
+	t="\${ORG${org}_PEER${peer}_URL}" && export CORE_PEER_ADDRESS=$(eval echo $t)
+	t="\${ORG${org}_ADMIN_MSP}" && export CORE_PEER_MSPCONFIGPATH=$(eval echo $t)
+	t="\${ORG${org}_PEER${peer}_TLS_ROOTCERT}" && export CORE_PEER_TLS_ROOTCERT_FILE=$(eval echo $t)
 
 	#env |grep CORE
 }
@@ -106,7 +106,7 @@ channelCreate() {
 	local orderer_url=$5
 	local orderer_tls_rootcert=$6
 
-	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit 1
 
 	echo "=== Create Channel ${channel} by org $org/peer $peer === "
 	setEnvs $org $peer
@@ -156,7 +156,7 @@ channelJoin () {
 	local channel=$1
 	local org=$2
 	local peer=$3
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit 1
 
 	echo "=== Join org $org/peer $peer into channel ${channel} === "
 	setEnvs $org $peer
@@ -173,6 +173,7 @@ getShasum () {
 # E.g., for peer 0 at org 1, will do
 # channelList 1 0
 channelList () {
+
 	local org=$1
 	local peer=$2
 	echo "=== List the channels that org${org}/peer${peer} joined === "
@@ -289,7 +290,7 @@ channelSignConfigTx () {
 	local org=$2
 	local peer=$3
 	local tx=$4
-	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit 1
 	echo "=== Sign channel config tx $tx for channel $channel by org $org/peer $peer === "
 	[ -f ${CHANNEL_ARTIFACTS}/${tx} ] || { echo_r "${tx} not exist"; exit 1; }
 
@@ -314,7 +315,7 @@ channelUpdate() {
 	local orderer_url=$4
 	local orderer_tls_rootcert=$5
 	local tx=$6
-	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $tx ] && [ -z $org ] && [ -z $peer ] && echo_r "input param invalid" && exit 1
 
 	setEnvs $org $peer
 	echo "=== Update config on channel ${channel} === "
@@ -347,7 +348,7 @@ channelUpdate() {
 chaincodeInstall () {
 	if [ "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode install"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -361,7 +362,7 @@ chaincodeInstall () {
     local lang=$8
   fi
 
-	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit -1
+	[ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $version ] && [ -z $path ] &&  echo_r "input param invalid" && exit 1
 	echo "=== Install Chaincode on org ${org}/peer ${peer} === "
 	echo "name=${name}, version=${version}, path=${path}"
 	setEnvs $org $peer
@@ -383,7 +384,7 @@ chaincodeInstall () {
 chaincodeApprove () {
 	if [ "$#" -ne 9 -a "$#" -ne 11 ]; then
 		echo_r "Wrong param number for chaincode approve"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -455,7 +456,7 @@ chaincodeApprove () {
 chaincodeQueryApprove () {
 	if [ "$#" -ne 7 ]; then
 		echo_r "Wrong param number for chaincode queryapproval"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -484,7 +485,7 @@ chaincodeQueryApprove () {
 chaincodeCommit () {
 	if [ "$#" -ne 7 -a "$#" -ne 9 ]; then
 		echo_r "Wrong param number for chaincode commit"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -557,7 +558,7 @@ chaincodeCommit () {
 chaincodeQueryCommitted () {
 	if [ "$#" -ne 6 ]; then
 		echo_r "Wrong param number for chaincode querycommit"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -585,7 +586,7 @@ chaincodeQueryCommitted () {
 chaincodeInstantiate () {
 	if [ "$#" -gt 9 -a "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
-		exit -1
+		exit 1
 	fi
 	local channel=$1
 	local org=$2
@@ -595,7 +596,7 @@ chaincodeInstantiate () {
 	local version=$6
 	local args=$7
 	local collection_config=""  # collection config file path for sideDB
-	local policy="OR ('Org1MSP.member','Org2MSP.member')"  # endorsement policy
+	local policy="OR ('Org1MSP.peer','Org2MSP.peer')"  # endorsement policy
 
 	if [ ! -z "$8" ]; then
 		collection_config=$8
@@ -644,7 +645,7 @@ chaincodeInstantiate () {
 chaincodeInit () {
 	if [ "$#" -ne 8 ]; then
 		echo_r "Wrong param number for chaincode Init"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -655,7 +656,7 @@ chaincodeInit () {
 	local peer_url=$7
 	local peer_org_tlsca=$8
 
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit 1
 	echo "=== chaincodeInit to orderer by id of org${org}/peer${peer} === "
 	echo "channel=${channel}, name=${name}, args=${args}"
 	setEnvs $org $peer
@@ -694,7 +695,7 @@ chaincodeInit () {
 chaincodeInvoke () {
 	if [ "$#" -ne 9 ]; then
 		echo_r "Wrong param number for chaincode Invoke"
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -706,7 +707,7 @@ chaincodeInvoke () {
 	local name=$8
 	local args=$9
 
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit 1
 	echo "=== chaincodeInvoke to orderer by id of org${org}/peer${peer} === "
 	echo "channel=${channel}, name=${name}, args=${args}"
 	setEnvs $org $peer
@@ -744,7 +745,7 @@ chaincodeQuery () {
 	if [ "$#" -ne 7 -a "$#" -ne 8 ]; then
 		echo_r "Wrong param number $# for chaincode Query"
 		echo $*
-		exit -1
+		exit 1
 	fi
 	local org=$1
 	local peer=$2
@@ -757,7 +758,7 @@ chaincodeQuery () {
 
 	[ $# -eq 8 ] && local expected_result=$8
 
-	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit -1
+	[ -z $channel ] && [ -z $org ] && [ -z $peer ] && [ -z $name ] && [ -z $args ] &&  echo_r "input param invalid" && exit 1
 
 	echo "=== chaincodeQuery to org $org/peer $peer === "
 	echo "channel=${channel}, name=${name}, args=${args}, expected_result=${expected_result}"
@@ -809,7 +810,7 @@ chaincodeList () {
 	local peer=$2
 	local channel=$3
 
-	[ -z $org ] && [ -z $peer ] && [ -z $channel ] &&  echo_r "input param invalid" && exit -1
+	[ -z $org ] && [ -z $peer ] && [ -z $channel ] &&  echo_r "input param invalid" && exit 1
 	echo "=== ChaincodeList on org ${org}/peer ${peer} === "
 	setEnvs $org $peer
 	echo_b "Get installed chaincodes at peer$peer.org$org"
@@ -836,7 +837,7 @@ chaincodeList () {
 chaincodeStartDev () {
 	local peer=$1
 	local version=$2
-	[ -z $peer ] && [ -z $version ] &&  echo_r "input param invalid" && exit -1
+	[ -z $peer ] && [ -z $version ] &&  echo_r "input param invalid" && exit 1
 	setEnvs 1 0
 	CORE_CHAINCODE_LOGLEVEL=debug \
 	CORE_PEER_ADDRESS=peer${peer}.org1.example.com:7052 \
@@ -852,7 +853,7 @@ chaincodeStartDev () {
 chaincodeUpgrade () {
 	if [ "$#" -gt 9 -a  "$#" -lt 7 ]; then
 		echo_r "Wrong param number for chaincode instantaite"
-		exit -1
+		exit 1
 	fi
 	local channel=$1
 	local org=$2

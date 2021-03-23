@@ -2,7 +2,7 @@
 
 # Importing useful functions for cc testing
 if [ -f ./func.sh ]; then
- source ../../v1.1.0/scripts/func.sh
+ source ./func.sh
 elif [ -f scripts/func.sh ]; then
  source scripts/func.sh
 fi
