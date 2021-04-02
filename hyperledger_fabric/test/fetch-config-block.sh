@@ -45,10 +45,10 @@ fetchConfigBlock() {
     --tls \
     --cafile "${tlscaFile}"
 
-  echo "[${channel}] Decode config block into JSON with configtxlator"
+  echo "[${channel}] Decode config block into ${channel}_config.block.json"
   configtxlatorDecode "common.Block" "${channel}_config.block" "${channel}_config.block.json"
 
-  echo "[${channel}] Export the config section ${PAYLOAD_CFG_PATH} from config block"
+  echo "[${channel}] Export the config section ${PAYLOAD_CFG_PATH} from config block into ${channel}_config.block.cfg.json"
   jq "${PAYLOAD_CFG_PATH}" "${channel}_config.block.json" >"${channel}_config.block.cfg.json"
 }
 
@@ -62,6 +62,7 @@ main() {
   if [ $# -lt 3 ]; then
     echo "Not enough argument supplied"
     echo "$(basename $0) mspId channel ordererURL mspPath=${PWD}/msp-mspId"
+    exit 1
   fi
   local mspId=$1
   local channel=$2
