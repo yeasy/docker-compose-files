@@ -254,6 +254,9 @@ env_clean: # clean up Docker environment
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
 
+sdk: # enter the sdk-node container
+	docker exec -it sdk-node bash
+
 orderer: orderer0
 
 orderer0: # enter the orderer0 container

@@ -81,8 +81,8 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      - CORE_CHAINCODE_BUILDER=bcs/fabric-ccenv:${TWO_DIGIT_VERSION}
-      - CORE_CHAINCODE_GOLANG_RUNTIME=bcs/fabric-baseos:${TWO_DIGIT_VERSION}
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${TWO_DIGIT_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${TWO_DIGIT_VERSION}
       - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${TWO_DIGIT_VERSION}
       - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:${TWO_DIGIT_VERSION}
       #- FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{longpkg}] %{callpath} -> %{level:.4s}%{color:reset} %{message}
@@ -108,6 +108,12 @@ services:
       - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'cd /tmp; source scripts/func.sh; while true; do sleep 20170504; done'
+
+  sdk-node: # node sdk
+    image: yeasy/hyperledger-fabric-sdk-node:release-2.2
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
 
   prometheus: # prometheus will pull metrics from fabric
     image: prom/prometheus:v2.6.0

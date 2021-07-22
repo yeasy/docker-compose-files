@@ -205,3 +205,14 @@ services:
         - ./raft/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./chaincodes:/go/src/chaincodes
        #- $GOPATH/src/github.com/hyperledger/fabric:/go/src/github.com/hyperledger/fabric
+
+  sdk-node:
+    extends:
+      file: base.yaml
+      service: sdk-node
+    container_name: sdk-node
+    hostname: sdk-node
+    tty: true
+    volumes:
+      - ./crypto-config:/opt/crypto-config
+      - ./test:/opt/test

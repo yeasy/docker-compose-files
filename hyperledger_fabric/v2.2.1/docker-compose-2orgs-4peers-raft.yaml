@@ -18,6 +18,10 @@ services:
 #     file: base-raft.yaml
 #     service: ca.org2.example.com
 
+  sdk-node:
+    extends:
+      file: base-raft.yaml
+      service: sdk-node
   cli:
     extends:
       file: base-raft.yaml
