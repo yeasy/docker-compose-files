@@ -8,7 +8,9 @@
       ],
       "peers": [
         "peer0.org1.example.com",
-        "peer0.org2.example.com"
+        "peer1.org1.example.com",
+        "peer0.org2.example.com",
+        "peer1.org2.example.com"
       ]
     }
   },
@@ -16,13 +18,15 @@
     "Org1": {
       "mspid": "Org1MSP",
       "peers": [
-        "peer0.org1.example.com"
+        "peer0.org1.example.com",
+        "peer1.org1.example.com"
       ]
     },
     "Org2": {
       "mspid": "Org2MSP",
       "peers": [
-        "peer0.org2.example.com"
+        "peer0.org2.example.com",
+        "peer1.org2.example.com"
       ]
     }
   },
@@ -47,10 +51,28 @@
         "path": "/opt/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem"
       }
     },
+    "peer1.org1.example.com": {
+      "url": "grpcs://peer1.org1.example.com:7051",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer1.org1.example.com"
+      },
+      "tlsCACerts": {
+        "path": "/opt/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem"
+      }
+    },
     "peer0.org2.example.com": {
       "url": "grpcs://peer0.org2.example.com:7051",
       "grpcOptions": {
         "ssl-target-name-override": "peer0.org2.example.com"
+      },
+      "tlsCACerts": {
+        "path": "/opt/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem"
+      }
+    },
+    "peer1.org2.example.com": {
+      "url": "grpcs://peer1.org2.example.com:7051",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer1.org2.example.com"
       },
       "tlsCACerts": {
         "path": "/opt/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem"

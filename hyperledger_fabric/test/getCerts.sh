@@ -16,6 +16,9 @@ jq -r ".certs.admincert" $file > admin.cert
 echo "Output ca cert"
 jq -r ".certs.cacert" $file > ca.cert
 
+echo "Output tlsca cert"
+jq -r ".certs.tlscacert" $file > tlsca.cert
+
 echo "Output intermediate certs"
 jq -r ".certs.intermediatecerts" $file > intermediate.cert
 
