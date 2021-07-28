@@ -10,7 +10,9 @@
     "author": "Hyperledger",
     "license": "Apache-2.0",
     "dependencies": {
+        "fabric-common": "^2.2.8",
         "fabric-network": "^2.2.8",
-        "fabric-common": "^2.2.8"
+        "fabric-protos": "^2.2.8",
+        "khala-fabric-formatter": "^2.2.0-alpha.8"
     }
 }
