@@ -14,9 +14,14 @@ const IdentityContext = require('fabric-common/lib/IdentityContext');
 const mspId = 'Org1MSP';
 const peerURL = `grpcs://peer1.org1.example.com:7051`;
 const channelName = 'businesschannel';
-const tlsCAPath = path.resolve('../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem');
-const signCertPath = path.resolve('../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem');
-const signKeyPath = path.resolve('../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk');
+const baseMSPPath='../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp'
+const tlsCAPath = path.resolve(baseMSPPath+'/tlscacerts/tlsca.org1.example.com-cert.pem');
+const signCertPath = path.resolve(baseMSPPath+'/signcerts/Admin@org1.example.com-cert.pem');
+const signKeyPath = path.resolve(baseMSPPath+'/keystore/priv_sk');
+
+const chaincodeId = 'exp02';
+const fcn = 'query';
+const args = ['a'];
 
 const tlsCACert = fs.readFileSync(tlsCAPath).toString();
 const signCert = fs.readFileSync(signCertPath).toString();
@@ -55,24 +60,24 @@ const main = async () => {
     await discoverer.connect();
 
     const user = loadUser('test-Admin', signCert, signKey);
-    //---- query on system chaincode to getChainInfo
-    return getBlockchainInfo(channelName, endorser, user)
+    //---- query on chaincode
+    return queryChaincode(channelName, chaincodeId, fcn, args, endorser, user)
+
 };
 
 /**
  * Get the blockchain info from given channel
  * @param {string} channelName Channel to fetch blockchain info
+ * @param {string} chaincodeId Id of the chaincode
+ * @param {string} fcn Chaincode method to call
+ * @param {array} args Chaincode method arguments
  * @param {Endorser} endorser Endorser to send the request to
  * @param {User} user Identity to use
  * @returns {BlockchainInfo} Parsed blockchain info struct
  */
-const getBlockchainInfo = async (channelName, endorser, user) => {
-    const chaincodeId = 'qscc';
-    const fcn = 'GetChainInfo';
-    const args = [channelName];
-
+const queryChaincode = async (channelName,chaincodeId, fcn, args, endorser, user) => {
     let result = await  callChaincode(channelName, chaincodeId, fcn, args, endorser, user)
-    return parseBlockchainInfo(result)
+    return parseQueryResponse(result)
 }
 
 /**
@@ -104,6 +109,7 @@ const callChaincode = async (channelName, chaincodeId, fcn, args, endorser, user
     const network = await gateWay.getNetwork(channelName);
     const contract = network.getContract(chaincodeId);
     const tx = contract.createTransaction(fcn);
+    //const response = contract.evaluateTransaction(fcn, args)
 
     return tx.evaluate(...args);
 }
@@ -113,13 +119,14 @@ const callChaincode = async (channelName, chaincodeId, fcn, args, endorser, user
  * @param {Buffer} _resultProto The original result from fabric network
  * @returns {{previousBlockHash: string, currentBlockHash: string, height: number}}
  */
-const parseBlockchainInfo = (_resultProto) => {
-    const {height, currentBlockHash, previousBlockHash} = commonProto.BlockchainInfo.decode(_resultProto);
-    return {
-        height: height.toInt(),
-        currentBlockHash: currentBlockHash.toString('hex'),
-        previousBlockHash: previousBlockHash.toString('hex'),
-    };
+
+/**
+ * Parse the query result
+ * @param _resultProto
+ * @returns {string}
+ */
+const parseQueryResponse = (_resultProto) => {
+    return _resultProto.toString()
 };
 
 /**
