@@ -254,8 +254,11 @@ env_clean: # clean up Docker environment
 cli: # enter the cli container
 	docker exec -it fabric-cli bash
 
-sdk: # enter the sdk-node container
+sdk_node: # enter the sdk-node container
 	docker exec -it sdk-node bash
+
+gateway_java: # enter the gateway-java container
+	docker exec -it gateway-java bash
 
 orderer: orderer0
 

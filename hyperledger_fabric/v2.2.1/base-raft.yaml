@@ -215,4 +215,15 @@ services:
     tty: true
     volumes:
       - ./crypto-config:/opt/crypto-config
-      - ./test:/opt/test
+      - ./sdk-node:/opt/test
+
+  gateway-java:
+    extends:
+      file: base.yaml
+      service: gateway-java
+    container_name: gateway-java
+    hostname: gateway-java
+    tty: true
+    volumes:
+      - ./crypto-config:/opt/crypto-config
+      - ./gateway-java:/opt/test

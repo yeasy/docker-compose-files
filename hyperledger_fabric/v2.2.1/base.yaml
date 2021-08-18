@@ -115,6 +115,13 @@ services:
     network_mode: ${NETWORK}
     tty: true
 
+  gateway-java: # node java
+    image: yeasy/hyperledger-fabric-gateway-java:release-2.2
+    restart: always
+    network_mode: ${NETWORK}
+    tty: true
+    command: bash -c 'cd /tmp; while true; do sleep 20210729; done'
+
   prometheus: # prometheus will pull metrics from fabric
     image: prom/prometheus:v2.6.0
     restart: always

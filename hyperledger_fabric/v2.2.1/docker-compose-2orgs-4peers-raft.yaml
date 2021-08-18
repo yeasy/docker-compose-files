@@ -22,6 +22,12 @@ services:
     extends:
       file: base-raft.yaml
       service: sdk-node
+
+  gateway-java:
+    extends:
+      file: base-raft.yaml
+      service: gateway-java
+
   cli:
     extends:
       file: base-raft.yaml
