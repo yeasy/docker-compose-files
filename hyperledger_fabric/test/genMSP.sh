@@ -34,3 +34,6 @@ jq -r .certs.cacert "${cert_file}" > "msp-${mspId}/cacerts/ca.cert"
 
 echo "Get admincerts from ${admin_dir}"
 cp "${admin_dir}/${mspId}-cert.pem" "msp-${mspId}/admincerts/"
+
+echo "Clean the temp dir of ${mspId}-admin-credential"
+rm -rf ${mspId}-admin-credential
