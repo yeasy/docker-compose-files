@@ -1,0 +1,122 @@
+{
+    "name": "basic-network",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Org1",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "channels": {
+        "mychannel": {
+            "orderers": [
+                "orderer0.example.com"
+            ],
+            "peers": {
+                "peer0.org1.example.com": {
+                    "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "ledgerQuery": true,
+                    "eventSource": true
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Org1": {
+            "mspid": "Org1MSP",
+            "peers": [
+                "peer0.org1.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca-org1"
+            ],
+            "adminPrivateKeyPEM": {
+                "path": "/opt/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk"
+            },
+            "signedCertPEM": {
+                "path": "/opt/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem"
+            }
+        }
+    },
+    "orderers": {
+        "orderer0.example.com": {
+            "url": "grpcs://orderer0.example.com:7050",
+            "mspid": "OrdererMSP",
+            "grpcOptions": {
+                "ssl-target-name-override": "orderer0.example.com",
+                "hostnameOverride": "orderer0.example.com"
+            },
+            "tlsCACerts": {
+                "path": "/opt/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt"
+            },
+            "adminPrivateKeyPEM": {
+                "path": "/opt/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/keystore/priv_sk"
+            },
+            "signedCertPEM": {
+                "path": "/opt/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/signcerts/Admin@example.com-cert.pem"
+            }
+        }
+    },
+    "peers": {
+        "peer0.org1.example.com": {
+            "url": "grpcs://peer0.org1.example.com:7051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.org1.example.com",
+                "hostnameOverride": "peer0.org1.example.com",
+                "request-timeout": 120001
+            },
+            "tlsCACerts": {
+                "path": "/opt/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+            }
+        },
+        "peer0.org2.example.com": {
+            "url": "grpcs://peer0.org2.example.com:7051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.org2.example.com",
+                "hostnameOverride": "peer0.org2.example.com",
+                "request-timeout": 120001
+            },
+            "tlsCACerts": {
+                "path": "/opt/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca-org1": {
+            "url": "https://localhost:7054",
+            "grpcOptions": {
+                "verify": true
+            },
+            "tlsCACerts": {
+                "path": "/opt/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem"
+            },
+            "registrar": [
+                {
+                    "enrollId": "admin",
+                    "enrollSecret": "adminpw"
+                }
+            ]
+        },
+        "ca-org2": {
+            "url": "https://localhost:8054",
+            "grpcOptions": {
+                "verify": true
+            },
+            "tlsCACerts": {
+                "path": "/opt/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem"
+            },
+            "registrar": [
+                {
+                    "enrollId": "admin",
+                    "enrollSecret": "adminpw"
+                }
+            ]
+        }
+    }
+}
