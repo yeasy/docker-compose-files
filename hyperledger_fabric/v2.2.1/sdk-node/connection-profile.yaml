@@ -1,0 +1,69 @@
+---
+name: Network
+version: '1.1'
+client:
+  organization: Org1
+  credentialStore:
+    path: /tmp/hfc-kvs
+    cryptoStore:
+      path: /tmp/hfc-cvs
+channels:
+  businesschannel:
+    orderers:
+    - orderer0.example.com
+    peers:
+    - peer0.org1.example.com
+    - peer1.org1.example.com
+    - peer0.org2.example.com
+    - peer1.org2.example.com
+organizations:
+  Org1:
+    mspid: Org1MSP
+    peers:
+    - peer0.org1.example.com
+    - peer1.org1.example.com
+    adminPrivateKey:
+      path: /opt/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk
+    signedCert:
+      path: /opt/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+  Org2:
+    mspid: Org2MSP
+    peers:
+    - peer0.org2.example.com
+    - peer1.org2.example.com
+    adminPrivateKey:
+      path: /opt/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/priv_sk
+    signedCert:
+      path: /opt/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
+orderers:
+  orderer0.example.com:
+    url: grpcs://orderer0.example.com:7050
+    grpcOptions:
+      ssl-target-name-override: orderer0.example.com
+    tlsCACerts:
+      path: "/opt/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem"
+peers:
+  peer0.org1.example.com:
+    url: grpcs://peer0.org1.example.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org1.example.com
+    tlsCACerts:
+      path: "/opt/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem"
+  peer1.org1.example.com:
+    url: grpcs://peer1.org1.example.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer1.org1.example.com
+    tlsCACerts:
+      path: "/opt/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem"
+  peer0.org2.example.com:
+    url: grpcs://peer0.org2.example.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org2.example.com
+    tlsCACerts:
+      path: "/opt/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem"
+  peer1.org2.example.com:
+    url: grpcs://peer1.org2.example.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer1.org2.example.com
+    tlsCACerts:
+      path: "/opt/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem"

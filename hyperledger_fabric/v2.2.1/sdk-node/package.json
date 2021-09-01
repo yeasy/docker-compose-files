@@ -13,6 +13,6 @@
         "fabric-common": "^2.2.8",
         "fabric-network": "^2.2.8",
         "fabric-protos": "^2.2.8",
-        "khala-fabric-formatter": "^2.2.0-alpha.8"
+        "yaml": "^1.10.2"
     }
 }
