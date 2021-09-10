@@ -1,0 +1,92 @@
+version: '2'
+
+services:
+    ca.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca.example.com
+        hostname: ca.example.com
+        volumes:
+          - $PWD/scripts:/scripts
+          - $PWD/crypto-config/ordererOrganizations/example.com/:/etc/hyperledger/fabric-ca-server
+        working_dir: /scripts
+        command: sh -c "sleep 1; bash ca_server_start.sh example.com ca"
+        depends_on:
+          - tlsca.example.com
+
+    ca.org1.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca.org1.example.com
+        hostname: ca.org1.example.com
+        volumes:
+          - $PWD/scripts:/scripts
+          - $PWD/crypto-config/peerOrganizations/org1.example.com/:/etc/hyperledger/fabric-ca-server
+        working_dir: /scripts
+        command: sh -c "sleep 1; bash ca_server_start.sh org1.example.com ca"
+        #command: fabric-ca-server start -b admin:adminpw
+        #--csr.names C=US,ST="California",L="San Francisco",O="org1.example.com"
+        depends_on:
+          - tlsca.org1.example.com
+
+    ca.org2.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca.org2.example.com
+        hostname: ca.org2.example.com
+        volumes:
+        - $PWD/scripts:/scripts
+        - $PWD/crypto-config/peerOrganizations/org2.example.com/:/etc/hyperledger/fabric-ca-server
+        working_dir: /scripts
+        command: sh -c "sleep 1; bash ca_server_start.sh org2.example.com ca"
+        #command: fabric-ca-server start -b admin:adminpw
+        #--csr.names C=US,ST="California",L="San Francisco",O="org1.example.com"
+        depends_on:
+          - tlsca.org2.example.com
+
+    tlsca.example.com:
+      image: yeasy/hyperledger-fabric-ca
+      container_name: tlsca.example.com
+      hostname: tlsca.example.com
+      volumes:
+      - $PWD/scripts:/scripts
+      - $PWD/crypto-config/ordererOrganizations/example.com/:/etc/hyperledger/fabric-ca-server
+      working_dir: /scripts
+      command: sh -c "bash ca_server_start.sh example.com tlsca"
+
+    tlsca.org1.example.com:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: tlsca.org1.example.com
+        hostname: tlsca.org1.example.com
+        volumes:
+          - $PWD/scripts:/scripts
+          - $PWD/crypto-config/peerOrganizations/org1.example.com/:/etc/hyperledger/fabric-ca-server
+        working_dir: /scripts
+        command: sh -c "bash ca_server_start.sh org1.example.com tlsca"
+
+    tlsca.org2.example.com:
+      image: yeasy/hyperledger-fabric-ca
+      container_name: tlsca.org2.example.com
+      hostname: tlsca.org2.example.com
+      volumes:
+      - $PWD/scripts:/scripts
+      - $PWD/crypto-config/peerOrganizations/org2.example.com/:/etc/hyperledger/fabric-ca-server
+      working_dir: /scripts
+      command: sh -c "bash ca_server_start.sh org2.example.com tlsca"
+
+    ca-client:
+        image: yeasy/hyperledger-fabric-ca
+        container_name: ca-client
+        hostname: ca-client
+        #environment:
+        #    - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-client
+        volumes:
+          - $PWD/scripts:/scripts
+          - $PWD/crypto-config:/etc/hyperledger/fabric-ca-client
+        working_dir: /scripts
+        depends_on:
+          - ca.example.com
+          - ca.org1.example.com
+          - ca.org2.example.com
+          - tlsca.example.com
+          - tlsca.org1.example.com
+          - tlsca.org2.example.com
+        #command: sh -c "while true; do sleep 1; done"
+        command: sh -c "sleep 4; bash client-test.sh"

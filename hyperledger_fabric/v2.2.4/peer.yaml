@@ -1,0 +1,37 @@
+# All elements in this file should depend on the base.yaml
+# Provided fabric peer node
+
+version: '2.0'
+
+services:
+  peer-solo: # example peer node in solo mode
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer0.org1.example.com # will generated automatically
+    hostname: peer0.org1.example.com # will generated automatically
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # grpc
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052 # chaincode
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051 # gossip
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+
+  peer-kafka: # example peer node in kafka mode
+    extends:
+      file: base.yaml
+      service: peer-base
+    container_name: peer0.org1.example.com
+    hostname: peer0.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
