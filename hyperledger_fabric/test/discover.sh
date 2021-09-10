@@ -23,8 +23,8 @@ main() {
   export CORE_PEER_TLS_ROOTCERT_FILE=${mspPath}/tlscacerts/tlsca.cert
   export CORE_PEER_TLS_ENABLED=true
 
-  for i in {1..1000}; do
-  echo "round $i"
+  #for i in {1..1000}; do
+  #  echo -n "round $i: "
   discover \
     --peerTLSCA "${CORE_PEER_TLS_ROOTCERT_FILE}" \
     --userKey ${mspPath}/keystore/${mspId}-key \
@@ -32,20 +32,18 @@ main() {
     --MSP "${mspId}" \
     peers \
     --channel "${channel}" \
-    --server "${peerAddr}" > peers.json
+    --server "${peerAddr}" >peers.json
 
-  if [ $(jq length peers.json) == 2 ]; then
-    echo "2"
-  else
-    cat peers.json
-    cp peers.json peers-${i}.json
-  fi
+  #if [ $(jq length peers.json) == 4 ]; then
+  #  echo "detected 4 peers"
+  #else
+  #  cat peers.json
+  #  cp peers.json peers-${i}.json
+  #  echo $(date) >>peers-${i}.json
+  #fi
   sleep 1
-  done
-  exit 0
+  #done
 
-for i in {1..1000}; do
-  echo "round $i"
   discover \
     --peerTLSCA "${CORE_PEER_TLS_ROOTCERT_FILE}" \
     --userKey ${mspPath}/keystore/${mspId}-key \
@@ -54,19 +52,18 @@ for i in {1..1000}; do
     endorsers \
     --channel "${channel}" \
     --chaincode "${ccName}" \
-    --server "${peerAddr}"  > endorsers.json
+    --server "${peerAddr}" >endorsers.json
 
-  if [ $(jq '.[0].EndorsersByGroups|length' endorsers.json) == 2 ]; then
-    echo "2"
-  else
-    cat endorsers.json
-    cp endorsers.json endorsers-1.json
-  fi
-  sleep 1
-  done
+  #if [ $(jq '.[0].EndorsersByGroups|length' endorsers.json) == 2 ]; then
+  #  echo "2"
+  #else
+  #  cat endorsers.json
+  #  cp endorsers.json endorsers-1.json
+  #fi
+  #sleep 1
 
-    #--tlsCert tls/client.crt \
-    #--tlsKey tls/client.key \
+  #--tlsCert tls/client.crt \
+  #--tlsKey tls/client.key \
 }
 
 main "$@"
