@@ -1044,7 +1044,7 @@ configtxlatorEncode() {
 }
 
 # configtxlator decode pb to json
-# Usage: configtxlatorEncode msgType input output
+# Usage: configtxlatorDecode msgType input output
 configtxlatorDecode() {
   local msgType=$1
   local input=$2

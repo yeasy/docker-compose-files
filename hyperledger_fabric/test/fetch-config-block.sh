@@ -61,12 +61,12 @@ fi
 main() {
   if [ $# -lt 3 ]; then
     echo "Not enough argument supplied"
-    echo "$(basename $0) mspId channel ordererURL mspPath=${PWD}/msp-mspId"
+    echo "$(basename $0) channel ordererURL mspId mspPath=${PWD}/msp-mspId"
     exit 1
   fi
-  local mspId=$1
-  local channel=$2
-  local ordererURL=$3
+  local channel=$1
+  local ordererURL=$2
+  local mspId=$3
   local mspPath=${4:-${PWD}/msp-${mspId}} # Suppose the local msp path named as msp-${msp_id}
 
   export FABRIC_LOGGING_SPEC="debug"

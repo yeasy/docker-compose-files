@@ -81,7 +81,7 @@ def process(directory):
 			f_read.close()
 			f_write.close()
 		else:
-			print("Ignore non-json file {}".format(f))
+			print("Ignore non .block.json file {}".format(f))
 
 
 # Usage python json_flatter.py [path_containing_json_files]

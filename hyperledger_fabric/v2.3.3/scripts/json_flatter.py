@@ -20,11 +20,11 @@ def decode_if_b64(raw):
 	except binascii.Error:
 		success = False
 
-	# if success:  # result_bytes = b'xxxx\xx'
-	# print('===================Start==================================')
-	# print(raw)
-	# print(result)
-	# print('=====================End===================================')
+	#if success:  # result_bytes = b'xxxx\xx'
+		#print('===================Start==================================')
+		#print(raw)
+		#print(result)
+		#print('=====================End===================================')
 	return success, result
 
 
@@ -44,7 +44,7 @@ def check_tree(tree, prefix, f_write):
 			else:  # leaf
 				result = v
 				if 'cert' in k or 'id_bytes' in k or 'value' in k and 'hash' not in k:
-					# print(prefix_path)
+					#print(prefix_path)
 					success, result = decode_if_b64(v)
 					if success:
 						result = "b64({})".format(result)
@@ -76,13 +76,12 @@ def process(directory):
 		if f.endswith(".block.json"):
 			file_name = os.path.join(json_dir, f)
 			f_read = open(file=file_name, mode="r", encoding='utf-8')
-			f_write = open(file=file_name + "-flat.json", mode="w",
-			               encoding='utf-8')
+			f_write = open(file=file_name+"-flat.json", mode="w", encoding='utf-8')
 			check_tree(json.load(f_read), "", f_write)
 			f_read.close()
 			f_write.close()
 		else:
-			print("Ignore non-json file {}".format(f))
+			print("Ignore non .block.json file {}".format(f))
 
 
 # Usage python json_flatter.py [path_containing_json_files]
