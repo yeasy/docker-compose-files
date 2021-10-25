@@ -201,34 +201,40 @@ genUpdateTx() {
 }
 
 # Sign a channel update transaction
-# Usage: signUpdateTx mspId mspPath tx
+# Usage: signUpdateTx update_tx mspId mspPath
 signUpdateTx() {
   if [ $# -lt 3 ]; then
-    echo "Not enough argument supplied"
-    echo "$(basename $0) mspId mspPath tx"
+    echo "Not enough argument supplied, at least need 3"
+    echo "$(basename $0) udpate_tx mspId mspPath..."
   fi
 
-  mspId=$1
-  mspPath=$2
-  tx=$3
+  tx=$1; shift
 
-  echo "Sign channel config tx $tx by $mspId"
-  [ -f "${tx}" ] || {
-    echo "${tx} not exist"
-    exit 1
-  }
+  for((i=1;i<=$#;)); do
+    mspId=${!i}
+    ((i++))
+    mspPath=${!i}
+    ((i++))
 
-  export CORE_PEER_LOCALMSPID=${mspId}
-  export CORE_PEER_MSPCONFIGPATH=${mspPath}
+    echo "Sign channel config tx $tx by $mspId $mspPath"
+    [ -f "${tx}" ] || {
+      echo "${tx} not exist"
+      exit 1
+    }
 
-  peer channel signconfigtx -f "${tx}" >log.txt 2>&1
-  rc=$?
-  [ $rc -ne 0 ] && cat log.txt
-  if [ $rc -ne 0 ]; then
-    echo "Sign channel config tx $tx by $mspId failed"
-  else
-    echo "Sign channel config tx $tx by $mspId is successful"
-  fi
+    export CORE_PEER_LOCALMSPID=${mspId}
+    export CORE_PEER_MSPCONFIGPATH=${mspPath}
+
+    peer channel signconfigtx -f "${tx}" >log.txt 2>&1
+    rc=$?
+    [ $rc -ne 0 ] && cat log.txt
+    if [ $rc -ne 0 ]; then
+      echo "Sign channel config tx $tx by $mspId failed"
+      return 1
+    else
+      echo "Sign channel config tx $tx by $mspId is successful"
+    fi
+  done
 
   return 0
 }
@@ -269,11 +275,11 @@ sendUpdateTx() {
 
 # Entrance function, will call other functions
 # Update a single channel's config, need to be founder's admin
-# Usage: updateChannel channel, ordererURL, mspId, mspPath
+# Usage: updateChannel channel, ordererURL, mspId, mspPath, (mspId2, mspPath2...)
 UpdateChannel() {
   if [ $# -lt 3 ]; then
     echo "Not enough argument supplied"
-    echo "$(basename $0) channel ordererURL mspId mspPath=${PWD}/msp-mspId"
+    echo "$(basename $0) channel ordererURL mspId mspPath=${PWD}/msp-mspId msp1 mspPath1 msp2 mspPath2..."
     exit 1
   fi
   channel=$1
@@ -300,7 +306,7 @@ UpdateChannel() {
 
   # TODO: do we support multiple msps?
   echo "[${channel}] Sign the channel update tx ${updateTx} by $mspId $mspPath"
-  signUpdateTx "${mspId}" "${mspPath}" "${updateTx}"
+  signUpdateTx "${updateTx}" "${mspId}" "${mspPath}" "${otherMSPs}"
   [ $? -ne 0 ] && { echo "[${channel}] Failed to sign the channel config update tx" && exit 1; }
 
   echo "[${channel}] Send the channel update tx ${updateTx} by $mspId $mspPath to ${ordererTLSRoot}"
@@ -309,14 +315,12 @@ UpdateChannel() {
 }
 
 if [ $# -lt 4 ]; then
-  echo "Not enough argument supplied"
-  echo "$(basename $0) channelListFile ordererURL mspId mspPath"
+  echo "Not enough argument supplied, at least 4"
+  echo "$(basename $0) channelListFile ordererURL orderer-mspId orderer-mspPath other-mspId other-mspPath..."
   exit 1
 fi
+
 channelListFile=$1
-ordererURL=$2
-mspId=$3
-mspPath=$4 # the msp path
 
 if [ -f ${channelListFile} ]; then
   i=0
