@@ -1,0 +1,134 @@
+version: 1.4.0
+port: 7054
+debug: false
+crlsizelimit: 512000
+tls:
+  enabled: false
+  certfile: null
+  keyfile: null
+  clientauth:
+    type: noclientcert
+    certfiles: null
+ca:
+  name: tlsca.org1.example.com
+  keyfile: tlsca.org1.example.com_sk
+  certfile: tlsca.org1.example.com-cert.pem
+  chainfile: null
+crl:
+  expiry: 24h
+registry:
+  maxenrollments: -1
+  identities:
+  - name: boot-admin
+    pass: boot-pass
+    type: client
+    affiliation: ""
+    attrs:
+      hf.Registrar.Roles: '*'
+      hf.Registrar.DelegateRoles: '*'
+      hf.Revoker: true
+      hf.IntermediateCA: true
+      hf.GenCRL: true
+      hf.Registrar.Attributes: '*'
+      hf.AffiliationMgr: true
+db:
+  type: sqlite3
+  datasource: fabric-ca-server.db
+  tls:
+    enabled: false
+    certfiles: null
+    client:
+      certfile: null
+      keyfile: null
+ldap:
+  enabled: false
+  url: ldap://<adminDN>:<adminPassword>@<host>:<port>/<base>
+  tls:
+    certfiles: null
+    client:
+      certfile: null
+      keyfile: null
+  attribute:
+    names:
+    - uid
+    - member
+    converters:
+    - name: null
+      value: null
+    maps:
+      groups:
+      - name: null
+        value: null
+affiliations:
+  org1:
+  - department1
+  - department2
+  org2:
+  - department1
+signing:
+  default:
+    usage:
+    - digital signature
+    - cert sign
+    - crl sign
+    expiry: 87600h
+  profiles:
+    ca:
+      usage:
+      - cert sign
+      - crl sign
+      expiry: 43800h
+      caconstraint:
+        isca: true
+        maxpathlen: 0
+    tls:
+      usage:
+      - signing
+      - key encipherment
+      - server auth
+      - client auth
+      - key agreement
+      expiry: 87600h
+csr:
+  cn: tlsca.org1.example.com
+  keyrequest:
+    algo: ecdsa
+    size: 256
+  names:
+  - C: US
+    ST: North Carolina
+    L: null
+    O: org1.example.com
+    OU: tlsca
+  hosts:
+  - fabric-ca-server
+  - localhost
+  ca:
+    expiry: 1314000h
+    pathlength: 1
+idemix:
+  rhpoolsize: 1000
+  nonceexpiration: 15s
+  noncesweepinterval: 15m
+bccsp:
+  default: SW
+  sw:
+    hash: SHA2
+    security: 256
+    filekeystore:
+      keystore: msp/keystore
+cacount: null
+cafiles: null
+intermediate:
+  parentserver:
+    url: null
+    caname: null
+  enrollment:
+    hosts: null
+    profile: null
+    label: null
+  tls:
+    certfiles: null
+    client:
+      certfile: null
+      keyfile: null
