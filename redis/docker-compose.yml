@@ -1,0 +1,20 @@
+version: '3'
+services:
+   redis-server:
+     image: redis:6.2
+     restart: "always"
+     container_name: redis-server
+     ports:
+       - "6379:6379"
+     volumes:
+       - ./redis.conf:/etc/redis/redis.conf
+       - ./data:/data
+     command: redis-server /etc/redis/redis.conf
+     privileged: true
+
+   redis-cli:
+     image: redis:6.2
+     restart: "always"
+     container_name: redis-cli
+     command: bash -c 'redis-cli -h redis-server -p 6379 ping; while true; do sleep 20220101; done'
+     privileged: true
