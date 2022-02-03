@@ -1,4 +1,4 @@
-# This compose file will boot a typical nginx-web toplogy
+# This compose file will boot a typical nginx-web topology
 #  nginx: can set user/password to access, and forward request to web.
 #  web: listen on private network
 # https://github.com/yeasy/docker-compose-files
@@ -10,7 +10,7 @@ web:
   expose:
   - "80"
 
-#nginx to forward request 
+#nginx to forward request
 nginx:
   image: yeasy/nginx
   hostname: nginx

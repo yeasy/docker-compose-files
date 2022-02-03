@@ -71,6 +71,9 @@ To import them, after all containers startup, go inside the kibana container, an
 $ cd /kibana/beats-dashboards-1.0.1 && ./load.sh http://elasticsearch:9200
 ```
 
+## [redis](redis)
+A redis serer and a redis client (send a PING to the server).
+
 ## [registry_mirror](registry_mirror)
 docker registry mirror, with redis as the backend cache.
 

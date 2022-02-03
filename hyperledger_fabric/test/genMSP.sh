@@ -9,31 +9,37 @@ if [ $# -lt 1 ]; then
 fi
 
 mspId=$1
-echo "msp id = ${mspId}"
+mspPath=msp-${mspId}
+echo "msp id=${mspId}, msp path=${mspPath}"
 
-cert_file=${mspId}-certificates.json
-admin_dir=${mspId}-admin-credential
+certFile=${mspId}-certificates.json
+adminCredentialDir=${mspId}-admin-credential
+adminCredentialFile=${mspId}-admin-credential.zip
 
-mkdir -p "msp-${mspId}"
-pushd "msp-${mspId}" && mkdir tlscacerts signcerts keystore cacerts admincerts && popd || exit 1
+[ -d "${mspPath}" ] && { echo "${mspPath} already exists, will exit" && exit 0; }
+mkdir -p "${mspPath}"
 
-echo "Unzip ${mspId}-admin-credential.zip file to create the ${admin_dir}"
-unzip -d "${mspId}-admin-credential" "${mspId}-admin-credential.zip"
+pushd "${mspPath}" && mkdir tlscacerts signcerts keystore cacerts admincerts && popd || exit 1
 
-echo "Get tlscacert from ${cert_file}"
-jq -r .certs.tlscacert "${cert_file}" > "msp-${mspId}/tlscacerts/tlsca.cert"
+echo "Unzip ${adminCredentialFile} file to create the ${adminCredentialDir}"
+unzip -d "${adminCredentialDir}" "${adminCredentialFile}"
 
-echo "Get signcerts from ${admin_dir}"
-cp "${admin_dir}/${mspId}-cert.pem" "msp-${mspId}/signcerts/"
+echo "Get tlscacert from ${certFile}"
+jq -r .certs.tlscacert "${certFile}" > "${mspPath}/tlscacerts/tlsca.cert"
 
-echo "Get keystore from ${admin_dir}"
-cp "${admin_dir}/${mspId}-key" "msp-${mspId}/keystore/"
+echo "Get signcerts from ${adminCredentialDir}"
+cp "${adminCredentialDir}/${mspId}-cert.pem" "${mspPath}/signcerts/"
 
-echo "Get cacerts from ${cert_file}"
-jq -r .certs.cacert "${cert_file}" > "msp-${mspId}/cacerts/ca.cert"
+echo "Get keystore from ${adminCredentialDir}"
+cp "${adminCredentialDir}/${mspId}-key" "${mspPath}/keystore/"
 
-echo "Get admincerts from ${admin_dir}"
-cp "${admin_dir}/${mspId}-cert.pem" "msp-${mspId}/admincerts/"
+echo "Get cacerts from ${certFile}"
+jq -r .certs.cacert "${certFile}" > "${mspPath}/cacerts/ca.cert"
 
-echo "Clean the temp dir of ${mspId}-admin-credential"
-rm -rf ${mspId}-admin-credential
+echo "Get admincerts from ${adminCredentialDir}"
+cp "${adminCredentialDir}/${mspId}-cert.pem" "${mspPath}/admincerts/"
+
+echo "Remove the unzipped ${adminCredentialDir}"
+rm -rf ${adminCredentialDir}
+
+echo "MSP is created at ${mspPath}, now you can run: rm -rf ${certFile} ${adminCredentialFile}"

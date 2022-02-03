@@ -1,5 +1,8 @@
-#bash fetch-config-block.sh dhanNodeOUf1 testchainid dhannodeouf1-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20003
-#bash fetch-config-block.sh dhanNodeOUf1 nodeouchannel01 dhannodeouf1-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20003
+# This should be run in env with fabric command line binaries including peer, configtxlator
+
+#bash fetch-config-block.sh test01 dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9
+#bash channel-update-config.sh test01 dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9
+bash channel-update-config.sh channellist.txt dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9 msp1 msppath1
 
 mspId=VolvoFounder
 endorPolicy="OR('dh0728fab2f3.member')"
@@ -24,6 +27,6 @@ packageId="${ccName}:bed6b22c90562f2f87d2303895064718c6fa98566a637b58b4037c5082f
 #bash cc-marble-test.sh ${mspId} ${channelId} ${peerAddr} ${ordererAddr} ${ccName}
 
 #bash discover.sh VolvoFounder multiinstancewith32kbpage01 volvofounder-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20012 multiinstancewith32kbpageCC01
-bash discover.sh VolvoFounder multiinstancewith32kbpage01 volvofounder-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20013 multiinstancewith32kbpageCC01
+#bash discover.sh VolvoFounder multiinstancewith32kbpage01 volvofounder-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20013 multiinstancewith32kbpageCC01
 #bash discover.sh VolvoFounder multiinstancewith32kbpage01 volvopart01-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20041 multiinstancewith32kbpageCC01
 #bash discover.sh VolvoFounder multiinstancewith32kbpage01 volvopart01-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20043 multiinstancewith32kbpageCC01

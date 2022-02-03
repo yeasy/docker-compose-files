@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # This script will fix every channel's orderer admin policy from implicit to signature based.
-# It should be part of the migration tool
 
 # Usage: TODO
 
-# The commit 787b82fa80cb0a85f352384fa2ac51d5fbbc41e9 has changed the policy as:
+# changed the policy:
 #Admins:
 #            Type: ImplicitMeta
 #            Rule: "MAJORITY Admins"
@@ -16,7 +15,6 @@
 #            Type: Signature
 #            Rule: "OR('{{.ORGNAME}}.admin')"
 
-# However, there are still instances with 19.3.5 created with the old policies. The script will fix those instances.
 
 # configtxlator encode json to pb
 # Usage: configtxlatorEncode msgType input output
