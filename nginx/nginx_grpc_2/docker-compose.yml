@@ -1,0 +1,30 @@
+version: '3'
+services:
+  nginx1:
+    image: nginx:1.20
+    container_name: nginx1
+    volumes:
+      - ./nginx1.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - 7050:7050
+
+  nginx2:
+    image: nginx:1.20
+    container_name: nginx2
+    volumes:
+      - ./nginx2.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - 8050:7050
+  grpc_server:
+    build: ./grpc
+    container_name: grpc_server
+    expose:
+      - "7050"
+    command: grpc_server
+
+  grpc_client:
+    build: ./grpc
+    container_name: grpc_client
+    command: bash -c 'while true; do sleep 20220202; done; grpc_client'
