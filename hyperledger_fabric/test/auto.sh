@@ -1,8 +1,19 @@
 # This should be run in env with fabric command line binaries including peer, configtxlator
 
-#bash fetch-config-block.sh test01 dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9
+mspId=dh4baohuav1
+channelId=default
+ordererAddr=dh4baohuav1-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20003
+
+bash fetch-config-block.sh \
+	${channelId} \
+	${ordererAddr} \
+	${mspId} \
+	${PWD}/msp-${mspId}
+
 #bash channel-update-config.sh test01 dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9
-bash channel-update-config.sh channellist.txt dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9 msp1 msppath1
+#bash channel-update-config.sh channellist.txt dhentf9-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003 dhentf9  ${PWD}/msp-dhentf9 msp1 msppath1
+
+exit
 
 mspId=VolvoFounder
 endorPolicy="OR('dh0728fab2f3.member')"

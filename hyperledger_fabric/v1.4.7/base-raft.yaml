@@ -97,11 +97,13 @@ services:
     ports:
       - "9050:7050"
     environment:
+      - FABRIC_LOGGING_SPEC=DEBUG
       - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=10
     volumes:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/var/hyperledger/orderer/tls
     - ./raft/channel-artifacts/orderer2.genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+   #- ./raft/channel-artifacts/orderer2:/var/hyperledger/production/orderer
     command: orderer start
 
 ## following are peer nodes ##
