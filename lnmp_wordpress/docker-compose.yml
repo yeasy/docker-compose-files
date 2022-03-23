@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+  wordpress: # wordpress
+    image: wordpress:5-fpm # fastcgi
+    container_name: wordpress
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST:-db:3306}
+      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME:-wordpress}
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER:-wordpress}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD:-dbpassword@123}
+    ports:
+      - "8080:80"
+    volumes:
+      - ${WORDPRESS_LOCAL_PATH:-./wordpress_data}:/var/www/html
+      - ${WORDPRESS_UPLOADS_CONFIG:-./wordpress_config/uploads.ini}:/usr/local/etc/php/conf.d/uploads.ini
+    depends_on:
+      - db
+
+  db: # database
+    image: mysql:8
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-wordpress}
+      - MYSQL_USER=${MYSQL_USER:-wordpress}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-dbpassword@123}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword@123}
+    volumes:
+      - ${MYSQL_LOCAL_PATH:-./db_data}:/var/lib/mysql
+    command:
+      - '--default-authentication-plugin=mysql_native_password'
+
+  nginx:
+    # default ports 80, 443 - expose mapping as needed to host
+    image: nginx:1
+    container_name: nginx
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "80:80"    # http
+      - "443:443"   # https
+    volumes:
+      - ${WORDPRESS_LOCAL_PATH:-./wordpress_data}:/var/www/html
+      - ${NGINX_CONF:-./nginx_conf/default.conf}:/etc/nginx/conf.d/default.conf
+      - ${NGINX_SSL_CERTS:-./nginx_ssl}:/etc/ssl:ro
+      - ${NGINX_LOGS:-./nginx_logs/nginx}:/var/log/nginx
+    depends_on:
+      - wordpress
+      - db
+
+  adminer: # lightweighted mysql manage tool, bypasses nginx
+     # default port 9000
+     image: adminer:4-fastcgi
+     container_name: adminer
+     restart: unless-stopped
+     depends_on:
+       - db
+     ports:
+       - "9000:9000"
+
+volumes:
+  wordpress:
+  db:

@@ -45,6 +45,9 @@ See [hyperledger_fabric](hyperledger_fabric) for more details.
 ## [kafka](kafka)
 Start a simple kafka service for testing.
 
+## [lnmp_wordpress](lnmp_wordress)
+Deploy nginx, mysql, php + wordpress.
+
 ## [mongo_cluster](mongo_cluster)
 Start 3 mongo instance to make a replica set.
 
@@ -61,7 +64,7 @@ The web UI will listen on local 8081 port.
 ## [nginx_auth](nginx_auth)
 Use nginx as a proxy with authentication for backend application.
 
-## [packetbeat_ek](packetbeat_ek)
+## [packetbeat_elk](packetbeat_elk)
 Demo the packetbeat, elasticsearch and kibana.
 
 Some kibana [dashboard config](https://github.com/elastic/beats-dashboards) files are included.
