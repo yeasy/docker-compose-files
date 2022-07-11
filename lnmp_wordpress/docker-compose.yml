@@ -26,6 +26,8 @@ services:
     restart: always
     env_file:
       - .env
+    cap_add:
+      - SYS_NICE
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-wordpress}
       - MYSQL_USER=${MYSQL_USER:-wordpress}
