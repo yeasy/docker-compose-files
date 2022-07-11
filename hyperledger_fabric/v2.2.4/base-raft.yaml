@@ -70,6 +70,7 @@ services:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/fabric/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/etc/hyperledger/fabric/tls
     - ./raft/channel-artifacts/orderer0.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+    #- ./volumes/orderer0:/var/hyperledger/production/orderer
     command: orderer start
 
   orderer1.example.com:  # There can be multiple orderers
@@ -86,6 +87,7 @@ services:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/etc/hyperledger/fabric/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/etc/hyperledger/fabric/tls
     - ./raft/channel-artifacts/orderer1.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+    #- ./volumes/orderer1:/var/hyperledger/production/orderer
     command: orderer start
 
   orderer2.example.com:  # There can be multiple orderers
@@ -102,6 +104,7 @@ services:
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/etc/hyperledger/fabric/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/etc/hyperledger/fabric/tls
     - ./raft/channel-artifacts/orderer2.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+    #- ./volumes/orderer2:/var/hyperledger/production/orderer
     command: orderer start
 
 ## following are peer nodes ##

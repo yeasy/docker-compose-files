@@ -18,15 +18,15 @@ services:
 #     file: base-raft.yaml
 #     service: ca.org2.example.com
 
-  sdk-node:
-    extends:
-      file: base-raft.yaml
-      service: sdk-node
+#  sdk-node:
+#    extends:
+#      file: base-raft.yaml
+#      service: sdk-node
 
-  gateway-java:
-    extends:
-      file: base-raft.yaml
-      service: gateway-java
+#  gateway-java:
+#    extends:
+#      file: base-raft.yaml
+#      service: gateway-java
 
   cli:
     extends:
