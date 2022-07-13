@@ -60,7 +60,8 @@ Restart nginx.
 
 ```bash
 nginx -s reload
-service nginx restart```
+service nginx restart
+```
 
 Apply ssl cert and key pair with certbot.
 
