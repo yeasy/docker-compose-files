@@ -17,6 +17,7 @@ Fabric Release | Description
 [Fabric v2.4.0](v2.4.0/) | fabric 2.4.0 release.
 [Fabric v2.3.3](v2.3.3/) | fabric 2.3.3 release.
 [Fabric v2.3.0](v2.3.0/) | fabric 2.3.0 release.
+[Fabric v2.2.8](v2.2.8/) | fabric 2.2.8 LTS release.
 [Fabric v2.2.4](v2.2.4/) | fabric 2.2.4 LTS release.
 [Fabric v2.2.1](v2.2.1/) | fabric 2.2.1 LTS release.
 [Fabric v2.2.0](v2.2.0/) | fabric 2.2.0 LTS release.
@@ -43,7 +44,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v2.3.0
+$ export RELEASE=v2.4.0
 ```
 
 ```bash

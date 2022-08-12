@@ -4,7 +4,7 @@
 # ${channel}_config.block.json: decoded config block;
 # ${channel}_config.block.cfg.json: core config section of the config blcok
 
-# Usage: ./script mspId channel ordererURL mspPath=${PWD}/msp-mspId
+# Usage: ./script channel ordererURL mspId mspPath=${PWD}/msp-mspId
 
 # use configtxlator to decode pb to json
 # Usage: configtxlatorEncode msgType input output
