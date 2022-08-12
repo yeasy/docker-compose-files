@@ -1,9 +1,9 @@
-module examples/chaincode/go/chaincode_example02
+module chaincodes/go/chaincode_example02
 
-go 1.13
+go 1.14
 
 require (
-	github.com/hyperledger/fabric-chaincode-go v0.0.0-20190823162523-04390e015b85
-	github.com/hyperledger/fabric-protos-go v0.0.0-20190823190507-26c33c998676
+	github.com/hyperledger/fabric-chaincode-go v0.0.0-20201119163726-f8ef75b17719
+	github.com/hyperledger/fabric-protos-go v0.0.0-20201028172056-a3136dde2354
 	google.golang.org/grpc v1.24.0 // indirect
 )
