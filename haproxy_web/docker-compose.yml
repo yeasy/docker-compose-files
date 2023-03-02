@@ -2,31 +2,29 @@
 # Authors: yeasy.github.com
 # Date: 2015-11-15
 
-weba:
-    build: ./web
-    expose:
-        - 80
-
-webb:
-    build: ./web
-    expose:
-        - 80
-
-webc:
-    build: ./web
-    expose:
-        - 80
-
-haproxy:
-    image: haproxy:1.6
-    volumes:
-        - ./haproxy:/haproxy-override
-        - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-    links:
-        - weba
-        - webb
-        - webc
-    ports:
-        - "80:80"
-        - "70:70"
-
+version: "3.9"
+services:
+    weba:
+        build: ./web
+        expose:
+            - 80
+    webb:
+        build: ./web
+        expose:
+            - 80
+    webc:
+        build: ./web
+        expose:
+            - 80
+    haproxy:
+        image: haproxy:2.7
+        volumes:
+            - ./haproxy:/haproxy-override
+            - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+        links:
+            - weba
+            - webb
+            - webc
+        ports:
+            - "80:80"
+            - "70:70" # haproxy admin console, login with user:pass
