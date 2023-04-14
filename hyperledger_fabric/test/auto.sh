@@ -1,10 +1,11 @@
 # This should be run in env with fabric command line binaries including peer, configtxlator
 
-# docker run --rm -it -v $PWD/:/tmp/test yeasy/hyperledger-fabric:2.2.4 bash
+# docker run --rm -it --work-dir=/tmp/test -v $PWD/:/tmp/test yeasy/hyperledger-fabric:2.2.4 bash
 
-mspId=bus00gku
-channelId=testchainid
-ordererAddr=bus00gku-bcsnativetest-iad.blockchain.test.ocp.oc-test.com:20003
+mspId=sm25foun
+channelId=default
+#channelId=testchainid
+ordererAddr=sm25foun-oabcs1-iad.blockchain.ocp.oraclecloud.com:20003
 
 bash fetch-config-block.sh \
 	${channelId} \
