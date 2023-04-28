@@ -22,6 +22,9 @@ See [Docker Compose Documentation](https://docs.docker.com/compose/).
 ## [consul-discovery](consul-discovery)
 Using consul to make a service-discoverable architecture.
 
+## [discuz_php_apache_mysql](discuz_php_apache_mysql)
+Discuz with apache and mysql.
+
 ## [elk](elk)
 ELK example.
 

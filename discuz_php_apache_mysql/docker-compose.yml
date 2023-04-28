@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql:rw
+    environment: # match discuz default settings
+      - TZ=${TIME_ZONE:-Asia/Shanghai}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-testdb}
+      - MYSQL_USER=${MYSQL_USER:-testuser}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-testpass}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-testrootpass}
+
+  discuz: # discuz+php+apache. db host=mysql
+    image: yeasy/discuz:3.5 # build based on the local dockerfile
+    container_name: discuz
+    hostname: discuz
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./volumes/discuz-config:/var/www/html/config:rw
+      - ./volumes/discuz-data:/var/www/html/data:rw
+      - ./volumes/discuz-uc_client/data:/var/www/html/uc_client/data:rw
+      - ./volumes/discuz-uc_server/data:/var/www/html/uc_server/data:rw
+    environment:
+      - TZ=${TIME_ZONE:-Asia/Shanghai}
+    command: ${DISCUZ_RUN_CMD:-"apache2-foreground"}
+    depends_on:
+      - mysql
