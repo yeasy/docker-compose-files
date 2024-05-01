@@ -19,23 +19,25 @@
 # configtxlator encode json to pb
 # Usage: configtxlatorEncode msgType input output
 configtxlatorEncode() {
-  msgType=$1
-  input=$2
-  output=$3
+  local msgType=$1
+  local input=$2
+  local output=$3
 
   echo "Encode $input --> $output using type $msgType"
   configtxlator proto_encode \
     --type=${msgType} \
     --input=${input} \
     --output=${output}
+    
+  [ $? -eq 0 ] || { echo "Failed to do pb encode"; exit 1; }
 }
 
 # configtxlator decode pb to json
 # Usage: configtxlatorEncode msgType input output
 configtxlatorDecode() {
-  msgType=$1
-  input=$2
-  output=$3
+  local msgType=$1
+  local input=$2
+  local output=$3
 
   echo "Config Decode $input --> $output using type $msgType"
   if [ ! -f $input ]; then
@@ -47,15 +49,17 @@ configtxlatorDecode() {
     --type=${msgType} \
     --input=${input} \
     --output=${output}
+
+  [ $? -eq 0 ] || { echo "Failed to do pb decode"; exit 1; }
 }
 
 # compute diff between two pb
 # Usage: configtxlatorCompare channel origin updated output
 configtxlatorCompare() {
-  channel=$1
-  origin=$2
-  updated=$3
-  output=$4
+  local channel=$1
+  local origin=$2
+  local updated=$3
+  local output=$4
 
   echo "Config Compare $origin vs $updated > ${output} in channel $channel"
   if [ ! -f $origin ] || [ ! -f $updated ]; then
@@ -69,57 +73,54 @@ configtxlatorCompare() {
     --channel_id=${channel} \
     --output=${output}
 
-  [ $? -eq 0 ] || echo "Failed to compute config update"
+  [ $? -eq 0 ] || { echo "Failed to compute config update"; exit 1; }
 }
 
 # fetch the latest config block from channel and save as file
 # Usage: fetchConfig channel msp_path ordererURL block_file_to_save
 fetchConfig() {
-  CHANNEL=$1
-  MSP_PATH=$2
-  orderer_url=$3
-  BLOCK_FILE=$4
+  local channel=$1
+  local msp_path=$2
+  local orderer_url=$3
+  local block_file=$4
 
- peer channel fetch config ${BLOCK_FILE} \
+ peer channel fetch config ${block_file} \
     --connTimeout 10s \
-    -c ${CHANNEL} \
+    -c ${channel} \
     -o ${orderer_url} \
     --tls \
-    --cafile ${MSP_PATH}/tlscacerts/tlsca.cert
+    --cafile ${msp_path}/tlscacerts/tlsca.cert
 }
 
 # update a channel's config
 # Usage: updateConfig channel msp_path ordererURL config_update_jq_kv
 updateConfig() {
-  CHANNEL=$1
-  MSP_PATH=$2
-  orderer_url=$3
-  CFG_UPDATE_KV="$4"
+  local channel=$1
+  local msp_path=$2
+  local orderer_url=$3
+  local cfg_update_kv="$4"
 
-  BLOCK_FILE=${CHANNEL}_config.block
-  ORIGINAL_CFG_JSON=${CHANNEL}_origin_cfg.json
-  ORIGINAL_CFG_PB=${CHANNEL}_origin_cfg.pb
-  UPDATED_CFG_JSON=${CHANNEL}_updated_cfg.json
-  UPDATED_CFG_PB=${CHANNEL}_updated_cfg.pb
-  CFG_DELTA_JSON=${CHANNEL}_delta_cfg.json
-  CFG_DELTA_PB=${CHANNEL}_delta_cfg.pb
-  CFG_DELTA_ENV_JSON=${CHANNEL}_delta_env.json
-  CFG_DELTA_ENV_PB=${CHANNEL}_delta_env.pb
-  PAYLOAD_CFG_PATH=".data.data[0].payload.data.config"
+  local block_file=${channel}_config.block
+  local original_cfg_json=${channel}_origin_cfg.json
+  local original_cfg_pb=${channel}_origin_cfg.pb
+  local updated_cfg_json=${channel}_updated_cfg.json
+  local updated_cfg_pb=${channel}_updated_cfg.pb
+  local cfg_delta_json=${channel}_delta_cfg.json
+  local cfg_delta_pb=${channel}_delta_cfg.pb
+  local cfg_delta_env_json=${channel}_delta_env.json
+  local cfg_delta_env_pb=${channel}_delta_env.pb
+  local payload_cfg_path=".data.data[0].payload.data.config"
+  
+  echo "===Fetching config block for channel ${channel}==="
+  fetchConfig ${channel} ${msp_path} ${orderer_url} ${block_file}
 
-  echo "===Fetching config block for channel ${CHANNEL}==="
-  fetchConfig ${CHANNEL} ${MSP_PATH} ${orderer_url} ${BLOCK_FILE}
+  echo "Decode config block to json for channel ${channel}"
+  configtxlatorDecode "common.Block" ${block_file} ${block_file}.json
 
-  echo "Decode config block for channel ${CHANNEL}"
-  configtxlatorDecode "common.Block" ${BLOCK_FILE} ${BLOCK_FILE}.json
-
-  jq "${PAYLOAD_CFG_PATH}" ${BLOCK_FILE}.json >${ORIGINAL_CFG_JSON}
-
-  jq . ${ORIGINAL_CFG_JSON} >/dev/null
-  [ $? -ne 0 ] && {
-    echo "${ORIGINAL_CFG_JSON} is invalid"
-    exit
-  }
+  echo "Parse the payload part of the channel config json"
+  jq "${payload_cfg_path}" ${block_file}.json >${original_cfg_json}
+  jq . ${original_cfg_json} >/dev/null
+  [ $? -ne 0 ] && { echo "${original_cfg_json} is invalid"; exit 1; }
 
   # Check whether it has the key .channel_group.groups.Orderer.policies.Admins.policy.value.identities[0].principal.msp_identifier
   if jq -e '.channel_group.groups.Orderer.policies.Admins.policy.value.identities[0].principal | has("msp_identifier")' ${ORIGINAL_CFG_JSON} > /dev/null; then
@@ -128,51 +129,53 @@ updateConfig() {
   fi
 
   echo "Generate the pb with original config"
-  configtxlatorEncode "common.Config" ${ORIGINAL_CFG_JSON} ${ORIGINAL_CFG_PB}
+  configtxlatorEncode "common.Config" ${original_cfg_json} ${original_cfg_pb}
 
-  echo "Generate the updated config"
-  jq "${CFG_UPDATE_KV}" ${ORIGINAL_CFG_JSON} >${UPDATED_CFG_JSON}
+  echo "Generate the updated config as ${updated_cfg_json}"
+  jq "${cfg_update_kv}" ${original_cfg_json} >${updated_cfg_json}
 
-  jq . ${UPDATED_CFG_JSON} > /dev/null
+  jq . ${updated_cfg_json} > /dev/null
   [ $? -ne 0 ] && {
-    echo "${UPDATED_CFG_JSON} is invalid" && exit 1
+    echo "${updated_cfg_json} is invalid" && exit 1
   }
+  
   echo "Generate the updated pb with updated config"
-  configtxlatorEncode "common.Config" ${UPDATED_CFG_JSON} ${UPDATED_CFG_PB}
+  configtxlatorEncode "common.Config" ${updated_cfg_json} ${updated_cfg_pb}
 
   echo "Calculate the config delta between pb files"
-  configtxlatorCompare ${CHANNEL} ${ORIGINAL_CFG_PB} ${UPDATED_CFG_PB} ${CFG_DELTA_PB}
+  configtxlatorCompare ${channel} ${original_cfg_pb} ${updated_cfg_pb} ${cfg_delta_pb}
+  
+  [ $? -ne 0 ] && { echo "Error to calculate the delta pb file, no difference?"; exit 1; }
 
-  echo "Decode the config delta pb into json"
-  configtxlatorDecode "common.ConfigUpdate" ${CFG_DELTA_PB} ${CFG_DELTA_JSON}
-  jq . ${CFG_DELTA_JSON} >/dev/null
+  echo "Decode the config delta pb into json as ${cfg_delta_json}"
+  configtxlatorDecode "common.ConfigUpdate" ${cfg_delta_pb} ${cfg_delta_json}
+  jq . ${cfg_delta_json} >/dev/null
   [ $? -ne 0 ] && {
-    echo "${CFG_DELTA_JSON} is invalid" && exit 1
+    echo "${cfg_delta_json} is invalid" && exit 1
   }
-  echo "Wrap the config update as envelope"
-  echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$CHANNEL"'", "type":2}},"data":{"config_update":'$(cat ${CFG_DELTA_JSON})'}}}' | jq . >${CFG_DELTA_ENV_JSON}
+  echo "Wrap the config update in envelope as ${cfg_delta_env_json}"
+  echo '{"payload":{"header":{"channel_header":{"channel_id":"'"$channel"'", "type":2}},"data":{"config_update":'$(cat ${cfg_delta_json})'}}}' | jq . >${cfg_delta_env_json}
 
-  echo "Encode the config update envelope into pb"
-  configtxlatorEncode "common.Envelope" ${CFG_DELTA_ENV_JSON} ${CFG_DELTA_ENV_PB}
+  echo "Encode the config update envelope into pb as ${cfg_delta_env_pb}"
+  configtxlatorEncode "common.Envelope" ${cfg_delta_env_json} ${cfg_delta_env_pb}
 
   echo "Sign the config update transaction"
-  peer channel signconfigtx -f ${CFG_DELTA_ENV_PB}
+  peer channel signconfigtx -f ${cfg_delta_env_pb}
 
-  echo "Sending the config update tx to channel ${CHANNEL}"
+  echo "Sending the config update tx to channel ${channel}"
   peer channel update \
-    -c ${CHANNEL} \
+    -c ${channel} \
     -o ${orderer_url} \
-    -f ${CFG_DELTA_ENV_PB} \
+    -f ${cfg_delta_env_pb} \
     --tls \
-    --cafile ${MSP_PATH}/tlscacerts/tlsca.cert
+    --cafile ${msp_path}/tlscacerts/tlsca.cert
 
-  echo "Rechecking the kv with channel ${CHANNEL}"
-  fetchConfig ${CHANNEL} ${MSP_PATH} ${orderer_url} ${BLOCK_FILE}_new
+  echo "Rechecking the kv with channel ${channel}"
+  fetchConfig ${channel} ${msp_path} ${orderer_url} ${block_file}_new
 
-  echo "Decode new config block for channel ${CHANNEL}"
-  configtxlatorDecode "common.Block" ${BLOCK_FILE}_new ${BLOCK_FILE}_new.json
-
-  jq "${PAYLOAD_CFG_PATH}" ${BLOCK_FILE}_new.json >${ORIGINAL_CFG_JSON}_new
+  echo "Decode the payload of new config block of ${block_file}_new for channel ${channel} as ${block_file}_new_payload.json"
+  configtxlatorDecode "common.Block" ${block_file}_new ${block_file}_new.json
+  jq "${payload_cfg_path}" ${block_file}_new.json >${block_file}_new_payload.json
 
   # Check whether it has the key .channel_group.groups.Orderer.policies.Admins.policy.value.identities[0].principal.msp_identifier
   if jq -e '.channel_group.groups.Orderer.policies.Admins.policy.value.identities[0].principal | has("msp_identifier")' ${ORIGINAL_CFG_JSON}_new > /dev/null; then
