@@ -42,7 +42,7 @@ Set `/etc/nginx/conf.d/default.conf` as the following:
 server {
         listen       80;
         listen       [::]:80;
-        server_name  _;
+        server_name  yourserver.com;
         root         /usr/share/nginx/html;
 
         # Load configuration files
