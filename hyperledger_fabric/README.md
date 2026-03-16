@@ -2,7 +2,8 @@
 
 This project provides several useful Docker-Compose script to help quickly bootup a Hyperledger Fabric network, and do simple testing with deploy, invoke and query transactions.
 
-Currently we support Hyperledger Fabric all releases from v0.6.0, 1.x to latest 2.x.
+Currently we support Hyperledger Fabric releases from v0.6.0 and 1.x up to
+the latest 3.x example in this repository.
 
 If you're not familiar with Docker and Blockchain, can have a look at these books (in CN):
 
@@ -14,6 +15,7 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest) | latest fabric code, unstable.
+[Fabric v3.0.0](v3.0.0) | fabric 3.0.0 release with CCAAS lifecycle tests.
 [Fabric v2.5.0](v2.5.0) | fabric 2.5.0 release.
 [Fabric v2.4.0](v2.4.0) | fabric 2.4.0 release.
 [Fabric v2.3.3](v2.3.3) | fabric 2.3.3 release.
@@ -45,7 +47,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v2.5.0
+$ export RELEASE=v3.0.0
 ```
 
 ```bash
@@ -71,11 +73,24 @@ The following command will run the entire process (start a fabric network, creat
 $ make test  # Test with default fabric RAFT mode
 ```
 
+For `v3.0.0`, chaincode lifecycle tests use an external chaincode service
+instead of the legacy in-peer Docker build flow. The validated sequence is:
+
+```bash
+$ make stop clean
+$ make start
+$ make channel_test update_anchors
+$ make test_cc_install test_cc_queryinstalled
+$ make test_cc_approveformyorg test_cc_queryapproved
+$ make test_cc_checkcommitreadiness test_cc_commit
+$ make test_cc_querycommitted test_cc_invoke_query
+```
+
 [Prometheus](https://prometheus.io) dashboard listens at [http://localhost:9090](http://localhost:9090) to track the network statistics.
 
 ### Test with more modes
 
-In v2.x, only raft is supported.
+In v2.x and v3.x, only raft is supported.
 
 In v1.4.x, solo and kafka are also supported.
 

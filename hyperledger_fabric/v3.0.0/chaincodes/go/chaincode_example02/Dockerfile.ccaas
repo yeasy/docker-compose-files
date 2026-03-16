@@ -1,0 +1,12 @@
+FROM --platform=linux/arm64/v8 golang:1.23-alpine AS build
+
+WORKDIR /workspace
+COPY . .
+RUN go build -mod=vendor -o /usr/local/bin/chaincode_example02 .
+
+FROM --platform=linux/arm64/v8 alpine:3.20
+
+WORKDIR /workspace
+COPY --from=build /usr/local/bin/chaincode_example02 /usr/local/bin/chaincode_example02
+
+ENTRYPOINT ["/usr/local/bin/chaincode_example02"]
