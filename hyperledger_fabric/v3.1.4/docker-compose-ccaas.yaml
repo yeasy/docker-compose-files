@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  exp02-ccaas:
+    platform: linux/arm64/v8
+    build:
+      context: ./chaincodes/go/chaincode_example02
+      dockerfile: Dockerfile.ccaas
+    image: fabric-ccaas-exp02:${FABRIC_IMG_TAG}
+    container_name: exp02-ccaas
+    hostname: exp02-ccaas
+    restart: always
+    env_file:
+      - ./scripts/exp02-ccaas.env
+    expose:
+      - "9999"
+    networks:
+      default:
+        aliases:
+          - exp02-ccaas
+
+networks:
+  default:
+    external:
+      name: ${NETWORK}

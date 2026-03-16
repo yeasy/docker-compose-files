@@ -3,7 +3,7 @@
 This project provides several useful Docker-Compose script to help quickly bootup a Hyperledger Fabric network, and do simple testing with deploy, invoke and query transactions.
 
 Currently we support Hyperledger Fabric releases from v0.6.0 and 1.x up to
-the latest 3.x example in this repository.
+the latest 3.1.x example in this repository.
 
 If you're not familiar with Docker and Blockchain, can have a look at these books (in CN):
 
@@ -15,6 +15,7 @@ If you're not familiar with Docker and Blockchain, can have a look at these book
 Fabric Release | Description
 --- | ---
 [Fabric Latest](latest) | latest fabric code, unstable.
+[Fabric v3.1.4](v3.1.4) | fabric 3.1.4 release with CCAAS lifecycle tests.
 [Fabric v3.0.0](v3.0.0) | fabric 3.0.0 release with CCAAS lifecycle tests.
 [Fabric v2.5.0](v2.5.0) | fabric 2.5.0 release.
 [Fabric v2.4.0](v2.4.0) | fabric 2.4.0 release.
@@ -47,7 +48,7 @@ Fabric Release | Description
 ### TLDR
 
 ```bash
-$ export RELEASE=v3.0.0
+$ export RELEASE=v3.1.4
 ```
 
 ```bash
@@ -73,7 +74,7 @@ The following command will run the entire process (start a fabric network, creat
 $ make test  # Test with default fabric RAFT mode
 ```
 
-For `v3.0.0`, chaincode lifecycle tests use an external chaincode service
+For `v3.1.4`, chaincode lifecycle tests use an external chaincode service
 instead of the legacy in-peer Docker build flow. The validated sequence is:
 
 ```bash

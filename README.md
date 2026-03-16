@@ -41,7 +41,7 @@ A simple haproxy and web applications cluster.
 ## [hyperledger_fabric](hyperledger_fabric)
 Quickly bootup a hyperledger fabric cluster with several validator nodes, without vagrant or any manual configuration.
 
-Now we support releases from v0.6.0 up to v3.0.0, including a Fabric 3 CCAAS example.
+Now we support releases from v0.6.0 up to v3.1.4, including Fabric 3 CCAAS examples.
 
 See [hyperledger_fabric](hyperledger_fabric) for more details.
 

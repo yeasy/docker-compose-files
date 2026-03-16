@@ -1,0 +1,107 @@
+# github.com/yeasy/docker-compose-files
+# fabric network with couchdb as the peer state db.
+# including:
+# orderer.example.com: orderer node
+# peer0.org1.example.com: peer0 node
+# peer1.org1.example.com: peer1 node
+# peer0.org2.example.com: peer2 node
+# peer1.org2.example.com: peer3 node
+# couchdb0: couchdb node
+# couchdb1: couchdb node
+# couchdb2: couchdb node
+# couchdb3: couchdb node
+# cli: cli node
+
+version: '2'
+
+services:
+  orderer.example.com:
+    extends:
+      file: base-solo.yaml
+      service: orderer.example.com
+
+  peer0.org1.example.com:
+    extends:
+      file: base-solo.yaml
+      service: peer0.org1.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984
+    depends_on:
+      - couchdb0
+
+  peer1.org1.example.com:
+    extends:
+      file: base-solo.yaml
+      service: peer1.org1.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5984
+    depends_on:
+      - couchdb1
+
+  peer0.org2.example.com:
+    extends:
+      file: base-solo.yaml
+      service: peer0.org2.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
+    depends_on:
+      - couchdb2
+
+  peer1.org2.example.com:
+    extends:
+      file: base-solo.yaml
+      service: peer1.org2.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb3:5984
+    depends_on:
+      - couchdb3
+
+  couchdb0:
+    extends:
+      file: base.yaml
+      service: couchdb-base
+    container_name: couchdb0
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "5984:5984"  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+
+  couchdb1:
+    extends:
+      file: base.yaml
+      service: couchdb-base
+    container_name: couchdb1
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "6984:5984"
+
+  couchdb2:
+    extends:
+      file: base.yaml
+      service: couchdb-base
+    container_name: couchdb2
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "7984:5984"
+
+  couchdb3:
+    extends:
+      file: base.yaml
+      service: couchdb-base
+    container_name: couchdb3
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "8984:5984"
+
+  cli:
+    extends:
+      file: base-solo.yaml
+      service: cli
+
