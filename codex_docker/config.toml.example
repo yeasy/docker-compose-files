@@ -1,0 +1,8 @@
+[profiles.docker]
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.docker.sandbox_workspace_write]
+exclude_tmpdir_env_var = false
+exclude_slash_tmp = false
+network_access = true

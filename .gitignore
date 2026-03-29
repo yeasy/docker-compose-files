@@ -17,3 +17,6 @@ _book
 
 # pycharm
 .idea/
+
+# agent workspace
+.agent/

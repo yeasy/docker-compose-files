@@ -22,6 +22,23 @@ See [Docker Compose Documentation](https://docs.docker.com/compose/).
 ## [consul-discovery](consul-discovery)
 Using consul to make a service-discoverable architecture.
 
+## [codex_docker](codex_docker)
+Run Codex CLI inside Docker while keeping the in-container sandbox at
+`workspace-write`.
+
+This is a developer tool example rather than an application stack.
+
+To use it as your default `codex` command:
+```bash
+mkdir -p ~/bin
+ln -sf /absolute/path/to/docker-compose-files/codex_docker/bin/codex ~/bin/codex
+codex
+```
+
+By default it mounts the current workspace, persists host `~/.codex`,
+mounts host `~/.gitconfig` read-only when available, and does not mount
+host `~/.ssh` unless you opt in.
+
 ## [discuz_php_apache_mysql](discuz_php_apache_mysql)
 Discuz with apache and mysql.
 

@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_PATH="${BASH_SOURCE[0]}"
+while [[ -L "${SOURCE_PATH}" ]]; do
+  SOURCE_DIR="$(cd -- "$(dirname -- "${SOURCE_PATH}")" && pwd)"
+  SOURCE_PATH="$(readlink "${SOURCE_PATH}")"
+  [[ "${SOURCE_PATH}" != /* ]] && SOURCE_PATH="${SOURCE_DIR}/${SOURCE_PATH}"
+done
+
+IMAGE="${CODEX_IMAGE:-local/codex-cli:latest}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${SOURCE_PATH}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+WORKSPACE_INPUT="${CODEX_WORKSPACE:-${PWD}}"
+CODEX_HOME_DIR="${CODEX_HOME_DIR:-${HOME}/.codex}"
+CODEX_GITCONFIG="${CODEX_GITCONFIG:-${HOME}/.gitconfig}"
+CODEX_SANDBOX_MODE="${CODEX_SANDBOX_MODE:-workspace-write}"
+CODEX_APPROVAL_POLICY="${CODEX_APPROVAL_POLICY:-on-request}"
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "docker is required" >&2
+  exit 1
+fi
+
+if [[ ! -d "${WORKSPACE_INPUT}" ]]; then
+  echo "workspace does not exist: ${WORKSPACE_INPUT}" >&2
+  exit 1
+fi
+
+WORKSPACE="$(cd "${WORKSPACE_INPUT}" && pwd)"
+mkdir -p "${CODEX_HOME_DIR}"
+
+if ! docker image inspect "${IMAGE}" >/dev/null 2>&1 || [[ "${CODEX_REBUILD:-0}" == "1" ]]; then
+  docker build \
+    --build-arg "CODEX_VERSION=${CODEX_VERSION:-latest}" \
+    -t "${IMAGE}" \
+    "${ROOT_DIR}"
+fi
+
+docker_args=(
+  run
+  --rm
+  --init
+  --workdir /workspace
+  --user "$(id -u):$(id -g)"
+  --mount "type=bind,src=${WORKSPACE},dst=/workspace"
+  --mount "type=bind,src=${CODEX_HOME_DIR},dst=/home/coder/.codex"
+  -e HOME=/home/coder
+  -e CODEX_HOME=/home/coder/.codex
+  -e TERM="${TERM:-xterm-256color}"
+  -e COLORTERM="${COLORTERM:-truecolor}"
+  -e LANG="${LANG:-C.UTF-8}"
+)
+
+for env_name in OPENAI_API_KEY OPENAI_BASE_URL OPENAI_ORGANIZATION OPENAI_PROJECT OPENAI_ORG_ID OPENAI_PROJECT_ID; do
+  if [[ -n "${!env_name:-}" ]]; then
+    docker_args+=(-e "${env_name}=${!env_name}")
+  fi
+done
+
+if [[ -t 0 && -t 1 ]]; then
+  docker_args+=(-it)
+else
+  docker_args+=(-i)
+fi
+
+if [[ -f "${CODEX_GITCONFIG}" ]]; then
+  docker_args+=(
+    --mount "type=bind,src=${CODEX_GITCONFIG},dst=/home/coder/.gitconfig,readonly"
+  )
+fi
+
+if [[ "${CODEX_FORWARD_SSH_AGENT:-0}" == "1" && -n "${SSH_AUTH_SOCK:-}" && -S "${SSH_AUTH_SOCK}" ]]; then
+  docker_args+=(
+    --mount "type=bind,src=${SSH_AUTH_SOCK},dst=/ssh-agent"
+    -e SSH_AUTH_SOCK=/ssh-agent
+  )
+fi
+
+if [[ "${CODEX_MOUNT_SSH_DIR:-0}" == "1" && -d "${HOME}/.ssh" ]]; then
+  docker_args+=(
+    --mount "type=bind,src=${HOME}/.ssh,dst=/home/coder/.ssh,readonly"
+  )
+fi
+
+exec docker "${docker_args[@]}" \
+  "${IMAGE}" \
+  --sandbox "${CODEX_SANDBOX_MODE}" \
+  --ask-for-approval "${CODEX_APPROVAL_POLICY}" \
+  "$@"

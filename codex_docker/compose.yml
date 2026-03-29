@@ -1,0 +1,34 @@
+services:
+  codex:
+    image: ${CODEX_IMAGE:-local/codex-cli:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        CODEX_VERSION: ${CODEX_VERSION:-latest}
+    working_dir: /workspace
+    user: "${CODEX_UID:-1000}:${CODEX_GID:-1000}"
+    stdin_open: true
+    tty: true
+    environment:
+      HOME: /home/coder
+      CODEX_HOME: /home/coder/.codex
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      OPENAI_ORGANIZATION: ${OPENAI_ORGANIZATION:-}
+      OPENAI_PROJECT: ${OPENAI_PROJECT:-}
+      TERM: ${TERM:-xterm-256color}
+      COLORTERM: ${COLORTERM:-truecolor}
+      LANG: ${LANG:-C.UTF-8}
+    volumes:
+      - type: bind
+        source: ${CODEX_WORKSPACE:?set CODEX_WORKSPACE}
+        target: /workspace
+      - type: bind
+        source: ${CODEX_HOME_DIR:?set CODEX_HOME_DIR}
+        target: /home/coder/.codex
+    command:
+      - --sandbox
+      - workspace-write
+      - --ask-for-approval
+      - on-request
